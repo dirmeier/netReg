@@ -1,0 +1,10 @@
+CXX_STD = CXX11
+PKG_CXXFLAGS = @CXXFLAGS@ @OPENMP_CXXFLAGS@ 
+PKG_CPPFLAGS = @netReg_CPPFLAGS@ -Ilibnetreg
+PKG_LIBS = @OPENMP_CXXFLAGS@ @netReg_LDLIBS@ -Llibnetreg -lnetreg
+
+$(SHLIB): libnetreg.a
+
+libnetreg.a:
+	(cd libnetreg && ($(MAKE) -w libnetreg.a) && touch $@)
+
