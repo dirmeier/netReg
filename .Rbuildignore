@@ -1,0 +1,10 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+.gitignore
+.git
+.idea
+test
+netreg.Rcheck
+netreg.Rproj
+netreg*tar.gz
+.build*timestamp
