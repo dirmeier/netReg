@@ -1,6 +1,9 @@
 netReg
 ======
 
+![alt tag](http://url/to/img.png)
+
+
 An R-library for network-regularized generalized linear regression.
 
 ## Installation
