@@ -23,7 +23,6 @@ depcomp
 install-sh
 missing
 test-driver
-netreg.Rproj
 Makefile.in
 glmnet
 *.rda

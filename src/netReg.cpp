@@ -35,7 +35,7 @@ extern "C"
  * @param niters max number of iterations if parameter estimation does not converge in time
  * @param threshs convergence threshold
  */
-SEXP edgenet(SEXP XS, SEXP YS,
+SEXP gaussedgenet(SEXP XS, SEXP YS,
              SEXP GXS, SEXP GYS,
              SEXP ns, SEXP ps, SEXP qs,
              SEXP lambdass,
@@ -80,11 +80,11 @@ SEXP edgenet(SEXP XS, SEXP YS,
     // protect from gc
     prtCnt++;
     // R object for intercept vector
-    SEXP MU = PROTECT(allocVector(REALSXP, Q));
+    SEXP intercept = PROTECT(allocVector(REALSXP, Q));
     // protect from gc
     prtCnt++;
     double *B = REAL(BS);
-    double *b0 = REAL(MU);
+    double *b0 = REAL(intercept);
     for (int i = 0; i < Q; ++i)
     {
         // safe intercepts for R vector
@@ -101,7 +101,7 @@ SEXP edgenet(SEXP XS, SEXP YS,
     // set first element of list to the coef matrix
     SET_VECTOR_ELT(OS, 0, BS);
     // set second element of list to intercept vector
-    SET_VECTOR_ELT(OS, 1, MU);
+    SET_VECTOR_ELT(OS, 1, intercept);
     // release SEXPs for garbage collection (what a stupid feature to need that, why not create vars on stack???)
     UNPROTECT(prtCnt);
     // return results to R

@@ -29,8 +29,7 @@
 #' \item{coefficients }{ the estimated (\code{p} x \code{q})-dimensional coefficient matrix B.hat}
 #' \item{intercept }{ the estimated (\code{q} x \code{1})-dimensional vector of intercepts}
 #' \item{call }{ the call that produced the object}
-#' \item{residuals }{ the residuals, that is reponse minus fitted values}
-#' \item{fitted.values }{ the estimated response values}
+#' \item{family }{ the family of the response}
 #' 
 #' @references 
 #'  Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007), 
@@ -84,17 +83,9 @@ function
   n <- dim(X)[1]                              
   p <- dim(X)[2]     
   q <- dim(Y)[2]  
-  if (is.null(G.X)) 
-  {
-    G.X <- matrix(0, 1, 1)
-    psigx <- 0
-  }
+  if (is.null(G.X)) G.X <- matrix(0, 1, 1)
   if (!is.matrix(G.X)) stop("GX is no matrix!")
-  if (is.null(G.Y)) 
-  {
-    G.Y <- matrix(0, 1, 1)
-    psigy <- 0 
-  }
+  if (is.null(G.Y)) G.Y <- matrix(0, 1, 1)
   if (!is.matrix(G.Y)) stop("GY is no matrix!")
   # check if X and Y are valid
   if (n != dim(Y)[1]) stop("X and Y have not same number of observations!")        
@@ -134,19 +125,19 @@ function
   if (all(G.Y == 0)) psigy <- 0
   if (q == 1)        psigy <- 0
   # estimate coefficients
-  obj <- fit(X=X, Y=Y, 
-             G.X=G.X, G.Y=G.Y,
-             lambda=lambda,
-             psigx=psigx, psigy=psigy,
-             thresh=thresh, maxit=maxit,
-             family=family)    
+  obj <- .fit(X=X, Y=Y, 
+              G.X=G.X, G.Y=G.Y,
+              lambda=lambda,
+              psigx=psigx, psigy=psigy,
+              thresh=thresh, maxit=maxit,
+              family=family)    
   obj$call <- match.call()    
   class(obj) <- "edgenet"
   obj
 }
 
 #' @noRd
-fit <-
+.fit <-
 function
 (
   X, Y, 
@@ -159,33 +150,36 @@ function
   n <- dim(X)[1]                              
   p <- dim(X)[2]     
   q <- dim(Y)[2]
-  # TODO use family
   family = match.arg(family)
   # make C call to estimate coefficients and posterior networks
-  res <- .Call("edgenet", 
-               X, Y,
-               G.X, G.Y, 
-               as.integer(n), as.integer(p), as.integer(q),
-               as.double(lambda), 
-               as.double(psigx),  as.double(psigy),
-               as.integer(maxit), as.double(thresh), 
-               PACKAGE="netReg") 
-  # coefficients
-  B  <- matrix(1, p, q)#res$B
-  # intercepts
-  mu <- rep(1, q)#res$MU 
-  rownames(B) <- colnames(X)
-  colnames(B) <- colnames(Y)
-  # TODO: calculate the dfs. how to do that in such a model??
-  # calc degrees of freedom
-  # df <- n - p  
-  # if (df < 0) df <- 1
-  fitted.values <- as.matrix(X%*%B + intercept.matrix(n=n, mu=mu))
-  residuals <- Y - fitted.values
-  # standard deviation of residuals would be great to have :)
-  # sigma2 <- sum((residuals)^2) / df  
-  list(coefficients=B,
-       intercept=mu,
-       residuals=residuals,
-       fitted.values=fitted.values)
+  res <- switch(family, 
+                "gaussian"=.gaussedgenet(X=X, Y=Y, G.X=G.X, G.Y=G.Y, n=n, p=p, q=q, 
+                                         lambda=lambda, psigx=psigx, psigy=psigy, 
+                                         maxit=maxit, thresh=thresh),
+                stop("Family not found!"))
+  res$family <- family
+  res
+}
+
+#' @noRd
+.gaussedgenet <-
+function
+(
+  X, Y, G.X, G.Y, 
+  n, p, q, 
+  lambda, psigx, psigy, 
+  maxit, thresh
+)
+{
+  res  <- .Call("gaussedgenet", 
+       X, Y,
+       G.X, G.Y, 
+       as.integer(n), as.integer(p), as.integer(q),
+       as.double(lambda), 
+       as.double(psigx),  as.double(psigy),
+       as.integer(maxit), as.double(thresh), 
+       PACKAGE="netReg")
+  rownames(res$BS) <- colnames(X)
+  colnames(res$BS) <- colnames(Y)
+  res
 }
