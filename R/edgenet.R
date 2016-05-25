@@ -132,7 +132,7 @@ function
               thresh=thresh, maxit=maxit,
               family=family)    
   obj$call <- match.call()    
-  class(obj) <- "edgenet"
+  class(obj) <- append("edgenet", class(obj))
   obj
 }
 
@@ -181,5 +181,6 @@ function
        PACKAGE="netReg")
   rownames(res$BS) <- colnames(X)
   colnames(res$BS) <- colnames(Y)
+  class(res) <- "gaussian.edgenet"
   res
 }
