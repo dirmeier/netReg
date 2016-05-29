@@ -21,7 +21,10 @@ rm -rf \
   src/test-suite.log \
   src/test.log \
   src/test.trs \
-  stamp-h1
+  stamp-h1 \
+  src/Makevars \
+  src/libnetreg/Makefile \
+  src/libnetreg/stamp-h1
  
 find src -name *.a -delete
 find src -name *.o -delete

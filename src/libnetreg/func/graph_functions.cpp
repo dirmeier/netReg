@@ -4,7 +4,7 @@
  * Email: simon.dirmeier@bsse.ethz.ch
  */
 
-#import "graph_functions.hpp"
+#include "graph_functions.hpp"
 
 #include <vector>
 #include <cmath>
