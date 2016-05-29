@@ -13,6 +13,7 @@ Encoding: UTF-8
 Collate:
     'print.R'
     'edgenet.R'
+    'edgenet_modelselection.R'
     'predict.R'
     'unload.R'
     'util.R'
