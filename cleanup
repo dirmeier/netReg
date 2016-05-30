@@ -6,7 +6,7 @@ rm -rf \
 	Makefile.in \
 	src/Makefile.in \
 	aclocal* \
-  compile \
+   compile \
 	autom* \
 	install-sh \
 	depcomp \

@@ -14,6 +14,6 @@ LaTeX: pdfLaTeX
 
 BuildType: Package
 PackageUseDevtools: Yes
-PackageInstallArgs: --no-multiarch --with-keep.source --configure-vars='CPPFLAGS=-I/opt/local/include LIBS=-L/opt/local/lib'
-PackageCheckArgs: --configure-vars="CPPFLAGS=-I/opt/local/include LIBS=-L/opt/local/lib"
+PackageInstallArgs: --no-multiarch --with-keep.source
+PackageCheckArgs: --no-multiarch --with-keep.source
 PackageRoxygenize: rd,collate,namespace

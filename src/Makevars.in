@@ -6,5 +6,5 @@ PKG_LIBS = @OPENMP_CXXFLAGS@ @netReg_LDLIBS@ -Llibnetreg -lnetreg
 $(SHLIB): libnetreg.a
 
 libnetreg.a:
-	(cd libnetreg && ($(MAKE) -w libnetreg.a) && touch $@)
+	(cd libnetreg && $(MAKE) libnetreg.a)
 
