@@ -7,4 +7,3 @@ $(SHLIB): libnetreg.a
 
 libnetreg.a:
 	(cd libnetreg && $(MAKE) libnetreg.a)
-

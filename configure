@@ -2110,7 +2110,6 @@ $as_echo "$as_me: building from R" >&6;}
   			{ $as_echo "$as_me:${as_lineno-$LINENO}: no R_HOME found" >&5
 $as_echo "$as_me: no R_HOME found" >&6;}
   			CXX=`"${R_HOME}/bin/R" CMD config CXX1X`
-  			exit 1
 		fi
 
 
@@ -2940,7 +2939,6 @@ fi
 
 done
 
-		 CXXFLAGS=$( echo $CXXFLAGS | $SED -e 's/^ *//' -e 's/ *$//' )
 
 
 fi

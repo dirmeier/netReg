@@ -24,7 +24,6 @@ AS_IF(
 		then
   			AC_MSG_NOTICE([no R_HOME found])
   			CXX=`"${R_HOME}/bin/R" CMD config CXX1X`
-  			exit 1
 		fi	
 	]
 )
