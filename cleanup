@@ -13,8 +13,11 @@ rm -rf \
 	missing \
 	test-driver \
   Makefile \
+	src/libnetreg/config.h* \
   src/Makefile \
   src/.deps \
+	src/stamp-h1 \
+	src/libnetreg/Makefile.in \
   src/tests/.deps \
   src/tests/*.o \
   src/tests/.dirstamp \

@@ -20,12 +20,12 @@ AS_IF(
 	[
 		enable_console=no	
 		AC_MSG_NOTICE([building from R])
-		if test -z "${R_HOME}"; 
-		then
+		AS_IF( [test -z "${R_HOME}"], 
+			[
   			AC_MSG_NOTICE([no R_HOME found])
   			CXX=`"${R_HOME}/bin/R" CMD config CXX1X`
-  			exit 1
-		fi	
+			]
+		)
 	]
 )
 
@@ -47,7 +47,7 @@ AS_IF(
 	[test "x${enable_cxxflags_setting}" = "xyes"],
 		[
 		 CXXFLAGS=""
-		 AX_APPEND_COMPILE_FLAGS([-O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -march=native], [CXXFLAGS])
+		 AX_APPEND_COMPILE_FLAGS([-O3 -fPIC -pipe -Wall], [CXXFLAGS])
 		 CXXFLAGS=$( echo $CXXFLAGS | $SED -e 's/^ *//' -e 's/ *$//' )
 		]	
 )
