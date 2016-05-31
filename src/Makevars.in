@@ -1,9 +1,21 @@
+SOURCES=$(wildcard libnetreg/data/*.cpp libnetreg/func/*.cpp libnetreg/models/*.cpp libnetreg/modelselection/*.cpp)
+OBJECTS = $(SOURCES:.cpp=.o)
+
+#CXX_STD = CXX11
+#PKG_CXXFLAGS = @CXXFLAGS@ @OPENMP_CXXFLAGS@ 
+#PKG_CPPFLAGS = @netReg_CPPFLAGS@ -I.
+#PKG_LIBS = @OPENMP_CXXFLAGS@ @netReg_LDLIBS@ -Llibnetreg -lnetreg
+
 CXX_STD = CXX11
 PKG_CXXFLAGS = @CXXFLAGS@ @OPENMP_CXXFLAGS@ 
-PKG_CPPFLAGS = @netReg_CPPFLAGS@
-PKG_LIBS = @OPENMP_CXXFLAGS@ @netReg_LDLIBS@ -Llibnetreg -lnetreg
+PKG_CPPFLAGS = @netReg_CPPFLAGS@ -I.
+PKG_LIBS = @OPENMP_CXXFLAGS@ @netReg_LDLIBS@
 
-$(SHLIB): libnetreg.a
 
-libnetreg.a:
-	(cd libnetreg && $(MAKE) libnetreg.a)
+all: $(SHLIB)
+
+#$(SHLIB): libnetreg.a
+
+#libnetreg.a:
+#	(cd libnetreg && ($(MAKE) -w libnetreg.a))
+
