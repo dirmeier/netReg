@@ -153,16 +153,18 @@ function
   family = match.arg(family)
   # make C call to estimate coefficients and posterior networks
   res <- switch(family, 
-                "gaussian"=.gaussedgenet(X=X, Y=Y, G.X=G.X, G.Y=G.Y, n=n, p=p, q=q, 
-                                         lambda=lambda, psigx=psigx, psigy=psigy, 
-                                         maxit=maxit, thresh=thresh),
+                "gaussian"=.gauss.edgenet(X=X, Y=Y, G.X=G.X, G.Y=G.Y,
+                                          n=n, p=p, q=q, 
+                                          lambda=lambda, 
+                                          psigx=psigx, psigy=psigy, 
+                                          maxit=maxit, thresh=thresh),
                 stop("Family not found!"))
   res$family <- family
   res
 }
 
 #' @noRd
-.gaussedgenet <-
+.gauss.edgenet <-
 function
 (
   X, Y, G.X, G.Y, 
@@ -171,14 +173,14 @@ function
   maxit, thresh
 )
 {
-  res  <- .Call("gaussedgenet", 
-       X, Y,
-       G.X, G.Y, 
-       as.integer(n), as.integer(p), as.integer(q),
-       as.double(lambda), 
-       as.double(psigx),  as.double(psigy),
-       as.integer(maxit), as.double(thresh), 
-       PACKAGE="netReg")
+  res  <- .Call("gauss_edgenet", 
+                 X, Y,
+                 G.X, G.Y, 
+                 as.integer(n), as.integer(p), as.integer(q),
+                 as.double(lambda), 
+                 as.double(psigx),  as.double(psigy),
+                 as.integer(maxit), as.double(thresh), 
+                 PACKAGE="netReg")
   rownames(res$BS) <- colnames(X)
   colnames(res$BS) <- colnames(Y)
   class(res) <- "gaussian.edgenet"

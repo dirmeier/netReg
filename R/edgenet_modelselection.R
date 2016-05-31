@@ -136,8 +136,9 @@ cv.edgenet.default <-
   if (all(G.X == 0)) psigx <- 0
   if (all(G.Y == 0)) psigy <- 0
   if (q == 1)        psigy <- 0
+  family <- match.arg(family)
   # estimate coefficients
-  obj <- cv(X=X, Y=Y, 
+  obj <- .cv(X=X, Y=Y, 
              G.X=G.X, G.Y=G.Y,
              lambda=lambda,
              psigx=psigx, psigy=psigy,
@@ -151,7 +152,7 @@ cv.edgenet.default <-
 }
 
 #' @noRd
-cv <-
+.cv <-
   function
 (
   X, Y, 
@@ -165,19 +166,42 @@ cv <-
   n <- dim(X)[1]                              
   p <- dim(X)[2]     
   q <- dim(Y)[2]
-  family = match.arg(family)
   # make C call to estimate coefficients and posterior networks
   res <- switch(family, 
-                "gaussian"=.Call("gaussedgenetselect", 
-                                 X, Y,
-                                 G.X, G.Y, 
-                                 as.integer(n), as.integer(p), as.integer(q),
-                                 as.double(lambda), 
-                                 as.double(psigx),  as.double(psigy),
-                                 as.integer(maxit), as.double(thresh),
-                                 as.integer(nfolds), foldid,
-                                 PACKAGE="netReg"),
+                "gaussian"=.gauss.cv.edgenet(X=X, Y=Y, G.X=G.X, G.Y=G.Y,
+                                             n=n, p=p, q=q, 
+                                             lambda=lambda,
+                                             psigx=psigx, psigy=psigy,
+                                             maxit=maxit, thresh=thresh,
+                                             nfolds=nfolds, foldid=foldid),
                 stop("Family not found!"))
+  res$family <- family
   # TODO: hier weiter
   res
 }
+
+#' @noRd
+.gauss.cv.edgenet <-
+function
+(
+  X, Y, G.X, G.Y,
+  n, p, q, 
+  lambda, psigx, psigy, 
+  maxit, thresh,
+  nfolds, foldid
+)
+{
+  res <- .Call("gauss_cv_edgenet", 
+                X, Y,
+                G.X, G.Y, 
+                as.integer(n), as.integer(p), as.integer(q),
+                as.double(lambda), 
+                as.double(psigx),  as.double(psigy),
+                as.integer(maxit), as.double(thresh),
+                as.integer(nfolds), foldid,
+                PACKAGE="netReg")
+  class(res) <- "gaussian.cv.edgenet"
+  res
+}
+
+  

@@ -35,7 +35,7 @@ extern "C"
  * @param niters max number of iterations if parameter estimation does not converge in time
  * @param threshs convergence threshold
  */
-SEXP gaussedgenet(SEXP XS, SEXP YS,
+SEXP gauss_edgenet(SEXP XS, SEXP YS,
              SEXP GXS, SEXP GYS,
              SEXP ns, SEXP ps, SEXP qs,
              SEXP lambdass,
@@ -107,5 +107,15 @@ SEXP gaussedgenet(SEXP XS, SEXP YS,
     // return results to R
     return OS;
 }
+
+SEXP gauss_cv_edgenet(SEXP XS, SEXP YS, SEXP GXS, SEXP GYS,
+                      SEXP ns, SEXP ps, SEXP qs,
+                      SEXP lambs, SEXP psgxs, SEXP psgys,
+                      SEXP niters, SEXP threshs,
+                      SEXP nfolds, SEXP foldids)
+{
+    return R_NilValue;
+}
+
 
 };
