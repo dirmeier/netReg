@@ -129,10 +129,14 @@ cv.edgenet.default <-
   if (any(G.Y < 0))  stop("Some elements G.Y<0; please use non-negative matrix!")
   # check if some parameters have values
   pars <- list(...)
-  lambda <- ifelse(hasArg(lambda), pars$lambda, -1)
-  psigx <-  ifelse(hasArg(psigx), pars$psigx, -1)
-  psigy <-  ifelse(hasArg(psigy), pars$psigy, -1)
+  lambda <- ifelse(hasArg(lambda), pars$lambda, NA_real_)
+  psigx <-  ifelse(hasArg(psigx), pars$psigx, NA_real_)
+  psigy <-  ifelse(hasArg(psigy), pars$psigy, NA_real_)
+  if (any(c(lambda, psigx, psigy) < 0.0, na.rm=T))
+    stop("Some provided shrinkage parameters are smaller than 0!")
   if (!is.null(foldid) && is.numeric(foldid)) nfolds <- max(foldid)
+  if (is.null(foldid)) foldid <- NA_integer_
+  if (!is.numeric(foldid)) stop("Please provide either an integer vector or NULL for foldid")
   if (all(G.X == 0)) psigx <- 0
   if (all(G.Y == 0)) psigy <- 0
   if (q == 1)        psigy <- 0
@@ -146,7 +150,7 @@ cv.edgenet.default <-
              family=family,
              nfolds=nfolds,
              foldid=foldid)    
-  obj$call <- match.call()    
+  obj$call <- match.call()
   class(obj) <- "cv.edgenet"
   obj
 }
@@ -161,7 +165,7 @@ cv.edgenet.default <-
   thresh, maxit, family,
   nfolds, foldid
 )
-  {
+{
   # parse dimensions
   n <- dim(X)[1]                              
   p <- dim(X)[2]     
@@ -198,7 +202,7 @@ function
                 as.double(lambda), 
                 as.double(psigx),  as.double(psigy),
                 as.integer(maxit), as.double(thresh),
-                as.integer(nfolds), foldid,
+                as.integer(nfolds), as.integer(foldid),
                 PACKAGE="netReg")
   class(res) <- "gaussian.cv.edgenet"
   res
