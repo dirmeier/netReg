@@ -6,15 +6,15 @@ rm -rf \
 	Makefile.in \
 	src/Makefile.in \
 	aclocal* \
-   compile \
+	compile \
 	autom* \
 	install-sh \
 	depcomp \
 	missing \
 	test-driver \
-  Makefile \
+	Makefile \
 	src/libnetreg/config.h* \
-  src/Makefile \
+	src/Makefile \
   src/.deps \
 	src/stamp-h1 \
 	src/libnetreg/Makefile.in \

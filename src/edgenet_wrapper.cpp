@@ -4,7 +4,7 @@
  * Email: simon.dirmeier@bsse.ethz.ch
  */
 
-#include "netreg_wrapper.hpp"
+#include "edgenet_wrapper.hpp"
 
 #ifndef ARMA_DONT_USE_WRAPPER
 #define ARMA_DONT_USE_WRAPPER
@@ -15,7 +15,7 @@
 #include "libnetreg/models/edgenet.hpp"
 #include "libnetreg/modelselection/edgenet_model_selection.hpp"
 
-void run(double *const X, double *const Y,
+void do_gauss_edgenet_(double *const X, double *const Y,
          double *const GX, double *const GY,
          const int N, const int P, const int Q,
          const double LAMBDA, const double PSI_GX, const double PSI_GY,
@@ -34,3 +34,12 @@ void run(double *const X, double *const Y,
     mu_ = data.intercept().begin();
 }
 
+void do_gauss_cv_edgenet_(double *const X, double *const Y,
+                          double *const GX, double *const GY,
+                          const int N, const int P, const int Q,
+                          const double LAMBDA, const double PSI_GX, const double PSI_GY,
+                          const int N_ITER, const double THRESH,
+                          const int N_FOLDS, int * const foldid)
+{
+
+}
