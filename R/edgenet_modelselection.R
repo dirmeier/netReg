@@ -91,7 +91,7 @@ cv.edgenet.default <-
   foldid=NULL,
   ...
 ) 
-  {
+{
   if (!is.matrix(X)) stop ("X is no matrix!")      
   if (!is.matrix(Y)) stop ("Y is no matrix!")
   
