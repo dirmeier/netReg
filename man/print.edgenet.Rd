@@ -4,7 +4,7 @@
 \alias{print.edgenet}
 \title{Print method for edgenet objects}
 \usage{
-\method{print}{edgenet}(x, ...)
+print.edgenet(x, ...)
 }
 \arguments{
 \item{x}{an object of class \emph{netreg.graph}}

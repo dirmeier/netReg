@@ -2,6 +2,7 @@
 #' 
 #' @export
 #' @useDynLib netReg
+#' 
 #' @author Simon Dirmeier, \email{netreg@@simon-dirmeier.net}
 #' @description  Fit a graph-regularized linear regression model using edge-penalization.
 #' The coefficients are computed using graph-prior knowledge in the form of 
@@ -24,6 +25,7 @@
 #' @param thresh  threshold for coordinate descent
 #' @param maxit  maximum number of iterations
 #' @param family  family of response, e.g. gaussian
+#' @param ...  additional params
 #' 
 #' @return An object of class \code{edgenet}
 #' \item{coefficients }{ the estimated (\code{p} x \code{q})-dimensional coefficient matrix B.hat}
@@ -44,12 +46,14 @@
 #'  \emph{Bioinformatics}
 #'
 #' @examples
+#' \dontrun{
 #' X <- matrix(rnorm(100*10),100,10)
 #' Y <- matrix(rnorm(100),100,1)
 #' G.X <- matrix(rpois(10*10,1),10)
 #' G.X <- t(G.X) + G.X
 #' diag(G.X) <- 0
 #' fit <- edgenet(X=X, Y=Y, G.X=G.X, family="gaussian")
+#' }
 edgenet <-
 function
 (
@@ -59,7 +63,8 @@ function
   lambda=1, psigx=1, psigy=1, 
   thresh=1e-5,
   maxit=1e5,
-  family=c("gaussian")
+  family=c("gaussian"),
+  ...
 )
 UseMethod("edgenet")
 
@@ -74,7 +79,8 @@ function
  lambda=1, psigx=1, psigy=1, 
  thresh=1e-5,
  maxit=1e5, 
- family=c("gaussian")
+ family=c("gaussian"),
+ ...
 ) 
 {
   if (!is.matrix(X)) stop ("X is no matrix!")      
@@ -125,15 +131,16 @@ function
   if (all(G.Y == 0)) psigy <- 0
   if (q == 1)        psigy <- 0
   # estimate coefficients
-  obj <- .fit(X=X, Y=Y, 
+  ret <- .fit(X=X, Y=Y, 
               G.X=G.X, G.Y=G.Y,
               lambda=lambda,
               psigx=psigx, psigy=psigy,
               thresh=thresh, maxit=maxit,
-              family=family)    
-  obj$call <- match.call()    
-  class(obj) <- append("edgenet", class(obj))
-  obj
+              family=family,
+              ...)    
+  ret$call <- match.call()    
+  class(ret) <- c("edgenet", class(ret))
+  ret
 }
 
 #' @noRd
@@ -143,10 +150,10 @@ function
   X, Y, 
   G.X, G.Y, 
   lambda, psigx, psigy, 
-  thresh, maxit, family
+  thresh, maxit, family,
+  ...
 )
 {
-  # parse dimensions
   n <- dim(X)[1]                              
   p <- dim(X)[2]     
   q <- dim(Y)[2]

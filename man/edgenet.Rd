@@ -5,7 +5,7 @@
 \title{Fit a graph-regularized linear regression model using edge-based regularization.}
 \usage{
 edgenet(X, Y, G.X = NULL, G.Y = NULL, lambda = 1, psigx = 1,
-  psigy = 1, thresh = 1e-05, maxit = 1e+05, family = c("gaussian"))
+  psigy = 1, thresh = 1e-05, maxit = 1e+05, family = c("gaussian"), ...)
 }
 \arguments{
 \item{X}{input matrix, of dimension (\code{n} x \code{p}) 
@@ -33,6 +33,8 @@ of response variables Each row is an observation vector.}
 \item{maxit}{maximum number of iterations}
 
 \item{family}{family of response, e.g. gaussian}
+
+\item{...}{additional params}
 }
 \value{
 An object of class \code{edgenet}
@@ -48,12 +50,14 @@ one/two affinity matrices. Graph-regularization is an extension to previously
 introduced regularization techniques, such as the LASSO.
 }
 \examples{
+\dontrun{
 X <- matrix(rnorm(100*10),100,10)
 Y <- matrix(rnorm(100),100,1)
 G.X <- matrix(rpois(10*10,1),10)
 G.X <- t(G.X) + G.X
 diag(G.X) <- 0
 fit <- edgenet(X=X, Y=Y, G.X=G.X, family="gaussian")
+}
 }
 \author{
 Simon Dirmeier, \email{netreg@simon-dirmeier.net}

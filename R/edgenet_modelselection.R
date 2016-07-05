@@ -2,8 +2,9 @@
 #' 
 #' @export
 #' @useDynLib netReg
+#' 
 #' @author Simon Dirmeier, \email{netreg@@simon-dirmeier.net}
-#' @description  Use convex optimization to find the optimal set of parameters for edgenet.
+#' @description Use convex optimization to find the optimal set of parameters for edgenet.
 #'
 #' @param X  input matrix, of dimension (\code{n} x \code{p}) 
 #' where \code{n} is the number of observations and \code{p} is the number 
@@ -51,6 +52,7 @@
 #'  \url{http://www.damtp.cam.ac.uk/user/na/NA_papers/NA2009_06.pdf}
 #'
 #' @examples
+#' \dontrun{
 #' X <- matrix(rnorm(100*10),100,10)
 #' Y <- matrix(rnorm(100),100,1)
 #' G.X <- matrix(rpois(10*10,1),10)
@@ -61,6 +63,7 @@
 #' cv.edge.l <- cv.edgenet(X=X, Y=Y, G.X=G.X, lambda=1, family="gaussian")
 #' 
 #' cv.edge.ps <- cv.edgenet(X=X, Y=Y, G.X=G.X, psigx=1, psigy=1, family="gaussian")
+#' }
 cv.edgenet <-
 function
 (
@@ -94,7 +97,6 @@ cv.edgenet.default <-
 {
   if (!is.matrix(X)) stop ("X is no matrix!")      
   if (!is.matrix(Y)) stop ("Y is no matrix!")
-  
   # parse dimensions
   n <- dim(X)[1]
   p <- dim(X)[2]
@@ -113,8 +115,8 @@ cv.edgenet.default <-
   if (n != dim(Y)[1]) stop("X and Y have not same number of observations!")        
   if (p < 2) stop("Pls use a X matrix with at least 2 covariables!")  
   # check if graphs are valid
-  if (any(dim(G.X)!=dim(X)[2])) stop("ncol(X) and dim(G.X) do not fit!")
-  if (any(dim(G.Y)!=dim(Y)[2])) stop("ncol(Y) and dim(G.Y) do not fit!")
+  if (any(dim(G.X) != dim(X)[2])) stop("ncol(X) and dim(G.X) do not fit!")
+  if (any(dim(G.Y) != dim(Y)[2])) stop("ncol(Y) and dim(G.Y) do not fit!")
   if (maxit < 0)
   {
     warning("maxit < 0, setting to 1e5!")
@@ -134,25 +136,25 @@ cv.edgenet.default <-
   psigy <-  ifelse(hasArg(psigy), pars$psigy, NA_real_)
   if (any(c(lambda, psigx, psigy) < 0.0, na.rm=T))
     stop("Some provided shrinkage parameters are smaller than 0!")
-  if (!is.null(foldid) && is.numeric(foldid)) nfolds <- max(foldid)
+  if (!is.null(foldid) & is.numeric(foldid)) nfolds <- max(foldid)
   if (is.null(foldid)) foldid <- NA_integer_
   if (!is.numeric(foldid)) stop("Please provide either an integer vector or NULL for foldid")
   if (all(G.X == 0)) psigx <- 0
   if (all(G.Y == 0)) psigy <- 0
   if (q == 1)        psigy <- 0
-  family <- match.arg(family)
-  # estimate coefficients
-  obj <- .cv(X=X, Y=Y, 
+  # estimate shrinkage parameters
+  ret <- .cv(X=X, Y=Y, 
              G.X=G.X, G.Y=G.Y,
              lambda=lambda,
              psigx=psigx, psigy=psigy,
              thresh=thresh, maxit=maxit,
              family=family,
              nfolds=nfolds,
-             foldid=foldid)    
-  obj$call <- match.call()
-  class(obj) <- "cv.edgenet"
-  obj
+             foldid=foldid,
+             ...)    
+  ret$call <- match.call()
+  class(ret) <- c("cv.edgenet", class(ret))
+  ret
 }
 
 #' @noRd
@@ -163,14 +165,15 @@ cv.edgenet.default <-
   G.X, G.Y, 
   lambda, psigx, psigy, 
   thresh, maxit, family,
-  nfolds, foldid
+  nfolds, foldid,
+  ...
 )
 {
-  # parse dimensions
   n <- dim(X)[1]                              
   p <- dim(X)[2]     
   q <- dim(Y)[2]
-  # make C call to estimate coefficients and posterior networks
+  family = match.arg(family)
+  # make C call to estimate shrinkage parameters
   res <- switch(family, 
                 "gaussian"=.gauss.cv.edgenet(X=X, Y=Y, G.X=G.X, G.Y=G.Y,
                                              n=n, p=p, q=q, 
@@ -180,7 +183,6 @@ cv.edgenet.default <-
                                              nfolds=nfolds, foldid=foldid),
                 stop("Family not found!"))
   res$family <- family
-  # TODO: hier weiter
   res
 }
 

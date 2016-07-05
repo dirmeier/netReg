@@ -1,7 +1,6 @@
 /**
  * Author: Simon Dirmeier
- * Date: 14/05/16
- * Email: simon.dirmeier@bsse.ethz.ch
+ * Email: netreg@simon-dirmeier.net
  */
 
 #ifndef NETREG_NETREGWRAPPER_HPP
@@ -20,7 +19,7 @@ void do_gauss_cv_edgenet_(double *const X, double *const Y,
                           const double LAMBDA, const double PSI_GX,
                           const double PSI_GY,
                           const int N_ITER, const double THRESH,
-                          const int N_FOLDS, int * const foldid);
+                          const int N_FOLDS, int *const foldid);
 
 extern double *B_;
 extern double *mu_;

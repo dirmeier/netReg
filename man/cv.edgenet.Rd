@@ -54,6 +54,7 @@ you can provide starting values for the three regularization parameters, in this
 }
 }
 \examples{
+\dontrun{
 X <- matrix(rnorm(100*10),100,10)
 Y <- matrix(rnorm(100),100,1)
 G.X <- matrix(rpois(10*10,1),10)
@@ -64,6 +65,7 @@ cv.edge <- cv.edgenet(X=X, Y=Y, G.X=G.X, family="gaussian")
 cv.edge.l <- cv.edgenet(X=X, Y=Y, G.X=G.X, lambda=1, family="gaussian")
 
 cv.edge.ps <- cv.edgenet(X=X, Y=Y, G.X=G.X, psigx=1, psigy=1, family="gaussian")
+}
 }
 \author{
 Simon Dirmeier, \email{netreg@simon-dirmeier.net}

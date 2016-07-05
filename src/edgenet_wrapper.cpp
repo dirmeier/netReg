@@ -1,7 +1,6 @@
 /**
  * Author: Simon Dirmeier
- * Date: 14/05/16
- * Email: simon.dirmeier@bsse.ethz.ch
+ * Email: netreg@simon-dirmeier.net
  */
 
 #include "edgenet_wrapper.hpp"
@@ -11,9 +10,9 @@
 #endif
 #include <armadillo>
 
-#include "libnetreg/data/modeldata/graph_penalized_linear_model_data.hpp"
-#include "libnetreg/models/edgenet.hpp"
-#include "libnetreg/modelselection/edgenet_model_selection.hpp"
+#include "graph_penalized_linear_model_data.hpp"
+#include "edgenet.hpp"
+#include "edgenet_model_selection.hpp"
 
 void do_gauss_edgenet_(double *const X, double *const Y,
          double *const GX, double *const GY,
@@ -30,7 +29,7 @@ void do_gauss_edgenet_(double *const X, double *const Y,
     // create an edgenet object and fit the model
     netreg::edgenet e;
     e.run(data);
-    B_ = data.coefficients().begin();
+    B_  = data.coefficients().begin();
     mu_ = data.intercept().begin();
 }
 

@@ -1,8 +1,8 @@
 /**
  * Author: Simon Dirmeier
- * Date: 03/04/16
- * Email: simon.dirmeier@bsse.ethz.ch
+ * Email: netreg@simon-dirmeier.net
  */
+
 #include <R.h>
 #include <Rinternals.h>
 #include <Rmath.h>
