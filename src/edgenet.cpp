@@ -102,7 +102,7 @@ namespace netreg
          const double psigx, const double psigy,
          matrix<double> &LX, matrix<double> &LY, matrix<double> &cfs,
          const int P, const int Q,
-         const int pi, const int qi)
+         const int pi, const int qi) const
     {
         if (psigx != 0)
             lx_penalize(s, norm, psigx, LX, cfs, P, pi, qi);
@@ -113,7 +113,7 @@ namespace netreg
     void edgenet::lx_penalize
         (double &s, double &norm, const double psigx,
          matrix<double> &LX, matrix<double> &cfs, const int P,
-         const int pi, const int qi)
+         const int pi, const int qi) const
     {
         if (psigx == 0)
             return;
@@ -127,7 +127,7 @@ namespace netreg
     void edgenet::ly_penalize
         (double &s, double &norm, const double psigy,
          matrix<double> &LY, matrix<double> &cfs, const int Q,
-         const int pi, const int qi)
+         const int pi, const int qi) const
     {
         if (psigy == 0 || Q == 1)
             return;
@@ -273,7 +273,7 @@ namespace netreg
 
     double edgenet::up_norm(matrix<double> &X, const double txx,
                             std::vector<int> &testIdxs,
-                            const int cidx)
+                            const int cidx) const
     {
         double norm = txx;
         if (!testIdxs.size())
@@ -284,8 +284,7 @@ namespace netreg
     }
 
     void edgenet::pre_txx(matrix<double> &txx, matrix<double> &X,
-                          const int cidx,
-                          const int row)
+                          const int cidx, const int row) const
     {
         for (int didx = 0; didx <= cidx; ++didx)
             txx(cidx, didx) += X(row, cidx) * X(row, didx);

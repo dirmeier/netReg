@@ -35,7 +35,8 @@ namespace netreg
             cvset_(cvset),
             X_(data_.design()),
             Y_(data.response()),
-            nfolds_(static_cast<unsigned long>(cvset.fold_count()))
+            nfolds_(static_cast<unsigned long>(cvset.fold_count())),
+            edgenet_()
         { }
 
         /**
@@ -50,13 +51,12 @@ namespace netreg
             for (int fc = 0; fc < nfolds_; ++fc)
             {
                 cv_fold &fold = cvset_.get_fold(fc);
-                matrix<double> coef =
-                    edgenet_loss_function::edgenet_.mccd_(data_,
-                                                          params(0),
-                                                          params(1),
-                                                          params(2),
-                                                          params(3),
-                                                          fold);
+                matrix<double> coef = edgenet_.mccd_(data_,
+                                                     params(0),
+                                                     params(1),
+                                                     params(2),
+                                                     params(3),
+                                                     fold);
                 double err = sse(coef, X_, Y_, fold.test_set());
                 sses[fc] = err;
             }
@@ -71,7 +71,7 @@ namespace netreg
         matrix<double> &X_;      // design matrix
         matrix<double> &Y_;      // response matrix
         int nfolds_;             // number of folds
-        static constexpr edgenet edgenet_ = edgenet(); // static object so that re-instatiation is avoided
+        const edgenet edgenet_;
     };
 }
 #endif //NETREG_EDGENETLOSSFUNCTION_HPP

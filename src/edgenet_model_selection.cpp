@@ -41,8 +41,6 @@ namespace netreg
         std::vector<double> upper_bound{100.0, 1.0, 1000.0, 1000.0};
         const double rad_start = 0.49, rad_end = 1e-6;
         const int niter = 1000;
-        // TODO
-        // here is the rub
         opt.bobyqa<edgenet_loss_function>(pop, data, cvset,
                                           lower_bound, upper_bound,
                                           rad_start, rad_end, niter);

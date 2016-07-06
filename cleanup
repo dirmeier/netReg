@@ -12,6 +12,7 @@ rm -rf \
 	missing \
 	test-driver \
 	Makefile \
+	src/netReg.so \
 	src/config.h \
 	src/.deps \
 	src/stamp-h1 \

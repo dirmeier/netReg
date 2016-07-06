@@ -86,7 +86,7 @@ namespace netreg
              const double psigx, const double psigy,
              matrix<double> &LX, matrix<double> &LY, matrix<double> &cfs,
              const int P, const int Q,
-             const int pi, const int qi);
+             const int pi, const int qi) const;
 
         /**
          * Adds the penalty from the Laplacian of X to the softthresholding
@@ -103,7 +103,7 @@ namespace netreg
          */
         void lx_penalize
             (double &s, double &norm, const double psigx, matrix<double> &LX,
-             matrix<double> &cfs, const int P, const int pi, const int qi);
+             matrix<double> &cfs, const int P, const int pi, const int qi) const;
 
 
         /**
@@ -122,7 +122,7 @@ namespace netreg
         void ly_penalize
             (double &s, double &norm, const double psigy,
              matrix<double> &LY, matrix<double> &B, const int Q,
-             const int pi, const int qi);
+             const int pi, const int qi) const;
 
         /**
          * Calculates the softhresholding parameter as well as the normalisation constant.
@@ -201,7 +201,7 @@ namespace netreg
         double up_norm(matrix<double> &X,
                        const double txx,
                        std::vector<int> &test_idxs,
-                       const int cidx);
+                       const int cidx) const;
 
         /**
          * Preset the TXX matrix at a specific element
@@ -214,7 +214,7 @@ namespace netreg
         void pre_txx(matrix<double> &TXX,
                      matrix<double> &X,
                      const int cidx,
-                     const int row);
+                     const int row) const;
     };
 }
 #endif //NETREG_EDGENET_H
