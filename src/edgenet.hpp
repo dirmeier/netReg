@@ -37,7 +37,7 @@ namespace netreg
              const double alpha,
              const double psigx,
              const double psigy,
-             cv_fold &fold);
+             cv_fold &fold) const;
 
         /**
          * Calculate an univariate cyclic coordinate descent on the index of
@@ -62,7 +62,7 @@ namespace netreg
              const double psigx, const double psigy,
              cv_fold &fold, int qi,
              matrix<double> &trainTXX,
-             matrix<double> &trainTXY);
+             matrix<double> &trainTXY) const;
 
     private:
         /**
@@ -149,7 +149,7 @@ namespace netreg
              matrix<double> &LX, matrix<double> &LY,
              const int P, const int Q, const int pi, const int qi,
              const double psigx, const double psigy,
-             const bool lower);
+             const bool lower) const;
 
         /**
          * In cross-validation most of the parameters can be updated iteratively when needed.
@@ -188,7 +188,7 @@ namespace netreg
              matrix<double> &LX, matrix<double> &LY,
              const int pi, const int qi,
              const double psigx, const double psigy,
-             const int P, const int Q);
+             const int P, const int Q) const;
 
         /**
          * Update the normalization term incross-validation

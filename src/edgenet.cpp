@@ -88,7 +88,7 @@ namespace netreg
          const int P, const int Q,
          const int pi, const int qi,
          const double PSI_GX, const double PSI_GY,
-         const bool lower)
+         const bool lower) const
     {
         s = pls(TXX, TXY, coefficients, pi, qi, P, lower);
         norm = (TXX)(pi, pi);
@@ -139,10 +139,10 @@ namespace netreg
         norm += 2 * psigy * LY(qi, qi);
     }
 
-    matrix<double>edgenet::mccd_(graph_penalized_linear_model_data &data,
+    matrix<double> edgenet::mccd_(graph_penalized_linear_model_data &data,
                                  const double lambda,
                                  const double alpha, const double psigx,
-                                 const double psigy, cv_fold &fold)
+                                 const double psigy, cv_fold &fold) const
     {
         const int P = data.covariable_count();
         const int Q = data.response_count();
@@ -176,7 +176,7 @@ namespace netreg
          matrix<double> &cfs, matrix<double> &o_cfs,
          const double lamb, const double alph, const double psigx,
          const double psigy, cv_fold &fold, int qi,
-         matrix<double> &trainTXX, matrix<double> &trainTXY)
+         matrix<double> &trainTXX, matrix<double> &trainTXY) const
     {
         const int P = data.covariable_count();
         const int Q = data.response_count();
@@ -241,7 +241,7 @@ namespace netreg
          matrix<double> &LX, matrix<double> &LY,
          const int pi, const int qi,
          const double psigx, const double psigy,
-         const int P, const int Q)
+         const int P, const int Q) const
     {
         /*
         * Caution!

@@ -71,7 +71,7 @@ namespace netreg
         matrix<double> &X_;      // design matrix
         matrix<double> &Y_;      // response matrix
         int nfolds_;             // number of folds
-        static edgenet edgenet_; // static object so that re-instatiation is avoided
+        static constexpr edgenet edgenet_ = edgenet(); // static object so that re-instatiation is avoided
     };
 }
 #endif //NETREG_EDGENETLOSSFUNCTION_HPP
