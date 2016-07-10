@@ -22,13 +22,7 @@
 #' @param nfolds  the number of folds to be used - default is 10 (minimum 3, maximum nrow(X)). 
 #' @param foldid  an optional vector of length \code{nrow(X)} of values between 1 and \code{nfold} identifying what fold each observation is in.
 #' @param ...  additional parameters
-#' @details you can provide starting values for the three regularization parameters, in this case no optimization of those will be done
-#' \itemize{
-#'  \item{lambda }{}
-#'  \item{psigx }{}
-#'  \item{psigy }{}
-#' }
-#' 
+ 
 #' @return An object of class \code{cv.edgenet}
 #' \item{call }{ the call that produced the object}
 #' \item{lambda }{ the estimated (\code{p} x \code{q})-dimensional coefficient matrix B.hat}
@@ -130,28 +124,26 @@ cv.edgenet.default <-
   if (any(G.X < 0))  stop("Some elements G.X<0; please use non-negative matrix!")
   if (any(G.Y < 0))  stop("Some elements G.Y<0; please use non-negative matrix!")
   # check if some parameters have values
-  pars <- list(...)
-  lambda <- ifelse(hasArg(lambda), pars$lambda, NA_real_)
-  psigx <-  ifelse(hasArg(psigx), pars$psigx, NA_real_)
-  psigy <-  ifelse(hasArg(psigy), pars$psigy, NA_real_)
-  if (any(c(lambda, psigx, psigy) < 0.0, na.rm=T))
-    stop("Some provided shrinkage parameters are smaller than 0!")
-  if (!is.null(foldid) & is.numeric(foldid)) nfolds <- max(foldid)
+  family <-  match.arg(family)
+  if (!is.null(foldid) & is.numeric(foldid)) 
+  {
+    nfolds <- max(foldid)
+    if (length(foldid) != n) stop("length(foldid) != sample size (n)!")
+  }
   if (is.null(foldid)) foldid <- NA_integer_
   if (!is.numeric(foldid)) stop("Please provide either an integer vector or NULL for foldid")
+  psigx <- psigy <- -1
   if (all(G.X == 0)) psigx <- 0
   if (all(G.Y == 0)) psigy <- 0
   if (q == 1)        psigy <- 0
   # estimate shrinkage parameters
   ret <- .cv(X=X, Y=Y, 
              G.X=G.X, G.Y=G.Y,
-             lambda=lambda,
              psigx=psigx, psigy=psigy,
              thresh=thresh, maxit=maxit,
              family=family,
              nfolds=nfolds,
-             foldid=foldid,
-             ...)    
+             foldid=foldid)    
   ret$call <- match.call()
   class(ret) <- c("cv.edgenet", class(ret))
   ret
@@ -163,21 +155,18 @@ cv.edgenet.default <-
 (
   X, Y, 
   G.X, G.Y, 
-  lambda, psigx, psigy, 
+  psigx, psigy, 
   thresh, maxit, family,
-  nfolds, foldid,
-  ...
+  nfolds, foldid
 )
 {
   n <- dim(X)[1]                              
   p <- dim(X)[2]     
   q <- dim(Y)[2]
-  family = match.arg(family)
   # make C call to estimate shrinkage parameters
   res <- switch(family, 
                 "gaussian"=.gauss.cv.edgenet(X=X, Y=Y, G.X=G.X, G.Y=G.Y,
                                              n=n, p=p, q=q, 
-                                             lambda=lambda,
                                              psigx=psigx, psigy=psigy,
                                              maxit=maxit, thresh=thresh,
                                              nfolds=nfolds, foldid=foldid),
@@ -192,22 +181,23 @@ function
 (
   X, Y, G.X, G.Y,
   n, p, q, 
-  lambda, psigx, psigy, 
+  psigx, psigy, 
   maxit, thresh,
   nfolds, foldid
 )
 {
-  res <- .Call("gauss_cv_edgenet", 
+  cv <- .Call("gauss_cv_edgenet", 
                 X, Y,
                 G.X, G.Y, 
                 as.integer(n), as.integer(p), as.integer(q),
-                as.double(lambda), 
                 as.double(psigx),  as.double(psigy),
                 as.integer(maxit), as.double(thresh),
                 as.integer(nfolds), as.integer(foldid),
+                as.integer(length(foldid)),
                 PACKAGE="netReg")
-  class(res) <- "gaussian.cv.edgenet"
-  res
+  ret <- list(lambda=cv[1], psigx=cv[2], psigy=cv[3])
+  class(ret) <- "gaussian.cv.edgenet"
+  ret
 }
 
   

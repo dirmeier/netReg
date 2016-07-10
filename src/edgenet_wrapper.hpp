@@ -16,10 +16,11 @@ void do_gauss_edgenet_(double *const X, double *const Y,
 void do_gauss_cv_edgenet_(double *const X, double *const Y,
                           double *const GX, double *const GY,
                           const int N, const int P, const int Q,
-                          const double LAMBDA, const double PSI_GX,
+                          const double PSI_GX,
                           const double PSI_GY,
                           const int N_ITER, const double THRESH,
-                          const int N_FOLDS, int *const foldid);
+                          const int N_FOLDS, int *const foldid,
+                          const int FOLD_ID_LEN);
 
 extern double *B_;
 extern double *mu_;

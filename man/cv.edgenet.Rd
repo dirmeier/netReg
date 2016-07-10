@@ -45,14 +45,6 @@ An object of class \code{cv.edgenet}
 \description{
 Use convex optimization to find the optimal set of parameters for edgenet.
 }
-\details{
-you can provide starting values for the three regularization parameters, in this case no optimization of those will be done
-\itemize{
- \item{lambda }{}
- \item{psigx }{}
- \item{psigy }{}
-}
-}
 \examples{
 \dontrun{
 X <- matrix(rnorm(100*10),100,10)

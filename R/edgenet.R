@@ -130,6 +130,7 @@ function
   if (all(G.X == 0)) psigx <- 0
   if (all(G.Y == 0)) psigy <- 0
   if (q == 1)        psigy <- 0
+  family <- match.arg(family)
   # estimate coefficients
   ret <- .fit(X=X, Y=Y, 
               G.X=G.X, G.Y=G.Y,
@@ -157,7 +158,6 @@ function
   n <- dim(X)[1]                              
   p <- dim(X)[2]     
   q <- dim(Y)[2]
-  family = match.arg(family)
   # make C call to estimate coefficients and posterior networks
   res <- switch(family, 
                 "gaussian"=.gauss.edgenet(X=X, Y=Y, G.X=G.X, G.Y=G.Y,

@@ -1,23 +1,35 @@
-#' Print method for edgenet objects
-#' 
+#' @noRd
 #' @export
-#' 
 #' @author Simon Dirmeier, \email{netreg@@simon-dirmeier.net}
-#' @description Print method for objects of class \emph{edgenet} for easy vizualization of fitted edge-regularized models
-#' 
-#' @param x  an object of class \emph{netreg.graph}
-#' @param ...  further arguments
-print.edgenet <- 
+print.gaussian.edgenet <- 
 function
 (
  x,
  ...
 )
 {
-  cat("\nCall:\n")
+  cat("\nCall: ")
   print(x$call)
   cat("\nCoefficients:\n")
   print(x$coefficients)
   cat("\nIntercept:\n")
   print(x$intercept)
+}
+
+#' @noRd
+#' @export
+#' @author Simon Dirmeier, \email{netreg@@simon-dirmeier.net}
+print.gaussian.cv.edgenet <-
+function
+(
+  x, 
+  ...
+)
+{
+  cat("\nCall: ")
+  print(x$call)
+  cat("\nParameters: ")
+  cat(paste("lambda=", x$lambda, ", psi_gx=", x$psigx, ", psi_gy=", x$psigy, "\n", sep=""))
+  cat("\nFamily: ")
+  cat(x$family, "\n")
 }

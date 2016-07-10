@@ -3,9 +3,12 @@
  * Email: netreg@simon-dirmeier.net
  */
 
+#include <iostream>
+#include <cmath>
 #include <R.h>
 #include <Rinternals.h>
 #include <Rmath.h>
+
 
 #include "edgenet_wrapper.hpp"
 
@@ -69,8 +72,7 @@ SEXP gauss_edgenet(SEXP XS, SEXP YS,
     const int N_ITER = (*INTEGER(niters));
     // get convergence threshold
     const double THRESH = (*REAL(threshs));
-
-    // wrap the data
+    // call wrapper
     do_gauss_edgenet_(X, Y, GX, GY,
                       N, P, Q,
                       LAMBDA, PSI_GX, PSI_GY,
@@ -105,7 +107,7 @@ SEXP gauss_edgenet(SEXP XS, SEXP YS,
     SET_VECTOR_ELT(OS, 0, BS);
     // set second element of list to intercept vector
     SET_VECTOR_ELT(OS, 1, intercept);
-    // release SEXPs for garbage collection (what a stupid feature to need that, why not create vars on stack???)
+    // release SEXPs for garbage collection
     UNPROTECT(prtCnt);
     // return results to R
     return OS;
@@ -113,9 +115,9 @@ SEXP gauss_edgenet(SEXP XS, SEXP YS,
 
 SEXP gauss_cv_edgenet(SEXP XS, SEXP YS, SEXP GXS, SEXP GYS,
                       SEXP ns, SEXP ps, SEXP qs,
-                      SEXP lambs, SEXP psi_gxs, SEXP psi_gys,
+                      SEXP psi_gxs, SEXP psi_gys,
                       SEXP niters, SEXP threshs,
-                      SEXP nfolds, SEXP foldids)
+                      SEXP nfolds, SEXP foldids, SEXP lenfoldids)
 {
     double *X = REAL(XS);
     // cast R response matrix to pointer to double
@@ -124,8 +126,6 @@ SEXP gauss_cv_edgenet(SEXP XS, SEXP YS, SEXP GXS, SEXP GYS,
     double *GX = REAL(GXS);
     // cast R prior matrix for Y to pointer to double
     double *GY = REAL(GYS);
-    // cast R lambda values to pointer to double
-    const double LAMBDA = (*REAL(lambs));
     // get number of samples
     const int N = (*INTEGER(ns));
     // get number of covariables
@@ -143,54 +143,27 @@ SEXP gauss_cv_edgenet(SEXP XS, SEXP YS, SEXP GXS, SEXP GYS,
     const double THRESH = (*REAL(threshs));
     // the number of folds
     const int N_FOLDS = (*INTEGER(nfolds));
-    // the number of folds
+    // the fold assignments (usually not given)
     int *fold_ids = (INTEGER(foldids));
-
-    // wrap the data
+    // the length of the fold_ids array
+    const int FOLDID_LEN = (*INTEGER(lenfoldids));
+    // cakk wraooer
+    std::cout << PSI_GX << std::endl;
+    std::cout << PSI_GY << std::endl;
+    std::cout << FOLDID_LEN << std::endl;
     do_gauss_cv_edgenet_(X, Y, GX, GY,
                          N, P, Q,
-                         LAMBDA, PSI_GX, PSI_GY,
+                         PSI_GX, PSI_GY,
                          N_ITER, THRESH,
-                         N_FOLDS, fold_ids);
+                         N_FOLDS, fold_ids, FOLDID_LEN);
     // protection counter that is needed for not activating garbage collection
     int prtCnt = 0;
-    /*// R object for coefficient matrix
-    SEXP BS = PROTECT(allocMatrix(REALSXP, P, Q));
-    // protect from gc
+    SEXP OS = PROTECT(allocVector(REALSXP, 3));
     prtCnt++;
-    // R object for intercept vector
-    SEXP intercept = PROTECT(allocVector(REALSXP, Q));
-    // protect from gc
-    prtCnt++;
-    double *B = REAL(BS);
-    double *b0 = REAL(intercept);
-    for (int i = 0; i < Q; ++i)
-    {
-        // safe intercepts for R vector
-        b0[i] = mu_[i];
-        for (int j = 0; j < P; ++j)*//**//*
-        {
-            // safe coefficients for R matrix
-            B[j + P * i] = B_[j + P * i];
-        }
-    }*/
-    // create a R list of size 2 that can be returned
-    SEXP OS = PROTECT(allocVector(VECSXP, 11));
-    prtCnt++;
-    // set first element of list to the coef matrix
-    SET_VECTOR_ELT(OS, 0, XS);
-    // set second element of list to intercept vector
-    SET_VECTOR_ELT(OS, 1, YS);
-    SET_VECTOR_ELT(OS, 2, GXS);
-    SET_VECTOR_ELT(OS, 3, GYS);
-    SET_VECTOR_ELT(OS, 4, ns);
-    SET_VECTOR_ELT(OS, 5, ps);
-    SET_VECTOR_ELT(OS, 6, qs);
-    SET_VECTOR_ELT(OS, 7, psi_gys);
-    SET_VECTOR_ELT(OS, 8, psi_gxs);
-    SET_VECTOR_ELT(OS, 9, nfolds);
-    SET_VECTOR_ELT(OS, 10, foldids);
-    // release SEXPs for garbage collection (what a stupid feature to need that, why not create vars on stack???)
+    REAL(OS)[0] = lamb_;
+    REAL(OS)[1] = psi_gx_;
+    REAL(OS)[2] = psi_gy_;
+    // release SEXPs for garbage collection
     UNPROTECT(prtCnt);
     // return results to R
     return OS;

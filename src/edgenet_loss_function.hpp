@@ -36,30 +36,37 @@ namespace netreg
             X_(data_.design()),
             Y_(data.response()),
             nfolds_(static_cast<unsigned long>(cvset.fold_count())),
-            edgenet_()
-        { }
+            edgenet_(),
+            do_psigx(data_.psigx() == -1),
+            do_psigy(data_.psigy() == -1)
+        {
+        }
 
         /**
          * Over-write operator () in order to get functor functionality (object behaves like a function)
          *
          * @param params the free parameters on the objective function
          */
-        double operator()(const dlib::matrix<double> &params) const
+        double operator()(const dlib::matrix<double> &p) const
         {
             std::vector<double> sses(nfolds_);
             // do n-fold cross-validation
             for (int fc = 0; fc < nfolds_; ++fc)
             {
                 cv_fold &fold = cvset_.get_fold(fc);
-                matrix<double> coef = edgenet_.mccd_(data_,
-                                                     params(0),
-                                                     params(1),
-                                                     params(2),
-                                                     params(3),
-                                                     fold);
+                matrix<double> coef;
+                if (do_psigx && do_psigy)
+                    coef = edgenet_.mccd_(data_, p(0), 1.0, p(1), p(2), fold);
+                else if (do_psigy)
+                    coef = edgenet_.mccd_(data_, p(0), 1.0, 0, p(2), fold);
+                else if (do_psigx)
+                    coef = edgenet_.mccd_(data_, p(0), 1.0, p(1), 0, fold);
+                else
+                    coef = edgenet_.mccd_(data_, p(0), 1.0, 0, 0, fold);
                 double err = sse(coef, X_, Y_, fold.test_set());
                 sses[fc] = err;
             }
+
             return std::accumulate(sses.begin(), sses.end(), 0.0)
                    / sses.size();
         }
@@ -72,6 +79,8 @@ namespace netreg
         matrix<double> &Y_;      // response matrix
         int nfolds_;             // number of folds
         const edgenet edgenet_;
+        const bool do_psigx;
+        const bool do_psigy;
     };
 }
 #endif //NETREG_EDGENETLOSSFUNCTION_HPP

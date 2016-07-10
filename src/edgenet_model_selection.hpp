@@ -31,12 +31,7 @@ namespace netreg
         pareto_optimal_point<std::string, double> regularization_path
             (graph_penalized_linear_model_data &data,
              const int nfolds);
-    private:
-        pareto_optimal_point<std::string, double> regularization_path_
-            (graph_penalized_linear_model_data &data,
-             const int nfolds);
-
-        pareto_optimal_point<std::string, double> regularization_path_
+        pareto_optimal_point<std::string, double> regularization_path
             (graph_penalized_linear_model_data &data,
              cv_set &cvset);
     };
