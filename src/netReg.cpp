@@ -147,7 +147,7 @@ SEXP gauss_cv_edgenet(SEXP XS, SEXP YS, SEXP GXS, SEXP GYS,
     int *fold_ids = (INTEGER(foldids));
     // the length of the fold_ids array
     const int FOLDID_LEN = (*INTEGER(lenfoldids));
-    // cakk wraooer
+    // call wrapper
     std::cout << PSI_GX << std::endl;
     std::cout << PSI_GY << std::endl;
     std::cout << FOLDID_LEN << std::endl;

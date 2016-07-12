@@ -64,14 +64,14 @@ Simon Dirmeier, \email{netreg@simon-dirmeier.net}
 }
 \references{
 Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007), 
- Pathwise coordinate optimization. \cr
+ Pathwise coordinate optimization.\cr
  \emph{The Annals of Applied Statistics}\cr \cr
  Friedman J., Hastie T. and Tibshirani R. (2010),
- Regularization Paths for Generalized Linear Models via Coordinate Descent. \cr
- \emph{Journal of statistical software}\cr \cr
- Fu W. J. (1998),  Penalized Regression: The Bridge Versus the Lasso. \cr
- \emph{Journal of computational and graphical statistics}\cr \cr
- Cheng W. and Wang W. (2014), Graph-regularized dual Lasso for robust eQTL mapping. \cr
+ Regularization Paths for Generalized Linear Models via Coordinate Descent.\cr
+ \emph{Journal of Statistical Software}\cr \cr
+ Fu W. J. (1998),  Penalized Regression: The Bridge Versus the Lasso.\cr
+ \emph{Journal of Computational and Graphical Statistics}\cr \cr
+ Cheng W. and Wang W. (2014), Graph-regularized dual Lasso for robust eQTL mapping.\cr
  \emph{Bioinformatics}
 }
 

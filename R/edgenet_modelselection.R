@@ -31,18 +31,19 @@
 #' \item{foldid }{ the vector of fold assignments yoused}
 #' 
 #' @references 
+#' #' @references 
 #'  Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007), 
-#'  Pathwise coordinate optimization. \cr
+#'  Pathwise coordinate optimization.\cr
 #'  \emph{The Annals of Applied Statistics}\cr \cr
 #'  Friedman J., Hastie T. and Tibshirani R. (2010),
 #'  Regularization Paths for Generalized Linear Models via Coordinate Descent. \cr
-#'  \emph{Journal of statistical software}\cr \cr
-#'  Fu W. J. (1998),  Penalized Regression: The Bridge Versus the Lasso. \cr
-#'  \emph{Journal of computational and graphical statistics}\cr \cr
-#'  Cheng W. and Wang W. (2014), Graph-regularized dual Lasso for robust eQTL mapping. \cr
-#'  \emph{Bioinformatics} \cr\cr
+#'  \emph{Journal of Statistical Software}\cr \cr
+#'  Fu W. J. (1998),  Penalized Regression: The Bridge Versus the Lasso.\cr
+#'  \emph{Journal of Computational and Graphical Statistics}\cr \cr
+#'  Cheng W. and Wang W. (2014), Graph-regularized dual Lasso for robust eQTL mapping.\cr
+#'  \emph{Bioinformatics}\cr \cr
 #'  Powell M.J.D. (2009), 
-#'  The BOBYQA algorithm for bound constrained optimization without derivatives. \cr
+#'  The BOBYQA algorithm for bound constrained optimization without derivatives.\cr
 #'  \url{http://www.damtp.cam.ac.uk/user/na/NA_papers/NA2009_06.pdf}
 #'
 #' @examples
@@ -124,7 +125,6 @@ cv.edgenet.default <-
   if (any(G.X < 0))  stop("Some elements G.X<0; please use non-negative matrix!")
   if (any(G.Y < 0))  stop("Some elements G.Y<0; please use non-negative matrix!")
   # check if some parameters have values
-  family <-  match.arg(family)
   if (!is.null(foldid) & is.numeric(foldid)) 
   {
     nfolds <- max(foldid)
@@ -136,6 +136,7 @@ cv.edgenet.default <-
   if (all(G.X == 0)) psigx <- 0
   if (all(G.Y == 0)) psigy <- 0
   if (q == 1)        psigy <- 0
+  family <-  match.arg(family)
   # estimate shrinkage parameters
   ret <- .cv(X=X, Y=Y, 
              G.X=G.X, G.Y=G.Y,
@@ -145,7 +146,7 @@ cv.edgenet.default <-
              nfolds=nfolds,
              foldid=foldid)    
   ret$call <- match.call()
-  class(ret) <- c("cv.edgenet", class(ret))
+  class(ret) <- c(class(ret), "cv.edgenet")
   ret
 }
 

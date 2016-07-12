@@ -35,14 +35,14 @@
 #' 
 #' @references 
 #'  Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007), 
-#'  Pathwise coordinate optimization. \cr
+#'  Pathwise coordinate optimization.\cr
 #'  \emph{The Annals of Applied Statistics}\cr \cr
 #'  Friedman J., Hastie T. and Tibshirani R. (2010),
-#'  Regularization Paths for Generalized Linear Models via Coordinate Descent. \cr
-#'  \emph{Journal of statistical software}\cr \cr
-#'  Fu W. J. (1998),  Penalized Regression: The Bridge Versus the Lasso. \cr
-#'  \emph{Journal of computational and graphical statistics}\cr \cr
-#'  Cheng W. and Wang W. (2014), Graph-regularized dual Lasso for robust eQTL mapping. \cr
+#'  Regularization Paths for Generalized Linear Models via Coordinate Descent.\cr
+#'  \emph{Journal of Statistical Software}\cr \cr
+#'  Fu W. J. (1998),  Penalized Regression: The Bridge Versus the Lasso.\cr
+#'  \emph{Journal of Computational and Graphical Statistics}\cr \cr
+#'  Cheng W. and Wang W. (2014), Graph-regularized dual Lasso for robust eQTL mapping.\cr
 #'  \emph{Bioinformatics}
 #'
 #' @examples
@@ -137,10 +137,9 @@ function
               lambda=lambda,
               psigx=psigx, psigy=psigy,
               thresh=thresh, maxit=maxit,
-              family=family,
-              ...)    
+              family=family)    
   ret$call <- match.call()    
-  class(ret) <- c("edgenet", class(ret))
+  class(ret) <- c(class(ret), "edgenet")
   ret
 }
 
@@ -151,8 +150,7 @@ function
   X, Y, 
   G.X, G.Y, 
   lambda, psigx, psigy, 
-  thresh, maxit, family,
-  ...
+  thresh, maxit, family
 )
 {
   n <- dim(X)[1]                              
@@ -188,8 +186,11 @@ function
                  as.double(psigx),  as.double(psigy),
                  as.integer(maxit), as.double(thresh), 
                  PACKAGE="netReg")
-  rownames(res$BS) <- colnames(X)
-  colnames(res$BS) <- colnames(Y)
-  class(res) <- "gaussian.edgenet"
-  res
+  coefficients <- res[[1]]
+  intr <- res[[2]]
+  rownames(coefficients) <- colnames(X)
+  colnames(coefficients) <- colnames(Y)
+  ret <- list(coefficients=coefficients, intercept=intr)
+  class(ret) <- "gaussian.edgenet"
+  ret
 }
