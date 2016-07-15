@@ -186,11 +186,15 @@ function
                  as.double(psigx),  as.double(psigy),
                  as.integer(maxit), as.double(thresh), 
                  PACKAGE="netReg")
-  coefficients <- res[[1]]
-  intr <- res[[2]]
+  coefficients <- res$coefficients
+  intr         <- res$intercept
   rownames(coefficients) <- colnames(X)
   colnames(coefficients) <- colnames(Y)
-  ret <- list(coefficients=coefficients, intercept=intr)
+  ret <- list(coefficients=coefficients, 
+              intercept=intr,
+              lambda=lambda,
+              psigx=psigx,
+              psigy=psigy)
   class(ret) <- "gaussian.edgenet"
   ret
 }
