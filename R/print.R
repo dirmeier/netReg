@@ -14,6 +14,12 @@ function
   print(x$coefficients)
   cat("\nIntercept:\n")
   print(x$intercept)
+  cat("Lambda:\n")
+  print(x$lambda)
+  cat("Psi_gx:\n")
+  print(x$psigx)
+  cat("Psi_gy:\n")
+  print(x$psigy)
 }
 
 #' @noRd

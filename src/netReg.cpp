@@ -107,6 +107,13 @@ SEXP gauss_edgenet(SEXP XS, SEXP YS,
     SET_VECTOR_ELT(OS, 0, BS);
     // set second element of list to intercept vector
     SET_VECTOR_ELT(OS, 1, intercept);
+    // create name array
+    SEXP nms = PROTECT(allocVector(STRSXP, 2));
+    prtCnt++;
+    SET_STRING_ELT(nms, 0, mkChar("coefficients"));
+    SET_STRING_ELT(nms, 1, mkChar("intercept"));
+    // assign names to list
+    setAttrib(OS, R_NamesSymbol, nms);
     // release SEXPs for garbage collection
     UNPROTECT(prtCnt);
     // return results to R

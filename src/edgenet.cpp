@@ -15,7 +15,7 @@ namespace netreg
         const int Q = data.response_count();
         matrix<double> &coefficients = data.coefficients();
         matrix<double> oldCoeffs(P, Q);
-        cvector<double> intr = data.intercept();
+        cvector<double> &intr = data.intercept();
         const double THRESH = data.threshold();
         const int N_ITER = data.max_iter();
         int iter = 0;
