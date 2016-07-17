@@ -97,6 +97,8 @@ function
   if (n != dim(Y)[1]) stop("X and Y have not same number of observations!")        
   if (p < 2) stop("Pls use a X matrix with at least 2 covariables!")  
   # check if graphs are valid
+  if (all(G.X == 0)) psigx <- 0
+  if (all(G.Y == 0)) psigy <- 0
   if (psigx != 0 & any(dim(G.X)!=dim(X)[2])) stop("ncol(X) and dim(G.X) do not fit!")
   if (psigy != 0 & any(dim(G.Y)!=dim(Y)[2])) stop("ncol(Y) and dim(G.Y) do not fit!")
   if (lambda < 0) 
