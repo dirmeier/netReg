@@ -1,7 +1,7 @@
 netReg
 ======
 
-![alt tag](http://url/to/img.png)
+![alt tag](https://github.com/rafstraumur/netReg/linreg.png)
 
 
 An R-library for network-regularized generalized linear regression.
