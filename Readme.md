@@ -1,6 +1,6 @@
 
 <h1 align="center">
-<div style="font-family: "Lucida Console", Monaco, monospace;">netReg</div>
+<p style="font-family: "Lucida Console", Monaco, monospace;">netReg</p>
 </h1>
 
 An R-library for network-regularized generalized linear regression.
