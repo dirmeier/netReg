@@ -1,9 +1,10 @@
 
 <h1 align="center">
-<p style="font-family: "Lucida Console", Monaco, monospace;">netReg</p>
+	<p>netReg</p>
 </h1>
-
+<h5>
 An R-library for network-regularized generalized linear regression.
+</h5>
 
 ## Installation
  
