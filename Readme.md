@@ -2,7 +2,8 @@ netReg
 ======
 
 <h1 align="center">
-<img src="./img/linreg.png" alt="linreg"/></h1>
+<img src="./img/linreg.png" alt="linreg" height="42" width="42"/>
+</h1>
 
 An R-library for network-regularized generalized linear regression.
 
