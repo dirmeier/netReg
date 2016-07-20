@@ -1,6 +1,5 @@
 
 <h1 align="center">
-<img src="./img/linreg.png" alt="linreg" height="50" width="50"/>
 netReg
 </h1>
 
