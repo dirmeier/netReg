@@ -1,10 +1,12 @@
-#' Find the optimal parameters for edgenet
+#' Find the optimal shrinkage parameters for edgenet
 #' 
 #' @export
 #' @useDynLib netReg
 #' 
 #' @author Simon Dirmeier, \email{netreg@@simon-dirmeier.net}
-#' @description Use convex optimization to find the optimal set of parameters for edgenet.
+#' 
+#' @description Finds the optimal shrinkage parameters using cross-validation for edgenet. 
+#' We use the BOBYQA algorithm to minimize the sum of squared residuals objective function.
 #'
 #' @param X  input matrix, of dimension (\code{n} x \code{p}) 
 #' where \code{n} is the number of observations and \code{p} is the number 
@@ -31,7 +33,6 @@
 #' \item{foldid }{ the vector of fold assignments yoused}
 #' 
 #' @references 
-#' #' @references 
 #'  Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007), 
 #'  Pathwise coordinate optimization.\cr
 #'  \emph{The Annals of Applied Statistics}\cr \cr
@@ -54,10 +55,6 @@
 #' G.X <- t(G.X) + G.X
 #' diag(G.X) <- 0
 #' cv.edge <- cv.edgenet(X=X, Y=Y, G.X=G.X, family="gaussian")
-#' 
-#' cv.edge.l <- cv.edgenet(X=X, Y=Y, G.X=G.X, lambda=1, family="gaussian")
-#' 
-#' cv.edge.ps <- cv.edgenet(X=X, Y=Y, G.X=G.X, psigx=1, psigy=1, family="gaussian")
 #' }
 cv.edgenet <-
 function
@@ -96,22 +93,18 @@ cv.edgenet.default <-
   n <- dim(X)[1]
   p <- dim(X)[2]
   q <- dim(Y)[2]
-  if (is.null(G.X)) 
-  {
-    G.X <- matrix(0, 1, 1)
-  }
+  if (is.null(G.X)) G.X <- matrix(0, 1, 1)
   if (!is.matrix(G.X)) stop("GX is no matrix!")
-  if (is.null(G.Y)) 
-  {
-    G.Y <- matrix(0, 1, 1)
-  }
+  if (is.null(G.Y)) G.Y <- matrix(0, 1, 1)
   if (!is.matrix(G.Y)) stop("GY is no matrix!")
   # check if X and Y are valid
   if (n != dim(Y)[1]) stop("X and Y have not same number of observations!")        
   if (p < 2) stop("Pls use a X matrix with at least 2 covariables!")  
   # check if graphs are valid
-  if (any(dim(G.X) != dim(X)[2])) stop("ncol(X) and dim(G.X) do not fit!")
-  if (any(dim(G.Y) != dim(Y)[2])) stop("ncol(Y) and dim(G.Y) do not fit!")
+  if (all(G.X == 0)) psigx <- 0
+  if (all(G.Y == 0)) psigy <- 0
+  if (psigx != 0 & any(dim(G.X)!=dim(X)[2])) stop("ncol(X) and dim(G.X) do not fit!")
+  if (psigy != 0 & any(dim(G.Y)!=dim(Y)[2])) stop("ncol(Y) and dim(G.Y) do not fit!")
   if (maxit < 0)
   {
     warning("maxit < 0, setting to 1e5!")

@@ -7,9 +7,8 @@
 
 #include <string>
 #include <vector>
-
+#include <iostream>
 #include "../inst/dlib/optimization.h"
-#include "pareto_optimal_point.hpp"
 #include "graph_penalized_linear_model_data.hpp"
 #include "cv_set.hpp"
 #include "edgenet_loss_function.hpp"
@@ -43,20 +42,22 @@ namespace netreg
          * @param niter maximum calls to the loss function
          */
         template<typename loss_function>
-        void bobyqa
-            (pareto_optimal_point<std::string, double> &point,
-             graph_penalized_linear_model_data &data, cv_set &cvset,
+        std::vector<double> bobyqa
+            (graph_penalized_linear_model_data &data,
+             cv_set &cvset,
+             std::vector<double> &start,
              std::vector<double> &lower_bound,
              std::vector<double> &upper_bound,
-             const double radius_start, const double radius_stop,
+             const double radius_start,
+             const double radius_stop,
              const int niter)
         {
-            int sz = static_cast<int>(point.npar());
+            int sz = static_cast<int>(start.size());
             // convert to dlib objects
             dlib::matrix<double> par(sz, 1), lb(sz, 1), ub(sz, 1);
             for (int i = 0; i < sz; ++i)
             {
-                par(i, 0) = point[i].second;
+                par(i, 0) = start[i];
                 lb(i, 0) = lower_bound[i];
                 ub(i, 0) = upper_bound[i];
             }
@@ -72,9 +73,8 @@ namespace netreg
                 niter
             );
             for (int i = 0; i < sz; ++i)
-            {
-                point[i].second = par(i, 0);
-            }
+                start[i] = par(i, 0);
+            return start;
         }
     };
 }

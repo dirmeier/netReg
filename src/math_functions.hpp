@@ -41,24 +41,13 @@ namespace netreg
                     const double norm);
 
     /**
-     * Calculate the sum of the absolute differences between two matrices
+     * Returns the maximal element of a ptr
      *
-     * @param m1 a matrix object
-     * @param m2 a matrix object
-     * @return returns the sum of absolute differences
-     */
-    double abs_sum(matrix<double> &m1, matrix<double> &m2);
-
-    /**
-     * Calculate the sum of the absolute differences between two columns of two matrices
+     * @param ptr the pointer for which the maximum should be found
+     * @param len length of the pointer
      *
-     * @param m1 a matrix object
-     * @param m2 a matrix object
-     * @param col_idx the index of the columns
-     * @return returns the sum of absolute differences
+     * @return return the maximal element
      */
-    double abs_sum(matrix<double> &source1, matrix<double> &source2,
-                   const int col_idx);
-
+    template <typename T> T max_element(T *const ptr, int len);
 }
 #endif //NETREG_MATH_HPP

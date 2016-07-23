@@ -101,8 +101,6 @@ namespace netreg
         {
             return LY;
         }
-
-    protected:
         const double psi_gx;  // Penalization vector for GX
         const double psi_gy;  // Penalization vector for GY
         matrix<double> GX;    // prior graph for the design matrix

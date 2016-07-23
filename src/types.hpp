@@ -17,6 +17,7 @@ template<class T>
 using cvector = arma::Col<T>;
 template<class T>
 using rvector = arma::Row<T>;
+using index_vector = arma::uvec;
 #endif //NETREG_TYPES_HPP
 
 

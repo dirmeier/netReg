@@ -64,6 +64,17 @@ namespace netreg
              matrix<double> &trainTXX,
              matrix<double> &trainTXY) const;
 
+        void uccd_
+            (const int P, const int Q,
+             const double thresh, const int niter,
+             const double lambda, const double alpha,
+             const double psigx, const double psigy,
+             matrix<double> &TXX, matrix<double> &TXY,
+             matrix<double> &LX, matrix<double> &LY,
+             matrix<double> &coef,
+             matrix<double> &old_coef,
+             const int qi) const;
+
     private:
         /**
          * Updates the softthresholding parameter and the normalization

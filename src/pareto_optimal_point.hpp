@@ -21,6 +21,10 @@ namespace netreg
     class pareto_optimal_point
     {
     public:
+
+
+        pareto_optimal_point(): entry_(){ }
+
         /**
          * Add a pareto optimal value to the set.
          */
@@ -35,11 +39,9 @@ namespace netreg
          *
          * @return name-value pair
          */
-        std::pair <T, U> &operator[](const int idx)
+        double &operator[](const int idx)
         {
-            entry_.first = keys_[idx];
-            entry_.second = values_[idx];
-            return entry_;
+            return values_[idx];
         }
 
         /**
@@ -47,7 +49,7 @@ namespace netreg
          *
          * @return the number of parameters
          */
-        int npar()
+        size_t npar()
         {
             return values_.size();
         }
@@ -55,7 +57,6 @@ namespace netreg
     private:
         std::vector <T> keys_;   // names of the values
         std::vector <U> values_; // minimal values
-        std::pair <T, U> entry_; // a single name-value pair instantiated in order to avoid constant reallocation.
     };
 
 }

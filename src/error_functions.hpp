@@ -25,6 +25,6 @@ namespace netreg
     double sse(matrix<double> &B,
                matrix<double> &X,
                matrix<double> &Y,
-               std::vector<int> &test_set);
+               index_vector &test_set);
 }
 #endif //SRC_ERROR_FUNCTIONS_HPP

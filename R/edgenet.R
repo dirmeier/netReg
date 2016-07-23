@@ -4,6 +4,7 @@
 #' @useDynLib netReg
 #' 
 #' @author Simon Dirmeier, \email{netreg@@simon-dirmeier.net}
+#' 
 #' @description  Fit a graph-regularized linear regression model using edge-penalization.
 #' The coefficients are computed using graph-prior knowledge in the form of 
 #' one/two affinity matrices. Graph-regularization is an extension to previously 
@@ -106,7 +107,6 @@ function
     warning("lambda < 0, setting to 0!")
     lambda <- 0
   }
-  # TODO
   if (psigx < 0)
   {
     warning("psigx < 0, setting to 0!")
@@ -129,8 +129,6 @@ function
   }
   if (any(G.X < 0))  stop("Some elements G.X<0; please use non-negative matrix!")
   if (any(G.Y < 0))  stop("Some elements G.Y<0; please use non-negative matrix!")  
-  if (all(G.X == 0)) psigx <- 0
-  if (all(G.Y == 0)) psigy <- 0
   if (q == 1)        psigy <- 0
   family <- match.arg(family)
   # estimate coefficients

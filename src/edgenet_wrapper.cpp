@@ -17,18 +17,17 @@
 
 void do_gauss_edgenet_(double *const X, double *const Y,
                        double *const GX, double *const GY,
-                       const int N, const int P, const int Q,
-                       const double LAMBDA, const double PSI_GX,
-                       const double PSI_GY,
-                       const int N_ITER, const double THRESH)
+                       const int n, const int p, const int q,
+                       const double lambda,
+                       const double psigx, const double psigy,
+                       const int n_iter, const double thresh)
 {
     netreg::graph_penalized_linear_model_data data(X, Y,
                                                    GX, GY,
-                                                   N, P, Q,
-                                                   LAMBDA, 1.0, PSI_GX,
-                                                   PSI_GY,
-                                                   N_ITER, THRESH);
-    // create an edgenet object and fit the model
+                                                   n, p, q,
+                                                   lambda, 1.0,
+                                                   psigx, psigy,
+                                                   n_iter, thresh);
     netreg::edgenet e;
     e.run(data);
     B_ = data.coefficients().begin();
@@ -37,24 +36,25 @@ void do_gauss_edgenet_(double *const X, double *const Y,
 
 void do_gauss_cv_edgenet_(double *const X, double *const Y,
                           double *const GX, double *const GY,
-                          const int N, const int P, const int Q,
-                          const double PSI_GX, const double PSI_GY,
-                          const int N_ITER, const double THRESH,
-                          const int N_FOLDS, int *const foldid,
-                          const int FOLD_ID_LEN)
+                          const int n, const int p, const int q,
+                          const double psigx, const double psigy,
+                          const int n_iter, const double thresh,
+                          const int n_folds, int *const foldid,
+                          const int n_foldid)
 {
     netreg::graph_penalized_linear_model_data data(X, Y,
                                                    GX, GY,
-                                                   N, P, Q,
+                                                   n, p, q,
                                                    -1, 1.0,
-                                                   PSI_GX, PSI_GY,
-                                                   N_ITER, THRESH);
-    if (FOLD_ID_LEN == 1)
-    {
-        //netreg::edgenet_model_selection e;
-        //e.regularization_path(data, N_FOLDS);
-    }
-    lamb_ = 1;
-    psi_gx_ = 2;
-    psi_gy_ = 3;
+                                                   psigx, psigy,
+                                                   n_iter, thresh);
+    netreg::edgenet_model_selection e;
+    std::vector<double> pop;
+    if (n_foldid == n)
+        pop = e.regularization_path(data, foldid);
+    else
+        pop = e.regularization_path(data, n_folds);
+    lamb_ = pop[0];
+    psi_gx_ = pop[1];
+    psi_gy_ = pop[2];
 }

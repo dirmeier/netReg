@@ -2,7 +2,7 @@
 % Please edit documentation in R/edgenet_modelselection.R
 \name{cv.edgenet}
 \alias{cv.edgenet}
-\title{Find the optimal parameters for edgenet}
+\title{Find the optimal shrinkage parameters for edgenet}
 \usage{
 cv.edgenet(X, Y, G.X = NULL, G.Y = NULL, thresh = 1e-05, maxit = 1e+05,
   family = c("gaussian"), nfolds = 10, foldid = NULL, ...)
@@ -43,7 +43,8 @@ An object of class \code{cv.edgenet}
 \item{foldid }{ the vector of fold assignments yoused}
 }
 \description{
-Use convex optimization to find the optimal set of parameters for edgenet.
+Finds the optimal shrinkage parameters using cross-validation for edgenet. 
+We use the BOBYQA algorithm to minimize the sum of squared residuals objective function.
 }
 \examples{
 \dontrun{
@@ -63,8 +64,7 @@ cv.edge.ps <- cv.edgenet(X=X, Y=Y, G.X=G.X, psigx=1, psigy=1, family="gaussian")
 Simon Dirmeier, \email{netreg@simon-dirmeier.net}
 }
 \references{
-#' @references 
- Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007), 
+Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007), 
  Pathwise coordinate optimization.\cr
  \emph{The Annals of Applied Statistics}\cr \cr
  Friedman J., Hastie T. and Tibshirani R. (2010),

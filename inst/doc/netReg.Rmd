@@ -1,0 +1,61 @@
+---
+title: "netReg Vignette"
+author: "Simon Dirmeier"
+date: "2015-05-15"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{netReg}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+<b>netReg</b> is a package for graph-regularized linear regression. We will shortly give a tutorial for using netReg. 
+
+## Tutorial
+
+At first we generate some toy data randomly:
+```{r}
+X <- matrix(rnorm(100*5),100)
+Y <- matrix(rnorm(100*5),100)
+```
+Then we load the `netReg` library
+```{r}
+library(netReg)
+```
+
+For `edgenet` we need to create an affinity matrix for the co-variables first. We also can create a graph for the responses, but this is not necessary to demonstrate the method. We could create a random graph like this:
+```{r}
+aff.mat <- matrix(rpois(5*5, 1),5) * abs(rnorm(5*5))
+aff.mat <- t(aff.mat) + aff.mat
+diag(aff.mat) <- 0
+```
+We created the affinity matrix absolutely random, although in practice a <i>real</i> (biological) observed affinity matrix should be used, because in the end the affinity matrix decides the shrinkage of the coefficients. 
+
+The fit using edge-based regularization is done with:
+```{r}
+fit <- edgenet(X=X, Y=Y, G.X=aff.mat, lambda=1, psigx=1, family="gaussian")
+```
+The `fit` object contains information about coefficients, intercepts, residuals, etc. (however to sd for the coefficients).
+
+Having the coefficients estimated we are able to predict novel data-sets:
+```{r}
+X.new <-  matrix(rnorm(10*5),10)
+pred <- predict(fit, X.new)
+```
+The `pred` objects contains the predicted values for the responses.
+
+
+## References
+
+<p>Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007), Pathwise coordinate optimization.<br>
+  <i>The Annals of Applied Statistics</i>
+</p>  
+<p>Friedman J., Hastie T. and Tibshirani R. (2010), Regularization Paths for Generalized Linear Models via Coordinate Descent.<br>
+  <i>Journal of statistical software</i>
+</p>
+<p>Fu W. J. (1998), Penalized Regression: The Bridge Versus the Lasso.<br>
+  <i>Journal of computational and graphical statistics</i>
+</p>
+<p>Cheng W. and Wang W. (2014), Graph-regularized dual Lasso for robust eQTL mapping.<br>
+  <i>Bioinformatics</i>
+</p>

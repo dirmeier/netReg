@@ -9,7 +9,6 @@
 #include <Rinternals.h>
 #include <Rmath.h>
 
-
 #include "edgenet_wrapper.hpp"
 
 /**
@@ -120,6 +119,24 @@ SEXP gauss_edgenet(SEXP XS, SEXP YS,
     return OS;
 }
 
+/**
+ * Implementation of cross-validation for Edgenet. Finds and returns the optimal shrinkage values given a specific data-set.
+ *
+ * @param XS the (ns x ps)-dimensional design matrix
+ * @param YS the (ns x qs)-dimensional response matrix
+ * @param GXS the (ps x ps)-prior graph for XS
+ * @param GYS the (qs x qs)-prior graph for YS
+ * @param ns number of observations/samples/rows
+ * @param ps number of covariates
+ * @param qs number of responses
+ * @param psi_gxs weighting value of GX
+ * @param psi_gys weighting value of GY
+ * @param niters max number of iterations if parameter estimation does not converge in time
+ * @param threshs convergence threshold
+ * @param nfolds the number of cross-validation sets created (as in k-fold cv)
+ * @param foldids integer vector of assignments of observations to folds (i.e. vector of ns elements,  \in {1, ..., nfolds}
+ * @param lenfoldids length of the vector above
+ */
 SEXP gauss_cv_edgenet(SEXP XS, SEXP YS, SEXP GXS, SEXP GYS,
                       SEXP ns, SEXP ps, SEXP qs,
                       SEXP psi_gxs, SEXP psi_gys,
@@ -155,9 +172,6 @@ SEXP gauss_cv_edgenet(SEXP XS, SEXP YS, SEXP GXS, SEXP GYS,
     // the length of the fold_ids array
     const int FOLDID_LEN = (*INTEGER(lenfoldids));
     // call wrapper
-    std::cout << PSI_GX << std::endl;
-    std::cout << PSI_GY << std::endl;
-    std::cout << FOLDID_LEN << std::endl;
     do_gauss_cv_edgenet_(X, Y, GX, GY,
                          N, P, Q,
                          PSI_GX, PSI_GY,

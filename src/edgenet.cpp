@@ -13,8 +13,8 @@ namespace netreg
     {
         const int P = data.covariable_count();
         const int Q = data.response_count();
-        matrix<double> &coefficients = data.coefficients();
-        matrix<double> oldCoeffs(P, Q);
+        matrix<double> &coef = data.coefficients();
+        matrix<double> old_coef(P, Q);
         cvector<double> &intr = data.intercept();
         const double THRESH = data.threshold();
         const int N_ITER = data.max_iter();
@@ -23,20 +23,19 @@ namespace netreg
         {
             // TODO is this parallizable, guess not
             for (int qi = 0; qi < Q; ++qi)
-                uccd_(data, coefficients, oldCoeffs, qi);
+                uccd_(data, coef, old_coef, qi);
         }
 
-        while (netreg::abs_sum(coefficients, oldCoeffs) > THRESH &&
+        while (arma::accu(arma::abs(coef - old_coef)) > THRESH &&
                iter++ < N_ITER);
         // calculate intercepts of the linear model
-        intr = intercept(data.design(), data.response(),
-                                 coefficients);
+        intr = intercept(data.design(), data.response(), coef);
     }
 
     void edgenet::uccd_
         (graph_penalized_linear_model_data &data,
-         matrix<double> &coefficients,
-         matrix<double> &oldCoeffs,
+         matrix<double> &coef,
+         matrix<double> &old_coef,
          const int qi)
     {
         const int P = data.covariable_count();
@@ -65,35 +64,99 @@ namespace netreg
             for (int pi = 0; pi < P; ++pi)
             {
                 // safe current estimate of coefficients
-                oldCoeffs(pi, qi) = coefficients(pi, qi);
+                old_coef(pi, qi) = coef(pi, qi);
                 double s = 0.0;
                 double norm = 0.0;
                 set_params
-                    (s, norm, TXX, TXY, coefficients,
+                    (s, norm, TXX, TXY, coef,
                      LX, LY, P, Q, pi, qi, PSI_GX, PSI_GY, false);
                 // soft-thresholded version of estimate
-                coefficients(pi, qi) = softnorm(s, lalph,
-                                                        enorm * norm);
+                coef(pi, qi) = softnorm(s, lalph, enorm * norm);
             }
         }
-        while (abs_sum(coefficients, oldCoeffs, qi) > THRESH &&
-               iter++ < N_ITER);
+        while (
+            arma::accu(arma::abs(coef.col(qi) - old_coef.col(qi))) > THRESH &&
+            iter++ < N_ITER);
+    }
+
+    void edgenet::uccd_
+        (const int P, const int Q,
+         const double thresh, const int niter,
+         const double lambda, const double alpha,
+         const double psigx, const double psigy,
+         matrix<double> &TXX, matrix<double> &TXY,
+         matrix<double> &LX, matrix<double> &LY,
+         matrix<double> &coef,
+         matrix<double> &old_coef,
+         const int qi) const
+    {
+
+
+//        std::cout << std::endl;
+//        for (int i = 0; i < TXX.n_rows; ++i)
+//        {
+//            for (int j = 0; j < TXX.n_cols; ++j)
+//            {
+//                std::cout << TXX(i, j) << " ";
+//            }
+//            std::cout << std::endl;
+//        }
+//        std::cout << std::endl;
+//        for (int i = 0; i < TXY.n_rows; ++i)
+//        {
+//            for (int j = 0; j < TXY.n_cols; ++j)
+//            {
+//                std::cout << TXY(i, j) << " ";
+//            }
+//            std::cout <<std::endl;
+//        }
+//        std::cout <<  std::endl;
+
+        // weighted penalization param of Elastic-net
+        const double lalph = alpha * lambda;
+        // normalization for soft-thresholding
+        const double enorm = 1.0 + lambda * (1 - alpha);
+        // iteration counter
+        int iter = 0;
+        // do while estimation of params does not converge
+        do
+        {
+            // fix bnew_i and calculate least-squares
+            // coefficient on partial residual
+            for (int pi = 0; pi < P; ++pi)
+            {
+                // safe current estimate of coefficients
+                old_coef(pi, qi) = coef(pi, qi);
+                double s = 0.0;
+                double norm = 0.0;
+                set_params
+                    (s, norm, TXX, TXY, coef,
+                     LX, LY, P, Q, pi, qi, psigx, psigy, false);
+                // soft-thresholded version of estimate
+                coef(pi, qi) = softnorm(s, lalph, enorm * norm);
+            }
+        }
+        while (
+            arma::accu(arma::abs(coef.col(qi) - old_coef.col(qi))) > thresh &&
+            iter++ < niter);
     }
 
     void edgenet::set_params
         (double &s, double &norm,
          matrix<double> &TXX, matrix<double> &TXY,
-         matrix<double> &coefficients,
-         matrix<double> &LX, matrix<double> &LY,
+         matrix<double> &coef,
+         matrix<double> &LX,
+         matrix<double> &LY,
          const int P, const int Q,
          const int pi, const int qi,
-         const double PSI_GX, const double PSI_GY,
+         const double psigx,
+         const double psigy,
          const bool lower) const
     {
-        s = pls(TXX, TXY, coefficients, pi, qi, P, lower);
+        s = pls(TXX, TXY, coef, pi, qi, P, lower);
         norm = (TXX)(pi, pi);
-        graph_penalize(s, norm, PSI_GX, PSI_GY,
-                       LX, LY, coefficients,
+        graph_penalize(s, norm, psigx, psigy,
+                       LX, LY, coef,
                        P, Q, pi, qi);
     }
 
@@ -140,40 +203,67 @@ namespace netreg
     }
 
     matrix<double> edgenet::mccd_(graph_penalized_linear_model_data &data,
-                                 const double lambda,
-                                 const double alpha, const double psigx,
-                                 const double psigy, cv_fold &fold) const
+                                  const double lambda, const double alpha,
+                                  const double psigx, const double psigy,
+                                  cv_fold &fold) const
     {
         const int P = data.covariable_count();
         const int Q = data.response_count();
-        matrix<double> coefficients(P, Q, arma::fill::ones);
-        matrix<double> oldCoeffs(P, Q);
-        const double THRESH = data.threshold();
-        const int N_ITER = data.max_iter();
-        // X' %*% Y
-        matrix<double> trainTXY(P, Q, arma::fill::zeros);
-        // X'X
-        matrix<double> trainTXX(P, P, arma::fill::zeros);
+        matrix<double> coef(P, Q, arma::fill::ones);
+        matrix<double> old_coef(P, Q);
+        const double thresh = data.threshold();
+        const int niter = data.max_iter();
+        matrix<double> &X = data.design();
+        matrix<double> &Y = data.response();
+        matrix<double> &LX = data.lx();
+        matrix<double> &LY = data.ly();
+        index_vector &trainIdxs = fold.train_set();
+        index_vector &testIdxs = fold.test_set();
+        matrix<double> Xtrain = X.rows(trainIdxs);
+        matrix<double> Ytrain = Y.rows(trainIdxs);
+        matrix<double> TXtrain = Xtrain.t();
+        matrix<double> train_txx = TXtrain * Xtrain;
+        matrix<double> train_txy = TXtrain * Ytrain;
+
+//        std::cout <<  "full" << std::endl;
+//        for (int i = 0; i < data.txx().n_rows; ++i)
+//        {
+//            for (int j = 0; j < data.txx().n_cols; ++j)
+//            {
+//                std::cout << data.txx()(i, j) << " ";
+//            }
+//            std::cout << std::endl;
+//        }
+//        std::cout << std::endl;
+//        for (int i = 0; i < Ytrain.n_rows; ++i)
+//        {
+//            for (int j = 0; j < Ytrain.n_cols; ++j)
+//            {
+//                std::cout << Ytrain(i, j) << " ";
+//            }
+//            std::cout << std::endl;
+//        }
+//        std::cout << std::endl;
+
         int iter = 0;
         do
         {
             // TODO is this parallizable? think not
             for (int qi = 0; qi < Q; ++qi)
             {
-                uccd_(data, coefficients, oldCoeffs, lambda, alpha, psigx,
-                      psigy,
-                      fold, qi, trainTXX, trainTXY);
+                uccd_(P, Q, thresh, niter, lambda, alpha, psigx, psigy,
+                      train_txx, train_txy, LX, LY, coef, old_coef, qi);
             }
         }
-        while (abs_sum(coefficients, oldCoeffs) > THRESH &&
-               iter++ < N_ITER);
+        while (arma::accu(arma::abs(coef - old_coef)) > thresh &&
+               iter++ < niter);
 
-        return coefficients;
+        return coef;
     }
 
     void edgenet::uccd_
         (graph_penalized_linear_model_data &data,
-         matrix<double> &cfs, matrix<double> &o_cfs,
+         matrix<double> &coef, matrix<double> &old_coef,
          const double lamb, const double alph, const double psigx,
          const double psigy, cv_fold &fold, int qi,
          matrix<double> &trainTXX, matrix<double> &trainTXY) const
@@ -194,9 +284,13 @@ namespace netreg
         const double enorm = 1.0 + lamb * (1 - alph);
         // iteration counter
         // the vector of training indexes of the current fold
-        std::vector<int> &trainIdxs = fold.train_set();
+        index_vector &trainIdxs = fold.train_set();
         // the vector of testing indexed of the current fold
-        std::vector<int> &testIdxs = fold.test_set();
+        index_vector &testIdxs = fold.test_set();
+
+        matrix<double> train_txx;
+        matrix<double> train_txy;
+
         // boolean whether we calculate everything by hand or take the precomputed value
         bool isComputed = false;
         int iter = 0;
@@ -207,29 +301,41 @@ namespace netreg
             // coefficient on partial residual
             for (int pi = 0; pi < P; ++pi)
             {
-                o_cfs(pi, qi) = cfs(pi, qi);
+                old_coef(pi, qi) = coef(pi, qi);
                 double norm = 0.0;
                 double s = 0.0;
                 if (!isComputed)
                 {
-                    // make some docu here
-                    // computes s and norm and sets up matrices
-                    preset_params(s, norm, TXX, TXY, trainTXX, trainTXY,
-                                  trainIdxs, testIdxs, cfs, X, Y, LX, LY,
-                                  pi, qi, psigx, psigy, P, Q);
-                    isComputed = pi == P - 1;
+//                    // make some docu here
+////                    // computes s and norm and sets up matrices
+//                    preset_params(s, norm, TXX, TXY, trainTXX, trainTXY,
+//                                  trainIdxs, testIdxs, coef, X, Y, LX, LY,
+//                                  pi, qi, psigx, psigy, P, Q);
+//                    isComputed = pi == P - 1;
+//                    std::cout << "\n";
+                    for (int i = 0; i < P; ++i)
+                    {
+                        for (int j = 0; j < Q; ++j)
+                        {
+                            std::cout << trainTXY(i, j) << " ";
+                        }
+                        std::cout << "\n";
+                    }
+                    std::cout << "\n";
+
                 }
-                else
-                    set_params
-                        (s, norm, TXX, TXY, cfs,
-                         LX, LY, P, Q, pi, qi, psigx, psigy, true);
+//                else
+//                    set_params
+//                        (s, norm, trainTXX, trainTXY, coef,
+//                         LX, LY, P, Q, pi, qi, psigx, psigy, true);
 
                 // soft-thresholded version of estimate
-                cfs(pi, qi) = softnorm(s, lalph, enorm * norm);
+                coef(pi, qi) = softnorm(s, lalph, enorm * norm);
             }
         }
-        while (abs_sum(cfs, o_cfs, qi) > THRESH &&
-               iter++ < N_ITER);
+        while (
+            arma::accu(arma::abs(coef.col(qi) - old_coef.col(qi))) > THRESH &&
+            iter++ < N_ITER);
     }
 
     void edgenet::preset_params

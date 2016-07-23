@@ -5,6 +5,8 @@
 
 #include "stat_functions.hpp"
 
+#include <iostream>
+
 namespace netreg
 {
     cvector<double> intercept(matrix<double> &X, matrix<double> &Y,
@@ -58,6 +60,29 @@ namespace netreg
                const int P,
                const bool lower)
     {
+//        std::cout << "lower" << lower << std::endl;
+//        std::cout << "pi" << pi << std::endl;
+//        std::cout << "qi" << qi << std::endl;
+//        std::cout << "P" << P << std::endl;
+//        for (int i = 0; i < TXX.n_rows; ++i)
+//        {
+//            for (int j = 0; j < TXX.n_cols; ++j)
+//            {
+//                std::cout << TXX(i, j) << " ";
+//            }
+//            std::cout <<  "\n";
+//        }
+//        std::cout <<  "\n";
+//        for (int i = 0; i < TXY.n_rows; ++i)
+//        {
+//            for (int j = 0; j < TXY.n_cols; ++j)
+//            {
+//                std::cout << TXY(i, j) << " ";
+//            }
+//            std::cout <<  "\n";
+//        }
+//        std::cout <<  "\n";
+
         if (lower)
             return l_pls(TXX, TXY, cfs, pi, qi, P);
         else

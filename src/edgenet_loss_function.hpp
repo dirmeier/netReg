@@ -8,6 +8,8 @@
 #endif
 #include <armadillo>
 
+#include <iostream>
+
 #include "types.hpp"
 #include "edgenet.hpp"
 #include "graph_penalized_linear_model_data.hpp"
@@ -30,17 +32,17 @@ namespace netreg
          * @param cvset a cross-validation set
          */
         edgenet_loss_function
-            (graph_penalized_linear_model_data &data, cv_set &cvset) :
+            (graph_penalized_linear_model_data &data,
+             cv_set &cvset):
             data_(data),
             cvset_(cvset),
-            X_(data_.design()),
+            X_(data.design()),
             Y_(data.response()),
-            nfolds_(static_cast<unsigned long>(cvset.fold_count())),
+            nfolds_(static_cast<int>(cvset.fold_count())),
             edgenet_(),
-            do_psigx(data_.psigx() == -1),
-            do_psigy(data_.psigy() == -1)
-        {
-        }
+            do_psigx_(data.psigx() == -1),
+            do_psigy_(data.psigy() == -1)
+        { }
 
         /**
          * Over-write operator () in order to get functor functionality (object behaves like a function)
@@ -55,20 +57,24 @@ namespace netreg
             {
                 cv_fold &fold = cvset_.get_fold(fc);
                 matrix<double> coef;
-                if (do_psigx && do_psigy)
-                    coef = edgenet_.mccd_(data_, p(0), 1.0, p(1), p(2), fold);
-                else if (do_psigy)
-                    coef = edgenet_.mccd_(data_, p(0), 1.0, 0, p(2), fold);
-                else if (do_psigx)
-                    coef = edgenet_.mccd_(data_, p(0), 1.0, p(1), 0, fold);
+                if (do_psigx_ && do_psigy_)
+                    coef = edgenet_.mccd_(data_, p(0, 0), 1.0, p(1, 0), p(2, 0), fold);
+                else if (do_psigy_)
+                    coef = edgenet_.mccd_(data_, p(0, 0), 1.0, 0, p(2, 0), fold);
+                else if (do_psigx_)
+                    coef = edgenet_.mccd_(data_, p(0, 0), 1.0, p(1, 0), 0, fold);
                 else
-                    coef = edgenet_.mccd_(data_, p(0), 1.0, 0, 0, fold);
+                {
+                    std::cout << "YES" << "\n";
+                    coef = edgenet_.mccd_(data_, p(0, 0), 1.0, 0, 0, fold);
+                }
+                // TODO this is wring
                 double err = sse(coef, X_, Y_, fold.test_set());
                 sses[fc] = err;
             }
 
-            return std::accumulate(sses.begin(), sses.end(), 0.0)
-                   / sses.size();
+            return std::accumulate(sses.begin(), sses.end(), 0.0) /
+                   sses.size();
         }
 
     private:
@@ -79,8 +85,8 @@ namespace netreg
         matrix<double> &Y_;      // response matrix
         int nfolds_;             // number of folds
         const edgenet edgenet_;
-        const bool do_psigx;
-        const bool do_psigy;
+        const bool do_psigx_;
+        const bool do_psigy_;
     };
 }
 #endif //NETREG_EDGENETLOSSFUNCTION_HPP
