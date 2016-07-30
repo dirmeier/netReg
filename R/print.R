@@ -15,11 +15,10 @@ function
   cat("\nIntercept:\n")
   print(x$intercept)
   cat("Lambda:\n")
-  print(x$lambda)
-  cat("Psi_gx:\n")
-  print(x$psigx)
-  cat("Psi_gy:\n")
-  print(x$psigy)
+  cat("\nParameters: ")
+  cat(paste("lambda=", x$lambda, ", psi_gx=", x$psigx, ", psi_gy=", x$psigy, "\n", sep=""))
+  cat("\nFamily: ")
+  cat(x$family, "\n")
 }
 
 #' @noRd

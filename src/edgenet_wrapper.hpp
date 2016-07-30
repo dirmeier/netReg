@@ -34,6 +34,7 @@ void do_gauss_cv_edgenet_(double *const X, double *const Y,
 extern double *B_;
 extern double *mu_;
 extern double lamb_;
+extern int *foldid_;
 extern double psi_gx_;
 extern double psi_gy_;
 #endif //NETREG_NETREGWRAPPER_HPP

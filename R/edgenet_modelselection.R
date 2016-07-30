@@ -100,6 +100,7 @@ cv.edgenet.default <-
   # check if X and Y are valid
   if (n != dim(Y)[1]) stop("X and Y have not same number of observations!")        
   if (p < 2) stop("Pls use a X matrix with at least 2 covariables!")  
+  psigx <- psigy <- -1
   # check if graphs are valid
   if (all(G.X == 0)) psigx <- 0
   if (all(G.Y == 0)) psigy <- 0
@@ -129,6 +130,8 @@ cv.edgenet.default <-
   if (all(G.X == 0)) psigx <- 0
   if (all(G.Y == 0)) psigy <- 0
   if (q == 1)        psigy <- 0
+  class(G.X) <- class(G.Y) <- "numeric"
+  if (n < nfolds) nfolds <- n
   family <-  match.arg(family)
   # estimate shrinkage parameters
   ret <- .cv(X=X, Y=Y, 
@@ -180,6 +183,8 @@ function
   nfolds, foldid
 )
 {
+  print(psigx)
+  print(psigy)
   cv <- .Call("gauss_cv_edgenet", 
                 X, Y,
                 G.X, G.Y, 
@@ -189,7 +194,10 @@ function
                 as.integer(nfolds), as.integer(foldid),
                 as.integer(length(foldid)),
                 PACKAGE="netReg")
-  ret <- list(lambda=cv[1], psigx=cv[2], psigy=cv[3])
+  ret <- list(lambda=cv$shrinkage_parameters[1],
+              psigx=cv$shrinkage_parameters[2], 
+              psigy=cv$shrinkage_parameters[3],
+              foldids=cv$fold_ids)
   class(ret) <- "gaussian.cv.edgenet"
   ret
 }

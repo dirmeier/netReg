@@ -9,6 +9,7 @@
 #define ARMA_DONT_USE_WRAPPER
 #endif
 #include <armadillo>
+#include <iostream>
 
 #include "cv_set.hpp"
 #include "graph_penalized_linear_model_data.hpp"
@@ -48,13 +49,18 @@ void do_gauss_cv_edgenet_(double *const X, double *const Y,
                                                    -1, 1.0,
                                                    psigx, psigy,
                                                    n_iter, thresh);
+    std::vector<int> folds;
     netreg::edgenet_model_selection e;
     std::vector<double> pop;
     if (n_foldid == n)
-        pop = e.regularization_path(data, foldid);
+        pop = e.regularization_path(data, foldid, folds);
     else
-        pop = e.regularization_path(data, n_folds);
-    lamb_ = pop[0];
-    psi_gx_ = pop[1];
-    psi_gy_ = pop[2];
+        pop = e.regularization_path(data, n_folds , folds);
+    std::cout << "psigx " << psigx << " psigy " << psigy << std::endl;
+    lamb_   = pop[0];
+    psi_gx_ = psigx == -1 ? pop[1] : 0.0;
+    psi_gy_ = psigy == -1 ? pop[2] : 0.0;
+    foldid_ = new int[n];
+    for(std::vector<int>::size_type i = 0; i < folds.size(); i++)
+        foldid_[i] = folds[i];
 }

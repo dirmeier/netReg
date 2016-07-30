@@ -1,7 +1,7 @@
 Package: netReg
 Type: Package
 Title: Network-regularized regression models
-Version: 0.3
+Version: 0.1
 Date: 2015-05-15
 Author: Simon Dirmeier
 Maintainer: Simon Dirmeier, <netreg@simon-dirmeier.net>
@@ -10,13 +10,6 @@ Description: netReg fits linear models using network-regularized regression.
     model in the form of affinity matrices.
 License: GPL-3
 Encoding: UTF-8
-Collate:
-    'print.R'
-    'edgenet.R'
-    'edgenet_modelselection.R'
-    'predict.R'
-    'unload.R'
-    'util.R'
 Suggests:
     knitr,
     rmarkdown,

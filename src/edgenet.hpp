@@ -27,17 +27,28 @@ namespace netreg
         /**
          * Calulates the coefficients of a graph-regularized regression model.
          *
-         * @param modelData an object that holds all required data for the model
+         * @param data an object that holds all required data for the model
          */
-        void run(graph_penalized_linear_model_data &modelData);
+        void run(graph_penalized_linear_model_data &data) const;
 
-        matrix<double> mccd_
+        /**
+         * Calulates the coefficients of a graph-regularized regression model.
+         *
+         * @param data an object that holds all required data for the model
+         * @param lambda the shrinkage parameter you want to use for the LASSO
+         * @param alpha the parameter for the elastic net
+         * @param psigx penalization of laplacian for X
+         * @param psigy penalization of laplacian for Y
+         */
+        matrix<double> run_cv
             (graph_penalized_linear_model_data &data,
              const double lambda,
              const double alpha,
              const double psigx,
              const double psigy,
              cv_fold &fold) const;
+
+    private:
 
         /**
          * Calculate an univariate cyclic coordinate descent on the index of
@@ -49,33 +60,16 @@ namespace netreg
          * @param qi the index of a column of the multivariate response amtrox
          */
         void uccd_
-            (graph_penalized_linear_model_data &data,
-             matrix<double> &B,
-             matrix<double> &B_old,
-             const int qi);
-
-        void uccd_
-            (graph_penalized_linear_model_data &data,
-             matrix<double> &cfs,
-             matrix<double> &o_cfs,
-             const double lamb, const double alph,
-             const double psigx, const double psigy,
-             cv_fold &fold, int qi,
-             matrix<double> &trainTXX,
-             matrix<double> &trainTXY) const;
-
-        void uccd_
-            (const int P, const int Q,
-             const double thresh, const int niter,
-             const double lambda, const double alpha,
-             const double psigx, const double psigy,
+            (int P, int Q,
+             double thresh, int niter,
+             double lambda, double alpha,
+             double psigx, const double psigy,
              matrix<double> &TXX, matrix<double> &TXY,
              matrix<double> &LX, matrix<double> &LY,
              matrix<double> &coef,
              matrix<double> &old_coef,
-             const int qi) const;
+             int qi) const;
 
-    private:
         /**
          * Updates the softthresholding parameter and the normalization
          * constant using the graph Laplacians.
@@ -114,8 +108,8 @@ namespace netreg
          */
         void lx_penalize
             (double &s, double &norm, const double psigx, matrix<double> &LX,
-             matrix<double> &cfs, const int P, const int pi, const int qi) const;
-
+             matrix<double> &cfs, const int P, const int pi,
+             const int qi) const;
 
         /**
          * Adds the penalty from the Laplacian of X to the softthresholding
@@ -201,31 +195,6 @@ namespace netreg
              const double psigx, const double psigy,
              const int P, const int Q) const;
 
-        /**
-         * Update the normalization term incross-validation
-         *
-         * @param X design matrix
-         * @param txx an element of X'X matrix
-         * @param test_idxs the vector of testing indexes
-         * @param cidx the current coefficient
-         */
-        double up_norm(matrix<double> &X,
-                       const double txx,
-                       std::vector<int> &test_idxs,
-                       const int cidx) const;
-
-        /**
-         * Preset the TXX matrix at a specific element
-         *
-         * @param TXX X'X matrix
-         * @param X the design matrix
-         * @param cidx current coefficient index
-         * @param row current row
-         */
-        void pre_txx(matrix<double> &TXX,
-                     matrix<double> &X,
-                     const int cidx,
-                     const int row) const;
     };
 }
 #endif //NETREG_EDGENET_H

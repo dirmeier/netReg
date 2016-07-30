@@ -58,23 +58,45 @@ namespace netreg
                 cv_fold &fold = cvset_.get_fold(fc);
                 matrix<double> coef;
                 if (do_psigx_ && do_psigy_)
-                    coef = edgenet_.mccd_(data_, p(0, 0), 1.0, p(1, 0), p(2, 0), fold);
+                {
+                    coef = edgenet_.run_cv(data_, p(0, 0), 1.0, p(1, 0),
+                                          p(2, 0), fold);
+                }
                 else if (do_psigy_)
-                    coef = edgenet_.mccd_(data_, p(0, 0), 1.0, 0, p(2, 0), fold);
+                {
+                    coef = edgenet_.run_cv(data_, p(0, 0), 1.0, 0, p(2, 0),
+                                          fold);
+                }
                 else if (do_psigx_)
-                    coef = edgenet_.mccd_(data_, p(0, 0), 1.0, p(1, 0), 0, fold);
+                {
+                    coef = edgenet_.run_cv(data_, p(0, 0), 1.0, p(1, 0), 0,
+                                          fold);
+                }
                 else
                 {
-                    std::cout << "YES" << "\n";
-                    coef = edgenet_.mccd_(data_, p(0, 0), 1.0, 0, 0, fold);
+                    coef = edgenet_.run_cv(data_, p(0, 0), 1.0, 0, 0, fold);
                 }
-                // TODO this is wring
+                std::cout << " test idx ";
+                for(arma::uvec::iterator i = fold.test_set().begin(); i != fold.test_set().end(); ++i){
+                    std::cout << *i <<  " ";
+                }
+                std::cout << std::endl;
+                std::cout <<  "coef " <<std::endl;
+                for (int i = 0; i < coef.n_rows; i++){
+                    for (int j = 0; j < coef.n_cols; j++){
+                        std::cout << coef(i,j) << " ";
+                    }
+                    std::cout << std::endl;
+                }
+                std::cout << std::endl;
+                std::cout << std::endl;
                 double err = sse(coef, X_, Y_, fold.test_set());
+                std::cout << "lambda " <<  p(0, 0) << " err " << err << std::endl;
                 sses[fc] = err;
             }
-
-            return std::accumulate(sses.begin(), sses.end(), 0.0) /
-                   sses.size();
+            double  err = std::accumulate(sses.begin(), sses.end(), 0.0);
+            std::cout << "lambda " <<  p(0, 0) << " final err " << err << std::endl << std::endl;
+            return err;
         }
 
     private:

@@ -8,6 +8,7 @@
 #include <utility>
 
 #include "vector_functions.hpp"
+#include "not_implemented_exception.hpp"
 
 namespace netreg
 {
@@ -56,8 +57,10 @@ namespace netreg
 /*
  * TODO: this might need debugging ... looks correct though
  */
-    void cv_set::init(int *const foldids)
-    {
+void cv_set::init(int *const foldids)
+{
+    throw not_implemented_exception();
+}
 //        for (int i = 0; i < N_FOLDS_; ++i)
 //            folds_.push_back(cv_fold());
 //        // iterate over all sample indeces
@@ -73,5 +76,5 @@ namespace netreg
 //                if (j != fold) folds_[j].add_to_train_set(i);
 //            }
 //        }
-    }
+//    }
 }

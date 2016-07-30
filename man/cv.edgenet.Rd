@@ -54,10 +54,6 @@ G.X <- matrix(rpois(10*10,1),10)
 G.X <- t(G.X) + G.X
 diag(G.X) <- 0
 cv.edge <- cv.edgenet(X=X, Y=Y, G.X=G.X, family="gaussian")
-
-cv.edge.l <- cv.edgenet(X=X, Y=Y, G.X=G.X, lambda=1, family="gaussian")
-
-cv.edge.ps <- cv.edgenet(X=X, Y=Y, G.X=G.X, psigx=1, psigy=1, family="gaussian")
 }
 }
 \author{

@@ -1,13 +1,15 @@
 ---
-title: "netReg Vignette"
+title: "netReg"
 author: "Simon Dirmeier"
-date: "2015-05-15"
+date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{netReg}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
+
+## Introduction
 
 <b>netReg</b> is a package for graph-regularized linear regression. We will shortly give a tutorial for using netReg. 
 

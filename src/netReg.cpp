@@ -17,6 +17,7 @@
 
 double *B_;
 double *mu_;
+int *foldid_;
 double lamb_;
 double psi_gx_;
 double psi_gy_;
@@ -179,11 +180,30 @@ SEXP gauss_cv_edgenet(SEXP XS, SEXP YS, SEXP GXS, SEXP GYS,
                          N_FOLDS, fold_ids, FOLDID_LEN);
     // protection counter that is needed for not activating garbage collection
     int prtCnt = 0;
-    SEXP OS = PROTECT(allocVector(REALSXP, 3));
+    SEXP shrink = PROTECT(allocVector(REALSXP, 3));
     prtCnt++;
-    REAL(OS)[0] = lamb_;
-    REAL(OS)[1] = psi_gx_;
-    REAL(OS)[2] = psi_gy_;
+    REAL(shrink)[0] = lamb_;
+    REAL(shrink)[1] = psi_gx_;
+    REAL(shrink)[2] = psi_gy_;
+    // fold ids
+    SEXP folds = PROTECT(allocVector(INTSXP, N));
+    prtCnt++;
+    for (int i = 0; i < N; ++i) INTEGER(folds)[i] = foldid_[i];
+    delete[] foldid_;
+    // create a R list of size 2 that can be returned
+    SEXP OS = PROTECT(allocVector(VECSXP, 2));
+    prtCnt++;
+    // set first element of list to the coef matrix
+    SET_VECTOR_ELT(OS, 0, shrink);
+    // set second element of list to intercept vector
+    SET_VECTOR_ELT(OS, 1, folds);
+    // create name array
+    SEXP nms = PROTECT(allocVector(STRSXP, 2));
+    prtCnt++;
+    SET_STRING_ELT(nms, 0, mkChar("shrinkage_parameters"));
+    SET_STRING_ELT(nms, 1, mkChar("fold_ids"));
+    // assign names to list
+    setAttrib(OS, R_NamesSymbol, nms);
     // release SEXPs for garbage collection
     UNPROTECT(prtCnt);
     // return results to R
