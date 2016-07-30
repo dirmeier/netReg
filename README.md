@@ -2,7 +2,7 @@
 
 #TODO code cov
 
-An R-library for network-regularized generalized linear regression. 
+Network-penalized generalized linear models in R and C++.
 
 ## Introduction
 
