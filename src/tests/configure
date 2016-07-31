@@ -2838,7 +2838,7 @@ if test "x${enable_cxxflags_setting}" = "xyes"; then :
 		CXXFLAGS=""
 
 
-for flag in -O3 -g -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER; do
+for flag in -O3 -g -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto; do
   as_CACHEVAR=`$as_echo "ax_cv_check_cxxflags__$flag" | $as_tr_sh`
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C++ compiler accepts $flag" >&5
 $as_echo_n "checking whether C++ compiler accepts $flag... " >&6; }
@@ -3094,7 +3094,7 @@ $as_echo "$ac_cv_prog_cxx_openmp" >&6; }
 
 
 netReg_LDLIBS="${LIBS} -lstdc++ -lCppUTest -lCppUTestExt"
-netReg_CPPFLAGS="${CPPFLAGS}"
+netReg_CPPFLAGS="${CPPFLAGS} -DARMA_DONT_USE_WRAPPER"
 
 ac_ext=cpp
 ac_cpp='$CXXCPP $CPPFLAGS'

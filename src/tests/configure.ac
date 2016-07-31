@@ -28,7 +28,7 @@ AS_IF(
 	[test "x${enable_cxxflags_setting}" = "xyes"],
 	[
 		CXXFLAGS=""
-		AX_APPEND_COMPILE_FLAGS([-O3 -g -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER], [CXXFLAGS])
+		AX_APPEND_COMPILE_FLAGS([-O3 -g -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto], [CXXFLAGS])
 		CXXFLAGS=$( echo $CXXFLAGS | $SED -e 's/^ *//' -e 's/ *$//' )
 	]
 )
@@ -38,7 +38,7 @@ AX_CXX_COMPILE_STDCXX_11([noext], [mandatory])
 AC_OPENMP
 
 netReg_LDLIBS="${LIBS} -lstdc++ -lCppUTest -lCppUTestExt"
-netReg_CPPFLAGS="${CPPFLAGS}"
+netReg_CPPFLAGS="${CPPFLAGS} -DARMA_DONT_USE_WRAPPER"
 
 AC_CHECK_HEADER([armadillo],
 [
