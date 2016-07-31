@@ -37,11 +37,14 @@ dnl Other dependencies
 AX_CXX_COMPILE_STDCXX_11([noext], [mandatory])
 AC_OPENMP
 
+netReg_LDLIBS="${LIBS}"
+netReg_CPPFLAGS="${CPPFLAGS}"
+
 AC_CHECK_HEADER([armadillo],
 [
+	AC_MSG_NOTICE([found armadillo])
 	AC_DEFINE([HAVE_ARMADILLO], [1], [Define if Armadillo is installed])
-	netReg_LDLIBS="-larmadillo ${LIBS}"
-	netReg_CPPFLAGS="${CPPFLAGS}"
+	netReg_LDLIBS="-larmadillo ${netReg_LDLIBS}"
 ],
 [
 	AC_MSG_ERROR([cannot find armadillo])
@@ -59,20 +62,22 @@ AC_SEARCH_LIBS([cblas_dgemm], [openblas],
    netReg_LDLIBS="${netReg_LDLIBS} -lblas -llapack"
  ],
  [
-   AC_MSG_ERROR([cannot find blas or lapack])
+   AC_MSG_NOTICE([cannot find blas or lapack])
  ])
 ])
+
 AM_INIT_AUTOMAKE([1.14.1 foreign dist-bzip2 no-dist-gzip subdir-objects])
-AC_CONFIG_FILES([Makefile])
 AC_SUBST([netReg_LDLIBS])
 AC_SUBST([netReg_CPPFLAGS])
 AC_SUBST([OPENMP_CXXFLAGS])
 
-AC_OUTPUT([Makefiles])
+AC_OUTPUT([Makefile])
 
 AC_MSG_RESULT([
 	Have fun with: $PACKAGE_NAME
 
 	CXX:        $CXX
 	CXXFLAGS:   $CXXFLAGS
+	CPPFLAGS:   $netReg_CPPFLAGS
+	LDLIDS:     $netReg_LDLIBS
 ])
