@@ -15,7 +15,7 @@ AC_ARG_ENABLE([console],
 AS_IF(
 	[ test "x$enable_console" = "xyes"],
 	[ AC_MSG_NOTICE([building from commandline])
-   	],
+   ],
 	[
 		enable_console=no	
 		AC_MSG_NOTICE([building from R])
@@ -89,12 +89,6 @@ AC_SEARCH_LIBS([cblas_dgemm], [openblas],
  ]) 
 ])
 
-AC_SUBST([netReg_LDLIBS])
-AC_SUBST([netReg_CPPFLAGS])
-AC_SUBST([OPENMP_CXXFLAGS])
-
-AM_INIT_AUTOMAKE([1.14.1 foreign dist-bzip2 no-dist-gzip subdir-objects])
-AC_CONFIG_FILES([Makefile])
 AC_SUBST([netReg_LDLIBS])
 AC_SUBST([netReg_CPPFLAGS])
 AC_SUBST([OPENMP_CXXFLAGS])
