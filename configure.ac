@@ -10,7 +10,7 @@ AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_SRCDIR([src/edgenet.cpp])
 
 AC_ARG_ENABLE([console],
-    AS_HELP_STRING([--enable-console], [Enables building of more than just the R wrapper]))
+    AS_HELP_STRING([--enable-console], [Enables building the raw library.]))
 
 AS_IF(
 	[ test "x$enable_console" = "xyes"],
@@ -44,7 +44,7 @@ AC_PROG_RANLIB
 AS_IF(
 	[test "x${enable_cxxflags_setting}" = "xyes"],
 	[	 
-		AX_APPEND_COMPILE_FLAGS([-O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto], [CXXFLAGS])
+		AX_APPEND_COMPILE_FLAGS([-O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER], [CXXFLAGS])
 		CXXFLAGS=$( echo $CXXFLAGS | $SED -e 's/^ *//' -e 's/ *$//' )
 	]	
 )
@@ -89,6 +89,12 @@ AC_SEARCH_LIBS([cblas_dgemm], [openblas],
  ]) 
 ])
 
+AC_SUBST([netReg_LDLIBS])
+AC_SUBST([netReg_CPPFLAGS])
+AC_SUBST([OPENMP_CXXFLAGS])
+
+AM_INIT_AUTOMAKE([1.14.1 foreign dist-bzip2 no-dist-gzip subdir-objects])
+AC_CONFIG_FILES([Makefile])
 AC_SUBST([netReg_LDLIBS])
 AC_SUBST([netReg_CPPFLAGS])
 AC_SUBST([OPENMP_CXXFLAGS])

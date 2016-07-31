@@ -41,7 +41,7 @@ namespace netreg
         (graph_penalized_linear_model_data &data, cv_set &cvset,
          std::vector<int> &folds)
     {
-        if (folds.size() != data.sample_count())
+        if (static_cast<int>(folds.size()) != data.sample_count())
             folds.resize(data.sample_count());
         for (int i = 0; i < cvset.fold_count(); i++)
         {

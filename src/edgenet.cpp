@@ -80,16 +80,6 @@ namespace netreg
             }
         }
         while (arma::accu(arma::abs(coef - old_coef)) > thresh && iter++ < niter);
-
-        std::cout << std::endl;
-        std::cout <<  "coef afterest " <<std::endl;
-        for (int i = 0; i < coef.n_rows; i++){
-            for (int j = 0; j < coef.n_cols; j++){
-                std::cout << coef(i,j) << " ";
-            }
-            std::cout << std::endl;
-        }
-        std::cout << std::endl;
         return coef;
     }
 
@@ -128,18 +118,7 @@ namespace netreg
                 coef(pi, qi) = softnorm(s, lalph, enorm * norm);
             }
         }
-        while (
-            arma::accu(arma::abs(coef.col(qi) - old_coef.col(qi))) > thresh &&
-            iter++ < niter);
-        std::cout << std::endl;
-        std::cout <<  "coef infront est " <<std::endl;
-        for (int i = 0; i < coef.n_rows; i++){
-            for (int j = 0; j < coef.n_cols; j++){
-                std::cout << coef(i,j) << " ";
-            }
-            std::cout << std::endl;
-        }
-        std::cout << std::endl;
+        while (arma::accu(arma::abs(coef.col(qi) - old_coef.col(qi))) > thresh && iter++ < niter);
     }
 
     void edgenet::set_params
