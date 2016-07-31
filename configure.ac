@@ -9,23 +9,13 @@ AC_INIT(
 AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_SRCDIR([src/edgenet.cpp])
 
-AC_ARG_ENABLE([console],
-    AS_HELP_STRING([--enable-console], [Enables building the raw library.]))
 
-AS_IF(
-	[ test "x$enable_console" = "xyes"],
-	[ AC_MSG_NOTICE([building from commandline])
-   ],
-	[
-		enable_console=no	
-		AC_MSG_NOTICE([building from R])
-		if test -z "${R_HOME}"; 
-		then
-  			AC_MSG_NOTICE([no R_HOME found])
-  			CXX=`"${R_HOME}/bin/R" CMD config CXX1X`
-		fi	
-	]
-)
+AC_MSG_NOTICE([building from R])
+if test -z "${R_HOME}"; 
+then
+ 	AC_MSG_NOTICE([no R_HOME found])
+	CXX=`"${R_HOME}/bin/R" CMD config CXX1X`
+fi	
 
 AC_LANG([C++])
 
@@ -76,16 +66,10 @@ AC_SEARCH_LIBS([cblas_dgemm], [openblas],
    netReg_LDLIBS="${netReg_LDLIBS} -lblas -llapack"
  ], 
  [ 
- 	AS_IF(
-		[ test "x${enable_console}" = "xyes" ],
-		[AC_MSG_ERROR([no blas found])],
-		[
-			AC_MSG_NOTICE([using rblas]) 
-			RBLAS=`"${R_HOME}/bin/R" CMD config BLAS_LIBS`
-			RLAPACK=`"${R_HOME}/bin/R" CMD config LAPACK_LIBS`
-			netReg_LDLIBS="${netReg_LDLIBS} $RBLAS $RLAPACK"
-		]
-	)
+	AC_MSG_NOTICE([using rblas]) 
+	RBLAS=`"${R_HOME}/bin/R" CMD config BLAS_LIBS`
+	RLAPACK=`"${R_HOME}/bin/R" CMD config LAPACK_LIBS`
+	netReg_LDLIBS="${netReg_LDLIBS} $RBLAS $RLAPACK"
  ]) 
 ])
 
