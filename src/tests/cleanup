@@ -1,0 +1,15 @@
+#!/bin/bash
+
+echo "Cleaning up..."
+rm -rf \
+	config.* \
+	Makefile.in \
+	aclocal* \
+	compile \
+	autom* \
+	install-sh \
+	depcomp \
+	missing \
+	test-driver \
+	Makefile \
+	stamp-h1 

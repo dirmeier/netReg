@@ -6,16 +6,9 @@ AC_INIT(
 	[netreg@simon-dirmeier.net],
 	[netReg],
 	[https://github.com/rafstraumur/netreg])
-AC_CONFIG_HEADERS([src/config.h])
-AC_CONFIG_SRCDIR([src/edgenet.cpp])
+AC_CONFIG_HEADERS([../config.h])
+AC_CONFIG_SRCDIR([../edgenet.cpp])
 
-
-AC_MSG_NOTICE([building from R])
-if test -z "${R_HOME}"; 
-then
- 	AC_MSG_NOTICE([no R_HOME found])
-	CXX=`"${R_HOME}/bin/R" CMD config CXX1X`
-fi	
 
 AC_LANG([C++])
 
@@ -33,10 +26,11 @@ AC_PROG_RANLIB
 
 AS_IF(
 	[test "x${enable_cxxflags_setting}" = "xyes"],
-	[	 
-		AX_APPEND_COMPILE_FLAGS([-O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER], [CXXFLAGS])
+	[
+		CXXFLAGS=""
+		AX_APPEND_COMPILE_FLAGS([-O3 -g -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER], [CXXFLAGS])
 		CXXFLAGS=$( echo $CXXFLAGS | $SED -e 's/^ *//' -e 's/ *$//' )
-	]	
+	]
 )
 
 dnl Other dependencies
@@ -48,10 +42,9 @@ AC_CHECK_HEADER([armadillo],
 	AC_DEFINE([HAVE_ARMADILLO], [1], [Define if Armadillo is installed])
 	netReg_LDLIBS="-larmadillo ${LIBS}"
 	netReg_CPPFLAGS="${CPPFLAGS}"
-], 
+],
 [
-	AC_MSG_NOTICE([no armadillo found. using bundled lib])
-	netReg_CPPFLAGS="-I../inst/armadillo"
+	AC_MSG_ERROR([cannot find armadillo])
 ])
 
 AC_SEARCH_LIBS([cblas_dgemm], [openblas],
@@ -64,20 +57,18 @@ AC_SEARCH_LIBS([cblas_dgemm], [openblas],
  [
    AC_MSG_NOTICE([using blas])
    netReg_LDLIBS="${netReg_LDLIBS} -lblas -llapack"
- ], 
- [ 
-	AC_MSG_NOTICE([using rblas]) 
-	RBLAS=`"${R_HOME}/bin/R" CMD config BLAS_LIBS`
-	RLAPACK=`"${R_HOME}/bin/R" CMD config LAPACK_LIBS`
-	netReg_LDLIBS="${netReg_LDLIBS} $RBLAS $RLAPACK"
- ]) 
+ ],
+ [
+   AC_MSG_ERROR([cannot find blas or lapack])
+ ])
 ])
-
+AM_INIT_AUTOMAKE([1.14.1 foreign dist-bzip2 no-dist-gzip subdir-objects])
+AC_CONFIG_FILES([Makefile])
 AC_SUBST([netReg_LDLIBS])
 AC_SUBST([netReg_CPPFLAGS])
 AC_SUBST([OPENMP_CXXFLAGS])
 
-AC_OUTPUT([src/Makevars])
+AC_OUTPUT([Makefiles])
 
 AC_MSG_RESULT([
 	Have fun with: $PACKAGE_NAME
