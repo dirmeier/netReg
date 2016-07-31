@@ -1,5 +1,3 @@
-bin_PROGRAMS = netreg
-
 AM_CXXFLAGS = @OPENMP_CXXFLAGS@
 
 netreg_headers = \
@@ -25,8 +23,8 @@ netreg_headers = \
 	../utility_functions.hpp \
 	../vector_functions.hpp
 
-netreg_SOURCES = $(netreg_headers) \
-	 test.cpp \
+noinst_LIBRARIES = libnetreg.a
+libnetreg_a_SOURCES = $(netreg_headers) \
 	../cv_set.cpp \
 	../edgenet.cpp \
 	../error_functions.cpp \
@@ -36,6 +34,10 @@ netreg_SOURCES = $(netreg_headers) \
 	../utility_functions.cpp \
 	../vector_functions.cpp
 
-netreg_LDLIBS = @netReg_LDLIBS@
-netreg_CPPFLAGS = @netReg_CPPFLAGS@
+TESTS = netreg_tests
+check_PROGRAMS = netreg_tests
 
+netreg_tests_SOURCES = test.cpp
+netreg_tests_LDLIBS = @netReg_LDLIBS@
+netreg_tests_CPPFLAGS = @netReg_CPPFLAGS@
+netreg_tests_LDADD = libnetreg.a

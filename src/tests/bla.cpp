@@ -1,19 +1,8 @@
-/**
- * Author: Simon Dirmeier
- * Date: 7/31/16
- * Email: simon.dirmeier@bsse.ethz.ch
- */
+#define BOOST_TEST_MODULE example
+#include <boost/test/included/unit_test.hpp>
 
-#include <boost/lambda/lambda.hpp>
-#include <iostream>
-#include <iterator>
-#include <algorithm>
-
-int main()
-{
-    using namespace boost::lambda;
-    typedef std::istream_iterator<int> in;
-
-    std::for_each(
-        in(std::cin), in(), std::cout << (_1 * 3) << " " );
-}
+BOOST_AUTO_TEST_CASE( free_test_function )
+/* Compare with void free_test_function() */
+    {
+        BOOST_TEST( true /* test assertion */ );
+    }

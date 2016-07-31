@@ -23,8 +23,8 @@ FAIL("Fail me!");
 
 TEST(FirstTestGroup, SecondTest)
 {
-STRCMP_EQUAL("hello", "world");
-LONGS_EQUAL(1, 2);
-CHECK(false);
+    STRCMP_EQUAL("hello", "world");
+    LONGS_EQUAL(1, 2);
+    CHECK(false);
 }
 

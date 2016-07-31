@@ -3093,7 +3093,7 @@ $as_echo "$ac_cv_prog_cxx_openmp" >&6; }
 
 
 
-netReg_LDLIBS="${LIBS}"
+netReg_LDLIBS="${LIBS} -lstdc++ -lCppUTest -lCppUTestExt"
 netReg_CPPFLAGS="${CPPFLAGS}"
 
 ac_ext=cpp

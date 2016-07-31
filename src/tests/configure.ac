@@ -37,7 +37,7 @@ dnl Other dependencies
 AX_CXX_COMPILE_STDCXX_11([noext], [mandatory])
 AC_OPENMP
 
-netReg_LDLIBS="${LIBS}"
+netReg_LDLIBS="${LIBS} -lstdc++ -lCppUTest -lCppUTestExt"
 netReg_CPPFLAGS="${CPPFLAGS}"
 
 AC_CHECK_HEADER([armadillo],
