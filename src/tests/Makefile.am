@@ -34,10 +34,17 @@ libnetreg_a_SOURCES = $(netreg_headers) \
 	../utility_functions.cpp \
 	../vector_functions.cpp
 
-TESTS = netreg_tests
+TESTS = netreg_tests netreg_benchmarks
 check_PROGRAMS = netreg_tests
 
 netreg_tests_SOURCES = test.cpp
 netreg_tests_LDLIBS = @netReg_LDLIBS@
 netreg_tests_CPPFLAGS = @netReg_CPPFLAGS@
 netreg_tests_LDADD = libnetreg.a
+
+bin_PROGRAMS = netreg_benchmarks
+
+netreg_benchmarks_SOURCES = benchmark.cpp
+netreg_benchmarks_LDLIBS = @netReg_LDLIBS@
+netreg_benchmarks_CPPFLAGS = @netReg_CPPFLAGS@
+netreg_benchmarks_LDADD = libnetreg.a

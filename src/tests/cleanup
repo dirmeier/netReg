@@ -15,4 +15,5 @@ rm -rf \
 	stamp-h1 \
 	netreg_tests* \
 	libnetreg.a \
-	test-suite.log 
+	test-suite.log \
+	netreg_benchmarks*
