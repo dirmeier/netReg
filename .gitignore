@@ -1,3 +1,5 @@
+src/tests/netreg_benchmarks*
+src/tests/netreg_tests*
 src/test
 src/netReg.dSYM/*
 src/Makevars
