@@ -37,7 +37,7 @@ dnl Other dependencies
 AX_CXX_COMPILE_STDCXX_11([noext], [mandatory])
 AC_OPENMP
 
-netReg_LDLIBS="${LIBS} -lstdc++ -lCppUTest -lCppUTestExt"
+netReg_LDLIBS="${LIBS}"
 netReg_CPPFLAGS="${CPPFLAGS} -DARMA_DONT_USE_WRAPPER"
 
 AC_CHECK_HEADER([armadillo],
@@ -47,7 +47,8 @@ AC_CHECK_HEADER([armadillo],
 	netReg_LDLIBS="-larmadillo ${netReg_LDLIBS}"
 ],
 [
-	AC_MSG_ERROR([cannot find armadillo])
+	AC_MSG_NOTICE([no armadillo found. using bundled lib])
+	netReg_CPPFLAGS="${netReg_CPPFLAGS}  -I../../inst/armadillo"
 ])
 
 AC_SEARCH_LIBS([cblas_dgemm], [openblas],

@@ -4,27 +4,11 @@
  * Email: simon.dirmeier@bsse.ethz.ch
  */
 
-#include "CppUTest/CommandLineTestRunner.h"
-#include "CppUTest/TestHarness.h"
-int main(int ac, char** av)
+#define BOOST_TEST_MODULE example
+#include <boost/test/included/unit_test.hpp>
+
+BOOST_AUTO_TEST_CASE( free_test_function )
+/* Compare with void free_test_function() */
 {
-    return CommandLineTestRunner::RunAllTests(ac, av);
+        BOOST_TEST( true /* test assertion */ );
 }
-
-
-TEST_GROUP(FirstTestGroup)
-    {
-    };
-
-TEST(FirstTestGroup, FirstTest)
-{
-FAIL("Fail me!");
-}
-
-TEST(FirstTestGroup, SecondTest)
-{
-STRCMP_EQUAL("hello", "world");
-LONGS_EQUAL(1, 2);
-CHECK(false);
-}
-

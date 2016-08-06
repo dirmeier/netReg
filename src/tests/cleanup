@@ -12,4 +12,7 @@ rm -rf \
 	missing \
 	test-driver \
 	Makefile \
-	stamp-h1 
+	stamp-h1 \
+	netreg_tests* \
+	libnetreg.a \
+	test-suite.log 
