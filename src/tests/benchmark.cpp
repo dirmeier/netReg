@@ -31,6 +31,12 @@ void generate(T &generator, double * res, int sz)
         res[i] = generator();
 }
 
+void generate( double * res,unsigned int sz)
+{
+    for(size_t i = 0; i < sz; ++i)
+        res[i] = 1.0;
+}
+
 void norm(double * X, unsigned int n, unsigned int m)
 {
     for(size_t i = 0; i < n; ++i)
@@ -52,10 +58,9 @@ int main()
     boost::variate_generator<boost::mt19937&,
         boost::exponential_distribution<> > var_exp(rng, ed);
 
-
     const unsigned int n = 1000;
-    const unsigned int p = 1000;
-    const unsigned int q = 1000;
+    const unsigned int p = 10000;
+    const unsigned int q = 10000;
     double * X = new double[n * p];
     double * Y = new double[n * q];
     double * GX = new double[p * p];
@@ -70,7 +75,7 @@ int main()
                                                    GX, GY,
                                                    n, p, q,
                                                    100, 1.0,
-                                                   1, 1,
+                                                   0.0, 0.0,
                                                    10000, 0.00001);
     netreg::edgenet e;
     e.run(data);

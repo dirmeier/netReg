@@ -34,7 +34,7 @@ libnetreg_a_SOURCES = $(netreg_headers) \
 	../utility_functions.cpp \
 	../vector_functions.cpp
 
-TESTS = netreg_tests netreg_benchmarks
+TESTS = netreg_tests
 check_PROGRAMS = netreg_tests
 
 netreg_tests_SOURCES = test.cpp
@@ -44,7 +44,15 @@ netreg_tests_LDADD = libnetreg.a
 
 bin_PROGRAMS = netreg_benchmarks
 
-netreg_benchmarks_SOURCES = benchmark.cpp
+netreg_benchmarks_SOURCES = benchmark.cpp \
+	$(netreg_headers) \
+	../cv_set.cpp \
+	../edgenet.cpp \
+	../error_functions.cpp \
+	../graph_functions.cpp \
+	../math_functions.cpp \
+	../stat_functions.cpp \
+	../utility_functions.cpp \
+	../vector_functions.cpp
 netreg_benchmarks_LDLIBS = @netReg_LDLIBS@
 netreg_benchmarks_CPPFLAGS = @netReg_CPPFLAGS@
-netreg_benchmarks_LDADD = libnetreg.a
