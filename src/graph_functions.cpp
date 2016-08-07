@@ -5,39 +5,41 @@
 
 #include "graph_functions.hpp"
 
+#include <omp.h>
 #include <vector>
 #include <cmath>
 
 namespace netreg
 {
-    matrix<double> laplacian(matrix<double> &m)
+    matrix<double> laplacian(const double * x, const int n, const int m)
     {
-        const int N_ROW_ = static_cast<int>(m.n_rows);
-        const int N_COLS_ = static_cast<int>(m.n_cols);
-        matrix<double> lapla(N_ROW_, N_COLS_);
-        // node degrees of source matrix
-        std::vector<double> degrees(N_ROW_);
-        for (int i = 0; i < N_ROW_; ++i)
+        std::vector<double> degrees(n);
+        #pragma omp parallel for
+        for (int i = 0; i < n; ++i)
         {
             double rowSum = 0.0;
-            for (int j = 0; j < N_COLS_; ++j)
-                rowSum += m(i, j);
+            for (int j = 0; j < m; ++j)
+                rowSum += x[i + n * j];
             degrees[i] = rowSum;
         }
+        double *  laplacian = new double[n * m];
         // calculate normalized Laplacian matrix of source
-        for (int i = 0; i < N_ROW_; ++i)
+        #pragma omp parallel for
+        for (int i = 0; i < n; ++i)
         {
-            for (int j = 0; j < N_COLS_; ++j)
+            for (int j = 0; j < m; ++j)
             {
                 if (i == j && degrees[i] != 0)
-                    lapla(i, j) = 1 - (m(i, j) / degrees[i]);
-                else if (i != j && m(i, j) != 0)
-                    lapla(i, j) =
-                        -m(i, j) / std::sqrt(degrees[i] * degrees[j]);
+                    laplacian[i + n * j] = 1 - (x[i + n * j] / degrees[i]);
+                else if (i != j && x[i + n * j] != 0)
+                    laplacian[i + n * j] =
+                        -x[i + n * j] / std::sqrt(degrees[i] * degrees[j]);
                 else
-                    lapla(i, j) = 0.0;
+                    laplacian[i + n * j] = 0.0;
             }
         }
-        return lapla;
+        matrix<double> lap(laplacian, n, m, true, true);
+        delete [] laplacian;
+        return lap;
     }
 }

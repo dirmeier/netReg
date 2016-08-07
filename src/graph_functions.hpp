@@ -18,10 +18,12 @@ namespace netreg
    /*
     * Calculate the normalized laplacian of a matrix.
     *
-    * @param m the natrux fir which the laplacian is calculated
+    * @param x the pointer for which the laplacian is calculated (col first)
+    * @param n nrows of x
+    * @param m ncols of y
     * @return the normalized laplacian
     */
-    matrix<double> laplacian(matrix<double> &m);
+    matrix<double> laplacian(const double * x, int n, int m);
 
 }
 #endif //NETREG_GRAPH_FUNCTIONS_HPP

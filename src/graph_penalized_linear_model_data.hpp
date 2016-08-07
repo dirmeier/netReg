@@ -58,7 +58,7 @@ namespace netreg
                                           alpha, niter, thresh),
               psi_gx(psi_gx), psi_gy(psi_gy),
               GX(gx, p, p), GY(gy, q, q),
-              LX(laplacian(GX)), LY(laplacian(GY))
+              LX(laplacian(gx, p, p)), LY(laplacian(gy, q, q))
         {
         }
 

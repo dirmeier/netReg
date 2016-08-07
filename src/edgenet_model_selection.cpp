@@ -43,6 +43,7 @@ namespace netreg
     {
         if (static_cast<int>(folds.size()) != data.sample_count())
             folds.resize(data.sample_count());
+        //TODO parallel
         for (int i = 0; i < cvset.fold_count(); i++)
         {
             cv_fold &fold = cvset.get_fold(i);

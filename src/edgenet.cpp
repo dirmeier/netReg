@@ -27,6 +27,7 @@ namespace netreg
         matrix<double> &TXY = data.txy();
         matrix<double> &LX = data.lx();
         matrix<double> &LY = data.ly();
+        std::cout << "Running edgenet\n";
         int iter = 0;
         do
         {
@@ -41,11 +42,12 @@ namespace netreg
                       coef, old_coef,
                       qi);
         }
-
         while (arma::accu(arma::abs(coef - old_coef)) > thresh &&
                iter++ < niter);
         // calculate intercepts of the linear model
+        std::cout << "Calculating intercept!\n";
         intr = intercept(data.design(), data.response(), coef);
+        std::cout << "Done!\n";
     }
 
     matrix<double> edgenet::run_cv(graph_penalized_linear_model_data &data,

@@ -9,7 +9,6 @@
 #define ARMA_DONT_USE_WRAPPER
 #endif
 #include <armadillo>
-#include <iostream>
 
 #include "cv_set.hpp"
 #include "graph_penalized_linear_model_data.hpp"
@@ -56,7 +55,6 @@ void do_gauss_cv_edgenet_(double *const X, double *const Y,
         pop = e.regularization_path(data, foldid, folds);
     else
         pop = e.regularization_path(data, n_folds , folds);
-    std::cout << "psigx " << psigx << " psigy " << psigy << std::endl;
     lamb_   = pop[0];
     psi_gx_ = psigx == -1 ? pop[1] : 0.0;
     psi_gy_ = psigy == -1 ? pop[2] : 0.0;
