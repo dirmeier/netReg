@@ -10,6 +10,7 @@
 #endif
 #include <armadillo>
 #include <iostream>
+#include <cstdlib>
 
 #include <boost/random.hpp>
 #include <boost/random/variate_generator.hpp>
@@ -47,7 +48,7 @@ void norm(double * X, unsigned int n, unsigned int m)
                 X[i * m + j] = X[j * m + i];
 }
 
-int main()
+int main(int argc, char** argv)
 {
 
     boost::mt19937 rng(23);
@@ -58,9 +59,9 @@ int main()
     boost::variate_generator<boost::mt19937&,
         boost::exponential_distribution<> > var_exp(rng, ed);
 
-    const unsigned int n = 1000;
-    const unsigned int p = 10000;
-    const unsigned int q = 10000;
+    const unsigned int n = atoi(argv[1]);
+    const unsigned int p = atoi(argv[2]);
+    const unsigned int q = atoi(argv[3]);
     double * X = new double[n * p];
     double * Y = new double[n * q];
     double * GX = new double[p * p];
