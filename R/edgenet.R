@@ -156,14 +156,16 @@ function
   n <- dim(X)[1]                              
   p <- dim(X)[2]     
   q <- dim(Y)[2]
+  cl <- switch(family, 
+               "gaussian"=.gauss.edgenet,
+               "binomial"=.binom.edgenet,
+               stop("Family not found!"))
   # make C call to estimate coefficients and posterior networks
-  res <- switch(family, 
-                "gaussian"=.gauss.edgenet(X=X, Y=Y, G.X=G.X, G.Y=G.Y,
-                                          n=n, p=p, q=q, 
-                                          lambda=lambda, 
-                                          psigx=psigx, psigy=psigy, 
-                                          maxit=maxit, thresh=thresh),
-                stop("Family not found!"))
+  res <- cl(X=X, Y=Y, G.X=G.X, G.Y=G.Y,
+            n=n, p=p, q=q, 
+            lambda=lambda, 
+            psigx=psigx, psigy=psigy, 
+            maxit=maxit, thresh=thresh)               
   res$family <- family
   res
 }
@@ -196,5 +198,20 @@ function
               psigx=psigx,
               psigy=psigy)
   class(ret) <- "gaussian.edgenet"
+  ret
+}
+
+#' @noRd
+.binom.edgenet <-
+  function
+(
+  X, Y, G.X, G.Y, 
+  n, p, q, 
+  lambda, psigx, psigy, 
+  maxit, thresh
+)
+{
+  
+  class(ret) <- "binomial.edgenet"
   ret
 }
