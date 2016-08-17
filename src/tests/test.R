@@ -29,13 +29,13 @@ q <- 1
 n <- 100
 thresh <- 1e-5
 miter <- 1e5
-X <- matrix(rnorm(n*p), n)
+X <- matrix(sort(rnorm(n*p)), n)
 b.true <- rnorm(p)
-y <- rbinom(100,1,.5)
-y[y > .5] <- 1
-y[y <= .5] <- 0
+y <- c(rep(0,45),rep(1,5) ,rep(1,45), rep(0,5))
+
 b <- b.old <- rnorm(p)
 iter <- 0
+
 repeat
 {
   iter <- iter + 1
@@ -48,6 +48,7 @@ repeat
   b <- solve(t(X) %*% S %*% X) %*% t(X) %*% S %*% z
   if (sum(abs(b-b.old)) < thresh | iter > miter) break  
 }
+ 
 y.hat <- sigm(X%*%b)
 y.hat[y.hat > .5] <- 1
 y.hat[y.hat <= .5] <- 0
