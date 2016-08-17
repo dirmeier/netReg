@@ -78,7 +78,7 @@ int main(int argc, char** argv)
                                                    100, 1.0,
                                                    0.0, 0.0,
                                                    10000, 0.00001);
-    netreg::edgenet e;
+    netreg::gaussian_edgenet e;
     e.run(data);
     delete [] X;
     delete [] GX;

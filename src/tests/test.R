@@ -46,9 +46,9 @@ repeat
   S <- diag(s)
   z <- nu + solve(S)%*%(y-mu)
   b <- solve(t(X) %*% S %*% X) %*% t(X) %*% S %*% z
-  if (sum(abs(b-b.old)) < thresh | iter > miter) break  
+  if (sum(abs(b-b.old)) < thresh | iter > miter) break
 }
- 
+
 y.hat <- sigm(X%*%b)
 y.hat[y.hat > .5] <- 1
 y.hat[y.hat <= .5] <- 0
@@ -63,8 +63,8 @@ library(microbenchmark)
 n <- 100
 p <- 2
 q <- 1
-X <- matrix(rnorm(n*p), n)
-y <- matrix(rnorm(n*q), n)
+X <- smatrix(rnorm(n*p), n)
+y <-
 
 G.X <- matrix(as.numeric(rpois(p * p, 1)), p)
 G.X <- t(G.X) + G.X
@@ -74,16 +74,26 @@ gy <- matrix(0,q,q)
 b <- rnorm(p)
 lam <- psigx <- psigy <- 0
 
+sigm <- function(X) 1/(1 + exp(-X))
 lik <- function(b)
 {
-   s <- 0.5 * sum((y - X%*%b)**2) + lam * sum(abs(b)) 
-   a <- psigx * sum(diag(t(b) %*%  gx  %*% b))
-   b <- psigy * sum(diag(b %*%  gy  %*% t(b)))
-   return (s + a + b)
+
+  s <- 0
+  for (i in seq(n))
+  {
+    mu <- X[i, ] %*%b
+    s <- s  + (y[i, 1]  * log(sigm(mu))   + (1-y[i,1]) *  log(1-sigm(mu)))
+  }
+  s <-  -s  + sum(abs(b))
+  # a <- psigx * sum(diag(t(b) %*%  gx  %*% b))
+  # b <- psigy * sum(diag(b %*%  gy  %*% t(b)))
+  # return (s + a + b)
+  s
 }
 
 library(microbenchmark)
-nloptr::newuoa(x0=rnorm(p), lik, nl.info=T)
+b.res <- nloptr::newuoa(x0=rnorm(p), lik, nl.info=T)$par
+
+y.at <- sigm(X%*%b.res)
 
 
-solve(t(X)%*%X) %*% t(X) %*% y

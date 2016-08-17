@@ -16,4 +16,7 @@ rm -rf \
 	netreg_tests* \
 	libnetreg.a \
 	test-suite.log \
-	netreg_benchmarks*
+	netreg_benchmarks* \
+	callgrind.out.* \
+	cachegrind.out. * \
+	test

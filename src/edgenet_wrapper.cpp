@@ -28,7 +28,7 @@ void do_gauss_edgenet_(double *const X, double *const Y,
                                                    lambda, 1.0,
                                                    psigx, psigy,
                                                    n_iter, thresh);
-    netreg::edgenet e;
+    netreg::gaussian_edgenet e;
     e.run(data);
     B_ = data.coefficients().begin();
     mu_ = data.intercept().begin();
