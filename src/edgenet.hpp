@@ -197,4 +197,5 @@ namespace netreg
 
     };
 }
+
 #endif //NETREG_EDGENET_H

@@ -1,0 +1,10 @@
+/**
+ * Author: Simon Dirmeier
+ * Date: 17/08/16
+ * Email: simon.dirmeier@bsse.ethz.ch
+ */
+
+#ifndef SRC_BINOMIAL_EDGENET_LIKELIHOOD_FUNCTION_HPP
+#define SRC_BINOMIAL_EDGENET_LIKELIHOOD_FUNCTION_HPP
+
+#endif //SRC_BINOMIAL_EDGENET_LIKELIHOOD_FUNCTION_HPP
