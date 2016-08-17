@@ -48,7 +48,7 @@ namespace netreg
              const double psigx,
              const double psigy,
              cv_fold &fold) const;
+    };
 }
-
 
 #endif //SRC_BINOMIAL_EDGENET_HPP

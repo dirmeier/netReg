@@ -7,7 +7,7 @@ AC_INIT(
 	[netReg],
 	[https://github.com/rafstraumur/netreg])
 AC_CONFIG_HEADERS([../config.h])
-AC_CONFIG_SRCDIR([../edgenet.cpp])
+AC_CONFIG_SRCDIR([../gaussian_edgenet.cpp])
 
 
 AC_LANG([C++])

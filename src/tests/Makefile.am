@@ -1,11 +1,13 @@
 AM_CXXFLAGS = @OPENMP_CXXFLAGS@
 
 netreg_headers = \
+	../binomial_edgenet.hpp \
+	../binomial_edgenet_likelihood_function.hpp \
 	../config.h \
 	../cv_set.hpp \
 	../cv_fold.hpp \
-	../edgenet.hpp \
-	../edgenet_loss_function.hpp \
+	../gaussian_edgenet.hpp \
+	../gaussian_edgenet_loss_function.hpp \
 	../edgenet_model_selection.hpp \
 	../error_functions.hpp \
 	../graph_functions.hpp \
@@ -25,8 +27,9 @@ netreg_headers = \
 
 noinst_LIBRARIES = libnetreg.a
 libnetreg_a_SOURCES = $(netreg_headers) \
+	../binomial_edgenet.cpp \
 	../cv_set.cpp \
-	../edgenet.cpp \
+	../gaussian_edgenet.cpp \
 	../error_functions.cpp \
 	../graph_functions.cpp \
 	../math_functions.cpp \
@@ -47,7 +50,8 @@ bin_PROGRAMS = netreg_benchmarks
 netreg_benchmarks_SOURCES = benchmark.cpp \
 	$(netreg_headers) \
 	../cv_set.cpp \
-	../edgenet.cpp \
+	../binomial_edgenet.cpp \
+	../gaussian_edgenet.cpp \
 	../error_functions.cpp \
 	../graph_functions.cpp \
 	../math_functions.cpp \

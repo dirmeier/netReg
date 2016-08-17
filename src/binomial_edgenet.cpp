@@ -4,7 +4,7 @@
  * Email: simon.dirmeier@bsse.ethz.ch
  */
 
-#include "edgenet.hpp"
+#include "binomial_edgenet.hpp"
 #include "math_functions.hpp"
 #include "stat_functions.hpp"
 #include <iostream>
@@ -41,33 +41,9 @@ namespace netreg
                                    const double psigx, const double psigy,
                                    cv_fold &fold) const
     {
-        const int P = data.covariable_count();
-        const int Q = data.response_count();
-        matrix<double> coef(P, Q, arma::fill::ones);
-        matrix<double> old_coef(P, Q);
-        const double thresh = data.threshold();
-        const int niter = data.max_iter();
-        matrix<double> &X = data.design();
-        matrix<double> &Y = data.response();
-        matrix<double> &LX = data.lx();
-        matrix<double> &LY = data.ly();
-        index_vector &trainIdxs = fold.train_set();
-        matrix<double> Xtrain = X.rows(trainIdxs);
-        matrix<double> Ytrain = Y.rows(trainIdxs);
-        matrix<double> TXtrain = Xtrain.t();
-        matrix<double> train_txx = TXtrain * Xtrain;
-        matrix<double> train_txy = TXtrain * Ytrain;
-        int iter = 0;
-        do
-        {
-            // This is definitely not parallizable!
-            for (int qi = 0; qi < Q; ++qi)
-            {
-                uccd_(P, Q, thresh, niter, lambda, alpha, psigx, psigy,
-                      train_txx, train_txy, LX, LY, coef, old_coef, qi);
-            }
-        }
-        while (arma::accu(arma::abs(coef - old_coef)) > thresh && iter++ < niter);
+
+        matrix<double> coef(10, 10, arma::fill::ones);
+
         return coef;
     }
 
