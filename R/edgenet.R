@@ -188,6 +188,38 @@ function
                  as.double(psigx),  as.double(psigy),
                  as.integer(maxit), as.double(thresh), 
                  PACKAGE="netReg")
+  ret        <- .obj(res, lambda, psigx, psigy)
+  class(ret) <- "gaussian.edgenet"
+  ret
+}
+
+#' @noRd
+.binom.edgenet <-
+function
+(
+  X, Y, G.X, G.Y, 
+  n, p, q, 
+  lambda, psigx, psigy, 
+  maxit, thresh
+)
+{
+  res  <-  .Call("binom_edgenet", 
+                 X, Y,
+                 G.X, G.Y, 
+                 as.integer(n), as.integer(p), as.integer(q),
+                 as.double(lambda), 
+                 as.double(psigx),  as.double(psigy),
+                 as.integer(maxit), as.double(thresh), 
+                 PACKAGE="netReg")
+  ret        <- .obj(res, lambda, psigx, psigy)
+  class(ret) <- "binomial.edgenet"
+  ret
+}
+
+#' @noRd
+.obj <- 
+function(res, lambda, psigx, psigy)
+{
   coefficients <- res$coefficients
   intr         <- res$intercept
   rownames(coefficients) <- colnames(X)
@@ -197,21 +229,5 @@ function
               lambda=lambda,
               psigx=psigx,
               psigy=psigy)
-  class(ret) <- "gaussian.edgenet"
-  ret
-}
-
-#' @noRd
-.binom.edgenet <-
-  function
-(
-  X, Y, G.X, G.Y, 
-  n, p, q, 
-  lambda, psigx, psigy, 
-  maxit, thresh
-)
-{
-  
-  class(ret) <- "binomial.edgenet"
   ret
 }

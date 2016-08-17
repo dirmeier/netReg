@@ -18,10 +18,10 @@
 #include <boost/random/exponential_distribution.hpp>
 #include <boost/random/mersenne_twister.hpp>
 
-#include "cv_set.hpp"
-#include "graph_penalized_linear_model_data.hpp"
-#include "edgenet.hpp"
-#include "edgenet_model_selection.hpp"
+#include "../cv_set.hpp"
+#include "../graph_penalized_linear_model_data.hpp"
+#include "../gaussian_edgenet.hpp"
+#include "../edgenet_model_selection.hpp"
 
 
 // Version that fills a vector

@@ -54,3 +54,36 @@ y.hat[y.hat > .5] <- 1
 y.hat[y.hat <= .5] <- 0
 plot(as.vector(X), y, type="p")
 points(as.vector(X), y.hat, col=2)
+
+fr <- function(x) {   ## Rosenbrock Banana function
+  100 * (x[2] - x[1]^2)^2 + (1 - x[1])^2
+}
+library(microbenchmark)
+################################
+n <- 100
+p <- 2
+q <- 1
+X <- matrix(rnorm(n*p), n)
+y <- matrix(rnorm(n*q), n)
+
+G.X <- matrix(as.numeric(rpois(p * p, 1)), p)
+G.X <- t(G.X) + G.X
+gx <- t(G.X) + G.X
+diag(G.X) <- 0
+gy <- matrix(0,q,q)
+b <- rnorm(p)
+lam <- psigx <- psigy <- 0
+
+lik <- function(b)
+{
+   s <- 0.5 * sum((y - X%*%b)**2) + lam * sum(abs(b)) 
+   a <- psigx * sum(diag(t(b) %*%  gx  %*% b))
+   b <- psigy * sum(diag(b %*%  gy  %*% t(b)))
+   return (s + a + b)
+}
+
+library(microbenchmark)
+nloptr::newuoa(x0=rnorm(p), lik, nl.info=T)
+
+
+solve(t(X)%*%X) %*% t(X) %*% y
