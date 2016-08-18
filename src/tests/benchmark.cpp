@@ -4,13 +4,11 @@
  * Email: simon.dirmeier@bsse.ethz.ch
  */
 
-
+#include <cstdlib>
 #ifndef ARMA_DONT_USE_WRAPPER
 #define ARMA_DONT_USE_WRAPPER
 #endif
 #include <armadillo>
-#include <iostream>
-#include <cstdlib>
 
 #include <boost/random.hpp>
 #include <boost/random/variate_generator.hpp>
