@@ -7,6 +7,7 @@
 #define NETREG_MATH_HPP
 
 #include <vector>
+#include <cmath>
 
 #ifndef ARMA_DONT_USE_WRAPPER
 #define ARMA_DONT_USE_WRAPPER
@@ -49,5 +50,19 @@ namespace netreg
      * @return return the maximal element
      */
     template <typename T> T max_element(T *const ptr, int len);
+
+
+    /**
+     * Calculates the sigmoid function value of a double.
+     *
+     * @param d  the value for which the sigmoidal is calculated
+     *
+     * @return returns the sigmoid function value
+     */
+    double sigmoid(double d)
+    {
+        return 1 / (1 + exp(d));
+    }
+
 }
 #endif //NETREG_MATH_HPP

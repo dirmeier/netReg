@@ -63,7 +63,7 @@ library(microbenchmark)
 n <- 100
 p <- 2
 q <- 1
-X <- smatrix(rnorm(n*p), n)
+X <- matrix(rnorm(n*p), n)
 y <-
 
 G.X <- matrix(as.numeric(rpois(p * p, 1)), p)

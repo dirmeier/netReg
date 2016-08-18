@@ -7,11 +7,7 @@
 #define ARMA_DONT_USE_WRAPPER
 #endif
 #include <armadillo>
-#ifndef NDEBUG
-#include <iostream>
-#else
 #include <omp.h>
-#endif
 #include "types.hpp"
 #include "edgenet.hpp"
 #include "graph_penalized_linear_model_data.hpp"
@@ -55,9 +51,7 @@ namespace netreg
         {
             std::vector<double> sses(nfolds_);
             // do n-fold cross-validation
-#ifdef NDEBUG
             #pragma omp parallel for
-#endif
             for (int fc = 0; fc < nfolds_; ++fc)
             {
                 cv_fold &fold = cvset_.get_fold(fc);
@@ -81,32 +75,10 @@ namespace netreg
                 {
                     coef = edgenet_.run_cv(data_, p(0, 0), 1.0, 0, 0, fold);
                 }
-#ifndef NDEBUG
-                std::cout << " test idx ";
-                for(arma::uvec::iterator i = fold.test_set().begin(); i != fold.test_set().end(); ++i){
-                    std::cout << *i <<  " ";
-                }
-                std::cout << std::endl;
-                std::cout <<  "coef " <<std::endl;
-                for (int i = 0; i < coef.n_rows; i++){
-                    for (int j = 0; j < coef.n_cols; j++){
-                        std::cout << coef(i,j) << " ";
-                    }
-                    std::cout << std::endl;
-                }
-                std::cout << std::endl;
-                std::cout << std::endl;
-#endif
                 double err = sse(coef, X_, Y_, fold.test_set());
-#ifndef NDEBUG
-                std::cout << "lambda " <<  p(0, 0) << " err " << err << std::endl;
-#endif
                 sses[fc] = err;
             }
             double  err = std::accumulate(sses.begin(), sses.end(), 0.0);
-#ifndef NDEBUG
-            std::cout << "lambda " <<  p(0, 0) << " final err " << err << std::endl << std::endl;
-#endif
             return err;
         }
 

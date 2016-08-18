@@ -4,9 +4,14 @@
  */
 
 #include "gaussian_edgenet.hpp"
+
+#ifndef ARMA_DONT_USE_WRAPPER
+#define ARMA_DONT_USE_WRAPPER
+#endif
+#include <armadillo>
+
 #include "math_functions.hpp"
 #include "stat_functions.hpp"
-#include <iostream>
 
 namespace netreg
 {
@@ -162,9 +167,7 @@ namespace netreg
     {
         if (psigx == 0)
             return;
-        double xPenalty = -LX(pi, pi) * cfs(pi, qi);
-        for (int j = 0; j < P; j++)
-            xPenalty += LX(pi, j) * cfs(j, qi);
+        double xPenalty = -LX(pi, pi) * cfs(pi, qi) + arma::accu(LX.row(pi) * cfs.col(qi));
         s = s - 2 * psigx * xPenalty;
         norm += 2 * psigx * LX(pi, pi);
     }
@@ -177,9 +180,7 @@ namespace netreg
         if (psigy == 0 || Q == 1)
             return;
         // penalization for GY
-        double yPenalty = -cfs(pi, qi) * LY(qi, qi);
-        for (int j = 0; j < Q; ++j)
-            yPenalty += cfs(pi, j) * LY(j, qi);
+        double yPenalty = -cfs(pi, qi) * LY(qi, qi) + arma::accu(cfs.row(pi) * LY.col(qi));
         s = s - 2 * psigy * yPenalty;
         norm += 2 * psigy * LY(qi, qi);
     }

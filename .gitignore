@@ -1,3 +1,5 @@
+src/tests/callgrind.out*
+src/tests/cachegrind.out.*
 src/tests/netreg_benchmarks*
 src/tests/netreg_tests*
 src/test
