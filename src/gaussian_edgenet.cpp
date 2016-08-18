@@ -10,7 +10,7 @@
 
 namespace netreg
 {
-    void edgenet::run(graph_penalized_linear_model_data &data) const
+    void gaussian_edgenet::run(graph_penalized_linear_model_data &data) const
     {
         const int P = data.covariable_count();
         const int Q = data.response_count();
@@ -50,7 +50,7 @@ namespace netreg
         std::cout << "Done!\n";
     }
 
-    matrix<double> edgenet::run_cv(graph_penalized_linear_model_data &data,
+    matrix<double> gaussian_edgenet::run_cv(graph_penalized_linear_model_data &data,
                                   const double lambda, const double alpha,
                                   const double psigx, const double psigy,
                                   cv_fold &fold) const
@@ -85,7 +85,7 @@ namespace netreg
         return coef;
     }
 
-    void edgenet::uccd_
+    void gaussian_edgenet::uccd_
         (const int P, const int Q,
          const double thresh, const int niter,
          const double lambda, const double alpha,
@@ -123,7 +123,7 @@ namespace netreg
         while (arma::accu(arma::abs(coef.col(qi) - old_coef.col(qi))) > thresh && iter++ < niter);
     }
 
-    void edgenet::set_params
+    void gaussian_edgenet::set_params
         (double &s, double &norm,
          matrix<double> &TXX, matrix<double> &TXY,
          matrix<double> &coef,
@@ -142,7 +142,7 @@ namespace netreg
                        P, Q, pi, qi);
     }
 
-    void edgenet::graph_penalize
+    void gaussian_edgenet::graph_penalize
         (double &s, double &norm,
          const double psigx, const double psigy,
          matrix<double> &LX, matrix<double> &LY, matrix<double> &cfs,
@@ -155,7 +155,7 @@ namespace netreg
             ly_penalize(s, norm, psigy, LY, cfs, Q, pi, qi);
     }
 
-    void edgenet::lx_penalize
+    void gaussian_edgenet::lx_penalize
         (double &s, double &norm, const double psigx,
          matrix<double> &LX, matrix<double> &cfs, const int P,
          const int pi, const int qi) const
@@ -169,7 +169,7 @@ namespace netreg
         norm += 2 * psigx * LX(pi, pi);
     }
 
-    void edgenet::ly_penalize
+    void gaussian_edgenet::ly_penalize
         (double &s, double &norm, const double psigy,
          matrix<double> &LY, matrix<double> &cfs, const int Q,
          const int pi, const int qi) const

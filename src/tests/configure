@@ -2783,7 +2783,7 @@ if test "x${enable_cxxflags_setting}" = "xyes"; then :
 
 
 
-for flag in -O0 -g -pg -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto; do
+for flag in -O2 -g -pg -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto; do
   as_CACHEVAR=`$as_echo "ax_cv_check_cxxflags__$flag" | $as_tr_sh`
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C++ compiler accepts $flag" >&5
 $as_echo_n "checking whether C++ compiler accepts $flag... " >&6; }

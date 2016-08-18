@@ -21,7 +21,7 @@ namespace netreg
     /**
      * Class for estimating the coeffiecients of a edge-regularized linear regression model.
      */
-    class edgenet
+    class gaussian_edgenet
     {
     public:
         /**
