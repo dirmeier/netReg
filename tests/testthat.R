@@ -1,4 +1,4 @@
-#library(testthat)
-#library(netReg)
+library(testthat)
+library(netReg)
 
 test_check("netReg")
