@@ -5,9 +5,10 @@
  */
 
 #include "binomial_edgenet.hpp"
+#include <iostream>
+
 #include "math_functions.hpp"
 #include "stat_functions.hpp"
-#include <iostream>
 
 namespace netreg
 {

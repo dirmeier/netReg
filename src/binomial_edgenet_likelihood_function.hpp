@@ -15,6 +15,7 @@
 #endif
 #include <armadillo>
 #include <omp.h>
+
 #include "types.hpp"
 #include "graph_penalized_linear_model_data.hpp"
 #include "../inst/dlib/matrix.h"
@@ -41,7 +42,9 @@ namespace netreg
             nfolds_(static_cast<int>(cvset.fold_count())),
             edgenet_(),
             do_psigx_(data.psigx() == -1),
-            do_psigy_(data.psigy() == -1)
+            do_psigy_(data.psigy() == -1),
+            P_(X_.n_cols),
+            Q_(Y_.n_cols)
         {}
 
         /**
@@ -51,12 +54,18 @@ namespace netreg
          */
         double operator()(const dlib::matrix<double> &b) const
         {
-            // to cast
-            matrix<double> B(X_.ncol, Y_.col);
+
+            matrix<double> B(P, Q);
+            // TODO: efficient cast b to B
+            for (unsigned int i = 0; i < P; ++i)
+                for (unsigned int j = 0; j < Q; ++j)
+                    B(i, j) = b(i, j);
             matrix<double> sigm = (X_ * B);
             sigm.transform([](double val) { return log(1 / (1 + exp(val))); });
             matrix<double> loglik = Y .* log(sigm)  + (1 - Y) .* log(1-sigm);
+            double nll = 0.0;
 
+            return nll;
         }
 
     private:
@@ -66,6 +75,8 @@ namespace netreg
         matrix<double> &Y_;      // response matrix
         const bool do_psigx_;
         const bool do_psigy_;
+        const int P_;
+        const int Q_;
     };
 }
 

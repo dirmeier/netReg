@@ -59,10 +59,7 @@ namespace netreg
      *
      * @return returns the sigmoid function value
      */
-    double sigmoid(double d)
-    {
-        return 1 / (1 + exp(d));
-    }
+    double sigmoid(double d);
 
 }
 #endif //NETREG_MATH_HPP

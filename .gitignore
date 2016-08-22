@@ -1,3 +1,4 @@
+src/tests/build/.*
 src/tests/a.out
 src/tests/test.dSYM/.*
 src/tests/callgrind.out*

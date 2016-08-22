@@ -27,11 +27,17 @@ namespace netreg
         return std::abs(arma::dot(lhs, rhs));
     }
 
-    template <typename T> T max_element(T *const ptr, int len)
+    template<typename T>
+    T max_element(T *const ptr, int len)
     {
         T maximum = ptr[len - 1];
-        for(int i = 0; i < len - 1; ++i)
+        for (int i = 0; i < len - 1; ++i)
             if (ptr[i] > maximum) maximum = ptr[i];
         return maximum;
+    }
+
+    double sigmoid(double d)
+    {
+        return 1 / (1 + exp(d));
     }
 }

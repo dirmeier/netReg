@@ -4,8 +4,8 @@
  * Email: simon.dirmeier@bsse.ethz.ch
  */
 
-#ifndef SRC_BINOMIAL_EDGENET_HPP
-#define SRC_BINOMIAL_EDGENET_HPP
+#ifndef NETREG_BINOMIAL_EDGENET_HPP
+#define NETREG_BINOMIAL_EDGENET_HPP
 
 #ifndef ARMA_DONT_USE_WRAPPER
 #define ARMA_DONT_USE_WRAPPER
@@ -51,4 +51,4 @@ namespace netreg
     };
 }
 
-#endif //SRC_BINOMIAL_EDGENET_HPP
+#endif //NETREG_BINOMIAL_EDGENET_HPP
