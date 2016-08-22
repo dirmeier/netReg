@@ -9,6 +9,7 @@
 #endif
 #include <armadillo>
 #include <iostream>
+ 
 int main()
 {
     arma::Mat<double> a(10, 10, arma::fill::zeros);

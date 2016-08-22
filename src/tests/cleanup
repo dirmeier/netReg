@@ -1,5 +1,3 @@
-#!/bin/bash
-
 echo "Cleaning up..."
 rm -rf \
 	config.* \
@@ -18,5 +16,5 @@ rm -rf \
 	test-suite.log \
 	netreg_benchmarks* \
 	callgrind.out.* \
-	cachegrind.out. * \
+	cachegrind.out.* \
 	test
