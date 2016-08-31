@@ -8,13 +8,7 @@ intercept.matrix <- function(n, mu)  rep(1, n) %*% t(mu)
 rss <- function(Y, Y.hat) sum((Y - Y.hat) ** 2) 
 
 #' @noRd
-cvsets <- 
-function
-( 
- n,
- folds=10,
- seed=23
-)
+cvsets <- function(n, folds=10,seed=23)
 {      
   if (n < 1) stop("n<1; need positive integer!")
   if (folds < 0) stop("folds<0; need positive integer!")

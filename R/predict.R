@@ -1,4 +1,4 @@
-#' Predict method for edgenet fits
+#' Predict method for gaussian edgenet fits
 #' 
 #' @export
 #' 
@@ -6,7 +6,7 @@
 #' @description Predicts the estimated Y.hat values for a newdata design matrix X 
 #' similar to the other predict methods, e.g. from glm and glmnet
 #' 
-#' @param object a fitted object of class \emph{edgenet}
+#' @param object a fitted object of class \emph{gaussian.edgenet}
 #' @param ... further arguments
 #' @param newdata a new (\code{m} x \code{p})-dimensional design matrix with a 
 #' variable number of observations \code{m}, but a constant number 
@@ -20,9 +20,9 @@
 #' G.X <- matrix(rpois(10*10,1),10)
 #' G.X <- t(G.X) + G.X
 #' diag(G.X) <- 0
-#' fit <- edgenet(X=X, Y=Y, G.X=G.X)
+#' fit <- edgenet(X=X, Y=Y, G.X=G.X, family="gaussian")
 #' pred <- predict(fit, X)
-predict.edgenet <- 
+predict.gaussian.edgenet <- 
 function
 (
  object, 
