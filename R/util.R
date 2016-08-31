@@ -1,5 +1,5 @@
 #' @noRd
-intercept <- function(Y,X,B,n)  ((t(Y - X %*% B) %*% rep(1,n)) / n )
+intercept <- function(Y, X, B, n)  ((t(Y - X %*% B) %*% rep(1,n)) / n )
 
 #' @noRd
 intercept.matrix <- function(n, mu)  rep(1, n) %*% t(mu)
@@ -12,7 +12,8 @@ cvsets <-
 function
 ( 
  n,
- folds=10
+ folds=10,
+ seed=23
 )
 {      
   if (n < 1) stop("n<1; need positive integer!")

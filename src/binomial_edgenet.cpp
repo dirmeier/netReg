@@ -44,7 +44,7 @@ namespace netreg
     {
 
         matrix<double> coef(10, 10, arma::fill::ones);
-
+        //TODO
         return coef;
     }
 

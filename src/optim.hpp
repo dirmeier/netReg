@@ -11,7 +11,7 @@
 #include "../inst/dlib/optimization.h"
 #include "graph_penalized_linear_model_data.hpp"
 #include "cv_set.hpp"
-#include "edgenet_loss_function.hpp"
+#include "gaussian_edgenet_loss_function.hpp"
 
 namespace netreg
 {

@@ -188,7 +188,7 @@ function
                  as.double(psigx),  as.double(psigy),
                  as.integer(maxit), as.double(thresh), 
                  PACKAGE="netReg")
-  ret        <- .obj(res, lambda, psigx, psigy)
+  ret        <- .obj(res, lambda, psigx, psigy, X, Y)
   class(ret) <- "gaussian.edgenet"
   ret
 }
@@ -211,14 +211,14 @@ function
                  as.double(psigx),  as.double(psigy),
                  as.integer(maxit), as.double(thresh), 
                  PACKAGE="netReg")
-  ret        <- .obj(res, lambda, psigx, psigy)
+  ret        <- .obj(res, lambda, psigx, psigy, X, Y)
   class(ret) <- "binomial.edgenet"
   ret
 }
 
 #' @noRd
 .obj <- 
-function(res, lambda, psigx, psigy)
+function(res, lambda, psigx, psigy, X, Y)
 {
   coefficients <- res$coefficients
   intr         <- res$intercept

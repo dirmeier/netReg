@@ -31,6 +31,18 @@ void do_gauss_cv_edgenet_(double *const X, double *const Y,
                           int n_folds, int *const foldid,
                           int n_foldid);
 
+/**
+ * Wrapper for calling edge-net.
+ *
+ * Basically all the parameters are the same as in netReg.cpp binom_edgenet
+ */
+void do_binom_edgenet_(double *const X, double *const Y,
+                       double *const GX, double *const GY,
+                       const int n, const int p, const int q,
+                       const double lambda,
+                       const double psigx, const double psigy,
+                       const int n_iter, const double thresh);
+
 extern double *B_;
 extern double *mu_;
 extern double lamb_;

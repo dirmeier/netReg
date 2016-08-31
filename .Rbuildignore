@@ -8,3 +8,4 @@ netreg.Rcheck
 netreg.Rproj
 netreg*tar.gz
 .build*timestamp
+VERSIONS.md

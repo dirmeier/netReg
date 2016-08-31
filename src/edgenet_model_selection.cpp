@@ -13,7 +13,7 @@
 #include <numeric>
 #include <vector>
 
-#include "edgenet_loss_function.hpp"
+#include "gaussian_edgenet_loss_function.hpp"
 #include "optim.hpp"
 
 namespace netreg
@@ -58,7 +58,7 @@ namespace netreg
         std::vector<double> upper_bound{100.0, 10000.0, 10000.0};
         const double rad_start = 0.49, rad_end = 1e-6;
         const int niter = 1000;
-        return opt.bobyqa<edgenet_loss_function>
+        return opt.bobyqa<gaussian_edgenet_loss_function>
                       (data, cvset,
                        start, lower_bound, upper_bound,
                        rad_start, rad_end, niter);

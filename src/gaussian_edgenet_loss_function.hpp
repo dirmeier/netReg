@@ -9,7 +9,7 @@
 #include <armadillo>
 #include <omp.h>
 #include "types.hpp"
-#include "edgenet.hpp"
+#include "gaussian_edgenet.hpp"
 #include "graph_penalized_linear_model_data.hpp"
 #include "cv_set.hpp"
 #include "error_functions.hpp"
@@ -89,7 +89,7 @@ namespace netreg
         matrix<double> &X_;      // design matrix
         matrix<double> &Y_;      // response matrix
         int nfolds_;             // number of folds
-        const edgenet edgenet_;
+        const gaussian_edgenet edgenet_;
         const bool do_psigx_;
         const bool do_psigy_;
     };

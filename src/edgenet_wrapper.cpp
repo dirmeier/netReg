@@ -13,6 +13,7 @@
 #include "cv_set.hpp"
 #include "graph_penalized_linear_model_data.hpp"
 #include "gaussian_edgenet.hpp"
+#include "binomial_edgenet.hpp"
 #include "edgenet_model_selection.hpp"
 
 void do_gauss_edgenet_(double *const X, double *const Y,
