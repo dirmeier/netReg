@@ -179,7 +179,6 @@ namespace netreg
     {
         if (psigy == 0 || Q == 1)
             return;
-        // penalization for GY
         double yPenalty = -cfs(pi, qi) * LY(qi, qi) + arma::accu(cfs.row(pi) * LY.col(qi));
         s = s - 2 * psigy * yPenalty;
         norm += 2 * psigy * LY(qi, qi);
