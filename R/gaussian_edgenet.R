@@ -217,7 +217,7 @@ function
 }
 
 #' @noRd
-.obj <- 
+.to.edge.obj <- 
 function(res, lambda, psigx, psigy, X, Y)
 {
   coefficients <- res$coefficients
