@@ -4,7 +4,7 @@ binom.edgenet <- function(X, Y, G.X, G.Y,
                           lambda, psigx, psigy, 
                           maxit, thresh)
 {
-  res  <-  .Call("binom_edgenet", 
+  res <- .Call("binom_edgenet", 
                  X, Y,
                  G.X, G.Y, 
                  as.integer(n), as.integer(p), as.integer(q),

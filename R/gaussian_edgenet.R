@@ -4,7 +4,7 @@ gauss.edgenet <- function(X, Y, G.X, G.Y,
                           lambda, psigx, psigy, 
                           maxit, thresh)
 {
-  res  <- .Call("gauss_edgenet", 
+  res <- .Call("gauss_edgenet", 
                  X, Y,
                  G.X, G.Y, 
                  as.integer(n), as.integer(p), as.integer(q),
