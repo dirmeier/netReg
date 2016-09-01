@@ -1,4 +1,0 @@
-[submodule "netreg-lib"]
-path = netreg-lib
-url = https://github.com/rafstraumur/netreg-lib.git
-branch = master
