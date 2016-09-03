@@ -3,7 +3,7 @@
 \docType{package}
 \name{netReg-package}
 \alias{netReg-package}
-\title{Package: netReg}
+\title{netReg}
 \description{
 \emph{netReg} is a package for generalized linear regression that includes prior graphs in the models objective function.
 The models are a generalization of the \emph{LASSO} by Tibshirani.

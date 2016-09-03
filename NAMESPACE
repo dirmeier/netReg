@@ -2,7 +2,7 @@
 
 S3method(cv.edgenet,default)
 S3method(edgenet,default)
-S3method(predict,edgenet)
+S3method(predict,gaussian.edgenet)
 S3method(print,gaussian.cv.edgenet)
 S3method(print,gaussian.edgenet)
 export(cv.edgenet)

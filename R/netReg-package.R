@@ -1,15 +1,17 @@
-#' Package: netReg
+#' netReg
 #'
 #' \emph{netReg} is a package for generalized linear regression that includes prior graphs in the models objective function.
 #' The models are a generalization of the \emph{LASSO} by Tibshirani.
 #' \emph{netReg} uses \emph{Armadillo}, \emph{Intel MKL}, \emph{OpenBLAS}, \emph{BLAS} and \emph{LAPACK} for fast matrix computations and
 #' \emph{Dlib} for constrained derivate-free optimization.
 #' 
-#'
 #' @name netReg-package
 #' @author Simon Dirmeier | \email{simon.dirmeier@@gmx.de}
 #' @docType package
 #' @keywords package
+#' 
+#' @useDynLib netReg
+#' 
 #' @references 
 #'  Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007), 
 #'  Pathwise coordinate optimization.\cr
