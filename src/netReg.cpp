@@ -41,7 +41,7 @@ extern "C"
  * @param niters max number of iterations if parameter estimation does not converge in time
  * @param threshs convergence threshold
  */
-SEXP gauss_edgenet(SEXP XS, SEXP YS,
+SEXP gaussian_edgenet_(SEXP XS, SEXP YS,
                    SEXP GXS, SEXP GYS,
                    SEXP ns, SEXP ps, SEXP qs,
                    SEXP lambdass,
@@ -136,7 +136,7 @@ SEXP gauss_edgenet(SEXP XS, SEXP YS,
  * @param niters max number of iterations if parameter estimation does not converge in time
  * @param threshs convergence threshold
  */
-SEXP binom_edgenet(SEXP XS, SEXP YS,
+SEXP binomial_edgenet_(SEXP XS, SEXP YS,
                    SEXP GXS, SEXP GYS,
                    SEXP ns, SEXP ps, SEXP qs,
                    SEXP lambdass,
@@ -233,7 +233,7 @@ SEXP binom_edgenet(SEXP XS, SEXP YS,
  * @param foldids integer vector of assignments of observations to folds (i.e. vector of ns elements,  \in {1, ..., nfolds}
  * @param lenfoldids length of the vector above
  */
-SEXP gauss_cv_edgenet(SEXP XS, SEXP YS, SEXP GXS, SEXP GYS,
+SEXP gaussian_cv_edgenet_(SEXP XS, SEXP YS, SEXP GXS, SEXP GYS,
                       SEXP ns, SEXP ps, SEXP qs,
                       SEXP psi_gxs, SEXP psi_gys,
                       SEXP niters, SEXP threshs,
