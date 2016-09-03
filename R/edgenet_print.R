@@ -1,7 +1,7 @@
 #' @noRd
 #' @export
 #' @author Simon Dirmeier, \email{netreg@@simon-dirmeier.net}
-print.gaussian.edgenet <- 
+print.edgenet <- 
 function
 (
  x,
@@ -24,7 +24,7 @@ function
 #' @noRd
 #' @export
 #' @author Simon Dirmeier, \email{netreg@@simon-dirmeier.net}
-print.gaussian.cv.edgenet <-
+print.cv.edgenet <-
 function
 (
   x, 
