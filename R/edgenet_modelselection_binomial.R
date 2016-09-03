@@ -1,17 +1,10 @@
 #' @noRd
-.binomial.cv.edgenet <-
-  function
-(
-  X, Y, G.X, G.Y,
-  n, p, q, 
-  psigx, psigy, 
-  maxit, thresh,
-  nfolds, foldid
-)
-  {
-  print(psigx)
-  print(psigy)
-  cv <- .Call("binomial_cv_edgenet", 
+.binomial.cv.edgenet <- function(X, Y, G.X, G.Y,
+                                 n, p, q, 
+                                 psigx, psigy, 
+                                 maxit, thresh,nfolds, foldid)
+{
+  cv <- .Call("binomial_cv_edgenet_", 
               X, Y,
               G.X, G.Y, 
               as.integer(n), as.integer(p), as.integer(q),

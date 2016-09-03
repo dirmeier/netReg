@@ -1,10 +1,10 @@
 #' @noRd
-gauss.edgenet <- function(X, Y, G.X, G.Y, 
+binom.edgenet <- function(X, Y, G.X, G.Y, 
                           n, p, q, 
                           lambda, psigx, psigy, 
                           maxit, thresh)
 {
-  res <- .Call("gauss_edgenet", 
+  res <- .Call("binomial_edgenet_", 
                  X, Y,
                  G.X, G.Y, 
                  as.integer(n), as.integer(p), as.integer(q),
@@ -13,6 +13,6 @@ gauss.edgenet <- function(X, Y, G.X, G.Y,
                  as.integer(maxit), as.double(thresh), 
                  PACKAGE="netReg")
   ret        <- new.edgenet.obj(res, lambda, psigx, psigy, X, Y)
-  class(ret) <- "gaussian.edgenet"
+  class(ret) <- "binomial.edgenet"
   ret
 }
