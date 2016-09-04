@@ -12,6 +12,7 @@
 
 #include <numeric>
 #include <vector>
+#include <omp.h>
 
 #include "gaussian_edgenet_loss_function.hpp"
 #include "optim.hpp"
@@ -21,29 +22,29 @@ namespace netreg
     std::vector<double>
     edgenet_model_selection::regularization_path
         (graph_penalized_linear_model_data &data, const int nfolds,
-         std::vector<int> &folds)
+         std::vector<int> &folds,char *const fam)
     {
         cv_set cvset(data.design().n_rows, nfolds);
-        return regularization_path_(data, cvset, folds);
+        return regularization_path_(data, cvset, folds, fam);
     }
 
     std::vector<double>
     edgenet_model_selection::regularization_path
         (graph_penalized_linear_model_data &data, int *const foldid,
-         std::vector<int> &folds)
+         std::vector<int> &folds, char *const fam)
     {
         cv_set cvset(data.design().n_rows, foldid);
-        return regularization_path_(data, cvset, folds);
+        return regularization_path_(data, cvset, folds, fam);
     }
 
     std::vector<double>
     edgenet_model_selection::regularization_path_
         (graph_penalized_linear_model_data &data, cv_set &cvset,
-         std::vector<int> &folds)
+         std::vector<int> &folds, char *const fam)
     {
         if (static_cast<int>(folds.size()) != data.sample_count())
             folds.resize(data.sample_count());
-        //TODO parallel
+        #pragma omp parallel for
         for (int i = 0; i < cvset.fold_count(); i++)
         {
             cv_fold &fold = cvset.get_fold(i);

@@ -30,7 +30,8 @@ namespace netreg
          */
         std::vector<double> regularization_path
             (graph_penalized_linear_model_data &data,
-             const int nfolds,std::vector<int>& folds);
+             const int nfolds,std::vector<int>& folds,
+             char *const fam);
 
         /**
          * Calculate a regularization path for an edge-penalized regression model,
@@ -43,12 +44,14 @@ namespace netreg
          */
         std::vector<double> regularization_path
             (graph_penalized_linear_model_data &data,
-             int *const foldid,std::vector<int>& folds);
+             int *const foldid,std::vector<int>& folds,
+             char *const fam);
 
     private:
         std::vector<double> regularization_path_
             (graph_penalized_linear_model_data &data,
-             cv_set &cvset,std::vector<int>& folds);
+             cv_set &cvset,std::vector<int>& folds,
+             char *const fam);
     };
 }
 #endif //NETREG_EDGENETMODELSELECTION_HPP
