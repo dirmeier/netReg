@@ -3,8 +3,6 @@
  * Email: netreg@simon-dirmeier.net
  */
 
-#include <string>
-#include <cmath>
 #include <R.h>
 #include <Rinternals.h>
 #include <Rmath.h>

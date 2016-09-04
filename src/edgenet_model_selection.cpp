@@ -22,7 +22,7 @@ namespace netreg
     std::vector<double>
     edgenet_model_selection::regularization_path
         (graph_penalized_linear_model_data &data, const int nfolds,
-         std::vector<int> &folds,char *const fam)
+         std::vector<int> &folds, const char * fam)
     {
         cv_set cvset(data.design().n_rows, nfolds);
         return regularization_path_(data, cvset, folds, fam);
@@ -31,7 +31,7 @@ namespace netreg
     std::vector<double>
     edgenet_model_selection::regularization_path
         (graph_penalized_linear_model_data &data, int *const foldid,
-         std::vector<int> &folds, char *const fam)
+         std::vector<int> &folds, const char * fam)
     {
         cv_set cvset(data.design().n_rows, foldid);
         return regularization_path_(data, cvset, folds, fam);
@@ -40,7 +40,7 @@ namespace netreg
     std::vector<double>
     edgenet_model_selection::regularization_path_
         (graph_penalized_linear_model_data &data, cv_set &cvset,
-         std::vector<int> &folds, char *const fam)
+         std::vector<int> &folds, const char * fam)
     {
         if (static_cast<int>(folds.size()) != data.sample_count())
             folds.resize(data.sample_count());

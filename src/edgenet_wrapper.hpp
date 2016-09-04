@@ -16,7 +16,7 @@ void do_edgenet_(double *const X, double *const Y,
                  int N, int P, int Q,
                  double lambda,
                  double psigyx, double psigy,
-                 int n_iter, double thresh, const char *);
+                 int n_iter, double thresh, const char * fam);
 
 /**
  * Wrapper for calling cross-validation for edge-net.
@@ -29,7 +29,7 @@ void do_cv_edgenet_(double *const X, double *const Y,
                     double psigyx, double psigy,
                     int n_iter, double thresh,
                     int n_folds, int *const foldid,
-                    int n_foldid, const char *);
+                    int n_foldid, const char * fam);
 
 extern double *B_;
 extern double *mu_;
