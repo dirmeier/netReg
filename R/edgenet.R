@@ -128,29 +128,8 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
               lambda=lambda,
               psigx=psigx, psigy=psigy,
               thresh=thresh, maxit=maxit,
-              family=family)    
+              family=family) 
   ret$call <- match.call()    
   class(ret) <- c(class(ret), "edgenet")
   ret
-}
-
-#' @noRd
-.fit <-function(X, Y,  G.X, G.Y, 
-                lambda, psigx, psigy, 
-                thresh, maxit, family)
-{
-  n <- dim(X)[1]                              
-  p <- dim(X)[2]     
-  q <- dim(Y)[2]
-  cl <- switch(family, 
-               "gaussian"=gauss.edgenet,
-               "binomial"=binom.edgenet,
-               stop("Family not found!"))
-  res <- cl(X=X, Y=Y, G.X=G.X, G.Y=G.Y,
-            n=n, p=p, q=q, 
-            lambda=lambda, 
-            psigx=psigx, psigy=psigy, 
-            maxit=maxit, thresh=thresh)               
-  res$family <- family
-  res
 }

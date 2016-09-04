@@ -72,7 +72,7 @@ SEXP edgenet_(SEXP XS, SEXP YS,
     // get convergence threshold
     const double thresh = (*REAL(threshs));
     // get family
-    const char *family = CHAR(familys);
+    const char *family = CHAR(STRING_ELT(familys, 0));
     // call wrapper
     do_edgenet_(X, Y, GX, GY,
                 N, P, Q,
@@ -174,7 +174,7 @@ SEXP cv_edgenet_(SEXP XS, SEXP YS, SEXP GXS, SEXP GYS,
     // the length of the fold_ids array
     const int foldid_len = (*INTEGER(lenfoldids));
     // get family
-    const char *family = CHAR(familys);
+    const char *family = CHAR(STRING_ELT(familys, 0));
     // call wrapper
     do_cv_edgenet_(X, Y, GX, GY,
                    N, P, Q, psigx, psigy, niter, thresh,

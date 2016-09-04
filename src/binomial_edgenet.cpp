@@ -5,7 +5,6 @@
  */
 
 #include "binomial_edgenet.hpp"
-#include <iostream>
 
 #include "math_functions.hpp"
 #include "stat_functions.hpp"
@@ -29,12 +28,8 @@ namespace netreg
         matrix<double> &TXY = data.txy();
         matrix<double> &LX = data.lx();
         matrix<double> &LY = data.ly();
-        std::cout << "Running binomial edgenet\n";
-
-        // calculate intercepts of the linear model
-        std::cout << "Calculating intercept!\n";
+                // calculate intercepts of the linear model
         intr = intercept(data.design(), data.response(), coef);
-        std::cout << "Done!\n";
     }
 
     matrix<double> binomial_edgenet::run_cv(graph_penalized_linear_model_data &data,

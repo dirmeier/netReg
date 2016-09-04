@@ -125,26 +125,3 @@ cv.edgenet.default <- function (X, Y, G.X=NULL, G.Y=NULL,
   class(ret) <- c(class(ret), "cv.edgenet")
   ret
 }
-
-#' @noRd
-.cv <- function(X, Y, G.X, G.Y, 
-                psigx, psigy, 
-                thresh, maxit, family, nfolds, foldid)
-{
-  n <- dim(X)[1]                              
-  p <- dim(X)[2]     
-  q <- dim(Y)[2]
-  cl <- switch(family, 
-                "gaussian"=.gaussian.cv.edgenet,
-                "binimial"=.binomial.cv.edgenet, 
-                stop("Family not found!"))
-  res <- cl(X=X, Y=Y, G.X=G.X, G.Y=G.Y,
-                    n=n, p=p, q=q, 
-                    psigx=psigx, psigy=psigy,
-                    maxit=maxit, thresh=thresh,
-                    nfolds=nfolds, foldid=foldid)
-  res$family <- family
-  res
-}
-
-

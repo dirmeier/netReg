@@ -17,5 +17,4 @@ Suggests:
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1
 SystemRequirements: C++11
-Imports: Rcpp
 LinkingTo: Rcpp

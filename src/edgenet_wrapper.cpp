@@ -24,7 +24,8 @@ void do_edgenet_(double *const X, double *const Y,
                  const int n, const int p, const int q,
                  const double lambda,
                  const double psigx, const double psigy,
-                 const int n_iter, const double thresh, const char * fam)
+                 const int n_iter, const double thresh,
+                 const char *fam)
 {
 
     netreg::graph_penalized_linear_model_data data(X, Y,
@@ -33,19 +34,18 @@ void do_edgenet_(double *const X, double *const Y,
                                                    lambda, 1.0,
                                                    psigx, psigy,
                                                    n_iter, thresh);
-    if (strcmp(fam, "gaussian") == 0)
+    switch (fam[0])
     {
-        netreg::gaussian_edgenet e;
-        e.run(data);
-    }
-    else if (strcmp(fam, "binomial") == 0)
-    {
-        netreg::binomial_edgenet e;
-        e.run(data);
-    }
-    else
-    {
-        Rcpp::Rcerr << "No correct family given!" << "\n";
+        case 'g':
+            netreg::gaussian_edgenet e;
+            e.run(data);
+            break;
+        case 'b':
+            netreg::binomial_edgenet f;
+            f.run(data);
+            break;
+        default:
+            Rcpp::Rcerr << "No correct family given!" << "\n";;
     }
     B_ = data.coefficients().begin();
     mu_ = data.intercept().begin();
@@ -57,7 +57,7 @@ void do_cv_edgenet_(double *const X, double *const Y,
                     const double psigx, const double psigy,
                     const int n_iter, const double thresh,
                     const int n_folds, int *const foldid,
-                    const int n_foldid,const  char * fam)
+                    const int n_foldid, const char *fam)
 {
     netreg::graph_penalized_linear_model_data data(X, Y,
                                                    GX, GY,
