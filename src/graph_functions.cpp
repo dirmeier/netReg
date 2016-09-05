@@ -5,7 +5,9 @@
 
 #include "graph_functions.hpp"
 
+#ifdef HAVE_OPENMP
 #include <omp.h>
+#endif
 #include <vector>
 #include <cmath>
 

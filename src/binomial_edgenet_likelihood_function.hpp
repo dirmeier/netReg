@@ -14,8 +14,9 @@
 #define ARMA_DONT_USE_WRAPPER
 #endif
 #include <armadillo>
+#ifdef HAVE_OPENMP
 #include <omp.h>
-
+#endif
 #include "types.hpp"
 #include "graph_penalized_linear_model_data.hpp"
 #include "../inst/dlib/matrix.h"
@@ -62,6 +63,7 @@ namespace netreg
                     B(i, j) = b(i, j);
             matrix<double> sigm = (X_ * B);
             sigm.transform([](double val) { return log(1 / (1 + exp(val))); });
+            // TODO: from here on
             matrix<double> loglik = Y .* log(sigm)  + (1 - Y) .* log(1-sigm);
             double nll = 0.0;
 

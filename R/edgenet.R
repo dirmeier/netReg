@@ -1,7 +1,6 @@
 #' Fit a graph-regularized linear regression model using edge-based regularization.
 #' 
 #' @export
-#' @useDynLib netReg
 #' 
 #' @author Simon Dirmeier, \email{netreg@@simon-dirmeier.net}
 #' 

@@ -12,9 +12,12 @@
 
 #include <numeric>
 #include <vector>
+#ifdef HAVE_OPENMP
 #include <omp.h>
+#endif
 
 #include "gaussian_edgenet_loss_function.hpp"
+#include "binomial_edgenet_loss_function.hpp"
 #include "optim.hpp"
 
 namespace netreg
@@ -62,8 +65,7 @@ namespace netreg
         switch (fam[0])
         {
             case 'b':
-                // TODO exchange with binomial
-                return opt.bobyqa<gaussian_edgenet_loss_function>
+                return opt.bobyqa<binomial_edgenet_loss_function>
                               (data, cvset,
                                start, lower_bound, upper_bound,
                                rad_start, rad_end, niter);

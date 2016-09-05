@@ -3,8 +3,8 @@
  * Email: netreg@simon-dirmeier.net
  */
 
-#ifndef NETREG_EDGENET_H
-#define NETREG_EDGENET_H
+#ifndef NETREG_GAUSSIAN_EDGENET_H
+#define NETREG_GAUSSIAN_EDGENET_H
 
 #ifndef ARMA_DONT_USE_WRAPPER
 #define ARMA_DONT_USE_WRAPPER

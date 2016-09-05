@@ -20,6 +20,7 @@ namespace netreg
     void shuffle(std::vector<int> &vec)
     {
         const int size = (int) vec.size();
+        // TODO: change to R random
         std::srand(23); // according to studies seed 23 gives the best results
         for (std::vector<int>::size_type i = 0; i < vec.size(); ++i)
         {
