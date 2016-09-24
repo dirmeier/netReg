@@ -28,7 +28,7 @@ void do_edgenet_(double *const X, double *const Y,
                  const char *fam)
 {
 
-    asd
+    // TODO
     netreg::graph_penalized_linear_model_data data(X, Y,
                                                    GX, GY,
                                                    n, p, q,
