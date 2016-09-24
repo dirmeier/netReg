@@ -3,8 +3,8 @@ Type: Package
 Title: Network-regularized regression models
 Version: 0.1
 Date: 2015-05-15
-Author: Simon Dirmeier
-Maintainer: Simon Dirmeier, <netreg@simon-dirmeier.net>
+Authors@R: person("Simon", "Dirmeier", email = "simon.dirmeier@gmx.de", role = c("aut", "cre"))
+Maintainer: Simon Dirmeier, <simon.dirmeier@gmx.de>
 Description: netReg fits linear models using network-regularized regression.
     Graph prior knowledge is incorporated into the objective function of the linear
     model in the form of affinity matrices.
@@ -13,7 +13,8 @@ Encoding: UTF-8
 Suggests:
     knitr,
     rmarkdown,
-    testthat
+    testthat,
+    lintr
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1
 SystemRequirements: C++11
