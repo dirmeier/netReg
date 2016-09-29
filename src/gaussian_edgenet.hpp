@@ -32,13 +32,16 @@ namespace netreg
         void run(graph_penalized_linear_model_data &data) const;
 
         /**
-         * Calulates the coefficients of a graph-regularized regression model.
+         * Calulates the optimal set of shrinkage parameters of a
+         * graph-regularized regression model.
          *
          * @param data an object that holds all required data for the model
          * @param lambda the shrinkage parameter you want to use for the LASSO
          * @param alpha the parameter for the elastic net
          * @param psigx penalization of laplacian for X
          * @param psigy penalization of laplacian for Y
+         *
+         * @return returns the estimated coefficients
          */
         matrix<double> run_cv
             (graph_penalized_linear_model_data &data,
