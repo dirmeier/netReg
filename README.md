@@ -17,7 +17,7 @@ We use `Dlib` in order to calculate the most optimal set of shrinkage parameters
  
 Install `netReg` using:
 ```{r}
-install.packages("devtool")
+install.packages("devtools")
 devtools::install_github("dirmeier/netReg") 
 ```
 from the R-console.
