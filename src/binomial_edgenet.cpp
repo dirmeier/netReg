@@ -9,6 +9,7 @@
 #include "math_functions.hpp"
 #include "stat_functions.hpp"
 
+
 namespace netreg
 {
     void binomial_edgenet::run(graph_penalized_linear_model_data &data) const

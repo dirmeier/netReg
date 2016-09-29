@@ -12,17 +12,17 @@
 #endif
 #include <armadillo>
 
+#include "edgenet.hpp"
 #include "types.hpp"
 #include "graph_penalized_linear_model_data.hpp"
 #include "cv_fold.hpp"
-#include "cv_set.hpp"
 
 namespace netreg
 {
     /**
      * Class for estimating the coeffiecients of a edge-regularized linear regression model.
      */
-    class binomial_edgenet
+    class binomial_edgenet: public edgenet
     {
     public:
         /**

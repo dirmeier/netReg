@@ -7,6 +7,9 @@
 #ifndef NETREG_EDGENET_HPP
 #define NETREG_EDGENET_HPP
 
+#include "graph_penalized_linear_model_data.hpp"
+#include "cv_fold.hpp"
+
 namespace netreg
 {
     class edgenet

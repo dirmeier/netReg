@@ -10,6 +10,7 @@
 #endif
 #include <armadillo>
 
+#include "cv_set.hpp"
 #include "math_functions.hpp"
 #include "stat_functions.hpp"
 
