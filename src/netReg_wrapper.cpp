@@ -21,6 +21,7 @@
  * @param niters max number of iterations if parameter estimation does not converge in time
  * @param threshs convergence threshold
  */
+// [[Rcpp
 // [[Rcpp::export]]
 Rcpp::List edgenet_(
     Rcpp::NumericMatrix XS, Rcpp::NumericMatrix YS,
