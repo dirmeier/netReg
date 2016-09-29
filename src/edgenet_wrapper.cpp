@@ -5,8 +5,8 @@
 
 #include "edgenet_wrapper.hpp"
 
-#include <string.h>
 #include <Rcpp.h>
+#include <string.h>
 
 #ifndef ARMA_DONT_USE_WRAPPER
 #define ARMA_DONT_USE_WRAPPER
