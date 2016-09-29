@@ -25,7 +25,7 @@ namespace netReg {
         }
     }
 
-    inline Rcpp::List _edgenet_cpp(const Rcpp::NumericMatrix& XS, const Rcpp::NumericMatrix& YS, const Rcpp::NumericMatrix& GXS, const Rcpp::NumericMatrix& GYS, const int n, const int p, const int q, const double lambda, const double psigx, const double psigy, const int n_iter, const double thresh, const Rcpp::CharacterVector& familys) {
+    inline Rcpp::List _edgenet_cpp(const Rcpp::NumericMatrix& XS, const Rcpp::NumericMatrix& YS, const Rcpp::NumericMatrix& GXS, const Rcpp::NumericMatrix& GYS, const int n, const int p, const int q, const double lambda, const double psigx, const double psigy, const int n_iter, const double thresh, const Rcpp::CharacterVector& family) {
         typedef SEXP(*Ptr__edgenet_cpp)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr__edgenet_cpp p__edgenet_cpp = NULL;
         if (p__edgenet_cpp == NULL) {
@@ -35,7 +35,7 @@ namespace netReg {
         RObject rcpp_result_gen;
         {
             RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p__edgenet_cpp(Rcpp::wrap(XS), Rcpp::wrap(YS), Rcpp::wrap(GXS), Rcpp::wrap(GYS), Rcpp::wrap(n), Rcpp::wrap(p), Rcpp::wrap(q), Rcpp::wrap(lambda), Rcpp::wrap(psigx), Rcpp::wrap(psigy), Rcpp::wrap(n_iter), Rcpp::wrap(thresh), Rcpp::wrap(familys));
+            rcpp_result_gen = p__edgenet_cpp(Rcpp::wrap(XS), Rcpp::wrap(YS), Rcpp::wrap(GXS), Rcpp::wrap(GYS), Rcpp::wrap(n), Rcpp::wrap(p), Rcpp::wrap(q), Rcpp::wrap(lambda), Rcpp::wrap(psigx), Rcpp::wrap(psigy), Rcpp::wrap(n_iter), Rcpp::wrap(thresh), Rcpp::wrap(family));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();

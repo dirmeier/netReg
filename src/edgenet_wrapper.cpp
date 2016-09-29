@@ -37,14 +37,15 @@ void do_edgenet_(double *const X, double *const Y,
                                                    n_iter, thresh);
     switch (fam[0])
     {
-        case 'g':
+    case 'g': {
             netreg::gaussian_edgenet e;
             e.run(data);
-            break;
-        case 'b':
+            break;}
+    case 'b': {
             netreg::binomial_edgenet f;
             f.run(data);
             break;
+    }
         default:
             Rcpp::Rcerr << "No correct family given!" << "\n";;
     }

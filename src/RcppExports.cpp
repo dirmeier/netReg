@@ -10,8 +10,8 @@
 using namespace Rcpp;
 
 // edgenet_rcpp_
-Rcpp::List edgenet_rcpp_(const Rcpp::NumericMatrix& XS, const Rcpp::NumericMatrix& YS, const Rcpp::NumericMatrix& GXS, const Rcpp::NumericMatrix& GYS, const int n, const int p, const int q, const double lambda, const double psigx, const double psigy, const int n_iter, const double thresh, const Rcpp::CharacterVector& familys);
-static SEXP netReg_edgenet_rcpp__try(SEXP XSSEXP, SEXP YSSEXP, SEXP GXSSEXP, SEXP GYSSEXP, SEXP nSEXP, SEXP pSEXP, SEXP qSEXP, SEXP lambdaSEXP, SEXP psigxSEXP, SEXP psigySEXP, SEXP n_iterSEXP, SEXP threshSEXP, SEXP familysSEXP) {
+Rcpp::List edgenet_rcpp_(const Rcpp::NumericMatrix& XS, const Rcpp::NumericMatrix& YS, const Rcpp::NumericMatrix& GXS, const Rcpp::NumericMatrix& GYS, const int n, const int p, const int q, const double lambda, const double psigx, const double psigy, const int n_iter, const double thresh, const Rcpp::CharacterVector& family);
+static SEXP netReg_edgenet_rcpp__try(SEXP XSSEXP, SEXP YSSEXP, SEXP GXSSEXP, SEXP GYSSEXP, SEXP nSEXP, SEXP pSEXP, SEXP qSEXP, SEXP lambdaSEXP, SEXP psigxSEXP, SEXP psigySEXP, SEXP n_iterSEXP, SEXP threshSEXP, SEXP familySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< const Rcpp::NumericMatrix& >::type XS(XSSEXP);
@@ -26,16 +26,16 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const double >::type psigy(psigySEXP);
     Rcpp::traits::input_parameter< const int >::type n_iter(n_iterSEXP);
     Rcpp::traits::input_parameter< const double >::type thresh(threshSEXP);
-    Rcpp::traits::input_parameter< const Rcpp::CharacterVector& >::type familys(familysSEXP);
-    rcpp_result_gen = Rcpp::wrap(edgenet_rcpp_(XS, YS, GXS, GYS, n, p, q, lambda, psigx, psigy, n_iter, thresh, familys));
+    Rcpp::traits::input_parameter< const Rcpp::CharacterVector& >::type family(familySEXP);
+    rcpp_result_gen = Rcpp::wrap(edgenet_rcpp_(XS, YS, GXS, GYS, n, p, q, lambda, psigx, psigy, n_iter, thresh, family));
     return rcpp_result_gen;
 END_RCPP_RETURN_ERROR
 }
-RcppExport SEXP netReg_edgenet_rcpp_(SEXP XSSEXP, SEXP YSSEXP, SEXP GXSSEXP, SEXP GYSSEXP, SEXP nSEXP, SEXP pSEXP, SEXP qSEXP, SEXP lambdaSEXP, SEXP psigxSEXP, SEXP psigySEXP, SEXP n_iterSEXP, SEXP threshSEXP, SEXP familysSEXP) {
+RcppExport SEXP netReg_edgenet_rcpp_(SEXP XSSEXP, SEXP YSSEXP, SEXP GXSSEXP, SEXP GYSSEXP, SEXP nSEXP, SEXP pSEXP, SEXP qSEXP, SEXP lambdaSEXP, SEXP psigxSEXP, SEXP psigySEXP, SEXP n_iterSEXP, SEXP threshSEXP, SEXP familySEXP) {
     SEXP rcpp_result_gen;
     {
         Rcpp::RNGScope rcpp_rngScope_gen;
-        rcpp_result_gen = PROTECT(netReg_edgenet_rcpp__try(XSSEXP, YSSEXP, GXSSEXP, GYSSEXP, nSEXP, pSEXP, qSEXP, lambdaSEXP, psigxSEXP, psigySEXP, n_iterSEXP, threshSEXP, familysSEXP));
+        rcpp_result_gen = PROTECT(netReg_edgenet_rcpp__try(XSSEXP, YSSEXP, GXSSEXP, GYSSEXP, nSEXP, pSEXP, qSEXP, lambdaSEXP, psigxSEXP, psigySEXP, n_iterSEXP, threshSEXP, familySEXP));
     }
     Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
     if (rcpp_isInterrupt_gen) {

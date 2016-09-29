@@ -8,6 +8,7 @@
 #include <Rmath.h>
 
 #include "edgenet_wrapper.hpp"
+#include "graph_penalized_linear_model_data.hpp"
 
 /**
  * Extern C++ binding for R! (name mangling)

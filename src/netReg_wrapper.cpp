@@ -4,7 +4,12 @@
  */
 
 #include <Rcpp.h>
+#include <string>
+
 #include "graph_penalized_linear_model_data.hpp"
+#include "edgenet.hpp"
+#include "gaussian_edgenet.hpp"
+#include "binomial_edgenet.hpp"
 
 /**
  * Implementation of Edgenet, a edge-based regularized regression model.
@@ -25,23 +30,44 @@
 // [[Rcpp::interfaces(r, cpp)]]
 // [[Rcpp::export(name=".edgenet.cpp")]]
 Rcpp::List edgenet_rcpp_(
-    const Rcpp::NumericMatrix& XS, const Rcpp::NumericMatrix& YS,
-    const Rcpp::NumericMatrix& GXS, const Rcpp::NumericMatrix& GYS,
+    const Rcpp::NumericMatrix& XS,
+    const Rcpp::NumericMatrix& YS,
+    const Rcpp::NumericMatrix& GXS,
+    const Rcpp::NumericMatrix& GYS,
     const int n, const int p, const int q,
     const double lambda, const double psigx, const double psigy,
     const int n_iter, const double thresh,
-    const Rcpp::CharacterVector& familys)
+    const Rcpp::CharacterVector& family)
 {
     double * X = REAL(XS);
     double * Y = REAL(YS);
     double * GX = REAL(GXS);
     double * GY = REAL(GYS);
+    std::string fam = Rcpp::as<std::string>(family);
     netreg::graph_penalized_linear_model_data data(X, Y,
                                                    GX, GY,
                                                    n, p, q,
                                                    lambda, 1.0,
                                                    psigx, psigy,
                                                    n_iter, thresh);
-    return Rcpp::List::create(1);
+
+    netreg::edgenet* edge;
+    if (fam == "binomial")
+    {
+        edge = new netreg::binomial_edgenet;
+    }
+    else if (fam == "gaussian")
+    {
+        edge = new netreg::gaussian_edgenet;
+    }
+    else
+    {
+        Rcpp::Rcerr << "No correct family given!" << "\n";
+        return Rcpp::List::create(0);
+    }
+    edge->run(data);
+    delete edge;
+    return Rcpp::List::create(Rcpp::Named("coefficients") = data.coefficients(),
+                              Rcpp::Named("intercept") = data.intercept());
 }
 
