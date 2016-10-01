@@ -18,7 +18,6 @@
 #include <Rinternals.h>
 #include <Rmath.h>
 
-
 extern "C"
 {
 
@@ -198,7 +197,7 @@ SEXP cv_edgenet_(SEXP XS, SEXP YS, SEXP GXS, SEXP GYS,
     // the length of the fold_ids array
     const int foldid_len = (*INTEGER(lenfoldids));
     // get family
-    const char *family = CHAR(STRING_ELT(familys, 0));
+    std::string family = CHAR(STRING_ELT(familys, 0)) == 'b' ? "binomial" : "gaussian";
     // call wrapper
     netreg::edgenet_model_selection e;
     std::vector<double> pop;
@@ -207,10 +206,12 @@ SEXP cv_edgenet_(SEXP XS, SEXP YS, SEXP GXS, SEXP GYS,
 
     if (n_foldid == n)
         data = netreg::graph_penalized_linear_model_cv_data
-            (X, Y, GX, GY, N, P ,Q,   -1, 1.0, psigx, psigy, niter, thresh, fold_ids);
+            (X, Y, GX, GY, N, P, Q, -1, 1.0, psigx, psigy, niter, thresh,
+             fold_ids, family);
     else
         data = netreg::graph_penalized_linear_model_cv_data
-            (X, Y, GX, GY, N, P ,Q,   -1, 1.0, psigx, psigy, niter, thresh, nfold);
+            (X, Y, GX, GY, N, P, Q, -1, 1.0, psigx, psigy, niter, thresh,
+             nfold, family);
     std::vector<double> pop = e.regularization_path(data, fam);
 
     const double lamb_est = pop[0];
@@ -227,7 +228,6 @@ SEXP cv_edgenet_(SEXP XS, SEXP YS, SEXP GXS, SEXP GYS,
     SEXP folds = PROTECT(allocVector(INTSXP, N));
     prtCnt++;
     for (int i = 0; i < N; ++i) INTEGER(folds)[i] = foldid_[i];
-    delete[] foldid_;
     // create a R list of size 2 that can be returned
     SEXP OS = PROTECT(allocVector(VECSXP, 2));
     prtCnt++;

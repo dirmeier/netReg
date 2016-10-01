@@ -8,6 +8,8 @@
 
 #include "linear_model_data.hpp"
 
+#include <string>
+
 namespace netreg
 {
     /**
@@ -32,8 +34,9 @@ namespace netreg
         penalized_linear_model_data(double *x, double *y,
                                     const int n, const int p, const int q,
                                     double const lambda, double const alpha,
-                                    const int niter, const double thresh)
-            : linear_model_data(x, y, n, p, q, niter, thresh),
+                                    const int niter, const double thresh,
+                                    std::string family)
+            : linear_model_data(x, y, n, p, q, niter, thresh, family),
               ALPHA(alpha),
               LAMBDA(lambda)
         {

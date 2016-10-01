@@ -35,11 +35,12 @@ namespace netreg
          * @param q number of responses
          * @param niter maximal number of iterations
          * @param thresh the convergence threshold
-         * @param
+         * @param family of distribution of y
          */
         linear_model_data(double *x, double *y,
                           const int n, const int p, const int q,
-                          const int niter, const double thresh, std::string family)
+                          const int niter, const double thresh,
+                          std::string family)
             : N(n), P(p), Q(q),
               X(x, n, p),
               Y(y, n, q),
