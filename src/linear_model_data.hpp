@@ -7,6 +7,7 @@
 #define NETREG_LINEARMODELDATA_HPP
 
 #include <vector>
+#include <string>
 #include <utility>
 
 #ifndef ARMA_DONT_USE_WRAPPER
@@ -34,16 +35,18 @@ namespace netreg
          * @param q number of responses
          * @param niter maximal number of iterations
          * @param thresh the convergence threshold
+         * @param
          */
         linear_model_data(double *x, double *y,
                           const int n, const int p, const int q,
-                          const int niter, const double thresh)
+                          const int niter, const double thresh, std::string family)
             : N(n), P(p), Q(q),
               X(x, n, p),
               Y(y, n, q),
               intrcpt(q), coeffs(p, q, arma::fill::ones),
               THRESH(thresh), N_ITER(niter),
-              TXX(p, p), TXY(p, q)
+              TXX(p, p), TXY(p, q),
+              family(family)
         {
             matrix<double> TX = X.t();
             TXX = TX * X;
@@ -185,6 +188,7 @@ namespace netreg
         const int N_ITER;        // max number iterations if CCD does not converge
         matrix<double> TXX;      // (p x p)-dimensional matrix: X'X
         matrix<double> TXY;      // (p x q)-dimensional matrix: X'Y
+        std::string family;      // family of distribution of y
     };
 }
 #endif //NETREG_LINEARMODELDATA_HPP
