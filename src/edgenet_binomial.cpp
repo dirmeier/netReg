@@ -4,7 +4,7 @@
  * Email: simon.dirmeier@bsse.ethz.ch
  */
 
-#include "binomial_edgenet.hpp"
+#include "edgenet_binomial.hpp"
 
 #include "math_functions.hpp"
 #include "stat_functions.hpp"
@@ -12,7 +12,7 @@
 
 namespace netreg
 {
-    void binomial_edgenet::run(graph_penalized_linear_model_data &data) const
+    void edgenet_binomial::run(graph_penalized_linear_model_data &data) const
     {
 //        const int P = data.covariable_count();
 //        const int Q = data.response_count();
@@ -33,7 +33,7 @@ namespace netreg
 //        intr = intercept(data.design(), data.response(), coef);
     }
 
-    matrix<double> binomial_edgenet::run_cv(graph_penalized_linear_model_data &data,
+    matrix<double> edgenet_binomial::run_cv(graph_penalized_linear_model_data &data,
                                    const double lambda, const double alpha,
                                    const double psigx, const double psigy,
                                    cv_fold &fold) const

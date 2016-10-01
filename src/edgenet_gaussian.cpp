@@ -3,7 +3,7 @@
  * Email: netreg@simon-dirmeier.net
  */
 
-#include "gaussian_edgenet.hpp"
+#include "edgenet_gaussian.hpp"
 
 #ifndef ARMA_DONT_USE_WRAPPER
 #define ARMA_DONT_USE_WRAPPER
@@ -16,7 +16,7 @@
 
 namespace netreg
 {
-    void gaussian_edgenet::run(graph_penalized_linear_model_data &data) const
+    void edgenet_gaussian::run(graph_penalized_linear_model_data &data) const
     {
         const int P = data.covariable_count();
         const int Q = data.response_count();
@@ -53,7 +53,7 @@ namespace netreg
         intr = intercept(data.design(), data.response(), coef);
     }
 
-    matrix<double> gaussian_edgenet::run_cv(graph_penalized_linear_model_data &data,
+    matrix<double> edgenet_gaussian::run_cv(graph_penalized_linear_model_data &data,
                                   const double lambda, const double alpha,
                                   const double psigx, const double psigy,
                                   cv_fold &fold) const
@@ -88,7 +88,7 @@ namespace netreg
         return coef;
     }
 
-    void gaussian_edgenet::uccd_
+    void edgenet_gaussian::uccd_
         (const int P, const int Q,
          const double thresh, const int niter,
          const double lambda, const double alpha,
@@ -126,7 +126,7 @@ namespace netreg
         while (arma::accu(arma::abs(coef.col(qi) - old_coef.col(qi))) > thresh && iter++ < niter);
     }
 
-    void gaussian_edgenet::set_params
+    void edgenet_gaussian::set_params
         (double &s, double &norm,
          matrix<double> &TXX, matrix<double> &TXY,
          matrix<double> &coef,
@@ -145,7 +145,7 @@ namespace netreg
                        P, Q, pi, qi);
     }
 
-    void gaussian_edgenet::graph_penalize
+    void edgenet_gaussian::graph_penalize
         (double &s, double &norm,
          const double psigx, const double psigy,
          matrix<double> &LX, matrix<double> &LY, matrix<double> &cfs,
@@ -158,7 +158,7 @@ namespace netreg
             ly_penalize(s, norm, psigy, LY, cfs, Q, pi, qi);
     }
 
-    void gaussian_edgenet::lx_penalize
+    void edgenet_gaussian::lx_penalize
         (double &s, double &norm, const double psigx,
          matrix<double> &LX, matrix<double> &cfs, const int P,
          const int pi, const int qi) const
@@ -170,7 +170,7 @@ namespace netreg
         norm += 2 * psigx * LX(pi, pi);
     }
 
-    void gaussian_edgenet::ly_penalize
+    void edgenet_gaussian::ly_penalize
         (double &s, double &norm, const double psigy,
          matrix<double> &LY, matrix<double> &cfs, const int Q,
          const int pi, const int qi) const

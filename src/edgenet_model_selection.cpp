@@ -36,12 +36,12 @@ namespace netreg
         switch (data.family())
         {
             case 'b':
-                return opt.bobyqa<binomial_edgenet_loss_function>
+                return opt.bobyqa<edgenet_binomial_loss_function>
                               (data, start, lower_bound, upper_bound,
                                rad_start, rad_end, niter);
             case 'g':
             default:
-                return opt.bobyqa<gaussian_edgenet_loss_function>
+                return opt.bobyqa<edgenet_gaussian_loss_function>
                               (data, start, lower_bound, upper_bound,
                                rad_start, rad_end, niter);
 
