@@ -22,30 +22,12 @@
 
 namespace netreg
 {
-    std::vector<double>
-    edgenet_model_selection::regularization_path
-        (graph_penalized_linear_model_data &data, const int nfolds,
-         const char *fam)
-    {
-        cv_set cvset(data.design().n_rows, nfolds);
-        return regularization_path_(data, cvset, folds, fam);
-    }
-
-    std::vector<double>
-    edgenet_model_selection::regularization_path
-        (graph_penalized_linear_model_data &data, int *const foldid,
-         const char *fam)
-    {
-        cv_set cvset(data.design().n_rows, foldid);
-        return regularization_path_(data, cvset, folds, fam);
-    }
 
     std::vector<double>
     edgenet_model_selection::regularization_path_
         (graph_penalized_linear_model_data &data, cv_set &cvset,
          const char *fam)
     {
-        set_fold_ids(data, cvset);
         optim opt;
         std::vector<double> start{0, 0, 0};
         std::vector<double> lower_bound{0.0, 0.0, 0.0};

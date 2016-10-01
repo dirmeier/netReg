@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "graph_penalized_linear_model_data.hpp"
+#include "graph_penalized_linear_model_cv_data.hpp"
 #include "edgenet.hpp"
 #include "edgenet_binomial.hpp"
 #include "edgenet_gaussian.hpp"
@@ -201,10 +202,17 @@ SEXP cv_edgenet_(SEXP XS, SEXP YS, SEXP GXS, SEXP GYS,
     // call wrapper
     netreg::edgenet_model_selection e;
     std::vector<double> pop;
+
+    netreg::graph_penalized_linear_model_cv_data data;
+
     if (n_foldid == n)
-        pop = e.regularization_path(data, foldid, folds, fam);
+        data = netreg::graph_penalized_linear_model_cv_data
+            (X, Y, GX, GY, N, P ,Q,   -1, 1.0, psigx, psigy, niter, thresh, fold_ids);
     else
-        pop = e.regularization_path(data, n_folds, folds, fam);
+        data = netreg::graph_penalized_linear_model_cv_data
+            (X, Y, GX, GY, N, P ,Q,   -1, 1.0, psigx, psigy, niter, thresh, nfold);
+    std::vector<double> pop = e.regularization_path(data, fam);
+
     const double lamb_est = pop[0];
     const double psi_gx_est = psigx == -1 ? pop[1] : 0.0;
     const double psi_gy_est = psigy == -1 ? pop[2] : 0.0;
