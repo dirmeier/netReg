@@ -11,7 +11,6 @@
 
 #include <string>
 
-
 namespace netreg
 {
     virtual void edgenet::run(graph_penalized_linear_model_data &data) const
