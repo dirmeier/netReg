@@ -11,6 +11,8 @@
 #endif
 #include <armadillo>
 
+#include "edgenet.hpp"
+
 #include "types.hpp"
 #include "graph_penalized_linear_model_data.hpp"
 #include "cv_fold.hpp"
@@ -20,7 +22,7 @@ namespace netreg
     /**
      * Class for estimating the coeffiecients of a edge-regularized linear regression model.
      */
-    class edgenet_gaussian
+    class edgenet_gaussian: public edgenet
     {
     public:
         /**
