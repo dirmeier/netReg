@@ -10,6 +10,7 @@
 #include "edgenet.hpp"
 #include "gaussian_edgenet.hpp"
 #include "binomial_edgenet.hpp"
+#include "edgenet_model_selection.hpp"
 
 /**
  * Implementation of Edgenet, a edge-based regularized regression model.
