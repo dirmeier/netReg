@@ -39,7 +39,7 @@ extern "C"
  * @param threshs convergence threshold
  * @param familys family of distribution the response
  */
-SEXP edgenet_(SEXP XS, SEXP YS,
+SEXP edgenet(SEXP XS, SEXP YS,
               SEXP GXS, SEXP GYS,
               SEXP ns, SEXP ps, SEXP qs,
               SEXP lambdass,
@@ -161,7 +161,7 @@ SEXP edgenet_(SEXP XS, SEXP YS,
  * @param lenfoldids length of the vector above
  * @param familys family of distribution the response
  */
-SEXP cv_edgenet_(SEXP XS, SEXP YS, SEXP GXS, SEXP GYS,
+SEXP cv_edgenet(SEXP XS, SEXP YS, SEXP GXS, SEXP GYS,
                  SEXP ns, SEXP ps, SEXP qs,
                  SEXP psi_gxs, SEXP psi_gys,
                  SEXP niters, SEXP threshs,
@@ -201,7 +201,7 @@ SEXP cv_edgenet_(SEXP XS, SEXP YS, SEXP GXS, SEXP GYS,
     // call wrapper
     netreg::edgenet_model_selection e;
     std::vector<double> pop;
-
+    // TODO fold parsing
     netreg::graph_penalized_linear_model_cv_data data;
 
     if (n_foldid == n)
@@ -227,7 +227,8 @@ SEXP cv_edgenet_(SEXP XS, SEXP YS, SEXP GXS, SEXP GYS,
     // fold ids
     SEXP folds = PROTECT(allocVector(INTSXP, N));
     prtCnt++;
-    for (int i = 0; i < N; ++i) INTEGER(folds)[i] = foldid_[i];
+    std::vector& fold_ids = data.fold_ids();
+    for (int i = 0; i < N; ++i) INTEGER(folds)[i] = fold_ids;
     // create a R list of size 2 that can be returned
     SEXP OS = PROTECT(allocVector(VECSXP, 2));
     prtCnt++;

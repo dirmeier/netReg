@@ -9,11 +9,14 @@
 
 #include "graph_penalized_linear_model_data.hpp"
 
+#include <vector>
+
 #ifndef ARMA_DONT_USE_WRAPPER
 #define ARMA_DONT_USE_WRAPPER
 #endif
 #include <armadillo>
 
+#include "cv_set.hpp"
 #include "types.hpp"
 
 namespace netreg
@@ -52,7 +55,7 @@ namespace netreg
              double const lambda, const double alpha,
              const double psi_gx, const double psi_gy,
              const int niter, const double thresh,
-             const int nfolds)
+             const int nfolds) const
             : graph_penalized_linear_model_data
                   (x, y, gx, gy, n, p, q, lambda, alpha, niter, thresh),
               fold_ids_(design().n_rows)
@@ -86,7 +89,7 @@ namespace netreg
              double const lambda, const double alpha,
              const double psi_gx, const double psi_gy,
              const int niter, const double thresh,
-             const int* fold_ids)
+             const int* fold_ids) const
             : graph_penalized_linear_model_data
                   (x, y, gx, gy, n, p, q, lambda, alpha, niter, thresh),
               fold_ids_(design().n_rows)
@@ -95,7 +98,21 @@ namespace netreg
             set_fold_ids();
         }
 
+        /**
+         * Getter for the vector of fold id mappings.
+         *
+         * @return returns the fold ids
+         */
+        std::vector& fold_ids() const
+        {
+            return fold_ids_;
+        }
+
+
     private:
+        /**
+         * Function to set the fold id mappings to sample indexes.
+         */
         void set_fold_ids();
         // mapping from fold id to index in samples
         std::vector<int> fold_ids_;
