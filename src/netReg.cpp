@@ -11,6 +11,7 @@
 #include "edgenet.hpp"
 #include "edgenet_binomial.hpp"
 #include "edgenet_gaussian.hpp"
+#include "edgenet_model_selection.hpp"
 
 #include <R.h>
 #include <Rinternals.h>
@@ -105,14 +106,16 @@ SEXP edgenet_(SEXP XS, SEXP YS,
     prtCnt++;
     double *B = REAL(BS);
     double *b0 = REAL(intercept);
+    double *b_ = data.coefficients().memptr();
+    double *mu_ = data.intercept().memptr();
     for (int i = 0; i < Q; ++i)
     {
         // safe intercepts for R vector
-        //b0[i] = mu_[i];
+        b0[i] = mu[i];
         for (int j = 0; j < P; ++j)
         {
             // safe coefficients for R matrix
-            //B[j + P * i] = B_[j + P * i];
+            B[j + P * i] = b_[j + P * i];
         }
     }
     // create a R list of size 2 that can be returned
@@ -196,19 +199,15 @@ SEXP cv_edgenet_(SEXP XS, SEXP YS, SEXP GXS, SEXP GYS,
     // get family
     const char *family = CHAR(STRING_ELT(familys, 0));
     // call wrapper
-    std::vector<int> folds;
     netreg::edgenet_model_selection e;
     std::vector<double> pop;
     if (n_foldid == n)
         pop = e.regularization_path(data, foldid, folds, fam);
     else
         pop = e.regularization_path(data, n_folds, folds, fam);
-    lamb_ = pop[0];
-    psi_gx_ = psigx == -1 ? pop[1] : 0.0;
-    psi_gy_ = psigy == -1 ? pop[2] : 0.0;
-    foldid_ = new int[n];
-    for (std::vector<int>::size_type i = 0; i < folds.size(); i++)
-        foldid_[i] = folds[i];
+    const double lamb_est = pop[0];
+    const double psi_gx_est = psigx == -1 ? pop[1] : 0.0;
+    const double psi_gy_est = psigy == -1 ? pop[2] : 0.0;
     // protection counter that is needed for not activating garbage collection
     int prtCnt = 0;
     SEXP shrink = PROTECT(allocVector(REALSXP, 3));

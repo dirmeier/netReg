@@ -16,8 +16,8 @@
 #include <omp.h>
 #endif
 
-#include "gaussian_edgenet_loss_function.hpp"
-#include "binomial_edgenet_loss_function.hpp"
+#include "edgenet_gaussian_loss_function.hpp"
+#include "edgenet_binomial_loss_function.hpp"
 #include "optim.hpp"
 
 namespace netreg
@@ -25,7 +25,7 @@ namespace netreg
     std::vector<double>
     edgenet_model_selection::regularization_path
         (graph_penalized_linear_model_data &data, const int nfolds,
-         std::vector<int> &folds, const char *fam)
+         const char *fam)
     {
         cv_set cvset(data.design().n_rows, nfolds);
         return regularization_path_(data, cvset, folds, fam);
@@ -34,7 +34,7 @@ namespace netreg
     std::vector<double>
     edgenet_model_selection::regularization_path
         (graph_penalized_linear_model_data &data, int *const foldid,
-         std::vector<int> &folds, const char *fam)
+         const char *fam)
     {
         cv_set cvset(data.design().n_rows, foldid);
         return regularization_path_(data, cvset, folds, fam);
@@ -43,19 +43,9 @@ namespace netreg
     std::vector<double>
     edgenet_model_selection::regularization_path_
         (graph_penalized_linear_model_data &data, cv_set &cvset,
-         std::vector<int> &folds, const char *fam)
+         const char *fam)
     {
-        if (static_cast<int>(folds.size()) != data.sample_count())
-            folds.resize(data.sample_count());
-        #pragma omp parallel for
-        for (int i = 0; i < cvset.fold_count(); i++)
-        {
-            cv_fold &fold = cvset.get_fold(i);
-            for (arma::uvec::iterator j = fold.test_set().begin();
-                 j != fold.test_set().end(); ++j)
-                folds[*j] = i;
-        }
-
+        set_fold_ids(data, cvset);
         optim opt;
         std::vector<double> start{0, 0, 0};
         std::vector<double> lower_bound{0.0, 0.0, 0.0};
@@ -76,6 +66,20 @@ namespace netreg
                                start, lower_bound, upper_bound,
                                rad_start, rad_end, niter);
 
+        }
+
+    }
+
+    void edgenet_model_selection::set_foldids
+        (graph_penalized_linear_model_data &data, cv_set &cvset)
+    {
+        #pragma omp parallel for
+        for (int i = 0; i < cvset.fold_count(); i++)
+        {
+            cv_fold &fold = cvset.get_fold(i);
+            for (arma::uvec::iterator j = fold.test_set().begin();
+                 j != fold.test_set().end(); ++j)
+                folds[*j] = i;
         }
     }
 }

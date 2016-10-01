@@ -1,0 +1,10 @@
+/**
+ * Author: Simon Dirmeier
+ * Date: 01/10/16
+ * Email: simon.dirmeier@bsse.ethz.ch
+ */
+
+#ifndef NETREG_GRAPH_PENALIZED_LINEAR_MODEL_CV_DATA_HPP
+#define NETREG_GRAPH_PENALIZED_LINEAR_MODEL_CV_DATA_HPP
+
+#endif //NETREG_GRAPH_PENALIZED_LINEAR_MODEL_CV_DATA_HPP

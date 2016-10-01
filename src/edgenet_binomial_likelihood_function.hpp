@@ -26,7 +26,7 @@ namespace netreg
     /**
      * Functor class representing the objective function of a edge-regularized regression model.
      */
-    class binomial_edgenet_likelihood_function
+    class edgenet_binomial_likelihood_function
     {
     public:
         /**
@@ -35,7 +35,7 @@ namespace netreg
          * @param data the complete dataset required for edge-regularized regression
          * @param cvset a cross-validation set
          */
-        binomial_edgenet_likelihood_function
+        edgenet_binomial_likelihood_function
             (graph_penalized_linear_model_data &data) :
             data_(data),
             X_(data.design()),

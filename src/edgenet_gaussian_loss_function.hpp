@@ -22,7 +22,7 @@ namespace netreg
     /**
      * Functor class representing the objective function of a edge-regularized regression model.
      */
-    class gaussian_edgenet_loss_function
+    class edgenet_gaussian_loss_function
     {
     public:
         /**
@@ -31,7 +31,7 @@ namespace netreg
          * @param data the complete dataset required for edge-regularized regression
          * @param cvset a cross-validation set
          */
-        gaussian_edgenet_loss_function
+        edgenet_gaussian_loss_function
             (graph_penalized_linear_model_data &data,
              cv_set &cvset):
             data_(data),
