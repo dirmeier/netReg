@@ -16,7 +16,6 @@
 
 #include <R.h>
 #include <Rinternals.h>
-#include <Rmath.h>
 
 extern "C"
 {
@@ -40,12 +39,12 @@ extern "C"
  * @param familys family of distribution the response
  */
 SEXP edgenet(SEXP XS, SEXP YS,
-              SEXP GXS, SEXP GYS,
-              SEXP ns, SEXP ps, SEXP qs,
-              SEXP lambdass,
-              SEXP psi_gxs, SEXP psi_gys,
-              SEXP niters, SEXP threshs,
-              SEXP familys)
+             SEXP GXS, SEXP GYS,
+             SEXP ns, SEXP ps, SEXP qs,
+             SEXP lambdass,
+             SEXP psi_gxs, SEXP psi_gys,
+             SEXP niters, SEXP threshs,
+             SEXP familys)
 {
     // get number of samples
     const int N = (*INTEGER(ns));
@@ -72,28 +71,14 @@ SEXP edgenet(SEXP XS, SEXP YS,
     // get convergence threshold
     const double thresh = (*REAL(threshs));
     // get family
-    const char *family = CHAR(STRING_ELT(familys, 0));
+    std::string family =
+        CHAR(STRING_ELT(familys, 0)) == 'b' ? "binomial" : "gaussian";
     // call wrapper
-    netreg::graph_penalized_linear_model_data data(X, Y,
-                                                   GX, GY,
-                                                   N, P, Q,
-                                                   lambda, 1.0,
-                                                   psigx, psigy,
-                                                   n_iter, thresh);
-    std::unique_ptr <netreg::edgenet> edge;
-    switch (family[0])
-    {
-        case 'b':
-        {
-            edge = std::make_unique<netreg::binomial_edgenet>();
-            break;
-        }
-        case 'g':
-        default:
-            edge = std::make_unique<netreg::gaussian_edgenet>();
-    }
-    edge->run(data);
-    delete edge;
+    netreg::graph_penalized_linear_model_data data
+        (X, Y, GX, GY, N, P, Q, lambda, 1.0, psigx, psigy, n_iter, thresh, family);
+    // TODO change that back and include family in data
+    netreg::edgenet edge;
+    edge.run(data);
     // protection counter that is needed for not activating garbage collection
     int prtCnt = 0;
     // R object for coefficient matrix
@@ -162,11 +147,11 @@ SEXP edgenet(SEXP XS, SEXP YS,
  * @param familys family of distribution the response
  */
 SEXP cv_edgenet(SEXP XS, SEXP YS, SEXP GXS, SEXP GYS,
-                 SEXP ns, SEXP ps, SEXP qs,
-                 SEXP psi_gxs, SEXP psi_gys,
-                 SEXP niters, SEXP threshs,
-                 SEXP nfolds, SEXP foldids, SEXP lenfoldids,
-                 SEXP familys)
+                SEXP ns, SEXP ps, SEXP qs,
+                SEXP psi_gxs, SEXP psi_gys,
+                SEXP niters, SEXP threshs,
+                SEXP nfolds, SEXP foldids, SEXP lenfoldids,
+                SEXP familys)
 {
     double *X = REAL(XS);
     // cast R response matrix to pointer to double
@@ -197,7 +182,8 @@ SEXP cv_edgenet(SEXP XS, SEXP YS, SEXP GXS, SEXP GYS,
     // the length of the fold_ids array
     const int foldid_len = (*INTEGER(lenfoldids));
     // get family
-    std::string family = CHAR(STRING_ELT(familys, 0)) == 'b' ? "binomial" : "gaussian";
+    std::string family =
+        CHAR(STRING_ELT(familys, 0)) == 'b' ? "binomial" : "gaussian";
     // call wrapper
     netreg::edgenet_model_selection e;
     std::vector<double> pop;
@@ -227,7 +213,7 @@ SEXP cv_edgenet(SEXP XS, SEXP YS, SEXP GXS, SEXP GYS,
     // fold ids
     SEXP folds = PROTECT(allocVector(INTSXP, N));
     prtCnt++;
-    std::vector& fold_ids = data.fold_ids();
+    std::vector &fold_ids = data.fold_ids();
     for (int i = 0; i < N; ++i) INTEGER(folds)[i] = fold_ids;
     // create a R list of size 2 that can be returned
     SEXP OS = PROTECT(allocVector(VECSXP, 2));

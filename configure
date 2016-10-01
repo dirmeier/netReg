@@ -585,7 +585,7 @@ PACKAGE_STRING='netReg 0.1'
 PACKAGE_BUGREPORT='netreg@simon-dirmeier.net'
 PACKAGE_URL='https://github.com/rafstraumur/netreg'
 
-ac_unique_file="src/gaussian_edgenet.cpp"
+ac_unique_file="src/edgenet.cpp"
 # Factoring default headers for most tests.
 ac_includes_default="\
 #include <stdio.h>
