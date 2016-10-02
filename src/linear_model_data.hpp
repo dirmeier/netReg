@@ -15,6 +15,7 @@
 #endif
 #include <armadillo>
 
+#include "family.hpp"
 #include "types.hpp"
 
 namespace netreg
@@ -40,7 +41,7 @@ namespace netreg
         linear_model_data(double *x, double *y,
                           const int n, const int p, const int q,
                           const int niter, const double thresh,
-                          std::string family)
+                          const family family)
             : N(n), P(p), Q(q),
               X(x, n, p),
               Y(y, n, q),
@@ -55,10 +56,21 @@ namespace netreg
         }
 
     public:
+
+        /**
+         * Getter for the family of the distribution of the response.
+         *
+         * @return returns the family
+         */
+        const family family()
+        {
+            return family;
+        }
+
         /**
          * Getter for number of samples.
          *
-         * @return the number of samples
+         * @return returns the number of samples
          */
         const int sample_count()
         {
@@ -68,7 +80,7 @@ namespace netreg
         /**
          * Getter for number of responses.
          *
-         * @return the number of responses
+         * @return returns the number of responses
          */
         const int response_count()
         {
@@ -78,7 +90,7 @@ namespace netreg
         /**
          * Getter for number of covariables.
          *
-         * @return the number of covariables
+         * @return returns the number of covariables
          */
         const int covariable_count()
         {

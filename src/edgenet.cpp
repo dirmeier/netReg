@@ -6,16 +6,18 @@
 
 #include "edgenet.hpp"
 
+#include <string>
+#include "family.hpp"
+
 #include "edgenet_binomial.hpp"
 #include "edgenet_gaussian.hpp"
 
-#include <string>
 
 namespace netreg
 {
     void edgenet::run(graph_penalized_linear_model_data &data) const
     {
-        if (data.family() == "binomial")
+        if (data.family() == family.BINOMIAL)
         {
             netreg::edgenet_binomial edge;
             edge.run(data);

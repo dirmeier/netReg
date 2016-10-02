@@ -14,6 +14,7 @@
 #endif
 #include <armadillo>
 
+#include "family.hpp"
 #include "types.hpp"
 #include "graph_functions.hpp"
 
@@ -52,7 +53,7 @@ namespace netreg
              const double lambda, const double alpha,
              const double psi_gx, const double psi_gy,
              const int niter, const double thresh,
-             const std::string family)
+             const family family)
             : penalized_linear_model_data(x, y, n, p, q, lambda,
                                           alpha, niter, thresh, family),
               psi_gx(psi_gx), psi_gy(psi_gy),
@@ -60,9 +61,7 @@ namespace netreg
               LX(laplacian(gx, p, p)), LY(laplacian(gy, q, q))
         {
         }
-
-        const std::string family
-
+        
         /**
          * Getter for penalization term for laplacian of X
          *

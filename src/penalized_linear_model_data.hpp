@@ -9,6 +9,7 @@
 #include "linear_model_data.hpp"
 
 #include <string>
+#include "family.hpp"
 
 namespace netreg
 {
@@ -35,7 +36,7 @@ namespace netreg
                                     const int n, const int p, const int q,
                                     double const lambda, double const alpha,
                                     const int niter, const double thresh,
-                                    std::string family)
+                                    const family family)
             : linear_model_data(x, y, n, p, q, niter, thresh, family),
               ALPHA(alpha),
               LAMBDA(lambda)
