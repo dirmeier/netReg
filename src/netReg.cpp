@@ -38,46 +38,24 @@
  */
 // [[Rcpp::export(name=".edgenet.cpp")]]
 Rcpp::List edgenet
-    (Rcpp::NumericMatrix XS, SEXP YS,
-             SEXP GXS, SEXP GYS,
-             SEXP ns, SEXP ps, SEXP qs,
-             SEXP lambdass,
-             SEXP psi_gxs, SEXP psi_gys,
-             SEXP niters, SEXP threshs,
-             SEXP familys)
+    (SEXP XS, SEXP YS,
+     SEXP GXS, SEXP GYS,
+     const int n, const int p, const int q,
+     const double lambda,
+     const double psigx, const double psigy,
+     const int niter, const double threshs,
+     Rcpp::CharacterVector familys)
 {
-    // get number of samples
-    const int N = (*INTEGER(ns));
-    // get number of covariables
-    const int P = (*INTEGER(ps));
-    // get number of responses
-    const int Q = (*INTEGER(qs));
-    // cast R design matrix to pointer to double
-    double *X = REAL(XS);
-    // cast R response matrix to pointer to double
-    double *Y = REAL(YS);
-    // cast R prior matrix for X to pointer to double
-    double *GX = REAL(GXS);
-    // cast R prior matrix for Y to pointer to double
-    double *GY = REAL(GYS);
-    // cast R lambda values to pointer to double
-    const double lambda = (*REAL(lambdass));
-    // cast R weighting values for GX to pointer to double
-    const double psigx = (*REAL(psi_gxs));
-    // cast R weighting values for GY to pointer to double
-    const double psigy = (*REAL(psi_gys));
-    // get number of max iterations
-    const int niter = (*INTEGER(niters));
-    // get convergence threshold
-    const double thresh = (*REAL(threshs));
-    // get family
     std::string family =
         CHAR(STRING_ELT(familys, 0)) == 'b' ? "binomial" : "gaussian";
     // call wrapper
     netreg::graph_penalized_linear_model_data data
-        (X, Y, GX, GY, N, P, Q, lambda, 1.0, psigx, psigy, n_iter, thresh, family);
+        (REAL(XS), REAL(YS), REAL(GXS), REAL(GYS),
+         n, p, q, lambda, 1.0, psigx, psigy, n_iter, thresh,
+         family);
     // TODO change that back and include family in data
     netreg::edgenet edge;
+    // TODO return
     edge.run(data);
     // protection counter that is needed for not activating garbage collection
     int prtCnt = 0;
