@@ -18,7 +18,7 @@
 #endif
 #include "types.hpp"
 #include "edgenet_binomial.hpp"
-#include "graph_penalized_linear_model_data.hpp"
+#include "graph_penalized_linear_model_cv_data.hpp"
 #include "cv_set.hpp"
 #include "error_functions.hpp"
 #include "../inst/dlib/matrix.h"
@@ -38,13 +38,12 @@ namespace netreg
          * @param cvset a cross-validation set
          */
         edgenet_binomial_loss_function
-            (graph_penalized_linear_model_data &data,
-             cv_set &cvset):
+            (graph_penalized_linear_model_cv_data &data):
             data_(data),
-            cvset_(cvset),
+            cvset_(data.cvset()),
             X_(data.design()),
             Y_(data.response()),
-            nfolds_(static_cast<int>(cvset.fold_count())),
+            nfolds_(static_cast<int>(data.cvset().fold_count())),
             edgenet_(),
             do_psigx_(data.psigx() == -1),
             do_psigy_(data.psigy() == -1)

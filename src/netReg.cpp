@@ -13,6 +13,7 @@
 #include "edgenet_binomial.hpp"
 #include "edgenet_gaussian.hpp"
 #include "edgenet_model_selection.hpp"
+#include "family.hpp"
 
 #include <R.h>
 #include <Rinternals.h>
