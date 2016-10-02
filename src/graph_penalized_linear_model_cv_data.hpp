@@ -47,6 +47,7 @@ namespace netreg
          * @param niter max number of iterations in case estimation of the coefficients does not converge
          * @param thresh convergence threshold
          * @param nfolds the number of folds
+         * @param fold_ids fold id mappings
          */
         graph_penalized_linear_model_cv_data
             (double *const x, double *const y,
@@ -55,12 +56,11 @@ namespace netreg
              double const lambda, const double alpha,
              const double psi_gx, const double psi_gy,
              const int niter, const double thresh,
-             const int nfolds) const
+             const int nfolds, const std::string family)
             : graph_penalized_linear_model_data
-                  (x, y, gx, gy, n, p, q, lambda, alpha, niter, thresh),
-              fold_ids_(design().n_rows)
+                  (x, y, gx, gy, n, p, q, lambda, alpha, niter, thresh, family),
+              fold_ids_(design().n_rows), cvset(n, nfolds)
         {
-            cvset_ = cv_set(design().n_rows, fold_ids);
             set_fold_ids();
         }
 
@@ -89,12 +89,11 @@ namespace netreg
              double const lambda, const double alpha,
              const double psi_gx, const double psi_gy,
              const int niter, const double thresh,
-             const int* fold_ids) const
+             const int* fold_ids, const std::string family)
             : graph_penalized_linear_model_data
-                  (x, y, gx, gy, n, p, q, lambda, alpha, niter, thresh),
-              fold_ids_(design().n_rows)
+                  (x, y, gx, gy, n, p, q, lambda, alpha, niter, thresh, family),
+              fold_ids_(design().n_rows), , cvset(n, fold_ids)
         {
-            cvset_ = cv_set(design().n_rows, fold_ids);
             set_fold_ids();
         }
 
@@ -103,7 +102,7 @@ namespace netreg
          *
          * @return returns the fold ids
          */
-        std::vector& fold_ids() const
+        std::vector<int>& fold_ids() const
         {
             return fold_ids_;
         }
