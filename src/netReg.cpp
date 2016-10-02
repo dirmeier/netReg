@@ -15,11 +15,8 @@
 #include "edgenet_model_selection.hpp"
 #include "family.hpp"
 
-#include <R.h>
-#include <Rinternals.h>
+#include <Rcpp.h>
 
-extern "C"
-{
 
 /**
  * Implementation of Edgenet, a edge-based regularized regression model.
@@ -39,7 +36,9 @@ extern "C"
  * @param threshs convergence threshold
  * @param familys family of distribution the response
  */
-SEXP edgenet(SEXP XS, SEXP YS,
+// [[Rcpp::export(name=".edgenet.cpp")]]
+Rcpp::List edgenet
+    (Rcpp::NumericMatrix XS, SEXP YS,
              SEXP GXS, SEXP GYS,
              SEXP ns, SEXP ps, SEXP qs,
              SEXP lambdass,
