@@ -15,9 +15,10 @@
 #include "edgenet_model_selection.hpp"
 #include "family.hpp"
 
-#include <Rcpp.h>
+#include "Rcpp.h"
 
-
+extern "C"
+{
 /**
  * Implementation of Edgenet, a edge-based regularized regression model.
  *
@@ -34,73 +35,38 @@
  * @param niters max number of iterations if parameter estimation
  *        does not converge in time
  * @param threshs convergence threshold
- * @param familys family of distribution the response
+ * @param fs family of distribution the response
  */
-// [[Rcpp::export(name=".edgenet.cpp")]]
-Rcpp::List edgenet
-    (SEXP XS, SEXP YS,
-     SEXP GXS, SEXP GYS,
-     const int n, const int p, const int q,
-     const double lambda,
-     const double psigx, const double psigy,
-     const int niter, const double threshs,
-     Rcpp::CharacterVector familys)
+SEXP edgenet
+    (SEXP XS, SEXP YS, SEXP GXS, SEXP GYS,
+     SEXP lambda, SEXP psigx, SEXP psigy,
+     SEXP niter, SEXP thresh,
+     SEXP fs)
 {
-    std::string family =
-        CHAR(STRING_ELT(familys, 0)) == 'b' ? "binomial" : "gaussian";
-    // call wrapper
+    BEGIN_RCPP;
+    std::string fam = Rcpp::as<std::string>(fs);
+    family f = fam == "binomial" ? family::BINOMIAL :
+               fam == "gaussian" ? family::GAUSSIAN
+                                 : family::NONE;
+    if (f == family::NONE)
+    {
+        Rcpp::Rcerr << "Wrong family given!" << "\n";
+        return R_NilValue;
+    }
+    Xdim = getAttrib(XS, R_DimSymbol);
+    Ydim = getAttrib(YS, R_DimSymbol);
     netreg::graph_penalized_linear_model_data data
         (REAL(XS), REAL(YS), REAL(GXS), REAL(GYS),
-         n, p, q, lambda, 1.0, psigx, psigy, n_iter, thresh,
-         family);
+         NTEGER(Xdim)[0], NTEGER(Xdim)[1], NTEGER(Ydim)[0],
+         Rcpp::as<double>(lambda), 1.0,
+         Rcpp::as<double>(psigx), Rcpp::as<double>(psigy),
+         Rcpp::as<int>(niter), Rcpp::as<double>(thresh), f);
     // TODO change that back and include family in data
     netreg::edgenet edge;
-    // TODO return
-    edge.run(data);
-    // protection counter that is needed for not activating garbage collection
-    int prtCnt = 0;
-    // R object for coefficient matrix
-    SEXP BS = PROTECT(allocMatrix(REALSXP, P, Q));
-    // protect from gc
-    prtCnt++;
-    // R object for intercept vector
-    SEXP intercept = PROTECT(allocVector(REALSXP, Q));
-    // protect from gc
-    prtCnt++;
-    double *B = REAL(BS);
-    double *b0 = REAL(intercept);
-    double *b_ = data.coefficients().memptr();
-    double *mu_ = data.intercept().memptr();
-    for (int i = 0; i < Q; ++i)
-    {
-        // safe intercepts for R vector
-        b0[i] = mu[i];
-        for (int j = 0; j < P; ++j)
-        {
-            // safe coefficients for R matrix
-            B[j + P * i] = b_[j + P * i];
-        }
-    }
-    // create a R list of size 2 that can be returned
-    SEXP OS = PROTECT(allocVector(VECSXP, 2));
-    prtCnt++;
-    // set first element of list to the coef matrix
-    SET_VECTOR_ELT(OS, 0, BS);
-    // set second element of list to intercept vector
-    SET_VECTOR_ELT(OS, 1, intercept);
-    // create name array
-    SEXP nms = PROTECT(allocVector(STRSXP, 2));
-    prtCnt++;
-    SET_STRING_ELT(nms, 0, mkChar("coefficients"));
-    SET_STRING_ELT(nms, 1, mkChar("intercept"));
-    // assign names to list
-    setAttrib(OS, R_NamesSymbol, nms);
-    // release SEXPs for garbage collection
-    UNPROTECT(prtCnt);
-    // return results to R
-    return OS;
+    return edge.run(data);
+    END_RCPP;
 }
-
+};
 /**
  * Implementation of cross-validation for Edgenet.
  *
@@ -213,4 +179,3 @@ SEXP cv_edgenet(SEXP XS, SEXP YS, SEXP GXS, SEXP GYS,
     return OS;
 }
 
-};
