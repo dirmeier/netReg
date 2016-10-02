@@ -10,6 +10,7 @@
 #include "graph_penalized_linear_model_data.hpp"
 
 #include <vector>
+#include <string>
 
 #ifndef ARMA_DONT_USE_WRAPPER
 #define ARMA_DONT_USE_WRAPPER
@@ -53,13 +54,14 @@ namespace netreg
             (double *const x, double *const y,
              double *const gx, double *const gy,
              const int n, const int p, const int q,
-             double const lambda, const double alpha,
+             const double lambda, const double alpha,
              const double psi_gx, const double psi_gy,
              const int niter, const double thresh,
              const int nfolds, const std::string family)
             : graph_penalized_linear_model_data
-                  (x, y, gx, gy, n, p, q, lambda, alpha, niter, thresh, family),
-              fold_ids_(design().n_rows), cvset(n, nfolds)
+                  (x, y, gx, gy, n, p, q, lambda, alpha, psi_gx, psi_gy, 
+                   niter, thresh, family),
+              fold_ids_(design().n_rows), cvset_(n, nfolds)
         {
             set_fold_ids();
         }
@@ -89,10 +91,11 @@ namespace netreg
              double const lambda, const double alpha,
              const double psi_gx, const double psi_gy,
              const int niter, const double thresh,
-             const int* fold_ids, const std::string family)
+              int* const fold_ids, const std::string family)
             : graph_penalized_linear_model_data
-                  (x, y, gx, gy, n, p, q, lambda, alpha, niter, thresh, family),
-              fold_ids_(design().n_rows), , cvset(n, fold_ids)
+              (x, y, gx, gy, n, p, q, lambda, alpha, psi_gx, psi_gy,
+               niter, thresh, family),
+              fold_ids_(design().n_rows), cvset_(n, fold_ids)
         {
             set_fold_ids();
         }
@@ -102,7 +105,7 @@ namespace netreg
          *
          * @return returns the fold ids
          */
-        std::vector<int>& fold_ids() const
+        const std::vector<int>& fold_ids() const
         {
             return fold_ids_;
         }

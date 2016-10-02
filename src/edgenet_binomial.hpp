@@ -31,7 +31,7 @@ namespace netreg
          *
          * @param data an object that holds all required data for the model
          */
-        void run(graph_penalized_linear_model_data &data) const;
+        virtual void run(graph_penalized_linear_model_data &data) const;
 
         /**
          * Calulates the coefficients of a graph-regularized regression model.

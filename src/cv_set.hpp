@@ -42,8 +42,6 @@ namespace netreg
          */
         cv_set(const int n, int *const foldids): N_FOLDS_(n), N_(n)
         {
-           // max_element<int>(foldids, foldids + n);
-
             init(foldids);
         }
 

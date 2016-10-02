@@ -52,7 +52,7 @@ namespace netreg
              const double lambda, const double alpha,
              const double psi_gx, const double psi_gy,
              const int niter, const double thresh,
-             std::string family)
+             const std::string family)
             : penalized_linear_model_data(x, y, n, p, q, lambda,
                                           alpha, niter, thresh, family),
               psi_gx(psi_gx), psi_gy(psi_gy),
