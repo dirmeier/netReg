@@ -36,8 +36,8 @@ namespace netreg
                                     const int n, const int p, const int q,
                                     double const lambda, double const alpha,
                                     const int niter, const double thresh,
-                                    const family family)
-            : linear_model_data(x, y, n, p, q, niter, thresh, family),
+                                    const enum family fam)
+            : linear_model_data(x, y, n, p, q, niter, thresh, fam),
               ALPHA(alpha),
               LAMBDA(lambda)
         {

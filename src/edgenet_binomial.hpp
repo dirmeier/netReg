@@ -42,7 +42,7 @@ namespace netreg
          * @param psigx penalization of laplacian for X
          * @param psigy penalization of laplacian for Y
          */
-        matrix<double> run_cv
+        virtual matrix<double> run_cv
             (graph_penalized_linear_model_data &data,
              const double lambda,
              const double alpha,

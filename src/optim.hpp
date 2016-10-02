@@ -8,10 +8,11 @@
 #include <string>
 #include <vector>
 #include <iostream>
+
 #include "../inst/dlib/optimization.h"
-#include "graph_penalized_linear_model_data.hpp"
+#include "graph_penalized_linear_model_cv_data.hpp"
 #include "cv_set.hpp"
-#include "gaussian_edgenet_loss_function.hpp"
+#include "edgenet_gaussian_loss_function.hpp"
 
 namespace netreg
 {
@@ -43,8 +44,7 @@ namespace netreg
          */
         template<typename loss_function>
         std::vector<double> bobyqa
-            (graph_penalized_linear_model_data &data,
-             cv_set &cvset,
+            (graph_penalized_linear_model_cv_data &data,
              std::vector<double> &start,
              std::vector<double> &lower_bound,
              std::vector<double> &upper_bound,

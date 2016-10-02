@@ -17,7 +17,7 @@
 #include <omp.h>
 #endif
 #include "types.hpp"
-#include "binomial_edgenet.hpp"
+#include "edgenet_binomial.hpp"
 #include "graph_penalized_linear_model_data.hpp"
 #include "cv_set.hpp"
 #include "error_functions.hpp"
@@ -28,7 +28,7 @@ namespace netreg
     /**
      * Functor class representing the objective function of a edge-regularized regression model.
      */
-    class binomial_edgenet_loss_function
+    class edgenet_binomial_loss_function
     {
     public:
         /**
@@ -37,7 +37,7 @@ namespace netreg
          * @param data the complete dataset required for edge-regularized regression
          * @param cvset a cross-validation set
          */
-        binomial_edgenet_loss_function
+        edgenet_binomial_loss_function
             (graph_penalized_linear_model_data &data,
              cv_set &cvset):
             data_(data),
@@ -98,7 +98,7 @@ namespace netreg
         matrix<double> &X_;      // design matrix
         matrix<double> &Y_;      // response matrix
         int nfolds_;             // number of folds
-        const binomial_edgenet edgenet_;
+        const edgenet_binomial edgenet_;
         const bool do_psigx_;
         const bool do_psigy_;
     };

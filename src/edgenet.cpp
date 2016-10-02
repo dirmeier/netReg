@@ -17,7 +17,7 @@ namespace netreg
 {
     void edgenet::run(graph_penalized_linear_model_data &data) const
     {
-        if (data.family() == family.BINOMIAL)
+        if (data.family() == family::BINOMIAL)
         {
             netreg::edgenet_binomial edge;
             edge.run(data);

@@ -53,15 +53,15 @@ namespace netreg
              const double lambda, const double alpha,
              const double psi_gx, const double psi_gy,
              const int niter, const double thresh,
-             const family family)
+             const enum family fam)
             : penalized_linear_model_data(x, y, n, p, q, lambda,
-                                          alpha, niter, thresh, family),
+                                          alpha, niter, thresh, fam),
               psi_gx(psi_gx), psi_gy(psi_gy),
               GX(gx, p, p), GY(gy, q, q),
               LX(laplacian(gx, p, p)), LY(laplacian(gy, q, q))
         {
         }
-        
+
         /**
          * Getter for penalization term for laplacian of X
          *

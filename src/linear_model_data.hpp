@@ -36,19 +36,19 @@ namespace netreg
          * @param q number of responses
          * @param niter maximal number of iterations
          * @param thresh the convergence threshold
-         * @param family of distribution of y
+         * @param fam of distribution of y
          */
         linear_model_data(double *x, double *y,
                           const int n, const int p, const int q,
                           const int niter, const double thresh,
-                          const family family)
+                          const family fam)
             : N(n), P(p), Q(q),
               X(x, n, p),
               Y(y, n, q),
               intrcpt(q), coeffs(p, q, arma::fill::ones),
               THRESH(thresh), N_ITER(niter),
               TXX(p, p), TXY(p, q),
-              family(family)
+              family_(fam)
         {
             matrix<double> TX = X.t();
             TXX = TX * X;
@@ -64,7 +64,7 @@ namespace netreg
          */
         const family family()
         {
-            return family;
+            return family_;
         }
 
         /**
@@ -104,7 +104,7 @@ namespace netreg
          * @param j the index of the column
          * @return a reference to an element in the coefficient matrix
          */
-        double &coefficients(const int i, const int j)
+        double &coefficients(const int i, const int j) 
         {
             return coeffs(i, j);
         }
@@ -114,7 +114,7 @@ namespace netreg
          *
          * @return a reference to the vector of intercepts
          */
-        cvector<double> &intercept()
+        cvector<double> &intercept() 
         {
             return intrcpt;
         }
@@ -124,7 +124,7 @@ namespace netreg
          *
          * @return a reference to the design matrix
          */
-        matrix<double> &design()
+        const matrix<double> &design() 
         {
             return X;
         }
@@ -134,7 +134,7 @@ namespace netreg
          *
          * @return a reference to the response matrix
          */
-        matrix<double> &response()
+        const matrix<double> &response() const
         {
             return Y;
         }
@@ -144,7 +144,7 @@ namespace netreg
          *
          * @return a reference to the coefficient matrix
          */
-        matrix<double> &coefficients()
+        matrix<double> &coefficients() 
         {
             return coeffs;
         }
@@ -154,7 +154,7 @@ namespace netreg
          *
          * @return a reference to X'X matrix.
          */
-        matrix<double> &txx()
+        matrix<double> &txx() 
         {
             return TXX;
         }
@@ -164,7 +164,7 @@ namespace netreg
          *
          * @return a reference to X'Y matrix.
          */
-        matrix<double> &txy()
+        matrix<double> &txy() 
         {
             return TXY;
         }
@@ -174,7 +174,7 @@ namespace netreg
          *
          * @return the max number of iterations
          */
-        const int max_iter()
+        const int max_iter() 
         {
             return N_ITER;
         }
@@ -201,7 +201,7 @@ namespace netreg
         const int N_ITER;        // max number iterations if CCD does not converge
         matrix<double> TXX;      // (p x p)-dimensional matrix: X'X
         matrix<double> TXY;      // (p x q)-dimensional matrix: X'Y
-        std::string family;      // family of distribution of y
+        enum family family_;      // family of distribution of y
     };
 }
 #endif //NETREG_LINEARMODELDATA_HPP

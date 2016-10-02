@@ -6,7 +6,7 @@
 #ifndef NETREG_EDGENETMODELSELECTION_HPP
 #define NETREG_EDGENETMODELSELECTION_HPP
 
-#include "graph_penalized_linear_model_cv_data.hpp"
+#include    "graph_penalized_linear_model_cv_data.hpp"
 #include "cv_set.hpp"
 
 namespace netreg

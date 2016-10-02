@@ -7,12 +7,14 @@
 #define ARMA_DONT_USE_WRAPPER
 #endif
 #include <armadillo>
+
 #ifdef HAVE_OPENMP
 #include <omp.h>
 #endif
+
 #include "types.hpp"
-#include "gaussian_edgenet.hpp"
-#include "graph_penalized_linear_model_data.hpp"
+#include "edgenet_gaussian.hpp"
+#include "graph_penalized_linear_model_cv_data.hpp"
 #include "cv_set.hpp"
 #include "error_functions.hpp"
 #include "../inst/dlib/matrix.h"
@@ -32,10 +34,9 @@ namespace netreg
          * @param cvset a cross-validation set
          */
         edgenet_gaussian_loss_function
-            (graph_penalized_linear_model_data &data,
-             cv_set &cvset):
+            ( graph_penalized_linear_model_cv_data &data):
             data_(data),
-            cvset_(cvset),
+            cvset_(data.cvset()),
             X_(data.design()),
             Y_(data.response()),
             nfolds_(static_cast<int>(cvset.fold_count())),
@@ -86,12 +87,12 @@ namespace netreg
 
     private:
         // data required for a edge-regularized regression model
-        graph_penalized_linear_model_data &data_;
-        cv_set &cvset_;          // cv-set on which the selected model is evaluated
-        matrix<double> &X_;      // design matrix
-        matrix<double> &Y_;      // response matrix
-        int nfolds_;             // number of folds
-        const gaussian_edgenet edgenet_;
+         graph_penalized_linear_model_cv_data &data_;
+         cv_set &cvset_;          // cv-set on which the selected model is evaluated
+         matrix<double> &X_;      // design matrix
+         matrix<double> &Y_;      // response matrix
+        const int nfolds_;             // number of folds
+        const edgenet_gaussian edgenet_;
         const bool do_psigx_;
         const bool do_psigy_;
     };

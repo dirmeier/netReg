@@ -57,10 +57,10 @@ namespace netreg
              const double lambda, const double alpha,
              const double psi_gx, const double psi_gy,
              const int niter, const double thresh,
-             const int nfolds, const std::string family)
+             const int nfolds, const enum family fam)
             : graph_penalized_linear_model_data
                   (x, y, gx, gy, n, p, q, lambda, alpha, psi_gx, psi_gy, 
-                   niter, thresh, family),
+                   niter, thresh, fam),
               fold_ids_(design().n_rows), cvset_(n, nfolds)
         {
             set_fold_ids();
@@ -91,10 +91,10 @@ namespace netreg
              double const lambda, const double alpha,
              const double psi_gx, const double psi_gy,
              const int niter, const double thresh,
-              int* const fold_ids, const std::string family)
+              int* const fold_ids, const enum family fam)
             : graph_penalized_linear_model_data
               (x, y, gx, gy, n, p, q, lambda, alpha, psi_gx, psi_gy,
-               niter, thresh, family),
+               niter, thresh, fam),
               fold_ids_(design().n_rows), cvset_(n, fold_ids)
         {
             set_fold_ids();
@@ -110,6 +110,13 @@ namespace netreg
             return fold_ids_;
         }
 
+        /**
+         * Getter
+         */
+        const cv_set cvset() const
+        {
+            return cvset_;
+        }
 
     private:
         /**
