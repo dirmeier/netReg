@@ -16,6 +16,7 @@
 #include <omp.h>
 #endif
 
+#include "family.hpp"
 #include "edgenet_gaussian_loss_function.hpp"
 #include "edgenet_binomial_loss_function.hpp"
 #include "optim.hpp"
@@ -35,12 +36,12 @@ namespace netreg
         const int niter = 1000;
         switch (data.family())
         {
-            case 'b':
+          case family::BINOMIAL:
                 return opt.bobyqa<edgenet_binomial_loss_function>
                               (data, start, lower_bound, upper_bound,
                                rad_start, rad_end, niter);
-            case 'g':
-            default:
+          case family::GAUSSIAN:
+          default:
                 return opt.bobyqa<edgenet_gaussian_loss_function>
                               (data, start, lower_bound, upper_bound,
                                rad_start, rad_end, niter);

@@ -93,7 +93,7 @@ namespace netreg
 
     private:
         // data required for a edge-regularized regression model
-        graph_penalized_linear_model_data &data_;
+        graph_penalized_linear_model_cv_data &data_;
         cv_set &cvset_;          // cv-set on which the selected model is evaluated
         matrix<double> &X_;      // design matrix
         matrix<double> &Y_;      // response matrix

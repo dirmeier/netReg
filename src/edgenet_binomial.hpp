@@ -16,6 +16,7 @@
 
 #include "types.hpp"
 #include "graph_penalized_linear_model_data.hpp"
+#include "graph_penalized_linear_model_cv_data.hpp"
 #include "cv_fold.hpp"
 
 namespace netreg
@@ -43,7 +44,7 @@ namespace netreg
          * @param psigy penalization of laplacian for Y
          */
         virtual matrix<double> run_cv
-            (graph_penalized_linear_model_data &data,
+            (graph_penalized_linear_model_cv_data &data,
              const double lambda,
              const double alpha,
              const double psigx,

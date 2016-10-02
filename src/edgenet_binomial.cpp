@@ -9,7 +9,6 @@
 #include "math_functions.hpp"
 #include "stat_functions.hpp"
 
-
 namespace netreg
 {
     void edgenet_binomial::run(graph_penalized_linear_model_data &data) const
@@ -33,10 +32,11 @@ namespace netreg
 //        intr = intercept(data.design(), data.response(), coef);
     }
 
-    matrix<double> edgenet_binomial::run_cv(graph_penalized_linear_model_data &data,
-                                   const double lambda, const double alpha,
-                                   const double psigx, const double psigy,
-                                   cv_fold &fold) const
+    matrix<double> edgenet_binomial::run_cv
+        (graph_penalized_linear_model_cv_data &data,
+         const double lambda, const double alpha,
+         const double psigx, const double psigy,
+         cv_fold &fold) const
     {
 
         matrix<double> coef(10, 10, arma::fill::ones);

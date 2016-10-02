@@ -63,7 +63,7 @@ namespace netreg
             }
             // minimize the loss_function
             dlib::find_min_bobyqa(
-                loss_function(data, cvset),
+                loss_function(data),
                 par,
                 par.size() * 2 + 1,
                 lb,

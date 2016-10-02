@@ -39,7 +39,7 @@ namespace netreg
             cvset_(data.cvset()),
             X_(data.design()),
             Y_(data.response()),
-            nfolds_(static_cast<int>(cvset.fold_count())),
+            nfolds_(static_cast<int>(data.cvset().fold_count())),
             edgenet_(),
             do_psigx_(data.psigx() == -1),
             do_psigy_(data.psigy() == -1)
