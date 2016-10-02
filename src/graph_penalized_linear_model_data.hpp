@@ -61,6 +61,8 @@ namespace netreg
         {
         }
 
+        const std::string family
+
         /**
          * Getter for penalization term for laplacian of X
          *
