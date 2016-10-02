@@ -124,7 +124,7 @@ namespace netreg
          *
          * @return a reference to the design matrix
          */
-        const matrix<double> &design() 
+         matrix<double> &design()
         {
             return X;
         }
@@ -134,7 +134,7 @@ namespace netreg
          *
          * @return a reference to the response matrix
          */
-        const matrix<double> &response() const
+         matrix<double> &response()
         {
             return Y;
         }

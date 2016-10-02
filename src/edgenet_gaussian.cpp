@@ -27,9 +27,9 @@ namespace netreg
         const int niter = data.max_iter();
         const double lambda = data.lambda();
         const double alpha = data.alpha();
-        const double psigx=data.psigx();
-        const double psigy=data.psigy();
-        matrix<double> &TXX= data.txx();
+        const double psigx = data.psigx();
+        const double psigy = data.psigy();
+        matrix<double> &TXX = data.txx();
         matrix<double> &TXY = data.txy();
         matrix<double> &LX = data.lx();
         matrix<double> &LY = data.ly();
@@ -53,10 +53,11 @@ namespace netreg
         intr = intercept(data.design(), data.response(), coef);
     }
 
-    matrix<double> edgenet_gaussian::run_cv(graph_penalized_linear_model_data &data,
-                                  const double lambda, const double alpha,
-                                  const double psigx, const double psigy,
-                                  cv_fold &fold) const
+    matrix<double> edgenet_gaussian::run_cv(
+        graph_penalized_linear_model_cv_data &data,
+        const double lambda, const double alpha,
+        const double psigx, const double psigy,
+        cv_fold &fold) const
     {
         const int P = data.covariable_count();
         const int Q = data.response_count();
@@ -84,7 +85,8 @@ namespace netreg
                       train_txx, train_txy, LX, LY, coef, old_coef, qi);
             }
         }
-        while (arma::accu(arma::abs(coef - old_coef)) > thresh && iter++ < niter);
+        while (arma::accu(arma::abs(coef - old_coef)) > thresh &&
+               iter++ < niter);
         return coef;
     }
 
@@ -123,7 +125,9 @@ namespace netreg
                 coef(pi, qi) = softnorm(s, lalph, enorm * norm);
             }
         }
-        while (arma::accu(arma::abs(coef.col(qi) - old_coef.col(qi))) > thresh && iter++ < niter);
+        while (
+            arma::accu(arma::abs(coef.col(qi) - old_coef.col(qi))) > thresh &&
+            iter++ < niter);
     }
 
     void edgenet_gaussian::set_params
@@ -165,7 +169,8 @@ namespace netreg
     {
         if (psigx == 0)
             return;
-        double xPenalty = -LX(pi, pi) * cfs(pi, qi) + arma::accu(LX.row(pi) * cfs.col(qi));
+        double xPenalty =
+            -LX(pi, pi) * cfs(pi, qi) + arma::accu(LX.row(pi) * cfs.col(qi));
         s = s - 2 * psigx * xPenalty;
         norm += 2 * psigx * LX(pi, pi);
     }
@@ -177,7 +182,8 @@ namespace netreg
     {
         if (psigy == 0 || Q == 1)
             return;
-        double yPenalty = -cfs(pi, qi) * LY(qi, qi) + arma::accu(cfs.row(pi) * LY.col(qi));
+        double yPenalty =
+            -cfs(pi, qi) * LY(qi, qi) + arma::accu(cfs.row(pi) * LY.col(qi));
         s = s - 2 * psigy * yPenalty;
         norm += 2 * psigy * LY(qi, qi);
     }

@@ -34,7 +34,7 @@ namespace netreg
          * @param cvset a cross-validation set
          */
         edgenet_gaussian_loss_function
-            ( graph_penalized_linear_model_cv_data &data):
+            (graph_penalized_linear_model_cv_data &data):
             data_(data),
             cvset_(data.cvset()),
             X_(data.design()),
