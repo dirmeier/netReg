@@ -3,9 +3,9 @@ AC_PREREQ([2.69])
 AC_INIT(
 	[netReg],
 	[0.1],
-	[netreg@simon-dirmeier.net],
+	[simon.dirmeier@gmx.de],
 	[netReg],
-	[https://github.com/rafstraumur/netreg])
+	[https://github.com/dirmeier/netReg])
 AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_SRCDIR([src/edgenet.cpp])
 
@@ -51,7 +51,7 @@ AC_CHECK_HEADER([armadillo],
 ], 
 [
 	AC_MSG_NOTICE([no armadillo found. using bundled lib])
-	netReg_CPPFLAGS="-I../inst/armadillo"
+	netReg_CPPFLAGS="-I../inst/include/armadillo"
 ])
 
 AC_SEARCH_LIBS([cblas_dgemm], [openblas],
