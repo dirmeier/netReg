@@ -40,6 +40,7 @@ namespace netreg
          *
          * @param data an object that holds all required data for the model
          */
+        // TODO return Rcpp::List
         virtual void run(graph_penalized_linear_model_data &data) const;
 
         /**
