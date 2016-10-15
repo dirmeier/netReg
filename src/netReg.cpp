@@ -141,10 +141,6 @@ SEXP cv_edgenet
              Rcpp::as<int>(niter), Rcpp::as<double>(thresh),
              nfold, family);
     netreg::edgenet_model_selection e;
-    // TODO
-//    const double lamb_est = pop[0];
-//    const double psi_gx_est = psigx == -1 ? pop[1] : 0.0;
-//    const double psi_gy_est = psigy == -1 ? pop[2] : 0.0;
     return e.regularization_path(data, fam);
     END_RCPP;
 }

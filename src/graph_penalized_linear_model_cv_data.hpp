@@ -135,7 +135,7 @@ namespace netreg
             return cvset_;
         }
 
-    private:
+    protected:
         /**
          * Function to set the fold id mappings to sample indexes.
          */

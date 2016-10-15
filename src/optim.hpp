@@ -34,8 +34,7 @@
 #include "cv_set.hpp"
 #include "edgenet_gaussian_loss_function.hpp"
 
-#include <R.h>
-#include <Rinternals.h>
+#include <Rcpp.h>
 
 namespace netreg
 {
@@ -95,9 +94,14 @@ namespace netreg
                 radius_stop,
                 niter
             );
-            for (int i = 0; i < sz; ++i)
-                start[i] = par(i, 0);
-            return start;
+            const double lambda = par(0, 0);
+            const double psigx = data.psigx() == -1 ? par(1, 0) : 0.0;
+            const double psipy = data.psigy() == -1 ? par(2, 0) : 0.0;
+            return Rcpp::List::create(
+                Named("lambda", lambda),
+                Named("psigx", psigx),
+                Named("psigy", psigy)
+            );
         }
     };
 }
