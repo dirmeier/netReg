@@ -60,16 +60,16 @@ SEXP edgenet
 {
     BEGIN_RCPP;
     std::string fam = Rcpp::as<std::string>(fs);
-    family f = fam == "binomial" ? family::BINOMIAL :
-               fam == "gaussian" ? family::GAUSSIAN
-                                 : family::NONE;
-    if (f == family::NONE)
+    netreg::family f = fam == "binomial" ? netreg::family::BINOMIAL :
+                       fam == "gaussian" ? netreg::family::GAUSSIAN
+                                         : netreg::family::NONE;
+    if (f == netreg::family::NONE)
     {
         Rcpp::Rcerr << "Wrong family given!" << "\n";
         return R_NilValue;
     }
-    const int *xdim = INTEGER(getAttrib(X, R_DimSymbol));
-    const int *ydim = INTEGER(getAttrib(Y, R_DimSymbol));
+    const int *xdim = INTEGER(Rf_getAttrib(X, R_DimSymbol));
+    const int *ydim = INTEGER(Rf_getAttrib(Y, R_DimSymbol));
     netreg::graph_penalized_linear_model_data data
         (REAL(X), REAL(Y), REAL(GX), REAL(GY),
          xdim[0], xdim[1], ydim[1],
@@ -115,16 +115,16 @@ SEXP cv_edgenet
 {
     BEGIN_RCPP;
     std::string fam = Rcpp::as<std::string>(fs);
-    family f = fam == "binomial" ? family::BINOMIAL :
-               fam == "gaussian" ? family::GAUSSIAN
-                                 : family::NONE;
+    netreg::family f = fam == "binomial" ? netreg::family::BINOMIAL :
+                       fam == "gaussian" ? netreg::family::GAUSSIAN
+                                         : netreg::family::NONE;
     if (f == family::NONE)
     {
         Rcpp::Rcerr << "Wrong family given!" << "\n";
         return R_NilValue;
     }
-    const int *xdim = INTEGER(getAttrib(X, R_DimSymbol));
-    const int *ydim = INTEGER(getAttrib(Y, R_DimSymbol));
+    const int *xdim = INTEGER(Rf_getAttrib(X, R_DimSymbol));
+    const int *ydim = INTEGER(Rf_getAttrib(Y, R_DimSymbol));
     netreg::graph_penalized_linear_model_cv_data data;
     if (Rcpp::as<int>(len_foldids) == xdim[0])
         data = netreg::graph_penalized_linear_model_cv_data

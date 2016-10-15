@@ -27,6 +27,9 @@
 #include "graph_penalized_linear_model_cv_data.hpp"
 #include "cv_set.hpp"
 
+#include <R.h>
+#include <Rinternals.h>
+
 namespace netreg
 {
     /**
@@ -37,15 +40,16 @@ namespace netreg
     public:
 
         /**
-         * Calculate a regularization path for an edge-penalized regression model,
-         * i.e. calculate different lambdas and psis.
+         * Calculate the optimal shrinkage parameters for an
+         * edge-penalized regression model, i.e. calculate different
+         * lambdas and psis.
          *
          * @param data the model data for which you want to estimate the
          *        optimal regularization parameters.
          *
-         * @returns an pareto-optimal point
+         * @returns returns a SEXP with the optimal shrinkage parameters
          */
-        std::vector<double> regularization_path
+        SEXP regularization_path
             (graph_penalized_linear_model_cv_data &data);
     };
 }

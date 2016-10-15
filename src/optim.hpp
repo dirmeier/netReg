@@ -34,6 +34,9 @@
 #include "cv_set.hpp"
 #include "edgenet_gaussian_loss_function.hpp"
 
+#include <R.h>
+#include <Rinternals.h>
+
 namespace netreg
 {
     /**
@@ -63,7 +66,7 @@ namespace netreg
          * @param niter maximum calls to the loss function
          */
         template<typename loss_function>
-        std::vector<double> bobyqa
+        SEXP bobyqa
             (graph_penalized_linear_model_cv_data &data,
              std::vector<double> &start,
              std::vector<double> &lower_bound,

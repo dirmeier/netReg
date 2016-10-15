@@ -39,7 +39,7 @@
 #include "graph_penalized_linear_model_cv_data.hpp"
 #include "cv_set.hpp"
 #include "error_functions.hpp"
-#include "../inst/dlib/matrix.h"
+#include "../inst/include/dlib/matrix.h"
 
 namespace netreg
 {
