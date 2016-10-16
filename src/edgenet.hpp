@@ -29,6 +29,8 @@
 #include "graph_penalized_linear_model_cv_data.hpp"
 #include "cv_fold.hpp"
 
+#include <Rinternals.h>
+
 namespace netreg
 {
     class edgenet
@@ -40,8 +42,7 @@ namespace netreg
          *
          * @param data an object that holds all required data for the model
          */
-        // TODO return Rcpp::List
-        virtual void run(graph_penalized_linear_model_data &data) const;
+        virtual SEXP run(graph_penalized_linear_model_data &data) const;
 
         /**
          * Calulates the optimal set of shrinkage parameters of a

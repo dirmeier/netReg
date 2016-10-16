@@ -33,9 +33,11 @@
 #include "math_functions.hpp"
 #include "stat_functions.hpp"
 
+#include <Rcpp.h>
+
 namespace netreg
 {
-    void edgenet_gaussian::run(graph_penalized_linear_model_data &data) const
+    SEXP edgenet_gaussian::run(graph_penalized_linear_model_data &data) const
     {
         const int P = data.covariable_count();
         const int Q = data.response_count();

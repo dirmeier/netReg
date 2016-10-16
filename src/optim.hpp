@@ -94,13 +94,10 @@ namespace netreg
                 radius_stop,
                 niter
             );
-            const double lambda = par(0, 0);
-            const double psigx = data.psigx() == -1 ? par(1, 0) : 0.0;
-            const double psipy = data.psigy() == -1 ? par(2, 0) : 0.0;
             return Rcpp::List::create(
-                Named("lambda", lambda),
-                Named("psigx", psigx),
-                Named("psigy", psigy)
+                Named("lambda",  par(0, 0)),
+                Named("psigx", data.psigx() == -1 ? par(1, 0) : 0.0),
+                Named("psigy", data.psigy() == -1 ? par(2, 0) : 0.0)
             );
         }
     };

@@ -86,17 +86,17 @@ namespace netreg
                 if (do_psigx_ && do_psigy_)
                 {
                     coef = edgenet_.run_cv(data_, p(0, 0), 1.0, p(1, 0),
-                                          p(2, 0), fold);
+                                           p(2, 0), fold);
                 }
                 else if (do_psigy_)
                 {
                     coef = edgenet_.run_cv(data_, p(0, 0), 1.0, 0, p(2, 0),
-                                          fold);
+                                           fold);
                 }
                 else if (do_psigx_)
                 {
                     coef = edgenet_.run_cv(data_, p(0, 0), 1.0, p(1, 0), 0,
-                                          fold);
+                                           fold);
                 }
                 else
                 {
@@ -105,16 +105,16 @@ namespace netreg
                 double err = sse(coef, X_, Y_, fold.test_set());
                 sses[fc] = err;
             }
-            double  err = std::accumulate(sses.begin(), sses.end(), 0.0);
+            double err = std::accumulate(sses.begin(), sses.end(), 0.0);
             return err;
         }
 
     private:
         // data required for a edge-regularized regression model
-         graph_penalized_linear_model_cv_data &data_;
-         cv_set &cvset_;          // cv-set on which the selected model is evaluated
-         matrix<double> &X_;      // design matrix
-         matrix<double> &Y_;      // response matrix
+        graph_penalized_linear_model_cv_data &data_;
+        cv_set &cvset_;          // cv-set on which the selected model is evaluated
+        matrix<double> &X_;      // design matrix
+        matrix<double> &Y_;      // response matrix
         const int nfolds_;             // number of folds
         const edgenet_gaussian edgenet_;
         const bool do_psigx_;
