@@ -41,9 +41,8 @@ namespace netreg
     {
         const int P = data.covariable_count();
         const int Q = data.response_count();
-        matrix<double> &coef = data.coefficients();
+        matrix<double> coef(P, Q, arma::fill::ones);
         matrix<double> old_coef(P, Q);
-        cvector<double> &intr = data.intercept();
         const double thresh = data.threshold();
         const int niter = data.max_iter();
         const double lambda = data.lambda();
@@ -71,7 +70,9 @@ namespace netreg
         while (arma::accu(arma::abs(coef - old_coef)) > thresh &&
                iter++ < niter);
         // calculate intercepts of the linear model
-        intr = intercept(data.design(), data.response(), coef);
+        cvector<double> intr = intercept(data.design(), data.response(), coef);
+        // TODO REUTRN
+        // TODO exclude intercept and coefficients from model data
     }
 
     matrix<double> edgenet_gaussian::run_cv(
