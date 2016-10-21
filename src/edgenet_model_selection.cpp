@@ -65,6 +65,5 @@ namespace netreg
                                rad_start, rad_end, niter));
 
         }
-        return R_NilValue;
     }
 }

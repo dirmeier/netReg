@@ -46,4 +46,22 @@ namespace netreg
         }
         return R_NilValue;
     }
+
+    matrix<double> edgenet::run_cv
+        (graph_penalized_linear_model_cv_data &data,
+         const double lambda, const double alpha,
+         const double psigx,  const double psigy,
+         cv_fold &fold) const
+    {
+        if (data.distribution_family() == family::BINOMIAL)
+        {
+            netreg::edgenet_binomial edge;
+            return edge.run_cv(data, lambda, alpha, psigx, psigy, fold);
+        }
+        else
+        {
+            netreg::edgenet_gaussian edge;
+            return edge.run_cv(data, lambda, alpha, psigx, psigy, fold);
+        }
+    }
 }
