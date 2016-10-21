@@ -28,13 +28,12 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <map>
 
 #include "../inst/include/dlib/optimization.h"
 #include "graph_penalized_linear_model_cv_data.hpp"
 #include "cv_set.hpp"
 #include "edgenet_gaussian_loss_function.hpp"
-
-#include <Rcpp.h>
 
 namespace netreg
 {
@@ -65,7 +64,7 @@ namespace netreg
          * @param niter maximum calls to the loss function
          */
         template<typename loss_function>
-        SEXP bobyqa
+        std::map<std::string, double> bobyqa
             (graph_penalized_linear_model_cv_data &data,
              std::vector<double> &start,
              std::vector<double> &lower_bound,
@@ -94,11 +93,9 @@ namespace netreg
                 radius_stop,
                 niter
             );
-            return Rcpp::List::create(
-                Rcpp::Named("lambda",  par(0, 0)),
-                Rcpp::Named("psigx", data.psigx() == -1 ? par(1, 0) : 0.0),
-                Rcpp::Named("psigy", data.psigy() == -1 ? par(2, 0) : 0.0)
-            );
+            return {{"lambda", par(0, 0)}, 
+                    {"psigx", data.psigx() == -1 ? par(1, 0) : 0.0}, 
+                    {"psigy", data.psigy() == -1 ? par(2, 0) : 0.0}};
         }
     };
 }

@@ -45,6 +45,7 @@ namespace netreg
     class linear_model_data
     {
     protected:
+
         /**
          * Protected constructor in order to avoid instantiation.
          *

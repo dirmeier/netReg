@@ -27,7 +27,7 @@
 #include "graph_penalized_linear_model_cv_data.hpp"
 #include "cv_set.hpp"
 
-#include <Rinternals.h>
+#include <Rcpp.h>
 
 namespace netreg
 {

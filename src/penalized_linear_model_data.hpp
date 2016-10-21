@@ -39,6 +39,7 @@ namespace netreg
     {
 
     public:
+
         /**
          * Constructor.
          *

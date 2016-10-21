@@ -31,6 +31,7 @@
 
 #include <numeric>
 #include <vector>
+
 #ifdef HAVE_OPENMP
 #include <omp.h>
 #endif
@@ -54,15 +55,16 @@ namespace netreg
         switch (data.distribution_family())
         {
             case family::BINOMIAL:
-                return opt.bobyqa<edgenet_binomial_loss_function>
+                return Rcpp::wrap(opt.bobyqa<edgenet_binomial_loss_function>
                               (data, start, lower_bound, upper_bound,
-                               rad_start, rad_end, niter);
+                               rad_start, rad_end, niter));
             case family::GAUSSIAN:
             default:
-                return opt.bobyqa<edgenet_gaussian_loss_function>
+                return Rcpp::wrap(opt.bobyqa<edgenet_gaussian_loss_function>
                               (data, start, lower_bound, upper_bound,
-                               rad_start, rad_end, niter);
+                               rad_start, rad_end, niter));
 
         }
+        return R_NilValue;
     }
 }

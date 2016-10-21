@@ -118,30 +118,34 @@ SEXP cv_edgenet
     netreg::family f = fam == "binomial" ? netreg::family::BINOMIAL :
                        fam == "gaussian" ? netreg::family::GAUSSIAN
                                          : netreg::family::NONE;
-    if (f == family::NONE)
+    if (f == netreg::family::NONE)
     {
         Rcpp::Rcerr << "Wrong family given!" << "\n";
         return R_NilValue;
     }
     const int *xdim = INTEGER(Rf_getAttrib(X, R_DimSymbol));
     const int *ydim = INTEGER(Rf_getAttrib(Y, R_DimSymbol));
-    netreg::graph_penalized_linear_model_cv_data data;
-    if (Rcpp::as<int>(len_foldids) == xdim[0])
-        data = netreg::graph_penalized_linear_model_cv_data
-            (REAL(X), REAL(Y), REAL(GX), REAL(GY),
-             xdim[0], xdim[1], ydim[1],
-             -1, 1.0, Rcpp::as<double>(psigx), Rcpp::as<double>(psigy),
-             Rcpp::as<int>(niter), Rcpp::as<double>(thresh),
-             REAL(fold_ids), f);
-    else
-        data = netreg::graph_penalized_linear_model_cv_data
-            (REAL(X), REAL(Y), REAL(GX), REAL(GY),
-             xdim[0], xdim[1], ydim[1],
-             -1, 1.0, Rcpp::as<double>(psigx), Rcpp::as<double>(psigy),
-             Rcpp::as<int>(niter), Rcpp::as<double>(thresh),
-             nfold, family);
     netreg::edgenet_model_selection e;
-    return e.regularization_path(data, fam);
+    if (Rcpp::as<int>(len_foldids) == xdim[0])
+    {
+        netreg::graph_penalized_linear_model_cv_data data
+            (REAL(X), REAL(Y), REAL(GX), REAL(GY),
+             xdim[0], xdim[1], ydim[1],
+             -1, 1.0, Rcpp::as<double>(psigx), Rcpp::as<double>(psigy),
+             Rcpp::as<int>(niter), Rcpp::as<double>(thresh),
+             INTEGER(foldids), f);
+        return e.regularization_path(data);
+    }
+    else
+    {
+        netreg::graph_penalized_linear_model_cv_data data
+            (REAL(X), REAL(Y), REAL(GX), REAL(GY),
+             xdim[0], xdim[1], ydim[1],
+             -1, 1.0, Rcpp::as<double>(psigx), Rcpp::as<double>(psigy),
+             Rcpp::as<int>(niter), Rcpp::as<double>(thresh),
+             Rcpp::as<int>(nfolds), f);
+        return e.regularization_path(data);
+    }
     END_RCPP;
 }
 };
