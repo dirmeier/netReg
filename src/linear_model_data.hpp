@@ -81,7 +81,7 @@ namespace netreg
          *
          * @return returns the family
          */
-        const family family()
+        const family distribution_family()
         {
             return family_;
         }
@@ -220,7 +220,7 @@ namespace netreg
         const int N_ITER;        // max number iterations if CCD does not converge
         matrix<double> TXX;      // (p x p)-dimensional matrix: X'X
         matrix<double> TXY;      // (p x q)-dimensional matrix: X'Y
-        enum family family_;      // family of distribution of y
+        const enum family family_;      // family of distribution of y
     };
 }
 #endif //NETREG_LINEARMODELDATA_HPP

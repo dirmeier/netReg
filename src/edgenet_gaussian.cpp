@@ -73,6 +73,7 @@ namespace netreg
         cvector<double> intr = intercept(data.design(), data.response(), coef);
         // TODO REUTRN
         // TODO exclude intercept and coefficients from model data
+        return R_NilValue;
     }
 
     matrix<double> edgenet_gaussian::run_cv(

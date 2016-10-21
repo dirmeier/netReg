@@ -51,7 +51,7 @@ namespace netreg
         std::vector<double> upper_bound{100.0, 10000.0, 10000.0};
         const double rad_start = 0.49, rad_end = 1e-6;
         const int niter = 1000;
-        switch (data.family())
+        switch (data.distribution_family())
         {
             case family::BINOMIAL:
                 return opt.bobyqa<edgenet_binomial_loss_function>

@@ -28,7 +28,7 @@
 
 namespace netreg
 {
-    void edgenet_binomial::run(graph_penalized_linear_model_data &data) const
+    SEXP edgenet_binomial::run(graph_penalized_linear_model_data &data) const
     {
 //        const int P = data.covariable_count();
 //        const int Q = data.response_count();
@@ -47,6 +47,7 @@ namespace netreg
 //        matrix<double> &LY = data.ly();
 //        // calculate intercepts of the linear model
 //        intr = intercept(data.design(), data.response(), coef);
+        return R_NilValue;
     }
 
     matrix<double> edgenet_binomial::run_cv

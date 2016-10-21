@@ -32,17 +32,18 @@
 
 namespace netreg
 {
-    void edgenet::run(graph_penalized_linear_model_data &data) const
+    SEXP edgenet::run(graph_penalized_linear_model_data &data) const
     {
-        if (data.family() == family::BINOMIAL)
+        if (data.distribution_family() == family::BINOMIAL)
         {
             netreg::edgenet_binomial edge;
-            edge.run(data);
+            return edge.run(data);
         }
         else
         {
             netreg::edgenet_gaussian edge;
-            edge.run(data);
+            return edge.run(data);
         }
+        return R_NilValue;
     }
 }

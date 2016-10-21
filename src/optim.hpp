@@ -95,9 +95,9 @@ namespace netreg
                 niter
             );
             return Rcpp::List::create(
-                Named("lambda",  par(0, 0)),
-                Named("psigx", data.psigx() == -1 ? par(1, 0) : 0.0),
-                Named("psigy", data.psigy() == -1 ? par(2, 0) : 0.0)
+                Rcpp::Named("lambda",  par(0, 0)),
+                Rcpp::Named("psigx", data.psigx() == -1 ? par(1, 0) : 0.0),
+                Rcpp::Named("psigy", data.psigy() == -1 ? par(2, 0) : 0.0)
             );
         }
     };
