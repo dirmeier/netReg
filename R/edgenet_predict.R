@@ -22,7 +22,6 @@
 #' 
 #' @export
 #' 
-#' @author Simon Dirmeier, \email{netreg@@simon-dirmeier.net}
 #' @description Predicts the estimated Y.hat values for a newdata design matrix X 
 #' similar to the other predict methods, e.g. from glm and glmnet
 #' 
@@ -34,7 +33,10 @@
 #' 
 #' @return A (\code{m} x \code{q})-dimensional matrix
 #' 
+#' @method predict gaussian.edgenet
+#' 
 #' @examples
+#' \dontrun{
 #' X <- matrix(rnorm(100*10),100,10)
 #' Y <- matrix(rnorm(100*10),100,10)
 #' G.X <- matrix(rpois(10*10,1),10)
@@ -42,13 +44,8 @@
 #' diag(G.X) <- 0
 #' fit <- edgenet(X=X, Y=Y, G.X=G.X, family="gaussian")
 #' pred <- predict(fit, X)
-predict.gaussian.edgenet <- 
-function
-(
- object, 
- newdata=NULL,
- ...
-)
+#' }
+predict.gaussian.edgenet <- function(object, newdata=NULL, ...)
 {
   if(is.null(newdata))
     stop("newdata is null")

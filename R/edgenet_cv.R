@@ -39,6 +39,7 @@
               psigy=cv$shrinkage_parameters[3],
               foldids=cv$fold_ids)
   ret$family <- family
+  class(ret) <- paste0(family, ".cv.edgenet")
   ret
 }
 

@@ -18,15 +18,9 @@
 # along with netReg. If not, see <http://www.gnu.org/licenses/>.
 
 
-#' @noRd
 #' @export
-#' @author Simon Dirmeier, \email{netreg@@simon-dirmeier.net}
-print.edgenet <- 
-function
-(
- x,
- ...
-)
+#' @method print edgenet
+print.edgenet <- function(x,...)
 {
   cat("\nCall: ")
   print(x$call)
@@ -41,15 +35,9 @@ function
   cat(x$family, "\n")
 }
 
-#' @noRd
 #' @export
-#' @author Simon Dirmeier, \email{netreg@@simon-dirmeier.net}
-print.cv.edgenet <-
-function
-(
-  x, 
-  ...
-)
+#' @method print cv.edgenet
+print.cv.edgenet <- function(x, ...)
 {
   cat("\nCall: ")
   print(x$call)

@@ -32,7 +32,7 @@
                as.integer(maxit), as.double(thresh), 
                as.character(family),
                PACKAGE="netReg")
-  
+  # finalize output
   coefficients <- res$coefficients
   intr         <- res$intercept
   rownames(coefficients) <- colnames(X)
@@ -43,6 +43,6 @@
               psigx=psigx,
               psigy=psigy)
   ret$family <- family
-  class(ret) <- paste(family, ".edgenet", sep="")
+  class(ret) <- paste0(family, ".edgenet")
   ret
 }

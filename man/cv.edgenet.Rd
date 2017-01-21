@@ -57,7 +57,7 @@ cv.edge <- cv.edgenet(X=X, Y=Y, G.X=G.X, family="gaussian")
 }
 }
 \author{
-Simon Dirmeier, \email{netreg@simon-dirmeier.net}
+Simon Dirmeier, \email{mail@simon-dirmeier.net}
 }
 \references{
 Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007), 

@@ -21,9 +21,8 @@
 #' Find the optimal shrinkage parameters for edgenet
 #' 
 #' @export
-#' @useDynLib netReg
 #' 
-#' @author Simon Dirmeier, \email{netreg@@simon-dirmeier.net}
+#' @author Simon Dirmeier, \email{mail@@simon-dirmeier.net}
 #' 
 #' @description Finds the optimal shrinkage parameters using cross-validation for edgenet. 
 #' We use the BOBYQA algorithm to minimize the sum of squared residuals objective function.
@@ -79,33 +78,32 @@
 cv.edgenet <- function (X, Y, G.X=NULL, G.Y=NULL, 
                         thresh=1e-5, maxit=1e5, family=c("gaussian"),
                         nfolds=10, foldid=NULL, ...)
+{ 
   UseMethod("cv.edgenet")
+}
 
 #' @export
-#' @noRd
+#' @method cv.edgenet default
 cv.edgenet.default <- function (X, Y, G.X=NULL, G.Y=NULL, 
-                                thresh=1e-5, maxit=1e5, family=c("gaussian"),
+                                thresh=1e-5, maxit=1e5,
+                                family=c("gaussian"),
                                 nfolds=10, foldid=NULL, ...) 
 {
-  if (!is.matrix(X)) stop ("X is no matrix!")      
-  if (!is.matrix(Y)) stop ("Y is no matrix!")
+  .check.matrices(X, Y)
   # parse dimensions
   n <- dim(X)[1]
   p <- dim(X)[2]
   q <- dim(Y)[2]
   if (is.null(G.X)) G.X <- matrix(0, 1, 1)
-  if (!is.matrix(G.X)) stop("GX is no matrix!")
   if (is.null(G.Y)) G.Y <- matrix(0, 1, 1)
+  if (!is.matrix(G.X)) stop("GX is no matrix!")
   if (!is.matrix(G.Y)) stop("GY is no matrix!")
-  # check if X and Y are valid
-  if (n != dim(Y)[1]) stop("X and Y have not same number of observations!")        
-  if (p < 2) stop("Pls use a X matrix with at least 2 covariables!")  
+  .check.dimensions(X, Y, n, p, q)
   psigx <- psigy <- -1
   # check if graphs are valid
   if (all(G.X == 0)) psigx <- 0
   if (all(G.Y == 0)) psigy <- 0
-  if (psigx != 0 & any(dim(G.X)!=dim(X)[2])) stop("ncol(X) and dim(G.X) do not fit!")
-  if (psigy != 0 & any(dim(G.Y)!=dim(Y)[2])) stop("ncol(Y) and dim(G.Y) do not fit!")
+  .check.graphs(X, Y, G.X, G.Y, psigx, psigy)
   if (maxit < 0)
   {
     warning("maxit < 0, setting to 1e5!")
@@ -116,23 +114,17 @@ cv.edgenet.default <- function (X, Y, G.X=NULL, G.Y=NULL,
     warning("thresh < 0, setting to 1e-5!")
     thresh <- 1e-5
   }
-  if (any(G.X < 0))  stop("Some elements G.X<0; please use non-negative matrix!")
-  if (any(G.Y < 0))  stop("Some elements G.Y<0; please use non-negative matrix!")
   # check if some parameters have values
   if (!is.null(foldid) & is.numeric(foldid)) 
   {
     nfolds <- max(foldid)
-    if (length(foldid) != n) stop("length(foldid) != sample size (n)!")
+    stopifnot(length(foldid) == n)
   }
   if (is.null(foldid)) foldid <- NA_integer_
   if (!is.numeric(foldid)) stop("Please provide either an integer vector or NULL for foldid")
-  psigx <- psigy <- -1
-  if (all(G.X == 0)) psigx <- 0
-  if (all(G.Y == 0)) psigy <- 0
-  if (q == 1)        psigy <- 0
-  class(G.X) <- class(G.Y) <- "numeric"
+  if (q == 1)     psigy  <- 0
   if (n < nfolds) nfolds <- n
-  family <-  match.arg(family)
+  family                 <- match.arg(family)
   # estimate shrinkage parameters
   ret <- .cv(X=X, Y=Y, 
              G.X=G.X, G.Y=G.Y,
@@ -141,7 +133,7 @@ cv.edgenet.default <- function (X, Y, G.X=NULL, G.Y=NULL,
              family=family,
              nfolds=nfolds,
              foldid=foldid)    
-  ret$call <- match.call()
+  ret$call   <- match.call()
   class(ret) <- c(class(ret), "cv.edgenet")
   ret
 }

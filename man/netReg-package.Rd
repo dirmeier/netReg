@@ -6,14 +6,15 @@
 \title{netReg}
 \description{
 \emph{netReg} is a package for generalized linear regression that includes 
-prior graphs in the models objective function. The models are a 
-generalization of the \emph{LASSO} by Tibshirani.
+prior graphs in the models objective function.
+}
+\details{
 \emph{netReg} uses \emph{Armadillo}, \emph{Intel MKL}, \emph{OpenBLAS}, 
 \emph{BLAS} and \emph{LAPACK} for fast matrix computations and
 \emph{Dlib} for constrained derivate-free optimization.
 }
 \author{
-Simon Dirmeier | \email{simon.dirmeier@gmx.de}
+Simon Dirmeier | \email{mail@simon-dirmeier.net}
 }
 \references{
 Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007), 
