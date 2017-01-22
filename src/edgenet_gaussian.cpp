@@ -33,7 +33,6 @@
 #include "math_functions.hpp"
 #include "stat_functions.hpp"
 
-#include <Rcpp.h>
 
 namespace netreg
 {
@@ -56,8 +55,7 @@ namespace netreg
         int iter = 0;
         do
         {
-            // This is definitely not parallizable, DO NOT parallelize
-            // -> dependency in updates k(i) \propto k(j != i)
+            // This is definitely not parallizable
             for (int qi = 0; qi < Q; ++qi)
                 uccd_(P, Q,
                       thresh, niter,
@@ -71,11 +69,10 @@ namespace netreg
         while (arma::accu(arma::abs(coef - old_coef)) > thresh &&
                iter++ < niter);
         // calculate intercepts of the linear model
-        // ideally the input matrix was standardized, so this should give zero
         cvector<double> intr = intercept(data.design(), data.response(), coef);
+        // TODO REUTRN
         // TODO exclude intercept and coefficients from model data
-        return Rcpp::List::create(Rcpp::Named("coefficients")=coef,
-                                  Rcpp::Named("intercept")   =intr);
+        return R_NilValue;
     }
 
     matrix<double> edgenet_gaussian::run_cv(

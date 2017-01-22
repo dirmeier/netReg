@@ -26,6 +26,8 @@
 #ifndef NETREG_EDGENET_GAUSSIAN_HPP
 #define NETREG_EDGENET_GAUSSIAN_HPP
 
+#include <vector>
+
 #ifndef ARMA_DONT_USE_WRAPPER
 #define ARMA_DONT_USE_WRAPPER
 #endif
