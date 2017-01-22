@@ -33,7 +33,6 @@
 #include "math_functions.hpp"
 #include "stat_functions.hpp"
 
-
 namespace netreg
 {
     SEXP edgenet_gaussian::run(graph_penalized_linear_model_data &data) const
@@ -70,9 +69,11 @@ namespace netreg
                iter++ < niter);
         // calculate intercepts of the linear model
         cvector<double> intr = intercept(data.design(), data.response(), coef);
-        // TODO REUTRN
         // TODO exclude intercept and coefficients from model data
-        return R_NilValue;
+        return Rcpp::List::create(
+          Rcpp::Named("coefficients") = coef,
+          Rcpp::Named("intercept")    = intr
+        );
     }
 
     matrix<double> edgenet_gaussian::run_cv(

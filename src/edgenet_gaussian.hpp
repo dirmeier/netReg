@@ -40,7 +40,7 @@
 #include "graph_penalized_linear_model_cv_data.hpp"
 #include "cv_fold.hpp"
 
-#include <Rinternals.h>
+#include <Rcpp.h>
 
 namespace netreg
 {

@@ -27,6 +27,7 @@
 #include "edgenet.hpp"
 #include "edgenet_gaussian.hpp"
 #include "family.hpp"
+
 #include "Rcpp.h"
 
 extern "C"
