@@ -22,6 +22,7 @@
  * @email: simon.dirmeier@gmx.de
  */
 
+
 #ifndef NETREG_EDGENET_HPP
 #define NETREG_EDGENET_HPP
 

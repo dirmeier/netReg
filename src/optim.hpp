@@ -22,12 +22,12 @@
  * @email: simon.dirmeier@gmx.de
  */
 
+
 #ifndef NETREG_OPTIM_HPP
 #define NETREG_OPTIM_HPP
 
 #include <string>
 #include <vector>
-#include <iostream>
 #include <map>
 
 #include "../inst/include/dlib/optimization.h"

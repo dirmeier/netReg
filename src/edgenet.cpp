@@ -21,30 +21,17 @@
  * @author: Simon Dirmeier
  * @email: simon.dirmeier@gmx.de
  */
+
+
 #include "edgenet.hpp"
-
-#include <string>
-#include "family.hpp"
-
-#include "edgenet_binomial.hpp"
 #include "edgenet_gaussian.hpp"
-
 
 namespace netreg
 {
     SEXP edgenet::run(graph_penalized_linear_model_data &data) const
     {
-        if (data.distribution_family() == family::BINOMIAL)
-        {
-            netreg::edgenet_binomial edge;
-            return edge.run(data);
-        }
-        else
-        {
-            netreg::edgenet_gaussian edge;
-            return edge.run(data);
-        }
-        return R_NilValue;
+        netreg::edgenet_gaussian edge;
+        return edge.run(data);
     }
 
     matrix<double> edgenet::run_cv
@@ -53,15 +40,7 @@ namespace netreg
          const double psigx,  const double psigy,
          cv_fold &fold) const
     {
-        if (data.distribution_family() == family::BINOMIAL)
-        {
-            netreg::edgenet_binomial edge;
-            return edge.run_cv(data, lambda, alpha, psigx, psigy, fold);
-        }
-        else
-        {
-            netreg::edgenet_gaussian edge;
-            return edge.run_cv(data, lambda, alpha, psigx, psigy, fold);
-        }
+        netreg::edgenet_gaussian edge;
+        return edge.run_cv(data, lambda, alpha, psigx, psigy, fold);
     }
 }

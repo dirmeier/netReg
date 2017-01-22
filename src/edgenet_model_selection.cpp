@@ -22,13 +22,13 @@
  * @email: simon.dirmeier@gmx.de
  */
 
+
 #include "edgenet_model_selection.hpp"
 
 #ifndef ARMA_DONT_USE_WRAPPER
 #define ARMA_DONT_USE_WRAPPER
 #endif
 #include <armadillo>
-
 #include <numeric>
 #include <vector>
 
@@ -37,7 +37,6 @@
 #endif
 #include "family.hpp"
 #include "edgenet_gaussian_loss_function.hpp"
-#include "edgenet_binomial_loss_function.hpp"
 #include "optim.hpp"
 
 namespace netreg
@@ -54,16 +53,11 @@ namespace netreg
         const int niter = 1000;
         switch (data.distribution_family())
         {
-            case family::BINOMIAL:
-                return Rcpp::wrap(opt.bobyqa<edgenet_binomial_loss_function>
-                              (data, start, lower_bound, upper_bound,
-                               rad_start, rad_end, niter));
             case family::GAUSSIAN:
             default:
                 return Rcpp::wrap(opt.bobyqa<edgenet_gaussian_loss_function>
                               (data, start, lower_bound, upper_bound,
                                rad_start, rad_end, niter));
-
         }
     }
 }
