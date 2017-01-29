@@ -51,7 +51,7 @@ introduced regularization techniques, such as the LASSO.
 }
 \examples{
 \dontrun{
-X <- matrix(rnorm(100*10), 100, 10)
+X <- matrix(rnorm(100*10), 100, 10)aw
 G.X <- matrix(rpois(100,1), 10)
 G.X <- t(G.X) + G.X
 diag(G.X) <- 0
@@ -60,13 +60,10 @@ diag(G.X) <- 0
 Y <- matrix(rnorm(100),100,1)
 fit <- edgenet(X=X, Y=Y, G.X=G.X, family="gaussian")
 
-# fit a binomial model
-Y <- matrix(rbinom(100, 1, .5), 100, 1)
-fit <- edgenet(X=X, Y=Y, G.X=G.X, family="binomial")
 }
 }
 \author{
-Simon Dirmeier, \email{mail@simon-dirmeier.net}
+Simon Dirmeier | \email{mail@simon-dirmeier.net}
 }
 \references{
 Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007), 

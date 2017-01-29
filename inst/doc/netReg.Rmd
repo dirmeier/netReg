@@ -1,7 +1,7 @@
 ---
-title: "netReg Vignette"
+title: "netReg"
 author: "Simon Dirmeier"
-date: "2015-05-15"
+date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{netReg}
@@ -9,39 +9,53 @@ vignette: >
   \usepackage[utf8]{inputenc}
 ---
 
-<b>netReg</b> is a package for graph-regularized linear regression. We will shortly give a tutorial for using netReg. 
+## Introduction
+
+**netReg** is a package for graph-regularized linear regression. Graph prior knowledge is incorporated into the likelihood of the linear model in the form of the Laplacian matrices of the graphs. The Laplacians penalize the estimation of the coefficients for smooth solutions. 
+
+For high-dimensional data-sets often no unique solutions exist. With graph-regularization high-dimensional data-sets can be fitted efficiently.
+
 
 ## Tutorial
 
 At first we generate some toy data randomly:
+
 ```{r}
-X <- matrix(rnorm(100*5),100)
-Y <- matrix(rnorm(100*5),100)
+  X <- matrix(rnorm(100*5), 100)
+  Y <- matrix(rnorm(100*5), 100)
 ```
+
 Then we load the `netReg` library
+
 ```{r}
-library(netReg)
+  library(netReg)
 ```
 
 For `edgenet` we need to create an affinity matrix for the co-variables first. We also can create a graph for the responses, but this is not necessary to demonstrate the method. We could create a random graph like this:
+
 ```{r}
-aff.mat <- matrix(rpois(5*5, 1),5) * abs(rnorm(5*5))
-aff.mat <- t(aff.mat) + aff.mat
-diag(aff.mat) <- 0
+  aff.mat <- matrix(rpois(5*5, 1),5) * abs(rnorm(5*5))
+  aff.mat <- t(aff.mat) + aff.mat
+  diag(aff.mat) <- 0
 ```
+
 We created the affinity matrix absolutely random, although in practice a <i>real</i> (biological) observed affinity matrix should be used, because in the end the affinity matrix decides the shrinkage of the coefficients. 
 
 The fit using edge-based regularization is done with:
+
 ```{r}
-fit <- edgenet(X=X, Y=Y, G.X=aff.mat, lambda=1, psigx=1, family="gaussian")
+  fit <- edgenet(X=X, Y=Y, G.X=aff.mat, lambda=1, psigx=1, family="gaussian")
 ```
+
 The `fit` object contains information about coefficients, intercepts, residuals, etc. (however to sd for the coefficients).
 
 Having the coefficients estimated we are able to predict novel data-sets:
+
 ```{r}
 X.new <-  matrix(rnorm(10*5),10)
-pred <- predict(fit, X.new)
+pred  <- predict(fit, X.new)
 ```
+
 The `pred` objects contains the predicted values for the responses.
 
 

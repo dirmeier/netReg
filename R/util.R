@@ -19,7 +19,7 @@
 
 
 #' @noRd
-intercept <- function(Y, X, B, n)  ((t(Y - X %*% B) %*% rep(1,n)) / n )
+intercept <- function(Y, X, B, n)  ((t(Y - X %*% B) %*% rep(1,n)) / n)
 
 #' @noRd
 intercept.matrix <- function(n, mu)  rep(1, n) %*% t(mu)
@@ -28,7 +28,7 @@ intercept.matrix <- function(n, mu)  rep(1, n) %*% t(mu)
 rss <- function(Y, Y.hat) sum((Y - Y.hat) ** 2) 
 
 #' @noRd
-cvsets <- function(n, folds=10,seed=23)
+cvsets <- function(n, folds=10, seed=23)
 {      
   if (n < 1) stop("n<1; need positive integer!")
   if (folds < 0) stop("folds<0; need positive integer!")
@@ -46,13 +46,14 @@ cvsets <- function(n, folds=10,seed=23)
 }
 
 #' @noRd
-.check.matrices <- function(X, Y)
+check.matrices <- function(X, Y)
 {
   stopifnot(is.matrix(X), is.matrix(Y))
 }
 
 #' @noRd
-.check.graphs <- function(X, Y, G.X, G.Y, psigx, psigy)
+#' 
+check.graphs <- function(X, Y, G.X, G.Y, psigx, psigy)
 {
   stopifnot(is.matrix(G.X), is.matrix(G.Y))
   if (psigx != 0 & any(dim(G.X)!=dim(X)[2])) 
@@ -66,7 +67,7 @@ cvsets <- function(n, folds=10,seed=23)
 }
 
 #' @noRd
-.check.dimensions <- function(X, Y, n, p, q)
+check.dimensions <- function(X, Y, n, p, q)
 {
   # check if X and Y are valid
   if (n != dim(Y)[1]) stop("X and Y have not same number of observations!")        

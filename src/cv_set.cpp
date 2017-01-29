@@ -66,7 +66,6 @@ namespace netreg
             }
         }
 
-
         for (int i = 0; i < N_FOLDS_; ++i)
             folds_.push_back(cv_fold(trains[i], tests[i]));
 

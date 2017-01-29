@@ -104,8 +104,14 @@ namespace netreg
             // This is definitely not parallizable!
             for (int qi = 0; qi < Q; ++qi)
             {
-                uccd_(P, Q, thresh, niter, lambda, alpha, psigx, psigy,
-                      train_txx, train_txy, LX, LY, coef, old_coef, qi);
+                uccd_(P, Q,
+                      thresh, niter,
+                      lambda, alpha,
+                      psigx, psigy,
+                      train_txx, train_txy,
+                      LX, LY,
+                      coef, old_coef,
+                      qi);
             }
         }
         while (arma::accu(arma::abs(coef - old_coef)) > thresh &&
@@ -144,7 +150,7 @@ namespace netreg
                 set_params
                     (s, norm, TXX, TXY, coef,
                      LX, LY, P, Q, pi, qi, psigx, psigy, false);
-                // soft-thresholded version of estimate
+//                // soft-thresholded version of estimate
                 coef(pi, qi) = softnorm(s, lalph, enorm * norm);
             }
         }
@@ -190,10 +196,14 @@ namespace netreg
          matrix<double> &LX, matrix<double> &cfs, const int P,
          const int pi, const int qi) const
     {
-        if (psigx == 0)
+        if (psigx <= 0.001)
             return;
-        double xPenalty =
-            -LX(pi, pi) * cfs(pi, qi) + arma::accu(LX.row(pi) * cfs.col(qi));
+        double xPenalty = 0.0;
+        if (qi < LX.n_rows && qi < LX.n_cols)
+        {
+            xPenalty = -LX(pi, pi) * cfs(pi, qi) +
+                arma::accu(LX.row(pi) * cfs.col(qi));
+        }
         s = s - 2 * psigx * xPenalty;
         norm += 2 * psigx * LX(pi, pi);
     }
@@ -203,10 +213,14 @@ namespace netreg
          matrix<double> &LY, matrix<double> &cfs, const int Q,
          const int pi, const int qi) const
     {
-        if (psigy == 0 || Q == 1)
+        if (psigy <= 0.001 || Q == 1)
             return;
-        double yPenalty =
-            -cfs(pi, qi) * LY(qi, qi) + arma::accu(cfs.row(pi) * LY.col(qi));
+        double yPenalty = 0.0;
+        if (qi < LY.n_rows && qi < LY.n_cols)
+        {
+            yPenalty = -cfs(pi, qi) * LY(qi, qi) +
+                       arma::accu(cfs.row(pi) * LY.col(qi));
+        }
         s = s - 2 * psigy * yPenalty;
         norm += 2 * psigy * LY(qi, qi);
     }

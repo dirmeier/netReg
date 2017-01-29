@@ -31,6 +31,7 @@
 #include <armadillo>
 #include <numeric>
 #include <vector>
+#include <map>
 
 #ifdef HAVE_OPENMP
 #include <omp.h>
@@ -55,9 +56,16 @@ namespace netreg
         {
             case family::GAUSSIAN:
             default:
-                return Rcpp::wrap(opt.bobyqa<edgenet_gaussian_loss_function>
-                              (data, start, lower_bound, upper_bound,
-                               rad_start, rad_end, niter));
+            {
+                std::map<std::string, double> res =
+                    opt.bobyqa<edgenet_gaussian_loss_function>(
+                        data, start, lower_bound, upper_bound, rad_start,
+                        rad_end, niter);
+                return Rcpp::List::create(
+                    Rcpp::Named("parameters") = Rcpp::wrap(res),
+                    Rcpp::Named("folds")      = data.fold_ids()
+                );
+            }
         }
     }
 }

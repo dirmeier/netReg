@@ -9,7 +9,7 @@
 prior graphs in the models objective function.
 }
 \details{
-\emph{netReg} uses \emph{Armadillo}, \emph{Intel MKL}, \emph{OpenBLAS}, 
+\emph{netReg} uses \emph{Armadillo}, \emph{OpenBLAS}, 
 \emph{BLAS} and \emph{LAPACK} for fast matrix computations and
 \emph{Dlib} for constrained derivate-free optimization.
 }

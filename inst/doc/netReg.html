@@ -12,9 +12,9 @@
 
 <meta name="author" content="Simon Dirmeier" />
 
-<meta name="date" content="2015-05-15" />
+<meta name="date" content="2017-01-29" />
 
-<title>netReg Vignette</title>
+<title>netReg</title>
 
 
 
@@ -68,31 +68,35 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 
-<h1 class="title toc-ignore">netReg Vignette</h1>
+<h1 class="title toc-ignore">netReg</h1>
 <h4 class="author"><em>Simon Dirmeier</em></h4>
-<h4 class="date"><em>2015-05-15</em></h4>
+<h4 class="date"><em>2017-01-29</em></h4>
 
 
 
-<p><b>netReg</b> is a package for graph-regularized linear regression. We will shortly give a tutorial for using netReg.</p>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p><strong>netReg</strong> is a package for graph-regularized linear regression. Graph prior knowledge is incorporated into the likelihood of the linear model in the form of the Laplacian matrices of the graphs. The Laplacians penalize the estimation of the coefficients for smooth solutions.</p>
+<p>For high-dimensional data-sets often no unique solutions exist. With graph-regularization high-dimensional data-sets can be fitted efficiently.</p>
+</div>
 <div id="tutorial" class="section level2">
 <h2>Tutorial</h2>
 <p>At first we generate some toy data randomly:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">X &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="dv">100</span>*<span class="dv">5</span>),<span class="dv">100</span>)
-Y &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="dv">100</span>*<span class="dv">5</span>),<span class="dv">100</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  X &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="dv">100</span>*<span class="dv">5</span>), <span class="dv">100</span>)
+  Y &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="dv">100</span>*<span class="dv">5</span>), <span class="dv">100</span>)</code></pre></div>
 <p>Then we load the <code>netReg</code> library</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(netReg)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  <span class="kw">library</span>(netReg)</code></pre></div>
 <p>For <code>edgenet</code> we need to create an affinity matrix for the co-variables first. We also can create a graph for the responses, but this is not necessary to demonstrate the method. We could create a random graph like this:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">aff.mat &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rpois</span>(<span class="dv">5</span>*<span class="dv">5</span>, <span class="dv">1</span>),<span class="dv">5</span>) *<span class="st"> </span><span class="kw">abs</span>(<span class="kw">rnorm</span>(<span class="dv">5</span>*<span class="dv">5</span>))
-aff.mat &lt;-<span class="st"> </span><span class="kw">t</span>(aff.mat) +<span class="st"> </span>aff.mat
-<span class="kw">diag</span>(aff.mat) &lt;-<span class="st"> </span><span class="dv">0</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  aff.mat &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rpois</span>(<span class="dv">5</span>*<span class="dv">5</span>, <span class="dv">1</span>),<span class="dv">5</span>) *<span class="st"> </span><span class="kw">abs</span>(<span class="kw">rnorm</span>(<span class="dv">5</span>*<span class="dv">5</span>))
+  aff.mat &lt;-<span class="st"> </span><span class="kw">t</span>(aff.mat) +<span class="st"> </span>aff.mat
+  <span class="kw">diag</span>(aff.mat) &lt;-<span class="st"> </span><span class="dv">0</span></code></pre></div>
 <p>We created the affinity matrix absolutely random, although in practice a <i>real</i> (biological) observed affinity matrix should be used, because in the end the affinity matrix decides the shrinkage of the coefficients.</p>
 <p>The fit using edge-based regularization is done with:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit &lt;-<span class="st"> </span><span class="kw">edgenet</span>(<span class="dt">X=</span>X, <span class="dt">Y=</span>Y, <span class="dt">G.X=</span>aff.mat, <span class="dt">lambda=</span><span class="dv">1</span>, <span class="dt">psigx=</span><span class="dv">1</span>, <span class="dt">family=</span><span class="st">&quot;gaussian&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  fit &lt;-<span class="st"> </span><span class="kw">edgenet</span>(<span class="dt">X=</span>X, <span class="dt">Y=</span>Y, <span class="dt">G.X=</span>aff.mat, <span class="dt">lambda=</span><span class="dv">1</span>, <span class="dt">psigx=</span><span class="dv">1</span>, <span class="dt">family=</span><span class="st">&quot;gaussian&quot;</span>)</code></pre></div>
 <p>The <code>fit</code> object contains information about coefficients, intercepts, residuals, etc. (however to sd for the coefficients).</p>
 <p>Having the coefficients estimated we are able to predict novel data-sets:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">X.new &lt;-<span class="st">  </span><span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="dv">10</span>*<span class="dv">5</span>),<span class="dv">10</span>)
-pred &lt;-<span class="st"> </span><span class="kw">predict</span>(fit, X.new)</code></pre></div>
+pred  &lt;-<span class="st"> </span><span class="kw">predict</span>(fit, X.new)</code></pre></div>
 <p>The <code>pred</code> objects contains the predicted values for the responses.</p>
 </div>
 <div id="references" class="section level2">

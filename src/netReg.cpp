@@ -25,7 +25,6 @@
 #include <string>
 #include "graph_penalized_linear_model_data.hpp"
 #include "edgenet.hpp"
-#include "edgenet_gaussian.hpp"
 #include "family.hpp"
 
 #include "Rcpp.h"
@@ -47,7 +46,7 @@ extern "C"
  * @param thresh convergence threshold
  * @param fs family of distribution the response
  */
-SEXP edgenet
+SEXP edgenet_cpp
     (SEXP X, SEXP Y, SEXP GX, SEXP GY,
      SEXP lambda, SEXP psigx, SEXP psigy,
      SEXP niter, SEXP thresh, SEXP fs)
@@ -72,6 +71,7 @@ SEXP edgenet
          Rcpp::as<int>(niter), Rcpp::as<double>(thresh), f);
     // TODO change that back and include family in data
     netreg::edgenet edge;
+//    return R_NilValue;
     return edge.run(data);
     END_RCPP;
 }

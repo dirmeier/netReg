@@ -32,8 +32,15 @@
 
 namespace netreg
 {
-    matrix<double> laplacian(const double * x, const int n, const int m)
+    matrix<double> laplacian(const double * x, const int n, const int m, const double px)
     {
+
+        if (px == 0)
+        {
+            matrix<double> lap(1, 1, arma::fill::zeros);
+            return lap;
+        }
+
         std::vector<double> degrees(n);
         #pragma omp parallel for
         for (int i = 0; i < n; ++i)

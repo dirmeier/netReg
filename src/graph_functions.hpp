@@ -42,7 +42,7 @@ namespace netreg
     * @param m ncols of y
     * @return the normalized laplacian
     */
-    matrix<double> laplacian(const double * x, int n, int m);
+    matrix<double> laplacian(const double * x, int n, int m, double px);
 
 }
 #endif //NETREG_GRAPH_FUNCTIONS_HPP

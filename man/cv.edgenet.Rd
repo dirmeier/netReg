@@ -5,7 +5,7 @@
 \title{Find the optimal shrinkage parameters for edgenet}
 \usage{
 cv.edgenet(X, Y, G.X = NULL, G.Y = NULL, thresh = 1e-05, maxit = 1e+05,
-  family = c("gaussian"), nfolds = 10, foldid = NULL, ...)
+  family = c("gaussian"), nfolds = 10, ...)
 }
 \arguments{
 \item{X}{input matrix, of dimension (\code{n} x \code{p}) 
@@ -30,9 +30,9 @@ of response variables Each row is an observation vector.}
 
 \item{nfolds}{the number of folds to be used - default is 10 (minimum 3, maximum nrow(X)).}
 
-\item{foldid}{an optional vector of length \code{nrow(X)} of values between 1 and \code{nfold} identifying what fold each observation is in.}
-
 \item{...}{additional parameters}
+
+\item{foldid}{an optional vector of length \code{nrow(X)} of values between 1 and \code{nfold} identifying what fold each observation is in.}
 }
 \value{
 An object of class \code{cv.edgenet}
@@ -40,7 +40,6 @@ An object of class \code{cv.edgenet}
 \item{lambda }{ the estimated (\code{p} x \code{q})-dimensional coefficient matrix B.hat}
 \item{psigx }{ the estimated (\code{q} x \code{1})-dimensional vector of intercepts}
 \item{psigy }{ the estimated (\code{q} x \code{1})-dimensional vector of intercepts}
-\item{foldid }{ the vector of fold assignments yoused}
 }
 \description{
 Finds the optimal shrinkage parameters using cross-validation for edgenet. 

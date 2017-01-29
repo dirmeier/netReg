@@ -18,6 +18,8 @@
 #include "types.hpp"
 #include "graph_functions.hpp"
 
+#include <Rcpp.h>
+
 namespace netreg
 {
     /**
@@ -58,10 +60,66 @@ namespace netreg
                                           alpha, niter, thresh, fam),
               psi_gx(psi_gx), psi_gy(psi_gy),
               GX(gx, p, p), GY(gy, q, q),
-              LX(laplacian(gx, p, p)), LY(laplacian(gy, q, q))
+              LX(laplacian(gx, p, p, psi_gx)), LY(laplacian(gy, q, q, psi_gy))
         {
+#ifndef NDEBUG
+            const int N = sample_count();
+            Rcpp::Rcout << "Design\n";
+            for (int i = 0; i < N; ++i)
+            {
+                for (int j = 0; j < P; ++j)
+                {
+                    Rcpp::Rcout << design()(i,j) << " ";
+                }
+                Rcpp::Rcout <<  "\n";
+            }
+            Rcpp::Rcout << "Response\n";
+            for (int i = 0; i < N; ++i)
+            {
+                for (int j = 0; j < Q; ++j)
+                {
+                    Rcpp::Rcout << response()(i,j) << " ";
+                }
+                Rcpp::Rcout <<  "\n";
+            }
+            Rcpp::Rcout << "LX\n";
+            for (int i = 0; i < LX.n_rows; ++i)
+            {
+                for (int j = 0; j < LX.n_cols; ++j)
+                {
+                    Rcpp::Rcout << lx()(i,j) << " ";
+                }
+                Rcpp::Rcout <<  "\n";
+            }
+            Rcpp::Rcout << "LY\n";
+            for (int i = 0; i < LY.n_rows; ++i)
+            {
+                for (int j = 0; j < LY.n_cols; ++j)
+                {
+                    Rcpp::Rcout << ly()(i, j) << " ";
+                }
+                Rcpp::Rcout <<  "\n";
+            }
+            Rcpp::Rcout << "TXX\n";
+            for (int i = 0; i < P; ++i)
+            {
+                for (int j = 0; j < P; ++j)
+                {
+                    Rcpp::Rcout << txx()(i, j) << " ";
+                }
+                Rcpp::Rcout <<  "\n";
+            }
+            Rcpp::Rcout << "TXY\n";
+            for (int i = 0; i < P; ++i)
+            {
+                for (int j = 0; j < Q; ++j)
+                {
+                    Rcpp::Rcout << txy()(i, j) << " ";
+                }
+                Rcpp::Rcout <<  "\n";
+            }
+#endif
         }
-
         /**
          * Getter for penalization term for laplacian of X
          *

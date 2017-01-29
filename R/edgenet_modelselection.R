@@ -49,7 +49,6 @@
 #' \item{lambda }{ the estimated (\code{p} x \code{q})-dimensional coefficient matrix B.hat}
 #' \item{psigx }{ the estimated (\code{q} x \code{1})-dimensional vector of intercepts}
 #' \item{psigy }{ the estimated (\code{q} x \code{1})-dimensional vector of intercepts}
-#' \item{foldid }{ the vector of fold assignments yoused}
 #' 
 #' @references 
 #'  Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007), 
@@ -76,34 +75,31 @@
 #' cv.edge <- cv.edgenet(X=X, Y=Y, G.X=G.X, family="gaussian")
 #' }
 cv.edgenet <- function (X, Y, G.X=NULL, G.Y=NULL, 
-                        thresh=1e-5, maxit=1e5, family=c("gaussian"),
-                        nfolds=10, foldid=NULL, ...)
+                        thresh=1e-5, maxit=1e5, 
+                        family=c("gaussian"),
+                        nfolds=10, ...)
 { 
   UseMethod("cv.edgenet")
 }
 
 #' @export
 #' @method cv.edgenet default
-cv.edgenet.default <- function (X, Y, G.X=NULL, G.Y=NULL, 
-                                thresh=1e-5, maxit=1e5,
-                                family=c("gaussian"),
-                                nfolds=10, foldid=NULL, ...) 
+cv.edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL, 
+                               thresh=1e-5, maxit=1e5,
+                               family=c("gaussian"),
+                               nfolds=10, ...) 
 {
-  .check.matrices(X, Y)
-  # parse dimensions
+  check.matrices(X, Y)
   n <- dim(X)[1]
   p <- dim(X)[2]
   q <- dim(Y)[2]
+  psigx <- psigy <- -1
   if (is.null(G.X)) G.X <- matrix(0, 1, 1)
   if (is.null(G.Y)) G.Y <- matrix(0, 1, 1)
-  if (!is.matrix(G.X)) stop("GX is no matrix!")
-  if (!is.matrix(G.Y)) stop("GY is no matrix!")
-  .check.dimensions(X, Y, n, p, q)
-  psigx <- psigy <- -1
-  # check if graphs are valid
   if (all(G.X == 0)) psigx <- 0
   if (all(G.Y == 0)) psigy <- 0
-  .check.graphs(X, Y, G.X, G.Y, psigx, psigy)
+  check.graphs(X, Y, G.X, G.Y, psigx, psigy)
+  check.dimensions(X, Y, n, p, q)
   if (maxit < 0)
   {
     warning("maxit < 0, setting to 1e5!")
@@ -114,6 +110,8 @@ cv.edgenet.default <- function (X, Y, G.X=NULL, G.Y=NULL,
     warning("thresh < 0, setting to 1e-5!")
     thresh <- 1e-5
   }
+  # TODO; implement this
+  foldid <- NULL
   # check if some parameters have values
   if (!is.null(foldid) & is.numeric(foldid)) 
   {
@@ -126,14 +124,35 @@ cv.edgenet.default <- function (X, Y, G.X=NULL, G.Y=NULL,
   if (n < nfolds) nfolds <- n
   family                 <- match.arg(family)
   # estimate shrinkage parameters
-  ret <- .cv(X=X, Y=Y, 
-             G.X=G.X, G.Y=G.Y,
-             psigx=psigx, psigy=psigy,
-             thresh=thresh, maxit=maxit,
-             family=family,
-             nfolds=nfolds,
-             foldid=foldid)    
+  ret <- .cv.edgenet(X=X, Y=Y, 
+                     G.X=G.X, G.Y=G.Y,
+                     psigx=psigx, psigy=psigy,
+                     thresh=thresh, maxit=maxit,
+                     family=family,
+                     nfolds=nfolds,
+                     foldid=foldid)    
   ret$call   <- match.call()
   class(ret) <- c(class(ret), "cv.edgenet")
+  ret
+}
+
+#' @noRd
+#' @import Rcpp
+#' @useDynLib netReg
+.cv.edgenet <- function(X, Y, G.X, G.Y, 
+                        psigx, psigy, thresh, maxit, family,
+                        nfolds, foldid)
+{
+  cv <- .Call("cv_edgenet_cpp", X, Y, G.X, G.Y, 
+              as.double(psigx),  as.double(psigy),
+              as.integer(maxit), as.double(thresh),
+              as.integer(nfolds), as.integer(foldid),
+              as.integer(length(foldid)),
+              as.character(family),
+              PACKAGE="netReg")
+  ret        <- list(cv[1],cv[2], cv[3])
+  names(ret) <- names(cv)
+  ret$family <- family
+  class(ret) <- paste0(family, ".cv.edgenet")
   ret
 }

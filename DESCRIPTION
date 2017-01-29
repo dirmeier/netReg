@@ -3,10 +3,11 @@ Type: Package
 Title: Network-regularized regression models
 Version: 0.1
 Date: 2015-05-15
-Authors@R: person("Simon", "Dirmeier", email = "simon.dirmeier@gmx.de", role = c("aut", "cre"))
-Description: netReg fits linear models using network-regularized regression.
-    Graph prior knowledge is incorporated into the objective function of the linear
-    model in the form of affinity matrices.
+Authors@R: person("Simon", "Dirmeier", email = "mail@simon.dirmeier.net", role = c("aut", "cre"))
+Description: netReg fits linear regression models using network-penalization.
+    Graph prior knowledge is incorporated into the likelihood of the linear
+    model in the form of the Laplacian matrices of the graphs. The Laplacians penalize the estimation
+    of the coefficients for smooth solutions.
 License: GPL-3
 Encoding: UTF-8
 Suggests:
