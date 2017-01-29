@@ -12,8 +12,13 @@
 
 ## ------------------------------------------------------------------------
   fit <- edgenet(X=X, Y=Y, G.X=aff.mat, lambda=1, psigx=1, family="gaussian")
+  print(fit)
 
 ## ------------------------------------------------------------------------
-X.new <-  matrix(rnorm(10*5),10)
-pred  <- predict(fit, X.new)
+  X.new <-  matrix(rnorm(10*5),10)
+  pred  <- predict(fit, X.new)
+
+## ------------------------------------------------------------------------
+  cv <- cv.edgenet(X=X, Y=Y, G.X=aff.mat, family="gaussian")
+  print(cv)
 

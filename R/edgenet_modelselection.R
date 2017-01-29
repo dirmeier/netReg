@@ -150,8 +150,10 @@ cv.edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
               as.integer(length(foldid)),
               as.character(family),
               PACKAGE="netReg")
-  ret        <- list(cv[1],cv[2], cv[3])
-  names(ret) <- names(cv)
+  ret        <- list(lambda    =cv$parameters[1],
+                     psigx     =cv$parameters[2],
+                     psigy     =cv$parameters[3],
+                     folds     =cv$folds+1)
   ret$family <- family
   class(ret) <- paste0(family, ".cv.edgenet")
   ret

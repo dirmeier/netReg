@@ -2,7 +2,7 @@
 title: "netReg"
 author: "Simon Dirmeier"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: pdf_document
 vignette: >
   %\VignetteIndexEntry{netReg}
   %\VignetteEngine{knitr::rmarkdown}
@@ -16,7 +16,9 @@ vignette: >
 For high-dimensional data-sets often no unique solutions exist. With graph-regularization high-dimensional data-sets can be fitted efficiently.
 
 
-## Tutorial
+## Edgenet tutorial
+
+This section explains how to fit a linear model and do parameter estimation using `edgenet`-regularization.
 
 At first we generate some toy data randomly:
 
@@ -39,25 +41,34 @@ For `edgenet` we need to create an affinity matrix for the co-variables first. W
   diag(aff.mat) <- 0
 ```
 
-We created the affinity matrix absolutely random, although in practice a <i>real</i> (biological) observed affinity matrix should be used, because in the end the affinity matrix decides the shrinkage of the coefficients. 
+We created the affinity matrix absolutely random, although in practice a *real* (biological) observed affinity matrix should be used, because in the end the affinity matrix decides the shrinkage of the coefficients. 
 
-The fit using edge-based regularization is done with:
+### Model fitting
+
+Fitting a model using edge-based regularization is done with:
 
 ```{r}
   fit <- edgenet(X=X, Y=Y, G.X=aff.mat, lambda=1, psigx=1, family="gaussian")
+  print(fit)
 ```
 
-The `fit` object contains information about coefficients, intercepts, residuals, etc. (however to sd for the coefficients).
-
-Having the coefficients estimated we are able to predict novel data-sets:
+The `fit` object contains information about coefficients, intercepts, residuals, etc. Having the coefficients estimated we are able to predict novel data-sets:
 
 ```{r}
-X.new <-  matrix(rnorm(10*5),10)
-pred  <- predict(fit, X.new)
+  X.new <-  matrix(rnorm(10*5),10)
+  pred  <- predict(fit, X.new)
 ```
 
 The `pred` objects contains the predicted values for the responses.
 
+### Model-selection
+
+In some cases we do not know the optimal shrinkage parameters. In that case we can just use `cv.edgenet` to find the best parameters for us. With *best* parameters we mean the ones reducing the *residual sum of squares* for Gaussian regression models:
+
+```{r}
+  cv <- cv.edgenet(X=X, Y=Y, G.X=aff.mat, family="gaussian")
+  print(cv)
+```
 
 ## References
 
