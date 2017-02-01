@@ -15,6 +15,5 @@ LaTeX: pdfLaTeX
 BuildType: Package
 PackageUseDevtools: Yes
 PackageInstallArgs: --no-multiarch --with-keep.source
-PackageBuildArgs: CXX=clang++-mp-3.7
-PackageCheckArgs: --no-multiarch --with-keep.source
+PackageCheckArgs: --no-multiarch --with-keep.source --as-cran
 PackageRoxygenize: rd,collate,namespace

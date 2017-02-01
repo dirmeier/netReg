@@ -27,7 +27,6 @@
 
 #include <vector>
 #include <utility>
-#include <iostream>
 
 #ifndef ARMA_DONT_USE_WRAPPER
 #define ARMA_DONT_USE_WRAPPER

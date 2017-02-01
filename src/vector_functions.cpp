@@ -24,7 +24,6 @@
 
 #include "vector_functions.hpp"
 #include <numeric>
-#include <random>
 #include "Rcpp.h"
 
 namespace netreg
@@ -42,8 +41,8 @@ namespace netreg
         GetRNGstate();
         for (std::vector<int>::size_type i = 0; i < vec.size(); ++i)
         {
-            int idx1 =  unif_rand() * size;
-            int idx2 = std::rand() % size;
+            int idx1 = unif_rand() * size;
+            int idx2 = unif_rand() * size;
             int a = vec[idx1];
             vec[idx1] = vec[idx2];
             vec[idx2] = a;
