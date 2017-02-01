@@ -37,5 +37,9 @@ env:
     - R_BUILD_ARGS="--no-build-vignettes --no-manual"
     - R_CHECK_ARGS="--no-build-vignettes --no-manual --as-cran"
 
+before_script:
+  - autoreconf -vif
+  - ./configure
+
 after_success:
   - Rscript -e 'library(covr); codecov()'
