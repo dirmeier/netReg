@@ -58,7 +58,7 @@ SEXP edgenet_cpp
                                          : netreg::family::NONE;
     if (f == netreg::family::NONE)
     {
-        Rcpp::Rcerr << "Wrong family given!" << "\n";
+        Rprintf("Wrong family given\n");
         return R_NilValue;
     }
     const int *xdim = INTEGER(Rf_getAttrib(X, R_DimSymbol));

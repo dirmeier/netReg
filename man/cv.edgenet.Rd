@@ -31,8 +31,6 @@ of response variables Each row is an observation vector.}
 \item{nfolds}{the number of folds to be used - default is 10 (minimum 3, maximum nrow(X)).}
 
 \item{...}{additional parameters}
-
-\item{foldid}{an optional vector of length \code{nrow(X)} of values between 1 and \code{nfold} identifying what fold each observation is in.}
 }
 \value{
 An object of class \code{cv.edgenet}

@@ -41,7 +41,6 @@
 #' @param maxit  maximum number of iterations
 #' @param family  family of response, e.g. gaussian
 #' @param nfolds  the number of folds to be used - default is 10 (minimum 3, maximum nrow(X)). 
-#' @param foldid  an optional vector of length \code{nrow(X)} of values between 1 and \code{nfold} identifying what fold each observation is in.
 #' @param ...  additional parameters
 
 #' @return An object of class \code{cv.edgenet}

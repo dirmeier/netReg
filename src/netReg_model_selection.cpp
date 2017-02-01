@@ -68,8 +68,8 @@ SEXP cv_edgenet_cpp
                                          : netreg::family::NONE;
     if (f == netreg::family::NONE)
     {
-        Rcpp::Rcerr << "Wrong family given!" << "\n";
-        return R_NilValue;
+      Rprintf("Wrong family given\n");
+      return R_NilValue;
     }
     const int *xdim = INTEGER(Rf_getAttrib(X, R_DimSymbol));
     const int *ydim = INTEGER(Rf_getAttrib(Y, R_DimSymbol));

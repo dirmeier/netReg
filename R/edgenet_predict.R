@@ -25,6 +25,8 @@
 #' @description Predicts the estimated Y.hat values for a newdata design matrix X 
 #' similar to the other predict methods, e.g. from glm and glmnet
 #' 
+#' @importFrom stats coef
+#' 
 #' @param object a fitted object of class \emph{gaussian.edgenet}
 #' @param ... further arguments
 #' @param newdata a new (\code{m} x \code{p})-dimensional design matrix with a 
@@ -53,7 +55,7 @@ predict.gaussian.edgenet <- function(object, newdata=NULL, ...)
   n <- dim(X)[1]
   p <- dim(X)[2]
   coefs <- coef(object)   
-  if(p != dim(coefs)[1]) stop("newdata dimensions do not fit coefficient dimensions!")
+  if(p != dim(stats::coefs)[1]) stop("newdata dimensions do not fit coefficient dimensions!")
   mu <- object$intercept
   Y.hat <- X %*% coefs + intercept.matrix(n=n, mu=mu)
   Y.hat
