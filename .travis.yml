@@ -37,6 +37,13 @@ env:
     - R_BUILD_ARGS="--no-build-vignettes --no-manual"
     - R_CHECK_ARGS="--no-build-vignettes --no-manual --as-cran"
 
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install --only-upgrade autoconf
+  - sudo apt-get install --only-upgrade automake
+  - sudo apt-get install --only-upgrade autotools-dev
+  - sudo apt-get install autoconf-archive  
+
 before_script:
   - autoreconf -vif
   - ./configure
