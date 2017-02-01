@@ -54,8 +54,8 @@ predict.gaussian.edgenet <- function(object, newdata=NULL, ...)
   X <- newdata
   n <- dim(X)[1]
   p <- dim(X)[2]
-  coefs <- coef(object)   
-  if(p != dim(stats::coefs)[1]) stop("newdata dimensions do not fit coefficient dimensions!")
+  coefs <- stats::coef(object)   
+  if(p != dim(coefs)[1]) stop("newdata dimensions do not fit coefficient dimensions!")
   mu <- object$intercept
   Y.hat <- X %*% coefs + intercept.matrix(n=n, mu=mu)
   Y.hat
