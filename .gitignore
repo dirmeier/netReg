@@ -25,7 +25,6 @@ src/libnetreg.a
 src/stamp-h1
 aclocal.m4
 autom*
-config.*
 depcomp
 install-sh
 missing
