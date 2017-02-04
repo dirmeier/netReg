@@ -29,13 +29,10 @@
 #include <string>
 #include <utility>
 
-#ifndef ARMA_DONT_USE_WRAPPER
-#define ARMA_DONT_USE_WRAPPER
-#endif
-#include <armadillo>
+// [[Rcpp::depends(RcppArmadillo)]]
+#include <RcppArmadillo.h>
 
 #include "family.hpp"
-#include "types.hpp"
 
 namespace netreg
 {
@@ -70,7 +67,7 @@ namespace netreg
               TXX(p, p), TXY(p, q),
               family_(fam)
         {
-            matrix<double> TX = X.t();
+            arma::Mat<double> TX = X.t();
             TXX = TX * X;
             TXY = TX * Y;
         }
@@ -134,7 +131,7 @@ namespace netreg
          *
          * @return a reference to the vector of intercepts
          */
-        cvector<double> &intercept() 
+        arma::Col<double> &intercept() 
         {
             return intrcpt;
         }
@@ -144,7 +141,7 @@ namespace netreg
          *
          * @return a reference to the design matrix
          */
-         matrix<double> &design()
+         arma::Mat<double> &design()
         {
             return X;
         }
@@ -154,7 +151,7 @@ namespace netreg
          *
          * @return a reference to the response matrix
          */
-         matrix<double> &response()
+         arma::Mat<double> &response()
         {
             return Y;
         }
@@ -164,7 +161,7 @@ namespace netreg
          *
          * @return a reference to the coefficient matrix
          */
-        matrix<double> &coefficients() 
+        arma::Mat<double> &coefficients() 
         {
             return coeffs;
         }
@@ -174,7 +171,7 @@ namespace netreg
          *
          * @return a reference to X'X matrix.
          */
-        matrix<double> &txx() 
+        arma::Mat<double> &txx() 
         {
             return TXX;
         }
@@ -184,7 +181,7 @@ namespace netreg
          *
          * @return a reference to X'Y matrix.
          */
-        matrix<double> &txy() 
+        arma::Mat<double> &txy() 
         {
             return TXY;
         }
@@ -213,14 +210,14 @@ namespace netreg
         const int N;             // number of samples: n
         const int P;             // number of covariables: p
         const int Q;             // number of responses: q
-        matrix<double> X;        // (n x p)-dimensional design matrix
-        matrix<double> Y;        // (n x q)-dimensional response matrix
-        cvector<double> intrcpt; // q-dimensional intercept vector
-        matrix<double> coeffs;   // (p x q)-dimensional coefficient matrix
+        arma::Mat<double> X;        // (n x p)-dimensional design matrix
+        arma::Mat<double> Y;        // (n x q)-dimensional response matrix
+        arma::Col<double> intrcpt; // q-dimensional intercept vector
+        arma::Mat<double> coeffs;   // (p x q)-dimensional coefficient matrix
         const double THRESH;     // convergence threshold
         const int N_ITER;        // max number iterations if CCD does not converge
-        matrix<double> TXX;      // (p x p)-dimensional matrix: X'X
-        matrix<double> TXY;      // (p x q)-dimensional matrix: X'Y
+        arma::Mat<double> TXX;      // (p x p)-dimensional matrix: X'X
+        arma::Mat<double> TXY;      // (p x q)-dimensional matrix: X'Y
         const enum family family_;      // family of distribution of y
     };
 }

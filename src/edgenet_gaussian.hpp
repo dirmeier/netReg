@@ -28,19 +28,13 @@
 
 #include <vector>
 
-#ifndef ARMA_DONT_USE_WRAPPER
-#define ARMA_DONT_USE_WRAPPER
-#endif
-#include <armadillo>
-
 #include "edgenet.hpp"
-
-#include "types.hpp"
 #include "graph_penalized_linear_model_data.hpp"
 #include "graph_penalized_linear_model_cv_data.hpp"
 #include "cv_fold.hpp"
 
-#include <Rcpp.h>
+// [[Rcpp::depends(RcppArmadillo)]]
+#include <RcppArmadillo.h>
 
 namespace netreg
 {
@@ -69,7 +63,7 @@ namespace netreg
          *
          * @return returns the estimated coefficients
          */
-        virtual matrix<double> run_cv
+        virtual arma::Mat<double> run_cv
             (graph_penalized_linear_model_cv_data &data,
              const double lambda,
              const double alpha,
@@ -93,10 +87,10 @@ namespace netreg
              double thresh, int niter,
              double lambda, double alpha,
              double psigx, const double psigy,
-             matrix<double> &TXX, matrix<double> &TXY,
-             matrix<double> &LX, matrix<double> &LY,
-             matrix<double> &coef,
-             matrix<double> &old_coef,
+             arma::Mat<double> &TXX, arma::Mat<double> &TXY,
+             arma::Mat<double> &LX, arma::Mat<double> &LY,
+             arma::Mat<double> &coef,
+             arma::Mat<double> &old_coef,
              int qi) const;
 
         /**
@@ -118,7 +112,7 @@ namespace netreg
         void graph_penalize
             (double &s, double &norm,
              const double psigx, const double psigy,
-             matrix<double> &LX, matrix<double> &LY, matrix<double> &cfs,
+             arma::Mat<double> &LX, arma::Mat<double> &LY, arma::Mat<double> &cfs,
              const int P, const int Q,
              const int pi, const int qi) const;
 
@@ -136,8 +130,8 @@ namespace netreg
          * @param psigx the penalty for the Laplacian of X
          */
         void lx_penalize
-            (double &s, double &norm, const double psigx, matrix<double> &LX,
-             matrix<double> &cfs, const int P, const int pi,
+            (double &s, double &norm, const double psigx, arma::Mat<double> &LX,
+             arma::Mat<double> &cfs, const int P, const int pi,
              const int qi) const;
 
         /**
@@ -155,7 +149,7 @@ namespace netreg
          */
         void ly_penalize
             (double &s, double &norm, const double psigy,
-             matrix<double> &LY, matrix<double> &B, const int Q,
+             arma::Mat<double> &LY, arma::Mat<double> &B, const int Q,
              const int pi, const int qi) const;
 
         /**
@@ -178,9 +172,9 @@ namespace netreg
          */
         void set_params
             (double &s, double &norm,
-             matrix<double> &TXX, matrix<double> &TXY,
-             matrix<double> &B,
-             matrix<double> &LX, matrix<double> &LY,
+             arma::Mat<double> &TXX, arma::Mat<double> &TXY,
+             arma::Mat<double> &B,
+             arma::Mat<double> &LX, arma::Mat<double> &LY,
              const int P, const int Q, const int pi, const int qi,
              const double psigx, const double psigy,
              const bool lower) const;
@@ -212,14 +206,14 @@ namespace netreg
          */
         void preset_params
             (double &soft, double &norm,
-             matrix<double> &TXX,
-             matrix<double> &TXY,
-             matrix<double> &TXX_train,
-             matrix<double> &TXY_train,
+             arma::Mat<double> &TXX,
+             arma::Mat<double> &TXY,
+             arma::Mat<double> &TXX_train,
+             arma::Mat<double> &TXY_train,
              std::vector<int> &train_idxs, std::vector<int> &testIidxs,
-             matrix<double> &B,
-             matrix<double> &X, matrix<double> &Y,
-             matrix<double> &LX, matrix<double> &LY,
+             arma::Mat<double> &B,
+             arma::Mat<double> &X, arma::Mat<double> &Y,
+             arma::Mat<double> &LX, arma::Mat<double> &LY,
              const int pi, const int qi,
              const double psigx, const double psigy,
              const int P, const int Q) const;

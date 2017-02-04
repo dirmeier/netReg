@@ -41,7 +41,7 @@ namespace netreg
         return 0.0;
     }
 
-    double abs_dprod(const cvector<double> &lhs, const cvector<double> &rhs)
+    double abs_dprod(const arma::Col<double> &lhs, const arma::Col<double> &rhs)
     {
         return std::abs(arma::dot(lhs, rhs));
     }

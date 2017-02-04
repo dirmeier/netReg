@@ -30,7 +30,8 @@
 #include "edgenet_model_selection.hpp"
 #include "family.hpp"
 
-#include "Rcpp.h"
+// [[Rcpp::depends(RcppArmadillo)]]
+#include <RcppArmadillo.h>
 
 extern "C"
 {

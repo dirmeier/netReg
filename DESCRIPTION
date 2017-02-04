@@ -18,5 +18,6 @@ Suggests:
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1
 SystemRequirements: C++11
-LinkingTo: Rcpp
-Imports: Rcpp
+LinkingTo: Rcpp, RcppArmadillo
+Imports: Rcpp, RcppArmadillo
+biocViews: StatisticalMethod, Regression, DimensionReduction, GraphAndNetwork, Network

@@ -26,13 +26,13 @@
 
 namespace netreg
 {
-    double sse(matrix<double> &B,
-               matrix<double> &X,
-               matrix<double> &Y,
-               index_vector &testSet)
+    double sse(arma::Mat<double> &B,
+               arma::Mat<double> &X,
+               arma::Mat<double> &Y,
+               arma::uvec &test_set)
     {
         // sum of all elements of residuals
-        double sum = arma::accu(Y.rows(testSet) - X.rows(testSet) * B);
+        double sum = arma::accu(Y.rows(test_set) - X.rows(test_set) * B);
         double sse = sum * sum;
         return sse;
     }

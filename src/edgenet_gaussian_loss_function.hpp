@@ -27,21 +27,18 @@
 
 #include <numeric>
 
-#ifndef ARMA_DONT_USE_WRAPPER
-#define ARMA_DONT_USE_WRAPPER
-#endif
-#include <armadillo>
-
 #ifdef HAVE_OPENMP
 #include <omp.h>
 #endif
 
-#include "types.hpp"
 #include "edgenet_gaussian.hpp"
 #include "graph_penalized_linear_model_cv_data.hpp"
 #include "cv_set.hpp"
 #include "error_functions.hpp"
 #include "../inst/include/dlib/matrix.h"
+
+// [[Rcpp::depends(RcppArmadillo)]]
+#include <RcppArmadillo.h>
 
 namespace netreg
 {
@@ -82,7 +79,7 @@ namespace netreg
             for (int fc = 0; fc < nfolds_; ++fc)
             {
                 cv_fold &fold = cvset_.get_fold(fc);
-                matrix<double> coef;
+                arma::Mat<double> coef;
                 if (do_psigx_ && do_psigy_)
                 {
                     coef = edgenet_.run_cv(data_, p(0, 0), 1.0, p(1, 0),
@@ -113,8 +110,8 @@ namespace netreg
         // data required for a edge-regularized regression model
         graph_penalized_linear_model_cv_data &data_;
         cv_set &cvset_;          // cv-set on which the selected model is evaluated
-        matrix<double> &X_;      // design matrix
-        matrix<double> &Y_;      // response matrix
+        arma::Mat<double> &X_;      // design matrix
+        arma::Mat<double> &Y_;      // response matrix
         const int nfolds_;             // number of folds
         const edgenet_gaussian edgenet_;
         const bool do_psigx_;

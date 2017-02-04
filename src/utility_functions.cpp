@@ -55,11 +55,11 @@ namespace netreg
         return v;
     }
 
-    matrix<double> to_matrix(std::vector< std::vector<double> > &elems)
+    arma::Mat<double> to_matrix(std::vector< std::vector<double> > &elems)
     {
         const int nrow = elems.size();
         const int ncol = elems[0].size();
-        matrix<double> m(nrow, ncol);
+        arma::Mat<double> m(nrow, ncol);
         std::vector< std::vector<double> >::iterator row;
         std::vector<double>::iterator col;
         for (row = elems.begin(); row != elems.end(); row++)

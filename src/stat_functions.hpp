@@ -24,12 +24,8 @@
 #ifndef NETREG_STAT_FUNCTIONS_HPP
 #define NETREG_STAT_FUNCTIONS_HPP
 
-#ifndef ARMA_DONT_USE_WRAPPER
-#define ARMA_DONT_USE_WRAPPER
-#endif
-#include <armadillo>
-
-#include "types.hpp"
+// [[Rcpp::depends(RcppArmadillo)]]
+#include <RcppArmadillo.h>
 
 namespace netreg
 {
@@ -41,9 +37,9 @@ namespace netreg
      * @param B the estimated coefficients
      * @return returns a column vector
      */
-    cvector<double> intercept(matrix<double> &X,
-                              matrix<double> &Y,
-                              matrix<double> &B);
+    arma::Col<double> intercept(arma::Mat<double> &X,
+                              arma::Mat<double> &Y,
+                              arma::Mat<double> &B);
 
     /**
      * Calculate the partial residual with respect to pi given a row and a response.
@@ -55,9 +51,9 @@ namespace netreg
      * @param pi the index of the coefficient
      * @param qi the index of the response
      */
-    double partial_residual(matrix<double> &X,
-                            matrix<double> &Y,
-                            matrix<double> &B,
+    double partial_residual(arma::Mat<double> &X,
+                            arma::Mat<double> &Y,
+                            arma::Mat<double> &B,
                             const int row,
                             const int pi,
                             const int qi);
@@ -72,8 +68,8 @@ namespace netreg
      * @param pi the current index of the column of X
      * @param qi the current index of the column of Y
      */
-    double l_pls(matrix<double> &TXX, matrix<double> &TXY,
-                 matrix<double> &cfs,
+    double l_pls(arma::Mat<double> &TXX, arma::Mat<double> &TXY,
+                 arma::Mat<double> &cfs,
                  const int cidx, const int qi, const int P);
 
     /**
@@ -87,7 +83,7 @@ namespace netreg
      * @param qi the current index of the column of Y
      * @param lower is only lower of TXX is initialized
      */
-    double pls(matrix<double> &TXX, matrix<double> &TXY, matrix<double> &cfs,
+    double pls(arma::Mat<double> &TXX, arma::Mat<double> &TXY, arma::Mat<double> &cfs,
                const int pi, const int qi, const int P, const bool lower);
 }
 #endif //NETREG_STAT_FUNCTIONS_HPP

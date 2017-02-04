@@ -34,7 +34,7 @@ namespace netreg
         return edge.run(data);
     }
 
-    matrix<double> edgenet::run_cv
+    arma::Mat<double> edgenet::run_cv
         (graph_penalized_linear_model_cv_data &data,
          const double lambda, const double alpha,
          const double psigx,  const double psigy,

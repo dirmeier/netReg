@@ -25,19 +25,14 @@
 #ifndef NETREG_BINOMIAL_EDGENET_HPP
 #define NETREG_BINOMIAL_EDGENET_HPP
 
-#ifndef ARMA_DONT_USE_WRAPPER
-#define ARMA_DONT_USE_WRAPPER
-#endif
-#include <armadillo>
+// [[Rcpp::depends(RcppArmadillo)]]
+#include <RcppArmadillo.h>
 
 #include "edgenet.hpp"
 
-#include "types.hpp"
 #include "graph_penalized_linear_model_data.hpp"
 #include "graph_penalized_linear_model_cv_data.hpp"
 #include "cv_fold.hpp"
-
-#include <Rinternals.h>
 
 namespace netreg
 {
@@ -63,7 +58,7 @@ namespace netreg
          * @param psigx penalization of laplacian for X
          * @param psigy penalization of laplacian for Y
          */
-        virtual matrix<double> run_cv
+        virtual arma::Mat<double> run_cv
             (graph_penalized_linear_model_cv_data &data,
              const double lambda,
              const double alpha,

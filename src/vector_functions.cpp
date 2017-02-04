@@ -24,7 +24,9 @@
 
 #include "vector_functions.hpp"
 #include <numeric>
-#include "Rcpp.h"
+
+// [[Rcpp::depends(RcppArmadillo)]]
+#include <RcppArmadillo.h>
 
 namespace netreg
 {

@@ -27,14 +27,13 @@
 #include <numeric>
 #include <cmath>
 
-#ifndef ARMA_DONT_USE_WRAPPER
-#define ARMA_DONT_USE_WRAPPER
-#endif
-#include <armadillo>
+// [[Rcpp::depends(RcppArmadillo)]]
+#include <RcppArmadillo.h>
+
 #ifdef HAVE_OPENMP
 #include <omp.h>
 #endif
-#include "types.hpp"
+
 #include "graph_penalized_linear_model_data.hpp"
 #include "../inst/dlib/matrix.h"
 
@@ -73,15 +72,15 @@ namespace netreg
         double operator()(const dlib::matrix<double> &b) const
         {
 
-            matrix<double> B(P, Q);
+            arma::Mat<double> B(P, Q);
             // TODO: efficient cast b to B
             for (unsigned int i = 0; i < P; ++i)
                 for (unsigned int j = 0; j < Q; ++j)
                     B(i, j) = b(i, j);
-            matrix<double> sigm = (X_ * B);
+            arma::Mat<double> sigm = (X_ * B);
             sigm.transform([](double val) { return log(1 / (1 + exp(val))); });
             // TODO: from here on
-            matrix<double> loglik = Y .* log(sigm)  + (1 - Y) .* log(1-sigm);
+            arma::Mat<double> loglik = Y .* log(sigm)  + (1 - Y) .* log(1-sigm);
             double nll = 0.0;
 
             return nll;

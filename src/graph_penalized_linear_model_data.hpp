@@ -9,16 +9,12 @@
 #include "penalized_linear_model_data.hpp"
 
 #include <string>
-#ifndef ARMA_DONT_USE_WRAPPER
-#define ARMA_DONT_USE_WRAPPER
-#endif
-#include <armadillo>
+
+// [[Rcpp::depends(RcppArmadillo)]]
+#include <RcppArmadillo.h>
 
 #include "family.hpp"
-#include "types.hpp"
 #include "graph_functions.hpp"
-
-#include <Rcpp.h>
 
 namespace netreg
 {
@@ -62,63 +58,7 @@ namespace netreg
               GX(gx, p, p), GY(gy, q, q),
               LX(laplacian(gx, p, p, psi_gx)), LY(laplacian(gy, q, q, psi_gy))
         {
-#ifndef NDEBUG
-            const int N = sample_count();
-            Rcpp::Rcout << "Design\n";
-            for (int i = 0; i < N; ++i)
-            {
-                for (int j = 0; j < P; ++j)
-                {
-                    Rcpp::Rcout << design()(i,j) << " ";
-                }
-                Rcpp::Rcout <<  "\n";
-            }
-            Rcpp::Rcout << "Response\n";
-            for (int i = 0; i < N; ++i)
-            {
-                for (int j = 0; j < Q; ++j)
-                {
-                    Rcpp::Rcout << response()(i,j) << " ";
-                }
-                Rcpp::Rcout <<  "\n";
-            }
-            Rcpp::Rcout << "LX\n";
-            for (int i = 0; i < LX.n_rows; ++i)
-            {
-                for (int j = 0; j < LX.n_cols; ++j)
-                {
-                    Rcpp::Rcout << lx()(i,j) << " ";
-                }
-                Rcpp::Rcout <<  "\n";
-            }
-            Rcpp::Rcout << "LY\n";
-            for (int i = 0; i < LY.n_rows; ++i)
-            {
-                for (int j = 0; j < LY.n_cols; ++j)
-                {
-                    Rcpp::Rcout << ly()(i, j) << " ";
-                }
-                Rcpp::Rcout <<  "\n";
-            }
-            Rcpp::Rcout << "TXX\n";
-            for (int i = 0; i < P; ++i)
-            {
-                for (int j = 0; j < P; ++j)
-                {
-                    Rcpp::Rcout << txx()(i, j) << " ";
-                }
-                Rcpp::Rcout <<  "\n";
-            }
-            Rcpp::Rcout << "TXY\n";
-            for (int i = 0; i < P; ++i)
-            {
-                for (int j = 0; j < Q; ++j)
-                {
-                    Rcpp::Rcout << txy()(i, j) << " ";
-                }
-                Rcpp::Rcout <<  "\n";
-            }
-#endif
+
         }
         /**
          * Getter for penalization term for laplacian of X
@@ -145,7 +85,7 @@ namespace netreg
          *
          * @return reference to laplacian matrix
          */
-        matrix<double> &lx()
+        arma::Mat<double> &lx()
         {
             return LX;
         }
@@ -155,7 +95,7 @@ namespace netreg
          *
          * @return reference to laplacian matrix
          */
-        matrix<double> &ly()
+        arma::Mat<double> &ly()
         {
             return LY;
         }
@@ -163,10 +103,10 @@ namespace netreg
     protected:
         const double psi_gx;  // Penalization vector for GX
         const double psi_gy;  // Penalization vector for GY
-        matrix<double> GX;    // prior graph for the design matrix
-        matrix<double> GY;    // prior graph for response matrix
-        matrix<double> LX;    // Normalized Laplacian of GX
-        matrix<double> LY;    // Normalized Laplacian of GY
+        arma::Mat<double> GX;    // prior graph for the design matrix
+        arma::Mat<double> GY;    // prior graph for response matrix
+        arma::Mat<double> LX;    // Normalized Laplacian of GX
+        arma::Mat<double> LY;    // Normalized Laplacian of GY
     };
 }
 #endif //NETREG_GRAPHPENALIZEDLINEARMODELDATA_HPP

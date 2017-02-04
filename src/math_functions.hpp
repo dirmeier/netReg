@@ -27,12 +27,8 @@
 #include <vector>
 #include <cmath>
 
-#ifndef ARMA_DONT_USE_WRAPPER
-#define ARMA_DONT_USE_WRAPPER
-#endif
-#include <armadillo>
-
-#include "types.hpp"
+// [[Rcpp::depends(RcppArmadillo)]]
+#include <RcppArmadillo.h>
 
 namespace netreg
 {
@@ -44,8 +40,8 @@ namespace netreg
      * @param pi the column of matrix<double> source1
      * @param qi the column of matrix<double> source2
      */
-    double abs_dprod(const cvector<double> &lhs,
-                     const cvector<double> &rhs);
+    double abs_dprod(const arma::Col<double> &lhs,
+                     const arma::Col<double> &rhs);
 
     /**
      * Calculate a soft-thresholded normalized coefficient.

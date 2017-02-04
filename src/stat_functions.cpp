@@ -26,18 +26,19 @@
 
 namespace netreg
 {
-    cvector<double> intercept(matrix<double> &X, matrix<double> &Y,
-                              matrix<double> &B)
+    arma::Col<double> intercept(arma::Mat<double> &X,
+                                arma::Mat<double> &Y,
+                              arma::Mat<double> &B)
     {
-        matrix<double> terr = (Y - (X * B)).t();
-        cvector<double> rep(Y.n_rows, arma::fill::ones);
-        cvector<double> intr = (terr * rep) / Y.n_rows;
+        arma::Mat<double> terr = (Y - (X * B)).t();
+        arma::Col<double> rep(Y.n_rows, arma::fill::ones);
+        arma::Col<double> intr = (terr * rep) / Y.n_rows;
         return intr;
     }
 
-    double partial_residual(matrix<double> &X,
-                            matrix<double> &Y,
-                            matrix<double> &B,
+    double partial_residual(arma::Mat<double> &X,
+                            arma::Mat<double> &Y,
+                            arma::Mat<double> &B,
                             const int row,
                             const int pi,
                             const int qi)
@@ -49,9 +50,9 @@ namespace netreg
         return Y(row, qi) - res;
     }
 
-    double l_pls(matrix<double> &TXX,
-                 matrix<double> &TXY,
-                 matrix<double> &cfs,
+    double l_pls(arma::Mat<double> &TXX,
+                 arma::Mat<double> &TXY,
+                 arma::Mat<double> &cfs,
                  const int cidx,
                  const int qi,
                  const int P)
@@ -60,7 +61,7 @@ namespace netreg
         double s = TXY(cidx, qi) + (TXX(cidx, cidx) * cfs(cidx, cidx));
         for (int j = 0; j < P; ++j)
         {
-            // we only initialized the lower triangular matrix<double> of TXX
+            // we only initialized the lower triangular arma::Mat<double> of TXX
             if (j > cidx)
                 s -= TXX(j, cidx) * cfs(j, cidx);
             else
@@ -69,9 +70,9 @@ namespace netreg
         return s;
     }
 
-    double pls(matrix<double> &TXX,
-               matrix<double> &TXY,
-               matrix<double> &cfs,
+    double pls(arma::Mat<double> &TXX,
+               arma::Mat<double> &TXY,
+               arma::Mat<double> &cfs,
                const int pi,
                const int qi,
                const int P,

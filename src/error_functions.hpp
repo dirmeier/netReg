@@ -25,11 +25,8 @@
 #ifndef NETREG_ERROR_FUNCTIONS_HPP
 #define NETREG_ERROR_FUNCTIONS_HPP
 
-#ifndef ARMA_DONT_USE_WRAPPER
-#define ARMA_DONT_USE_WRAPPER
-#endif
-#include <armadillo>
-#include "types.hpp"
+// [[Rcpp::depends(RcppArmadillo)]]
+#include <RcppArmadillo.h>
 
 namespace netreg
 {
@@ -41,9 +38,9 @@ namespace netreg
      * @param Y the response matrix
      * @param test_set a vector of indexed of the test set
      */
-    double sse(matrix<double> &B,
-               matrix<double> &X,
-               matrix<double> &Y,
-               index_vector &test_set);
+    double sse(arma::Mat<double> &B,
+               arma::Mat<double> &X,
+               arma::Mat<double> &Y,
+               arma::uvec &test_set);
 }
 #endif //SRC_ERROR_FUNCTIONS_HPP

@@ -9,7 +9,7 @@ AC_INIT(
 AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_SRCDIR([src/edgenet.cpp])
 
-
+AC_MSG_NOTICE([${R_HOME}])
 AC_MSG_NOTICE([building from R])
 if test -z "${R_HOME}"; 
 then
@@ -42,17 +42,6 @@ AS_IF(
 dnl Other dependencies
 AX_CXX_COMPILE_STDCXX_11([noext], [mandatory])
 AC_OPENMP
-
-AC_CHECK_HEADER([armadillo],
-[
-	AC_DEFINE([HAVE_ARMADILLO], [1], [Define if Armadillo is installed])
-	netReg_LDLIBS="-larmadillo ${LIBS}"
-	netReg_CPPFLAGS="${CPPFLAGS}"
-], 
-[
-	AC_MSG_NOTICE([no armadillo found. using bundled lib])
-	netReg_CPPFLAGS="-I../inst/include/armadillo"
-])
 
 AC_SEARCH_LIBS([cblas_dgemm], [openblas],
 [

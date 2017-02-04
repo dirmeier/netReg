@@ -24,11 +24,6 @@
 
 #include "edgenet_gaussian.hpp"
 
-#ifndef ARMA_DONT_USE_WRAPPER
-#define ARMA_DONT_USE_WRAPPER
-#endif
-#include <armadillo>
-
 #include "cv_set.hpp"
 #include "math_functions.hpp"
 #include "stat_functions.hpp"
@@ -39,23 +34,24 @@ namespace netreg
     {
         const int P = data.covariable_count();
         const int Q = data.response_count();
-        matrix<double> coef(P, Q, arma::fill::ones);
-        matrix<double> old_coef(P, Q);
+        arma::Mat<double> coef(P, Q, arma::fill::ones);
+        arma::Mat<double> old_coef(P, Q);
         const double thresh = data.threshold();
         const int niter = data.max_iter();
         const double lambda = data.lambda();
         const double alpha = data.alpha();
         const double psigx = data.psigx();
         const double psigy = data.psigy();
-        matrix<double> &TXX = data.txx();
-        matrix<double> &TXY = data.txy();
-        matrix<double> &LX = data.lx();
-        matrix<double> &LY = data.ly();
+        arma::Mat<double> &TXX = data.txx();
+        arma::Mat<double> &TXY = data.txy();
+        arma::Mat<double> &LX = data.lx();
+        arma::Mat<double> &LY = data.ly();
         int iter = 0;
         do
         {
             // This is definitely not parallizable
             for (int qi = 0; qi < Q; ++qi)
+            {
                 uccd_(P, Q,
                       thresh, niter,
                       lambda, alpha,
@@ -64,19 +60,22 @@ namespace netreg
                       LX, LY,
                       coef, old_coef,
                       qi);
+                if (iter % 100 == 0) Rcpp::checkUserInterrupt();
+            }
         }
         while (arma::accu(arma::abs(coef - old_coef)) > thresh &&
                iter++ < niter);
         // calculate intercepts of the linear model
-        cvector<double> intr = intercept(data.design(), data.response(), coef);
+        arma::Col<double> intr = intercept(data.design(), data.response(),
+                                         coef);
         // TODO exclude intercept and coefficients from model data
         return Rcpp::List::create(
-          Rcpp::Named("coefficients") = coef,
-          Rcpp::Named("intercept")    = intr
+            Rcpp::Named("coefficients") = coef,
+            Rcpp::Named("intercept") = intr
         );
     }
 
-    matrix<double> edgenet_gaussian::run_cv(
+    arma::Mat<double> edgenet_gaussian::run_cv(
         graph_penalized_linear_model_cv_data &data,
         const double lambda, const double alpha,
         const double psigx, const double psigy,
@@ -84,20 +83,20 @@ namespace netreg
     {
         const int P = data.covariable_count();
         const int Q = data.response_count();
-        matrix<double> coef(P, Q, arma::fill::ones);
-        matrix<double> old_coef(P, Q);
+        arma::Mat<double> coef(P, Q, arma::fill::ones);
+        arma::Mat<double> old_coef(P, Q);
         const double thresh = data.threshold();
         const int niter = data.max_iter();
-        matrix<double> &X = data.design();
-        matrix<double> &Y = data.response();
-        matrix<double> &LX = data.lx();
-        matrix<double> &LY = data.ly();
-        index_vector &trainIdxs = fold.train_set();
-        matrix<double> Xtrain = X.rows(trainIdxs);
-        matrix<double> Ytrain = Y.rows(trainIdxs);
-        matrix<double> TXtrain = Xtrain.t();
-        matrix<double> train_txx = TXtrain * Xtrain;
-        matrix<double> train_txy = TXtrain * Ytrain;
+        arma::Mat<double> &X = data.design();
+        arma::Mat<double> &Y = data.response();
+        arma::Mat<double> &LX = data.lx();
+        arma::Mat<double> &LY = data.ly();
+        arma::uvec &trainIdxs = fold.train_set();
+        arma::Mat<double> Xtrain = X.rows(trainIdxs);
+        arma::Mat<double> Ytrain = Y.rows(trainIdxs);
+        arma::Mat<double> TXtrain = Xtrain.t();
+        arma::Mat<double> train_txx = TXtrain * Xtrain;
+        arma::Mat<double> train_txy = TXtrain * Ytrain;
         int iter = 0;
         do
         {
@@ -112,6 +111,7 @@ namespace netreg
                       LX, LY,
                       coef, old_coef,
                       qi);
+                if (iter % 100 == 0) Rcpp::checkUserInterrupt();
             }
         }
         while (arma::accu(arma::abs(coef - old_coef)) > thresh &&
@@ -124,10 +124,10 @@ namespace netreg
          const double thresh, const int niter,
          const double lambda, const double alpha,
          const double psigx, const double psigy,
-         matrix<double> &TXX, matrix<double> &TXY,
-         matrix<double> &LX, matrix<double> &LY,
-         matrix<double> &coef,
-         matrix<double> &old_coef,
+         arma::Mat<double> &TXX, arma::Mat<double> &TXY,
+         arma::Mat<double> &LX, arma::Mat<double> &LY,
+         arma::Mat<double> &coef,
+         arma::Mat<double> &old_coef,
          const int qi) const
     {
         // weighted penalization param of Elastic-net
@@ -161,10 +161,10 @@ namespace netreg
 
     void edgenet_gaussian::set_params
         (double &s, double &norm,
-         matrix<double> &TXX, matrix<double> &TXY,
-         matrix<double> &coef,
-         matrix<double> &LX,
-         matrix<double> &LY,
+         arma::Mat<double> &TXX, arma::Mat<double> &TXY,
+         arma::Mat<double> &coef,
+         arma::Mat<double> &LX,
+         arma::Mat<double> &LY,
          const int P, const int Q,
          const int pi, const int qi,
          const double psigx,
@@ -181,7 +181,7 @@ namespace netreg
     void edgenet_gaussian::graph_penalize
         (double &s, double &norm,
          const double psigx, const double psigy,
-         matrix<double> &LX, matrix<double> &LY, matrix<double> &cfs,
+         arma::Mat<double> &LX, arma::Mat<double> &LY, arma::Mat<double> &cfs,
          const int P, const int Q,
          const int pi, const int qi) const
     {
@@ -193,7 +193,7 @@ namespace netreg
 
     void edgenet_gaussian::lx_penalize
         (double &s, double &norm, const double psigx,
-         matrix<double> &LX, matrix<double> &cfs, const int P,
+         arma::Mat<double> &LX, arma::Mat<double> &cfs, const int P,
          const int pi, const int qi) const
     {
         if (psigx <= 0.001)
@@ -202,7 +202,7 @@ namespace netreg
         if (qi < LX.n_rows && qi < LX.n_cols)
         {
             xPenalty = -LX(pi, pi) * cfs(pi, qi) +
-                arma::accu(LX.row(pi) * cfs.col(qi));
+                       arma::accu(LX.row(pi) * cfs.col(qi));
         }
         s = s - 2 * psigx * xPenalty;
         norm += 2 * psigx * LX(pi, pi);
@@ -210,7 +210,7 @@ namespace netreg
 
     void edgenet_gaussian::ly_penalize
         (double &s, double &norm, const double psigy,
-         matrix<double> &LY, matrix<double> &cfs, const int Q,
+         arma::Mat<double> &LY, arma::Mat<double> &cfs, const int Q,
          const int pi, const int qi) const
     {
         if (psigy <= 0.001 || Q == 1)

@@ -28,7 +28,8 @@
 #include <vector>
 #include <string>
 
-#include "types.hpp"
+// [[Rcpp::depends(RcppArmadillo)]]
+#include <RcppArmadillo.h>
 
 namespace netreg
 {
@@ -56,7 +57,7 @@ namespace netreg
      * @param elems a vector of a vector of doubles
      * @return a pointer to double
      */
-    matrix<double> to_matrix(std::vector< std::vector<double> > &elems);
+    arma::Mat<double> to_matrix(std::vector< std::vector<double> > &elems);
 }
 
 #endif //NETREG_UTILITY_H

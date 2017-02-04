@@ -30,7 +30,8 @@
 #include "graph_penalized_linear_model_cv_data.hpp"
 #include "cv_fold.hpp"
 
-#include <Rcpp.h>
+// [[Rcpp::depends(RcppArmadillo)]]
+#include <RcppArmadillo.h>
 
 namespace netreg
 {
@@ -57,7 +58,7 @@ namespace netreg
          *
          * @return returns the estimated coefficients
          */
-       virtual matrix<double> run_cv
+       virtual arma::Mat<double> run_cv
             (graph_penalized_linear_model_cv_data &data,
              const double lambda, const double alpha,
              const double psigx,  const double psigy,

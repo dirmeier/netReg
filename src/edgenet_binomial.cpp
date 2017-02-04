@@ -50,14 +50,14 @@ namespace netreg
         return R_NilValue;
     }
 
-    matrix<double> edgenet_binomial::run_cv
+    arma::Mat<double> edgenet_binomial::run_cv
         (graph_penalized_linear_model_cv_data &data,
          const double lambda, const double alpha,
          const double psigx, const double psigy,
          cv_fold &fold) const
     {
 
-        matrix<double> coef(10, 10, arma::fill::ones);
+      arma::Mat<double> coef(10, 10, arma::fill::ones);
         //TODO
         return coef;
     }

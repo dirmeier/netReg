@@ -32,12 +32,12 @@
 
 namespace netreg
 {
-    matrix<double> laplacian(const double * x, const int n, const int m, const double px)
+    arma::Mat<double> laplacian(const double * x, const int n, const int m, const double px)
     {
 
         if (px == 0)
         {
-            matrix<double> lap(1, 1, arma::fill::zeros);
+            arma::Mat<double> lap(1, 1, arma::fill::zeros);
             return lap;
         }
 
@@ -66,7 +66,7 @@ namespace netreg
                     laplacian[i + n * j] = 0.0;
             }
         }
-        matrix<double> lap(laplacian, n, m, true, true);
+        arma::Mat<double> lap(laplacian, n, m, true, true);
         delete [] laplacian;
         return lap;
     }

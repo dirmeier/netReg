@@ -25,12 +25,8 @@
 #ifndef NETREG_GRAPH_FUNCTIONS_HPP
 #define NETREG_GRAPH_FUNCTIONS_HPP
 
-#ifndef ARMA_DONT_USE_WRAPPER
-#define ARMA_DONT_USE_WRAPPER
-#endif
-#include <armadillo>
-
-#include "types.hpp"
+// [[Rcpp::depends(RcppArmadillo)]]
+#include <RcppArmadillo.h>
 
 namespace netreg
 {
@@ -42,7 +38,7 @@ namespace netreg
     * @param m ncols of y
     * @return the normalized laplacian
     */
-    matrix<double> laplacian(const double * x, int n, int m, double px);
+   arma::Mat<double> laplacian(const double * x, int n, int m, double px);
 
 }
 #endif //NETREG_GRAPH_FUNCTIONS_HPP

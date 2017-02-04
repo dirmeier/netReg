@@ -25,13 +25,12 @@
 
 #include "edgenet_model_selection.hpp"
 
-#ifndef ARMA_DONT_USE_WRAPPER
-#define ARMA_DONT_USE_WRAPPER
-#endif
-#include <armadillo>
 #include <numeric>
 #include <vector>
 #include <map>
+
+// [[Rcpp::depends(RcppArmadillo)]]
+#include <RcppArmadillo.h>
 
 #ifdef HAVE_OPENMP
 #include <omp.h>
@@ -57,6 +56,7 @@ namespace netreg
             case family::GAUSSIAN:
             default:
             {
+                BEGIN_RCPP
                 std::map<std::string, double> res =
                     opt.bobyqa<edgenet_gaussian_loss_function>(
                         data, start, lower_bound, upper_bound, rad_start,
@@ -65,6 +65,7 @@ namespace netreg
                     Rcpp::Named("parameters") = Rcpp::wrap(res),
                     Rcpp::Named("folds")      = data.fold_ids()
                 );
+                END_RCPP
             }
         }
     }

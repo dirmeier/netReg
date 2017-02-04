@@ -24,11 +24,6 @@
 
 #include "graph_penalized_linear_model_cv_data.hpp"
 
-#ifndef ARMA_DONT_USE_WRAPPER
-#define ARMA_DONT_USE_WRAPPER
-#endif
-#include <armadillo>
-
 #ifdef HAVE_OPENMP
 #include <omp.h>
 #endif
