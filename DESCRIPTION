@@ -1,7 +1,7 @@
 Package: netReg
 Type: Package
 Title: Network-regularized regression models
-Version: 0.1
+Version: 0.99.0
 Date: 2015-05-15
 Authors@R: person("Simon", "Dirmeier", email = "mail@simon.dirmeier.net", role = c("aut", "cre"))
 Description: netReg fits linear regression models using network-penalization.
