@@ -30,12 +30,12 @@ rss <- function(Y, Y.hat) sum((Y - Y.hat) ** 2)
 #' @noRd
 #' @importFrom stats runif
 cvsets <- function(n, folds=10, seed=23)
-{   
+{
   if (n < 1) stop("n<1; need positive integer!")
   if (folds < 0) stop("folds<0; need positive integer!")
   n <- as.integer(n)
   folds <- as.integer(folds)
-  if (n<folds) stop("n<folds; need n>folds!")   
+  if (n<folds) stop("n<folds; need n>folds!")
   id <- (1:n)[order(stats::runif(n))]
   k <- as.integer(n * seq(1,folds - 1) / folds)
   k <- matrix(c(0, rep(k, each=2), n), ncol=2, byrow=TRUE)
@@ -61,7 +61,7 @@ check.graphs <- function(X, Y, G.X, G.Y, psigx, psigy)
     stop("ncol(X) and dim(G.X) do not fit!")
   if (psigy != 0 & any(dim(G.Y)!=dim(Y)[2]))
     stop("ncol(Y) and dim(G.Y) do not fit!")
-  if (any(G.X < 0)) 
+  if (any(G.X < 0))
     stop("Some elements G.X<0; please use non-negative matrix!")
   if (any(G.Y < 0))
     stop("Some elements G.Y<0; please use non-negative matrix!")

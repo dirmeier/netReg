@@ -137,7 +137,7 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
                   psigx=psigx, psigy=psigy,
                   thresh=thresh, maxit=maxit,
                   family=family)
-  ret$call   <- match.call()  
+  ret$call   <- match.call()
   class(ret) <- c(class(ret), "edgenet")
   ret
 }
