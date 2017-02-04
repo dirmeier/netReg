@@ -30,8 +30,8 @@ Kernel configured for up to 4 processors.
 Processor type: x86_64h (Intel x86-64h Haswell)
 Processors active: 0 1 2 3
 Primary memory available: 16.00 gigabytes
-Default processor set: 268 tasks, 1205 threads, 4 processors
-Load average: 3.03, Mach factor: 1.34
+Default processor set: 268 tasks, 1175 threads, 4 processors
+Load average: 2.05, Mach factor: 2.10
 /bin/machine           = unknown
 /usr/bin/oslevel       = unknown
 /bin/universe          = unknown
@@ -691,15 +691,15 @@ configure: failed program was:
 | int main () { return omp_get_num_threads (); }
 | 
 configure:3288: result: unsupported
-configure:3302: checking for library containing cblas_dgemm
-configure:3333: g++ -std=c++11 -o conftest -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER   conftest.cpp  >&5
+configure:3300: checking for library containing cblas_dgemm
+configure:3331: g++ -std=c++11 -o conftest -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER   conftest.cpp  >&5
 undef: _cblas_dgemm
 Undefined symbols for architecture x86_64:
   "_cblas_dgemm", referenced from:
-      _main in cc-7346e2.o
+      _main in cc-65ab40.o
 ld: symbol(s) not found for architecture x86_64
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
-configure:3333: $? = 1
+configure:3331: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "netReg"
@@ -725,10 +725,10 @@ configure: failed program was:
 |   ;
 |   return 0;
 | }
-configure:3333: g++ -std=c++11 -o conftest -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER   conftest.cpp -lopenblas   >&5
+configure:3331: g++ -std=c++11 -o conftest -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER   conftest.cpp -lopenblas   >&5
 ld: library not found for -lopenblas
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
-configure:3333: $? = 1
+configure:3331: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "netReg"
@@ -754,16 +754,16 @@ configure: failed program was:
 |   ;
 |   return 0;
 | }
-configure:3350: result: no
-configure:3362: checking for library containing dgemm
-configure:3393: g++ -std=c++11 -o conftest -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER   conftest.cpp  >&5
+configure:3348: result: no
+configure:3360: checking for library containing dgemm
+configure:3391: g++ -std=c++11 -o conftest -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER   conftest.cpp  >&5
 undef: _dgemm
 Undefined symbols for architecture x86_64:
   "_dgemm", referenced from:
-      _main in cc-987385.o
+      _main in cc-146917.o
 ld: symbol(s) not found for architecture x86_64
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
-configure:3393: $? = 1
+configure:3391: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "netReg"
@@ -789,11 +789,11 @@ configure: failed program was:
 |   ;
 |   return 0;
 | }
-configure:3393: g++ -std=c++11 -o conftest -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER   conftest.cpp -lblas   >&5
-configure:3393: $? = 0
-configure:3410: result: -lblas
-configure:3416: using blas
-configure:3554: creating ./config.status
+configure:3391: g++ -std=c++11 -o conftest -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER   conftest.cpp -lblas   >&5
+configure:3391: $? = 0
+configure:3408: result: -lblas
+configure:3414: using blas
+configure:3552: creating ./config.status
 
 ## ---------------------- ##
 ## Running config.status. ##
@@ -812,7 +812,7 @@ on bs-mbpr134.d.ethz.ch
 
 config.status:792: creating src/Makevars
 config.status:792: creating src/config.h
-configure:4719: result:
+configure:4717: result:
 	Have fun with: netReg
 
 	CXX:        g++ -std=c++11
@@ -907,7 +907,7 @@ libexecdir='${exec_prefix}/libexec'
 localedir='${datarootdir}/locale'
 localstatedir='${prefix}/var'
 mandir='${datarootdir}/man'
-netReg_CPPFLAGS='-I../inst/include/armadillo'
+netReg_CPPFLAGS=''
 netReg_LDLIBS=' -lblas -llapack'
 oldincludedir='/usr/include'
 pdfdir='${docdir}'

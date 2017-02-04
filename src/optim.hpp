@@ -83,16 +83,22 @@ namespace netreg
                 ub(i, 0) = upper_bound[i];
             }
             // minimize the loss_function
-            dlib::find_min_bobyqa(
-                loss_function(data),
-                par,
-                par.size() * 2 + 1,
-                lb,
-                ub,
-                radius_start,
-                radius_stop,
-                niter
-            );
+            try 
+            {
+              dlib::find_min_bobyqa(
+                  loss_function(data),
+                  par,
+                  par.size() * 2 + 1,
+                  lb,
+                  ub,
+                  radius_start,
+                  radius_stop,
+                  niter);
+            }
+            catch (const std::exception& e)
+            {
+              Rprintf("Error estimating optim shrinkage parameters.");
+            }
             return {{"lambda", par(0, 0)}, 
                     {"psigx", data.psigx() == -1 ? par(1, 0) : 0.0}, 
                     {"psigy", data.psigy() == -1 ? par(2, 0) : 0.0}};

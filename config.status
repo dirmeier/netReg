@@ -603,7 +603,7 @@ echo 'BEGIN {' >"$ac_tmp/subs1.awk" &&
 cat >>"$ac_tmp/subs1.awk" <<\_ACAWK &&
 S["LTLIBOBJS"]=""
 S["LIBOBJS"]=""
-S["netReg_CPPFLAGS"]="-I../inst/include/armadillo"
+S["netReg_CPPFLAGS"]=""
 S["netReg_LDLIBS"]=" -lblas -llapack"
 S["OPENMP_CXXFLAGS"]=""
 S["HAVE_CXX11"]="1"

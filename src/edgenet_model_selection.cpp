@@ -35,6 +35,7 @@
 #ifdef HAVE_OPENMP
 #include <omp.h>
 #endif
+
 #include "family.hpp"
 #include "edgenet_gaussian_loss_function.hpp"
 #include "optim.hpp"

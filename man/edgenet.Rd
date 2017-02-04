@@ -50,8 +50,7 @@ one/two affinity matrices. Graph-regularization is an extension to previously
 introduced regularization techniques, such as the LASSO.
 }
 \examples{
-\dontrun{
-X <- matrix(rnorm(100*10), 100, 10)aw
+X <- matrix(rnorm(100*10), 100, 10)
 G.X <- matrix(rpois(100,1), 10)
 G.X <- t(G.X) + G.X
 diag(G.X) <- 0
@@ -60,7 +59,6 @@ diag(G.X) <- 0
 Y <- matrix(rnorm(100),100,1)
 fit <- edgenet(X=X, Y=Y, G.X=G.X, family="gaussian")
 
-}
 }
 \author{
 Simon Dirmeier | \email{mail@simon-dirmeier.net}
