@@ -33,4 +33,3 @@ fit <- edgenet(X=X, Y=Y, G.X=G.X, family="gaussian")
 pred <- predict(fit, X)
 }
 }
-

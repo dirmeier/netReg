@@ -16,8 +16,8 @@ Suggests:
     testthat,
     lintr
 VignetteBuilder: knitr
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.0
 SystemRequirements: C++11
 LinkingTo: Rcpp, RcppArmadillo
-Imports: Rcpp, RcppArmadillo
+Imports: Rcpp
 biocViews: StatisticalMethod, Regression, DimensionReduction, GraphAndNetwork, Network

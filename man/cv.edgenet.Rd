@@ -53,9 +53,6 @@ diag(G.X) <- 0
 cv.edge <- cv.edgenet(X=X, Y=Y, G.X=G.X, family="gaussian")
 }
 }
-\author{
-Simon Dirmeier, \email{mail@simon-dirmeier.net}
-}
 \references{
 Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007), 
  Pathwise coordinate optimization.\cr
@@ -71,4 +68,6 @@ Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007),
  The BOBYQA algorithm for bound constrained optimization without derivatives.\cr
  \url{http://www.damtp.cam.ac.uk/user/na/NA_papers/NA2009_06.pdf}
 }
-
+\author{
+Simon Dirmeier, \email{mail@simon-dirmeier.net}
+}

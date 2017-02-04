@@ -1,4 +1,5 @@
 language: r
+r: bioc-release
 
 sudo: required
 dist: trusty
@@ -25,17 +26,18 @@ matrix:
             - clang-3.7
       env: COMPILER=clang++-3.7
 
-r_packages:
-  - covr
-  - testthat
-
-r_github_packages:
-  - jimhester/lintr
 
 env:
   global:
     - R_BUILD_ARGS="--no-build-vignettes --no-manual"
-    - R_CHECK_ARGS="--no-build-vignettes --no-manual"
+    - R_CHECK_ARGS="--no-build-vignettes --no-manual --as-cran"
+
+r_packages:
+  - covr
+  - testthat
+
+bioc_packages:
+  - BiocCheck
 
 before_install:
   - sudo apt-get update -qq
@@ -48,5 +50,10 @@ before_script:
   - autoreconf -vif
   - ./configure
 
+script:
+ - R CMD build . --no-build-vignettes --no-manual
+ - R CMD CHECK netReg_*.tar.gz --no-build-vignettes --no-manual --as-cran
+ - R CMD BiocCheck netReg_*.tar.gz --no-build-vignettes --no-manual
+ 
 after_success:
   - Rscript -e 'library(covr); codecov()'

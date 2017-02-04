@@ -60,9 +60,6 @@ Y <- matrix(rnorm(100),100,1)
 fit <- edgenet(X=X, Y=Y, G.X=G.X, family="gaussian")
 
 }
-\author{
-Simon Dirmeier | \email{mail@simon-dirmeier.net}
-}
 \references{
 Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007), 
  Pathwise coordinate optimization.\cr
@@ -75,4 +72,6 @@ Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007),
  Cheng W. and Wang W. (2014), Graph-regularized dual Lasso for robust eQTL mapping.\cr
  \emph{Bioinformatics}
 }
-
+\author{
+Simon Dirmeier | \email{mail@simon-dirmeier.net}
+}
