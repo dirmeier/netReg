@@ -7,10 +7,11 @@ linters: list(linelen=line_length_linter(80),
               closedcurly=closed_curly_linter,
               trailingwhites=trailing_whitespace_linter)
 exclusions: list("tests/testthat.R",                 
-                 "tests/testthat/test_knn.R",
-                 "tests/testthat/test_mrw.R",
                  "tests/testthat/test_util.R",
-                 "tests/testthat/test_lint.R")
+                 "tests/testthat/test_predict.R",
+                 "tests/testthat/test_lint.R",
+                 "tests/testthat/test_gaussian_edgenet.R",
+                 "tests/testthat/test_binomial_edgenet.R")
 exclude: "# Exclude Linting"
 exclude_start: "# Begin Exclude Linting"
 exclude_end: "# End Exclude Linting"

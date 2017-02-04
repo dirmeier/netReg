@@ -34,7 +34,7 @@ AC_PROG_RANLIB
 AS_IF(
 	[test "x${enable_cxxflags_setting}" = "xyes"],
 	[	 
-		AX_APPEND_COMPILE_FLAGS([-O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER], [CXXFLAGS])
+		AX_APPEND_COMPILE_FLAGS([-O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto], [CXXFLAGS])
 		CXXFLAGS=$( echo $CXXFLAGS | $SED -e 's/^ *//' -e 's/ *$//' )
 	]	
 )

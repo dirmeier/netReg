@@ -41,10 +41,11 @@
 #' @examples
 #' \dontrun{
 #' X <- matrix(rnorm(100*10),100,10)
-#' Y <- matrix(rnorm(100*10),100,10)
 #' G.X <- matrix(rpois(10*10,1),10)
 #' G.X <- t(G.X) + G.X
 #' diag(G.X) <- 0
+#' 
+#' Y <- matrix(rnorm(100*10),100,10)
 #' fit <- edgenet(X=X, Y=Y, G.X=G.X, family="gaussian")
 #' pred <- predict(fit, X)
 #' }
@@ -55,8 +56,8 @@ predict.gaussian.edgenet <- function(object, newdata=NULL, ...)
   X <- newdata
   n <- dim(X)[1]
   p <- dim(X)[2]
-  coefs <- stats::coef(object)   
-  if(p != dim(coefs)[1]) 
+  coefs <- stats::coef(object)
+  if(p != dim(coefs)[1])
     stop("newdata dimensions do not fit coefficient dimensions!")
   mu <- object$intercept
   Y.hat <- X %*% coefs + intercept.matrix(n=n, mu=mu)

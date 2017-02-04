@@ -80,8 +80,8 @@
 #' Y <- X%*%b + rnorm(100)
 #' fit <- edgenet(X=X, Y=Y, G.X=G.X, family="gaussian")
 #' }
-edgenet <- function(X, Y, G.X=NULL, G.Y=NULL, lambda=1, psigx=1, psigy=1, 
-                    thresh=1e-5, maxit=1e5, family=c("gaussian"), ...) 
+edgenet <- function(X, Y, G.X=NULL, G.Y=NULL, lambda=1, psigx=1, psigy=1,
+                    thresh=1e-5, maxit=1e5, family=c("gaussian"), ...)
 {
   UseMethod("edgenet")
 }
@@ -89,21 +89,21 @@ edgenet <- function(X, Y, G.X=NULL, G.Y=NULL, lambda=1, psigx=1, psigy=1,
 #' @export
 #' @method edgenet default
 edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
-                            lambda=1, psigx=1, psigy=1, 
+                            lambda=1, psigx=1, psigy=1,
                             thresh=1e-5, maxit=1e5,
                             family=c("gaussian"), ...)
 {
   check.matrices(X, Y)
-  n <- dim(X)[1]                              
-  p <- dim(X)[2]     
-  q <- dim(Y)[2]  
+  n <- dim(X)[1]
+  p <- dim(X)[2]
+  q <- dim(Y)[2]
   if (is.null(G.X)) G.X <- matrix(0, 1, 1)
   if (is.null(G.Y)) G.Y <- matrix(0, 1, 1)
   if (all(G.X == 0)) psigx <- 0
   if (all(G.Y == 0)) psigy <- 0
   check.graphs(X, Y, G.X, G.Y, psigx, psigy)
   check.dimensions(X, Y, n, p, q)
-  if (lambda < 0) 
+  if (lambda < 0)
   {
     warning("lambda < 0, setting to 0!")
     lambda <- 0
@@ -131,13 +131,13 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
   if (q == 1) psigy <- 0
   family <- match.arg(family)
   # estimate coefficients
-  ret <- .edgenet(X=X, Y=Y, 
+  ret <- .edgenet(X=X, Y=Y,
                   G.X=G.X, G.Y=G.Y,
                   lambda=lambda,
                   psigx=psigx, psigy=psigy,
                   thresh=thresh, maxit=maxit,
-                  family=family) 
-  ret$call   <- match.call()    
+                  family=family)
+  ret$call   <- match.call()  
   class(ret) <- c(class(ret), "edgenet")
   ret
 }
@@ -145,8 +145,8 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
 #' @noRd
 #' @import Rcpp
 #' @useDynLib netReg
-.edgenet <-function(X, Y, G.X, G.Y, 
-                    lambda, psigx, psigy, 
+.edgenet <-function(X, Y, G.X, G.Y,
+                    lambda, psigx, psigy,
                     thresh, maxit, family)
 {
   res <- .Call("edgenet_cpp", X, Y, G.X, G.Y,
@@ -159,7 +159,7 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
   intr         <- res$intercept
   rownames(coefficients) <- colnames(X)
   colnames(coefficients) <- colnames(Y)
-  ret <- list(coefficients=coefficients, 
+  ret <- list(coefficients=coefficients,
               intercept=intr,
               lambda=lambda,
               psigx=psigx,

@@ -84,20 +84,20 @@
 #' Y <- X%*%b + rnorm(100)
 #' cv.edge <- cv.edgenet(X=X, Y=Y, G.X=G.X, family="gaussian")
 #' }
-cv.edgenet <- function (X, Y, G.X=NULL, G.Y=NULL, 
-                        thresh=1e-5, maxit=1e5, 
+cv.edgenet <- function (X, Y, G.X=NULL, G.Y=NULL,
+                        thresh=1e-5, maxit=1e5,
                         family=c("gaussian"),
                         nfolds=10, ...)
-{ 
+{
   UseMethod("cv.edgenet")
 }
 
 #' @export
 #' @method cv.edgenet default
-cv.edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL, 
+cv.edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
                                thresh=1e-5, maxit=1e5,
                                family=c("gaussian"),
-                               nfolds=10, ...) 
+                               nfolds=10, ...)
 {
   check.matrices(X, Y)
   n <- dim(X)[1]
@@ -123,24 +123,25 @@ cv.edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
   # TODO; implement this
   foldid <- NULL
   # check if some parameters have values
-  if (!is.null(foldid) & is.numeric(foldid)) 
+  if (!is.null(foldid) & is.numeric(foldid))
   {
     nfolds <- max(foldid)
     stopifnot(length(foldid) == n)
   }
   if (is.null(foldid)) foldid <- NA_integer_
-  if (!is.numeric(foldid)) stop("Please provide either an integer vector or NULL for foldid")
+  if (!is.numeric(foldid))
+    stop("Please provide either an integer vector or NULL for foldid")
   if (q == 1)     psigy  <- 0
   if (n < nfolds) nfolds <- n
   family                 <- match.arg(family)
   # estimate shrinkage parameters
-  ret <- .cv.edgenet(X=X, Y=Y, 
+  ret <- .cv.edgenet(X=X, Y=Y,
                      G.X=G.X, G.Y=G.Y,
                      psigx=psigx, psigy=psigy,
                      thresh=thresh, maxit=maxit,
                      family=family,
                      nfolds=nfolds,
-                     foldid=foldid)    
+                     foldid=foldid)
   ret$call   <- match.call()
   class(ret) <- c(class(ret), "cv.edgenet")
   ret
@@ -149,11 +150,11 @@ cv.edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
 #' @noRd
 #' @import Rcpp
 #' @useDynLib netReg
-.cv.edgenet <- function(X, Y, G.X, G.Y, 
+.cv.edgenet <- function(X, Y, G.X, G.Y,
                         psigx, psigy, thresh, maxit, family,
                         nfolds, foldid)
 {
-  cv <- .Call("cv_edgenet_cpp", X, Y, G.X, G.Y, 
+  cv <- .Call("cv_edgenet_cpp", X, Y, G.X, G.Y,
               as.double(psigx),  as.double(psigy),
               as.integer(maxit), as.double(thresh),
               as.integer(nfolds), as.integer(foldid),
