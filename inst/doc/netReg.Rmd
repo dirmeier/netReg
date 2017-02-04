@@ -24,7 +24,8 @@ At first we generate some toy data randomly:
 
 ```{r}
   X <- matrix(rnorm(100*5), 100)
-  Y <- matrix(rnorm(100*5), 100)
+  b <- rnorm(5)
+  Y <- X%*%b + rnorm(100)
 ```
 
 Then we load the `netReg` library

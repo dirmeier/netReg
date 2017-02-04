@@ -74,10 +74,13 @@
 #'
 #' @examples
 #' X <- matrix(rnorm(100*10),100,10)
-#' Y <- matrix(rnorm(100),100,1)
+#' b <- rnorm(10)
 #' G.X <- matrix(rpois(10*10,1),10)
 #' G.X <- t(G.X) + G.X
 #' diag(G.X) <- 0
+#' 
+#' # fit a Gaussian model
+#' Y <- X%*%b + rnorm(100)
 #' cv.edge <- cv.edgenet(X=X, Y=Y, G.X=G.X, family="gaussian")
 cv.edgenet <- function (X, Y, G.X=NULL, G.Y=NULL, 
                         thresh=1e-5, maxit=1e5, 

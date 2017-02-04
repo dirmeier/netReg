@@ -70,12 +70,13 @@
 #'
 #' @examples
 #' X <- matrix(rnorm(100*10), 100, 10)
+#' b <- rnorm(10)
 #' G.X <- matrix(rpois(100,1), 10)
 #' G.X <- t(G.X) + G.X
 #' diag(G.X) <- 0
 #' 
 #' # fit a Gaussian model
-#' Y <- matrix(rnorm(100),100,1)
+#' Y <- X%*%b + rnorm(100)
 #' fit <- edgenet(X=X, Y=Y, G.X=G.X, family="gaussian")
 #' 
 edgenet <- function(X, Y, G.X=NULL, G.Y=NULL, lambda=1, psigx=1, psigy=1, 

@@ -24,7 +24,8 @@ At first we generate some toy data randomly:
 
 ```{r}
   X <- matrix(rnorm(100*5), 100)
-  Y <- matrix(rnorm(100*5), 100)
+  b <- rnorm(5)
+  Y <- X%*%b + rnorm(100)
 ```
 
 Then we load the `netReg` library
@@ -66,8 +67,8 @@ The `pred` objects contains the predicted values for the responses.
 In some cases we do not know the optimal shrinkage parameters. In that case we can just use `cv.edgenet` to find the best parameters for us. With *best* parameters we mean the ones reducing the *residual sum of squares* for Gaussian regression models:
 
 ```{r}
-  cv <- cv.edgenet(X=X, Y=Y, G.X=aff.mat, family="gaussian")
-  print(cv)
+  #cv <- cv.edgenet(X=X, Y=Y, G.X=aff.mat, family="gaussian")
+  #print(cv)
 ```
 
 ## References
