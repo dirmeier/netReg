@@ -22,8 +22,9 @@
 #' 
 #' @export
 #' 
-#' @description Predicts the estimated Y.hat values for a newdata design matrix X 
-#' similar to the other predict methods, e.g. from glm and glmnet
+#' @description Predicts the estimated Y.hat values for a newdata 
+#'  design matrix X similar to the other predict methods, 
+#'  e.g. from glm and glmnet
 #' 
 #' @importFrom stats coef
 #' 
@@ -55,7 +56,8 @@ predict.gaussian.edgenet <- function(object, newdata=NULL, ...)
   n <- dim(X)[1]
   p <- dim(X)[2]
   coefs <- stats::coef(object)   
-  if(p != dim(coefs)[1]) stop("newdata dimensions do not fit coefficient dimensions!")
+  if(p != dim(coefs)[1]) 
+    stop("newdata dimensions do not fit coefficient dimensions!")
   mu <- object$intercept
   Y.hat <- X %*% coefs + intercept.matrix(n=n, mu=mu)
   Y.hat

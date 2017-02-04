@@ -2,7 +2,8 @@
 % Please edit documentation in R/edgenet.R
 \name{edgenet}
 \alias{edgenet}
-\title{Fit a graph-regularized linear regression model using edge-based regularization.}
+\title{Fit a graph-regularized linear regression model using 
+ edge-based regularization.}
 \usage{
 edgenet(X, Y, G.X = NULL, G.Y = NULL, lambda = 1, psigx = 1,
   psigy = 1, thresh = 1e-05, maxit = 1e+05, family = c("gaussian"), ...)
@@ -44,10 +45,11 @@ An object of class \code{edgenet}
 \item{family }{ the family of the response}
 }
 \description{
-Fit a graph-regularized linear regression model using edge-penalization.
-The coefficients are computed using graph-prior knowledge in the form of 
-one/two affinity matrices. Graph-regularization is an extension to previously 
-introduced regularization techniques, such as the LASSO.
+Fit a graph-regularized linear regression model using 
+edge-penalization. The coefficients are computed using graph-prior 
+knowledge in the form of one/two affinity matrices. Graph-regularization is
+an extension to previously introduced regularization techniques, 
+such as the LASSO.
 }
 \examples{
 X <- matrix(rnorm(100*10), 100, 10)

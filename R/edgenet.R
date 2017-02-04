@@ -18,16 +18,18 @@
 # along with netReg. If not, see <http://www.gnu.org/licenses/>.
 
 
-#' Fit a graph-regularized linear regression model using edge-based regularization.
+#' Fit a graph-regularized linear regression model using 
+#'  edge-based regularization.
 #' 
 #' @export
 #' 
 #' @author Simon Dirmeier | \email{mail@@simon-dirmeier.net}
 #' 
-#' @description  Fit a graph-regularized linear regression model using edge-penalization.
-#' The coefficients are computed using graph-prior knowledge in the form of 
-#' one/two affinity matrices. Graph-regularization is an extension to previously 
-#' introduced regularization techniques, such as the LASSO.
+#' @description  Fit a graph-regularized linear regression model using 
+#' edge-penalization. The coefficients are computed using graph-prior 
+#' knowledge in the form of one/two affinity matrices. Graph-regularization is
+#' an extension to previously introduced regularization techniques, 
+#' such as the LASSO.
 #'
 #' @param X  input matrix, of dimension (\code{n} x \code{p}) 
 #' where \code{n} is the number of observations and \code{p} is the number 
@@ -58,11 +60,12 @@
 #'  Pathwise coordinate optimization.\cr
 #'  \emph{The Annals of Applied Statistics}\cr \cr
 #'  Friedman J., Hastie T. and Tibshirani R. (2010),
-#'  Regularization Paths for Generalized Linear Models via Coordinate Descent.\cr
-#'  \emph{Journal of Statistical Software}\cr \cr
+#'  Regularization Paths for Generalized Linear Models via 
+#'  Coordinate Descent.\cr \emph{Journal of Statistical Software}\cr \cr
 #'  Fu W. J. (1998),  Penalized Regression: The Bridge Versus the Lasso.\cr
 #'  \emph{Journal of Computational and Graphical Statistics}\cr \cr
-#'  Cheng W. and Wang W. (2014), Graph-regularized dual Lasso for robust eQTL mapping.\cr
+#'  Cheng W. and Wang W. (2014), Graph-regularized dual Lasso for robust 
+#'  eQTL mapping.\cr
 #'  \emph{Bioinformatics}
 #'
 #' @examples

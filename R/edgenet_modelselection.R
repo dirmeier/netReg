@@ -24,8 +24,9 @@
 #' 
 #' @author Simon Dirmeier, \email{mail@@simon-dirmeier.net}
 #' 
-#' @description Finds the optimal shrinkage parameters using cross-validation for edgenet. 
-#' We use the BOBYQA algorithm to minimize the sum of squared residuals objective function.
+#' @description Finds the optimal shrinkage parameters 
+#'  using cross-validation for edgenet. We use the BOBYQA algorithm to minimize 
+#'  the sum of squared residuals objective function.
 #'
 #' @param X  input matrix, of dimension (\code{n} x \code{p}) 
 #' where \code{n} is the number of observations and \code{p} is the number 
@@ -40,39 +41,44 @@
 #' @param thresh  threshold for coordinate descent
 #' @param maxit  maximum number of iterations
 #' @param family  family of response, e.g. gaussian
-#' @param nfolds  the number of folds to be used - default is 10 (minimum 3, maximum nrow(X)). 
+#' @param nfolds  the number of folds to be used - default is 10 
+#'  (minimum 3, maximum nrow(X)). 
 #' @param ...  additional parameters
 
 #' @return An object of class \code{cv.edgenet}
 #' \item{call }{ the call that produced the object}
-#' \item{lambda }{ the estimated (\code{p} x \code{q})-dimensional coefficient matrix B.hat}
-#' \item{psigx }{ the estimated (\code{q} x \code{1})-dimensional vector of intercepts}
-#' \item{psigy }{ the estimated (\code{q} x \code{1})-dimensional vector of intercepts}
+#' \item{lambda }{ the estimated (\code{p} x \code{q})-dimensional 
+#'  coefficient matrix B.hat}
+#' \item{psigx }{ the estimated (\code{q} x \code{1})-dimensional
+#'  vector of intercepts}
+#' \item{psigy }{ the estimated (\code{q} x \code{1})-dimensional vector 
+#'  of intercepts}
 #' 
 #' @references 
 #'  Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007), 
 #'  Pathwise coordinate optimization.\cr
 #'  \emph{The Annals of Applied Statistics}\cr \cr
 #'  Friedman J., Hastie T. and Tibshirani R. (2010),
-#'  Regularization Paths for Generalized Linear Models via Coordinate Descent. \cr
+#'  Regularization Paths for Generalized Linear Models via 
+#'   Coordinate Descent. \cr
 #'  \emph{Journal of Statistical Software}\cr \cr
 #'  Fu W. J. (1998),  Penalized Regression: The Bridge Versus the Lasso.\cr
 #'  \emph{Journal of Computational and Graphical Statistics}\cr \cr
-#'  Cheng W. and Wang W. (2014), Graph-regularized dual Lasso for robust eQTL mapping.\cr
+#'  Cheng W. and Wang W. (2014), Graph-regularized dual Lasso for 
+#'   robust eQTL mapping.\cr
 #'  \emph{Bioinformatics}\cr \cr
 #'  Powell M.J.D. (2009), 
-#'  The BOBYQA algorithm for bound constrained optimization without derivatives.\cr
+#'  The BOBYQA algorithm for bound constrained optimization without 
+#'   derivatives.\cr
 #'  \url{http://www.damtp.cam.ac.uk/user/na/NA_papers/NA2009_06.pdf}
 #'
 #' @examples
-#' \dontrun{
 #' X <- matrix(rnorm(100*10),100,10)
 #' Y <- matrix(rnorm(100),100,1)
 #' G.X <- matrix(rpois(10*10,1),10)
 #' G.X <- t(G.X) + G.X
 #' diag(G.X) <- 0
 #' cv.edge <- cv.edgenet(X=X, Y=Y, G.X=G.X, family="gaussian")
-#' }
 cv.edgenet <- function (X, Y, G.X=NULL, G.Y=NULL, 
                         thresh=1e-5, maxit=1e5, 
                         family=c("gaussian"),

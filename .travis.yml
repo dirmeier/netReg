@@ -50,10 +50,5 @@ before_script:
   - autoreconf -vif
   - ./configure
 
-script:
- - R CMD build . --no-build-vignettes --no-manual
- - R CMD CHECK netReg_*.tar.gz --no-build-vignettes --no-manual --as-cran
- - R CMD BiocCheck netReg_*.tar.gz --no-build-vignettes --no-manual
- 
 after_success:
   - Rscript -e 'library(covr); codecov()'

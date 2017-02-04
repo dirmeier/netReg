@@ -19,8 +19,9 @@ of co-variables \code{p}}
 A (\code{m} x \code{q})-dimensional matrix
 }
 \description{
-Predicts the estimated Y.hat values for a newdata design matrix X 
-similar to the other predict methods, e.g. from glm and glmnet
+Predicts the estimated Y.hat values for a newdata 
+ design matrix X similar to the other predict methods, 
+ e.g. from glm and glmnet
 }
 \examples{
 \dontrun{
