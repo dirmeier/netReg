@@ -35,7 +35,10 @@ env:
 r_packages:
   - covr
   - testthat
-
+  
+bioc_packages:
+  - BiocCheck
+  
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get install --only-upgrade autoconf
