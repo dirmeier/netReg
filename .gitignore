@@ -1,3 +1,4 @@
+inst/doc/*
 src/tests/build/.*
 src/tests/a.out
 src/tests/test.dSYM/.*
