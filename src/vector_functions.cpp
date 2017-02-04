@@ -41,6 +41,9 @@ namespace netreg
     {
         const int size = (int) vec.size();
         GetRNGstate();
+        Rcpp::Environment base_env("package:base");
+        Rcpp::Function set_seed_r = base_env["set.seed"];
+        set_seed_r(23);
         for (std::vector<int>::size_type i = 0; i < vec.size(); ++i)
         {
             int idx1 = unif_rand() * size;

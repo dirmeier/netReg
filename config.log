@@ -30,8 +30,8 @@ Kernel configured for up to 4 processors.
 Processor type: x86_64h (Intel x86-64h Haswell)
 Processors active: 0 1 2 3
 Primary memory available: 16.00 gigabytes
-Default processor set: 265 tasks, 1108 threads, 4 processors
-Load average: 1.69, Mach factor: 2.30
+Default processor set: 266 tasks, 1147 threads, 4 processors
+Load average: 1.91, Mach factor: 2.08
 /bin/machine           = unknown
 /usr/bin/oslevel       = unknown
 /bin/universe          = unknown
@@ -696,7 +696,7 @@ configure:3331: g++ -std=c++11 -o conftest -g -O2 -O3 -fPIC -pipe -Wall -ffast-m
 undef: _cblas_dgemm
 Undefined symbols for architecture x86_64:
   "_cblas_dgemm", referenced from:
-      _main in cc-f4ed9c.o
+      _main in cc-24da01.o
 ld: symbol(s) not found for architecture x86_64
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
 configure:3331: $? = 1
@@ -760,7 +760,7 @@ configure:3391: g++ -std=c++11 -o conftest -g -O2 -O3 -fPIC -pipe -Wall -ffast-m
 undef: _dgemm
 Undefined symbols for architecture x86_64:
   "_dgemm", referenced from:
-      _main in cc-f5de8a.o
+      _main in cc-be2096.o
 ld: symbol(s) not found for architecture x86_64
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
 configure:3391: $? = 1
@@ -812,6 +812,7 @@ on bs-mbpr134.d.ethz.ch
 
 config.status:792: creating src/Makevars
 config.status:792: creating src/config.h
+config.status:962: src/config.h is unchanged
 configure:4717: result:
 	Have fun with: netReg
 
