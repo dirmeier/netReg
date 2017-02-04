@@ -26,7 +26,6 @@ matrix:
             - clang-3.7
       env: COMPILER=clang++-3.7
 
-
 env:
   global:
     - R_BUILD_ARGS="--no-build-vignettes --no-manual"
@@ -48,10 +47,8 @@ before_install:
 
 before_script:
   - autoreconf -vif
-  - R CMD build . --no-build-vignettes --no-manual
 
-script:
-  - R CMD CHECK netReg_0.1.tar.gz --no-build-vignettes --no-manual --as-cran
+after_script:
   - R CMD BiocCheck netReg_0.1.tar.gz
 
 after_success:

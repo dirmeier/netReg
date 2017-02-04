@@ -1,8 +1,8 @@
 context("util")
 
-Y <- matrix(1,10,1)
-X <- matrix(0,10,1)
-B <- matrix(1,1,1)
+Y <- matrix(1, 10, 1)
+X <- matrix(0, 10, 1)
+B <- matrix(1, 1, 1)
 
 test_that("intercept", {
   intr <- intercept(Y, X, B, 10)

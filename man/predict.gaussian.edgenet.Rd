@@ -26,10 +26,11 @@ Predicts the estimated Y.hat values for a newdata
 \examples{
 \dontrun{
 X <- matrix(rnorm(100*10),100,10)
-Y <- matrix(rnorm(100*10),100,10)
 G.X <- matrix(rpois(10*10,1),10)
 G.X <- t(G.X) + G.X
 diag(G.X) <- 0
+
+Y <- matrix(rnorm(100*10),100,10)
 fit <- edgenet(X=X, Y=Y, G.X=G.X, family="gaussian")
 pred <- predict(fit, X)
 }
