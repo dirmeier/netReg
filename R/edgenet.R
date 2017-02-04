@@ -69,6 +69,7 @@
 #'  \emph{Bioinformatics}
 #'
 #' @examples
+#' \dontrun{
 #' X <- matrix(rnorm(100*10), 100, 10)
 #' b <- rnorm(10)
 #' G.X <- matrix(rpois(100,1), 10)
@@ -78,7 +79,7 @@
 #' # fit a Gaussian model
 #' Y <- X%*%b + rnorm(100)
 #' fit <- edgenet(X=X, Y=Y, G.X=G.X, family="gaussian")
-#' 
+#' }
 edgenet <- function(X, Y, G.X=NULL, G.Y=NULL, lambda=1, psigx=1, psigy=1, 
                     thresh=1e-5, maxit=1e5, family=c("gaussian"), ...) 
 {

@@ -52,6 +52,7 @@ an extension to previously introduced regularization techniques,
 such as the LASSO.
 }
 \examples{
+\dontrun{
 X <- matrix(rnorm(100*10), 100, 10)
 b <- rnorm(10)
 G.X <- matrix(rpois(100,1), 10)
@@ -61,7 +62,7 @@ diag(G.X) <- 0
 # fit a Gaussian model
 Y <- X\%*\%b + rnorm(100)
 fit <- edgenet(X=X, Y=Y, G.X=G.X, family="gaussian")
-
+}
 }
 \references{
 Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007), 
