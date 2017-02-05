@@ -12,3 +12,4 @@ VERSIONS.md
 LICENSE
 .lintr
 .travis.yml
+.codecov.yml
