@@ -49,7 +49,7 @@ before_script:
 
 script:
  - R CMD build . --no-build-vignettes --no-manual
- - R CMD CHECK --no-build-vignettes --no-manual --as-cran netReg_0.99.0.tar.gz
+ - R CMD check --no-build-vignettes --no-manual --as-cran netReg_0.99.0.tar.gz
 
 after_success:
   - Rscript -e 'library(covr); codecov()'
