@@ -46,4 +46,5 @@ before_script:
   - autoreconf -vif
 
 after_success:
-  - Rscript -e 'library(covr); codecov()'
+  - tar -C .. -xf $PKG_TARBALL
+  - Rscript -e 'covr::codecov()'
