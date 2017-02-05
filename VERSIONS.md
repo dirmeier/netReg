@@ -1,7 +1,11 @@
 Versions
 ========
 
-### v0.1
+### v0.99.0
+
+* Implementation of Gaussian edgenet regularization
+* Implementation of model selection for edgenet
+* Basic setup
 
 ### Author
 

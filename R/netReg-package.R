@@ -32,7 +32,7 @@
 #' @docType package
 #' @keywords package
 #' 
-#' @useDynLib netReg
+#' @useDynLib netReg, .registration = TRUE
 #' 
 #' @references 
 #'  Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007), 

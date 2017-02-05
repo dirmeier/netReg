@@ -50,8 +50,10 @@
 #' @param ...  additional params
 #' 
 #' @return An object of class \code{edgenet}
-#' \item{coefficients }{ the estimated (\code{p} x \code{q})-dimensional coefficient matrix B.hat}
-#' \item{intercept }{ the estimated (\code{q} x \code{1})-dimensional vector of intercepts}
+#' \item{coefficients }{ the estimated (\code{p} x \code{q})-dimensional 
+#'  coefficient matrix B.hat}
+#' \item{intercept }{ the estimated (\code{q} x \code{1})-dimensional 
+#'  vector of intercepts}
 #' \item{call }{ the call that produced the object}
 #' \item{family }{ the family of the response}
 #' 
@@ -144,7 +146,6 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
 
 #' @noRd
 #' @import Rcpp
-#' @useDynLib netReg
 .edgenet <-function(X, Y, G.X, G.Y,
                     lambda, psigx, psigy,
                     thresh, maxit, family)
@@ -152,8 +153,7 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
   res <- .Call("edgenet_cpp", X, Y, G.X, G.Y,
                as.double(lambda), as.double(psigx),  as.double(psigy),
                as.integer(maxit), as.double(thresh),
-               as.character(family),
-               PACKAGE="netReg")
+               as.character(family))
   # finalize output
   coefficients <- matrix(res$coefficients, ncol(X))
   intr         <- res$intercept

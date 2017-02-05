@@ -25,8 +25,8 @@
 #' @author Simon Dirmeier, \email{mail@@simon-dirmeier.net}
 #' 
 #' @description Finds the optimal shrinkage parameters 
-#'  using cross-validation for edgenet. We use the BOBYQA algorithm to minimize 
-#'  the sum of squared residuals objective function.
+#'  using cross-validation for edgenet. We use the BOBYQA algorithm to 
+#'  minimize the sum of squared residuals objective function.
 #'
 #' @param X  input matrix, of dimension (\code{n} x \code{p}) 
 #' where \code{n} is the number of observations and \code{p} is the number 
@@ -149,7 +149,6 @@ cv.edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
 
 #' @noRd
 #' @import Rcpp
-#' @useDynLib netReg
 .cv.edgenet <- function(X, Y, G.X, G.Y,
                         psigx, psigy, thresh, maxit, family,
                         nfolds, foldid)
@@ -159,8 +158,7 @@ cv.edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
               as.integer(maxit), as.double(thresh),
               as.integer(nfolds), as.integer(foldid),
               as.integer(length(foldid)),
-              as.character(family),
-              PACKAGE="netReg")
+              as.character(family))
   ret        <- list(lambda    =cv$parameters[1],
                      psigx     =cv$parameters[2],
                      psigy     =cv$parameters[3],

@@ -45,8 +45,8 @@ An object of class \code{cv.edgenet}
 }
 \description{
 Finds the optimal shrinkage parameters 
- using cross-validation for edgenet. We use the BOBYQA algorithm to minimize 
- the sum of squared residuals objective function.
+ using cross-validation for edgenet. We use the BOBYQA algorithm to 
+ minimize the sum of squared residuals objective function.
 }
 \examples{
 \dontrun{

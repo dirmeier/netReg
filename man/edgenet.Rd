@@ -39,8 +39,10 @@ of response variables Each row is an observation vector.}
 }
 \value{
 An object of class \code{edgenet}
-\item{coefficients }{ the estimated (\code{p} x \code{q})-dimensional coefficient matrix B.hat}
-\item{intercept }{ the estimated (\code{q} x \code{1})-dimensional vector of intercepts}
+\item{coefficients }{ the estimated (\code{p} x \code{q})-dimensional 
+ coefficient matrix B.hat}
+\item{intercept }{ the estimated (\code{q} x \code{1})-dimensional 
+ vector of intercepts}
 \item{call }{ the call that produced the object}
 \item{family }{ the family of the response}
 }

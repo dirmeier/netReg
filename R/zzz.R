@@ -18,4 +18,7 @@
 # along with netReg. If not, see <http://www.gnu.org/licenses/>.
 
 
-.onUnload <- function(libpath) library.dynam.unload("netReg", libpath)
+.onUnload <- function(libpath)
+{
+  library.dynam.unload("netReg", libpath)
+}
