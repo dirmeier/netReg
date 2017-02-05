@@ -1,6 +1,6 @@
 Package: netReg
 Type: Package
-Title: Network-regularized regression models
+Title: Network-Regularized Regression Models
 Version: 0.99.0
 Date: 2015-05-15
 Authors@R: person("Simon", "Dirmeier", email = "mail@simon.dirmeier.net", role = c("aut", "cre"))
