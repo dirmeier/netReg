@@ -47,9 +47,5 @@ before_install:
 before_script:
   - autoreconf -vif
 
-script:
- - R CMD build . --no-build-vignettes --no-manual
- - R CMD check --no-build-vignettes --no-manual --as-cran netReg_0.99.0.tar.gz
-
 after_success:
   - Rscript -e 'library(covr); codecov()'
