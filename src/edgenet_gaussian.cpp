@@ -201,8 +201,7 @@ namespace netreg
         double xPenalty = 0.0;
         if (qi < LX.n_rows && qi < LX.n_cols)
         {
-            xPenalty = -LX(pi, pi) * cfs(pi, qi) +
-                       arma::accu(LX.row(pi) * cfs.col(qi));
+            xPenalty = -LX(pi, pi) * cfs(pi, qi) + arma::accu(LX.row(pi) * cfs.col(qi));
         }
         s = s - 2 * psigx * xPenalty;
         norm += 2 * psigx * LX(pi, pi);

@@ -30,29 +30,22 @@ Kernel configured for up to 4 processors.
 Processor type: x86_64h (Intel x86-64h Haswell)
 Processors active: 0 1 2 3
 Primary memory available: 16.00 gigabytes
-Default processor set: 259 tasks, 1203 threads, 4 processors
-Load average: 1.97, Mach factor: 2.02
+Default processor set: 259 tasks, 1111 threads, 4 processors
+Load average: 2.04, Mach factor: 1.95
 /bin/machine           = unknown
 /usr/bin/oslevel       = unknown
 /bin/universe          = unknown
 
-PATH: /opt/local/scala/scala-2.12.0/bin
-PATH: /Applications/Julia-0.5.app/Contents/Resources/julia/bin
-PATH: /opt/local/lib/postgresql93/bin
-PATH: /opt/local/cassandra/bin
-PATH: /opt/local/lib/mysql5/bin
-PATH: /Library/TeX/texbin/
-PATH: /opt/local/bin
-PATH: /opt/local/sbin
-PATH: /usr/local/gradle//bin
-PATH: /usr/local/maven/bin
-PATH: /usr/local/digital_alexandria
-PATH: /usr/local/sbin
-PATH: /usr/local/bin
-PATH: /usr/sbin
 PATH: /usr/bin
-PATH: /sbin
 PATH: /bin
+PATH: /usr/sbin
+PATH: /sbin
+PATH: /usr/local/bin
+PATH: /opt/X11/bin
+PATH: /usr/local/git/bin
+PATH: /usr/local/MacGPG2/bin
+PATH: /Library/TeX/texbin
+PATH: /opt/local/bin
 
 
 ## ----------- ##
@@ -64,34 +57,30 @@ configure:1798: building from R
 configure:1814: checking whether configure should try to set CXXFLAGS
 configure:1822: result: yes
 configure:1883: checking for g++
-configure:1899: found /opt/local/bin/g++
+configure:1899: found /usr/bin/g++
 configure:1910: result: g++
 configure:1937: checking for C++ compiler version
 configure:1946: g++ --version >&5
-g++ (MacPorts gcc5 5.4.0_0) 5.4.0
-Copyright (C) 2015 Free Software Foundation, Inc.
-This is free software; see the source for copying conditions.  There is NO
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
+Apple LLVM version 8.0.0 (clang-800.0.38)
+Target: x86_64-apple-darwin15.6.0
+Thread model: posix
+InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+Configured with: --prefix=/Applications/Xcode.app/Contents/Developer/usr --with-gxx-include-dir=/usr/include/c++/4.2.1
 configure:1957: $? = 0
 configure:1946: g++ -v >&5
-Using built-in specs.
-COLLECT_GCC=g++
-COLLECT_LTO_WRAPPER=/opt/local/libexec/gcc/x86_64-apple-darwin15/5.4.0/lto-wrapper
-Target: x86_64-apple-darwin15
-Configured with: /opt/local/var/macports/build/_opt_mports_dports_lang_gcc5/gcc5/work/gcc-5.4.0/configure --prefix=/opt/local --build=x86_64-apple-darwin15 --enable-languages=c,c++,objc,obj-c++,lto,fortran,java --libdir=/opt/local/lib/gcc5 --includedir=/opt/local/include/gcc5 --infodir=/opt/local/share/info --mandir=/opt/local/share/man --datarootdir=/opt/local/share/gcc-5 --with-local-prefix=/opt/local --with-system-zlib --disable-nls --program-suffix=-mp-5 --with-gxx-include-dir=/opt/local/include/gcc5/c++/ --with-gmp=/opt/local --with-mpfr=/opt/local --with-mpc=/opt/local --with-isl=/opt/local --enable-stage1-checking --disable-multilib --enable-lto --enable-libstdcxx-time --with-build-config=bootstrap-debug --with-as=/opt/local/bin/as --with-ld=/opt/local/bin/ld --with-ar=/opt/local/bin/ar --with-bugurl=https://trac.macports.org/newticket --with-pkgversion='MacPorts gcc5 5.4.0_0'
+Configured with: --prefix=/Applications/Xcode.app/Contents/Developer/usr --with-gxx-include-dir=/usr/include/c++/4.2.1
+Apple LLVM version 8.0.0 (clang-800.0.38)
+Target: x86_64-apple-darwin15.6.0
 Thread model: posix
-gcc version 5.4.0 (MacPorts gcc5 5.4.0_0) 
+InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
 configure:1957: $? = 0
 configure:1946: g++ -V >&5
-g++: error: unrecognized command line option '-V'
-g++: fatal error: no input files
-compilation terminated.
+clang: error: argument to '-V' is missing (expected 1 value)
+clang: error: no input files
 configure:1957: $? = 1
 configure:1946: g++ -qversion >&5
-g++: error: unrecognized command line option '-qversion'
-g++: fatal error: no input files
-compilation terminated.
+clang: error: unknown argument: '-qversion'
+clang: error: no input files
 configure:1957: $? = 1
 configure:1977: checking whether the C++ compiler works
 configure:1999: g++    conftest.cpp  >&5
@@ -124,7 +113,7 @@ configure:2309: result: yes
 configure:2332: checking for a sed that does not truncate output
 configure:2396: result: /usr/bin/sed
 configure:2444: checking for ranlib
-configure:2460: found /opt/local/bin/ranlib
+configure:2460: found /usr/bin/ranlib
 configure:2471: result: ranlib
 configure:2503: checking whether C++ compiler accepts -O3
 configure:2522: g++ -c -g -O2  -O3  conftest.cpp >&5
@@ -176,9 +165,10 @@ configure:2547: : CXXFLAGS="$CXXFLAGS"
 configure:2550: $? = 0
 configure:2584: checking whether g++ supports C++11 features by default
 configure:2878: g++ -c -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER  conftest.cpp >&5
-conftest.cpp:20:2: error: #error "This is not a C++11 compiler"
- #error "This is not a C++11 compiler"
-  ^
+conftest.cpp:20:2: error: "This is not a C++11 compiler"
+#error "This is not a C++11 compiler"
+ ^
+1 error generated.
 configure:2878: $? = 1
 configure: failed program was:
 | /* confdefs.h */
@@ -482,50 +472,13 @@ configure:3192: $? = 0
 configure:3201: result: yes
 configure:3241: checking for g++ -std=c++11 option to support OpenMP
 configure:3256: g++ -std=c++11 -o conftest -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER   conftest.cpp  >&5
-conftest.cpp:12:2: error: 'choke' does not name a type
-  choke me
-  ^
-In file included from conftest.cpp:14:0:
-/opt/local/lib/gcc5/gcc/x86_64-apple-darwin15/5.4.0/include/omp.h:39:3: error: 'omp_lock_t' does not name a type
- } omp_lock_t;
-   ^
-/opt/local/lib/gcc5/gcc/x86_64-apple-darwin15/5.4.0/include/omp.h:86:28: error: variable or field 'omp_init_lock' declared void
- extern void omp_init_lock (omp_lock_t *) __GOMP_NOTHROW;
-                            ^
-/opt/local/lib/gcc5/gcc/x86_64-apple-darwin15/5.4.0/include/omp.h:86:28: error: 'omp_lock_t' was not declared in this scope
-/opt/local/lib/gcc5/gcc/x86_64-apple-darwin15/5.4.0/include/omp.h:86:40: error: expected primary-expression before ')' token
- extern void omp_init_lock (omp_lock_t *) __GOMP_NOTHROW;
-                                        ^
-/opt/local/lib/gcc5/gcc/x86_64-apple-darwin15/5.4.0/include/omp.h:87:31: error: variable or field 'omp_destroy_lock' declared void
- extern void omp_destroy_lock (omp_lock_t *) __GOMP_NOTHROW;
-                               ^
-/opt/local/lib/gcc5/gcc/x86_64-apple-darwin15/5.4.0/include/omp.h:87:31: error: 'omp_lock_t' was not declared in this scope
-/opt/local/lib/gcc5/gcc/x86_64-apple-darwin15/5.4.0/include/omp.h:87:43: error: expected primary-expression before ')' token
- extern void omp_destroy_lock (omp_lock_t *) __GOMP_NOTHROW;
-                                           ^
-/opt/local/lib/gcc5/gcc/x86_64-apple-darwin15/5.4.0/include/omp.h:88:27: error: variable or field 'omp_set_lock' declared void
- extern void omp_set_lock (omp_lock_t *) __GOMP_NOTHROW;
-                           ^
-/opt/local/lib/gcc5/gcc/x86_64-apple-darwin15/5.4.0/include/omp.h:88:27: error: 'omp_lock_t' was not declared in this scope
-/opt/local/lib/gcc5/gcc/x86_64-apple-darwin15/5.4.0/include/omp.h:88:39: error: expected primary-expression before ')' token
- extern void omp_set_lock (omp_lock_t *) __GOMP_NOTHROW;
-                                       ^
-/opt/local/lib/gcc5/gcc/x86_64-apple-darwin15/5.4.0/include/omp.h:89:29: error: variable or field 'omp_unset_lock' declared void
- extern void omp_unset_lock (omp_lock_t *) __GOMP_NOTHROW;
-                             ^
-/opt/local/lib/gcc5/gcc/x86_64-apple-darwin15/5.4.0/include/omp.h:89:29: error: 'omp_lock_t' was not declared in this scope
-/opt/local/lib/gcc5/gcc/x86_64-apple-darwin15/5.4.0/include/omp.h:89:41: error: expected primary-expression before ')' token
- extern void omp_unset_lock (omp_lock_t *) __GOMP_NOTHROW;
-                                         ^
-/opt/local/lib/gcc5/gcc/x86_64-apple-darwin15/5.4.0/include/omp.h:90:27: error: 'omp_lock_t' was not declared in this scope
- extern int omp_test_lock (omp_lock_t *) __GOMP_NOTHROW;
-                           ^
-/opt/local/lib/gcc5/gcc/x86_64-apple-darwin15/5.4.0/include/omp.h:90:39: error: expected primary-expression before ')' token
- extern int omp_test_lock (omp_lock_t *) __GOMP_NOTHROW;
-                                       ^
-/opt/local/lib/gcc5/gcc/x86_64-apple-darwin15/5.4.0/include/omp.h:90:41: error: expected ',' or ';' before 'throw'
- extern int omp_test_lock (omp_lock_t *) __GOMP_NOTHROW;
-                                         ^
+conftest.cpp:12:2: error: unknown type name 'choke'
+ choke me
+ ^
+conftest.cpp:14:10: fatal error: 'omp.h' file not found
+#include <omp.h>
+         ^
+2 errors generated.
 configure:3256: $? = 1
 configure: failed program was:
 | /* confdefs.h */
@@ -545,15 +498,207 @@ configure: failed program was:
 | int main () { return omp_get_num_threads (); }
 | 
 configure:3274: g++ -std=c++11 -o conftest -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER -fopenmp   conftest.cpp  >&5
-configure:3274: $? = 0
-configure:3288: result: -fopenmp
+clang: error: unsupported option '-fopenmp'
+clang: error: unsupported option '-fopenmp'
+configure:3274: $? = 1
+configure: failed program was:
+| /* confdefs.h */
+| #define PACKAGE_NAME "netReg"
+| #define PACKAGE_TARNAME "netReg"
+| #define PACKAGE_VERSION "0.1"
+| #define PACKAGE_STRING "netReg 0.1"
+| #define PACKAGE_BUGREPORT "simon.dirmeier@gmx.de"
+| #define PACKAGE_URL "https://github.com/dirmeier/netReg"
+| #define HAVE_CXX11 1
+| /* end confdefs.h.  */
+| 
+| #ifndef _OPENMP
+|  choke me
+| #endif
+| #include <omp.h>
+| int main () { return omp_get_num_threads (); }
+| 
+configure:3274: g++ -std=c++11 -o conftest -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER -xopenmp   conftest.cpp  >&5
+clang: error: language not recognized: 'openmp'
+configure:3274: $? = 1
+configure: failed program was:
+| /* confdefs.h */
+| #define PACKAGE_NAME "netReg"
+| #define PACKAGE_TARNAME "netReg"
+| #define PACKAGE_VERSION "0.1"
+| #define PACKAGE_STRING "netReg 0.1"
+| #define PACKAGE_BUGREPORT "simon.dirmeier@gmx.de"
+| #define PACKAGE_URL "https://github.com/dirmeier/netReg"
+| #define HAVE_CXX11 1
+| /* end confdefs.h.  */
+| 
+| #ifndef _OPENMP
+|  choke me
+| #endif
+| #include <omp.h>
+| int main () { return omp_get_num_threads (); }
+| 
+configure:3274: g++ -std=c++11 -o conftest -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER -openmp   conftest.cpp  >&5
+conftest.cpp:12:2: error: unknown type name 'choke'
+ choke me
+ ^
+conftest.cpp:14:10: fatal error: 'omp.h' file not found
+#include <omp.h>
+         ^
+2 errors generated.
+configure:3274: $? = 1
+configure: failed program was:
+| /* confdefs.h */
+| #define PACKAGE_NAME "netReg"
+| #define PACKAGE_TARNAME "netReg"
+| #define PACKAGE_VERSION "0.1"
+| #define PACKAGE_STRING "netReg 0.1"
+| #define PACKAGE_BUGREPORT "simon.dirmeier@gmx.de"
+| #define PACKAGE_URL "https://github.com/dirmeier/netReg"
+| #define HAVE_CXX11 1
+| /* end confdefs.h.  */
+| 
+| #ifndef _OPENMP
+|  choke me
+| #endif
+| #include <omp.h>
+| int main () { return omp_get_num_threads (); }
+| 
+configure:3274: g++ -std=c++11 -o conftest -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER -mp   conftest.cpp  >&5
+clang: error: unknown argument: '-mp'
+configure:3274: $? = 1
+configure: failed program was:
+| /* confdefs.h */
+| #define PACKAGE_NAME "netReg"
+| #define PACKAGE_TARNAME "netReg"
+| #define PACKAGE_VERSION "0.1"
+| #define PACKAGE_STRING "netReg 0.1"
+| #define PACKAGE_BUGREPORT "simon.dirmeier@gmx.de"
+| #define PACKAGE_URL "https://github.com/dirmeier/netReg"
+| #define HAVE_CXX11 1
+| /* end confdefs.h.  */
+| 
+| #ifndef _OPENMP
+|  choke me
+| #endif
+| #include <omp.h>
+| int main () { return omp_get_num_threads (); }
+| 
+configure:3274: g++ -std=c++11 -o conftest -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER -omp   conftest.cpp  >&5
+conftest.cpp:12:2: error: unknown type name 'choke'
+ choke me
+ ^
+conftest.cpp:14:10: fatal error: 'omp.h' file not found
+#include <omp.h>
+         ^
+2 errors generated.
+configure:3274: $? = 1
+configure: failed program was:
+| /* confdefs.h */
+| #define PACKAGE_NAME "netReg"
+| #define PACKAGE_TARNAME "netReg"
+| #define PACKAGE_VERSION "0.1"
+| #define PACKAGE_STRING "netReg 0.1"
+| #define PACKAGE_BUGREPORT "simon.dirmeier@gmx.de"
+| #define PACKAGE_URL "https://github.com/dirmeier/netReg"
+| #define HAVE_CXX11 1
+| /* end confdefs.h.  */
+| 
+| #ifndef _OPENMP
+|  choke me
+| #endif
+| #include <omp.h>
+| int main () { return omp_get_num_threads (); }
+| 
+configure:3274: g++ -std=c++11 -o conftest -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER -qsmp=omp   conftest.cpp  >&5
+clang: error: unknown argument: '-qsmp=omp'
+configure:3274: $? = 1
+configure: failed program was:
+| /* confdefs.h */
+| #define PACKAGE_NAME "netReg"
+| #define PACKAGE_TARNAME "netReg"
+| #define PACKAGE_VERSION "0.1"
+| #define PACKAGE_STRING "netReg 0.1"
+| #define PACKAGE_BUGREPORT "simon.dirmeier@gmx.de"
+| #define PACKAGE_URL "https://github.com/dirmeier/netReg"
+| #define HAVE_CXX11 1
+| /* end confdefs.h.  */
+| 
+| #ifndef _OPENMP
+|  choke me
+| #endif
+| #include <omp.h>
+| int main () { return omp_get_num_threads (); }
+| 
+configure:3274: g++ -std=c++11 -o conftest -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER -homp   conftest.cpp  >&5
+clang: error: unknown argument: '-homp'
+configure:3274: $? = 1
+configure: failed program was:
+| /* confdefs.h */
+| #define PACKAGE_NAME "netReg"
+| #define PACKAGE_TARNAME "netReg"
+| #define PACKAGE_VERSION "0.1"
+| #define PACKAGE_STRING "netReg 0.1"
+| #define PACKAGE_BUGREPORT "simon.dirmeier@gmx.de"
+| #define PACKAGE_URL "https://github.com/dirmeier/netReg"
+| #define HAVE_CXX11 1
+| /* end confdefs.h.  */
+| 
+| #ifndef _OPENMP
+|  choke me
+| #endif
+| #include <omp.h>
+| int main () { return omp_get_num_threads (); }
+| 
+configure:3274: g++ -std=c++11 -o conftest -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER -Popenmp   conftest.cpp  >&5
+clang: error: unknown argument: '-Popenmp'
+configure:3274: $? = 1
+configure: failed program was:
+| /* confdefs.h */
+| #define PACKAGE_NAME "netReg"
+| #define PACKAGE_TARNAME "netReg"
+| #define PACKAGE_VERSION "0.1"
+| #define PACKAGE_STRING "netReg 0.1"
+| #define PACKAGE_BUGREPORT "simon.dirmeier@gmx.de"
+| #define PACKAGE_URL "https://github.com/dirmeier/netReg"
+| #define HAVE_CXX11 1
+| /* end confdefs.h.  */
+| 
+| #ifndef _OPENMP
+|  choke me
+| #endif
+| #include <omp.h>
+| int main () { return omp_get_num_threads (); }
+| 
+configure:3274: g++ -std=c++11 -o conftest -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER --openmp   conftest.cpp  >&5
+clang: error: unsupported option '--openmp'
+configure:3274: $? = 1
+configure: failed program was:
+| /* confdefs.h */
+| #define PACKAGE_NAME "netReg"
+| #define PACKAGE_TARNAME "netReg"
+| #define PACKAGE_VERSION "0.1"
+| #define PACKAGE_STRING "netReg 0.1"
+| #define PACKAGE_BUGREPORT "simon.dirmeier@gmx.de"
+| #define PACKAGE_URL "https://github.com/dirmeier/netReg"
+| #define HAVE_CXX11 1
+| /* end confdefs.h.  */
+| 
+| #ifndef _OPENMP
+|  choke me
+| #endif
+| #include <omp.h>
+| int main () { return omp_get_num_threads (); }
+| 
+configure:3288: result: unsupported
 configure:3300: checking for library containing cblas_dgemm
 configure:3331: g++ -std=c++11 -o conftest -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER   conftest.cpp  >&5
+undef: _cblas_dgemm
 Undefined symbols for architecture x86_64:
   "_cblas_dgemm", referenced from:
-      _main in cc2b3ki9.o
+      _main in cc-4534a5.o
 ld: symbol(s) not found for architecture x86_64
-collect2: error: ld returned 1 exit status
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
 configure:3331: $? = 1
 configure: failed program was:
 | /* confdefs.h */
@@ -582,7 +727,7 @@ configure: failed program was:
 | }
 configure:3331: g++ -std=c++11 -o conftest -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER   conftest.cpp -lopenblas   >&5
 ld: library not found for -lopenblas
-collect2: error: ld returned 1 exit status
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
 configure:3331: $? = 1
 configure: failed program was:
 | /* confdefs.h */
@@ -612,11 +757,12 @@ configure: failed program was:
 configure:3348: result: no
 configure:3360: checking for library containing dgemm
 configure:3391: g++ -std=c++11 -o conftest -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER   conftest.cpp  >&5
+undef: _dgemm
 Undefined symbols for architecture x86_64:
   "_dgemm", referenced from:
-      _main in cciJSo04.o
+      _main in cc-acc6e8.o
 ld: symbol(s) not found for architecture x86_64
-collect2: error: ld returned 1 exit status
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
 configure:3391: $? = 1
 configure: failed program was:
 | /* confdefs.h */
@@ -702,7 +848,7 @@ ac_cv_path_SED=/usr/bin/sed
 ac_cv_prog_ac_ct_CXX=g++
 ac_cv_prog_ac_ct_RANLIB=ranlib
 ac_cv_prog_cxx_g=yes
-ac_cv_prog_cxx_openmp=-fopenmp
+ac_cv_prog_cxx_openmp=unsupported
 ac_cv_search_cblas_dgemm=no
 ac_cv_search_dgemm=-lblas
 ax_cv_check_cxxflags___DARMA_DONT_USE_WRAPPER=yes
@@ -734,7 +880,7 @@ LIBOBJS=''
 LIBS='-lblas '
 LTLIBOBJS=''
 OBJEXT='o'
-OPENMP_CXXFLAGS='-fopenmp'
+OPENMP_CXXFLAGS=''
 PACKAGE_BUGREPORT='simon.dirmeier@gmx.de'
 PACKAGE_NAME='netReg'
 PACKAGE_STRING='netReg 0.1'

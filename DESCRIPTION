@@ -10,15 +10,15 @@ Description: netReg fits linear regression models using network-penalization.
     of the coefficients for smooth solutions.
 License: GPL-3
 Encoding: UTF-8
-Suggests:
-    knitr,
-    rmarkdown,
-    testthat,
-    lintr
+Suggests: knitr, rmarkdown, testthat, lintr
 VignetteBuilder: knitr
 RoxygenNote: 6.0.0
 SystemRequirements: C++11
 LinkingTo: Rcpp, RcppArmadillo
-Imports: Rcpp,
-    stats
-biocViews: StatisticalMethod, Regression, DimensionReduction, GraphAndNetwork, Network
+Imports: Rcpp, stats
+biocViews: StatisticalMethod, Regression, DimensionReduction,
+        GraphAndNetwork, Network
+NeedsCompilation: yes
+Packaged: 2017-02-05 13:05:16 UTC; simondi
+Author: Simon Dirmeier [aut, cre]
+Maintainer: Simon Dirmeier <mail@simon.dirmeier.net>
