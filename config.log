@@ -30,8 +30,8 @@ Kernel configured for up to 4 processors.
 Processor type: x86_64h (Intel x86-64h Haswell)
 Processors active: 0 1 2 3
 Primary memory available: 16.00 gigabytes
-Default processor set: 259 tasks, 1111 threads, 4 processors
-Load average: 2.04, Mach factor: 1.95
+Default processor set: 248 tasks, 1117 threads, 4 processors
+Load average: 2.49, Mach factor: 1.52
 /bin/machine           = unknown
 /usr/bin/oslevel       = unknown
 /bin/universe          = unknown
@@ -55,7 +55,7 @@ PATH: /opt/local/bin
 configure:1796: /Library/Frameworks/R.framework/Resources
 configure:1798: building from R
 configure:1814: checking whether configure should try to set CXXFLAGS
-configure:1822: result: yes
+configure:1822: result: no
 configure:1883: checking for g++
 configure:1899: found /usr/bin/g++
 configure:1910: result: g++
@@ -83,27 +83,27 @@ clang: error: unknown argument: '-qversion'
 clang: error: no input files
 configure:1957: $? = 1
 configure:1977: checking whether the C++ compiler works
-configure:1999: g++    conftest.cpp  >&5
+configure:1999: g++ -UNDEBUG -Wall -pedantic -g -O0   conftest.cpp  >&5
 configure:2003: $? = 0
 configure:2051: result: yes
 configure:2054: checking for C++ compiler default output file name
 configure:2056: result: a.out
 configure:2062: checking for suffix of executables
-configure:2069: g++ -o conftest    conftest.cpp  >&5
+configure:2069: g++ -o conftest -UNDEBUG -Wall -pedantic -g -O0   conftest.cpp  >&5
 configure:2073: $? = 0
 configure:2095: result: 
 configure:2117: checking whether we are cross compiling
-configure:2125: g++ -o conftest    conftest.cpp  >&5
+configure:2125: g++ -o conftest -UNDEBUG -Wall -pedantic -g -O0   conftest.cpp  >&5
 configure:2129: $? = 0
 configure:2136: ./conftest
 configure:2140: $? = 0
 configure:2155: result: no
 configure:2160: checking for suffix of object files
-configure:2182: g++ -c   conftest.cpp >&5
+configure:2182: g++ -c -UNDEBUG -Wall -pedantic -g -O0  conftest.cpp >&5
 configure:2186: $? = 0
 configure:2207: result: o
 configure:2211: checking whether we are using the GNU C++ compiler
-configure:2230: g++ -c   conftest.cpp >&5
+configure:2230: g++ -c -UNDEBUG -Wall -pedantic -g -O0  conftest.cpp >&5
 configure:2230: $? = 0
 configure:2239: result: yes
 configure:2248: checking whether g++ accepts -g
@@ -115,56 +115,8 @@ configure:2396: result: /usr/bin/sed
 configure:2444: checking for ranlib
 configure:2460: found /usr/bin/ranlib
 configure:2471: result: ranlib
-configure:2503: checking whether C++ compiler accepts -O3
-configure:2522: g++ -c -g -O2  -O3  conftest.cpp >&5
-configure:2522: $? = 0
-configure:2531: result: yes
-configure:2547: : CXXFLAGS="$CXXFLAGS"
-configure:2550: $? = 0
-configure:2503: checking whether C++ compiler accepts -fPIC
-configure:2522: g++ -c -g -O2 -O3  -fPIC  conftest.cpp >&5
-configure:2522: $? = 0
-configure:2531: result: yes
-configure:2547: : CXXFLAGS="$CXXFLAGS"
-configure:2550: $? = 0
-configure:2503: checking whether C++ compiler accepts -pipe
-configure:2522: g++ -c -g -O2 -O3 -fPIC  -pipe  conftest.cpp >&5
-configure:2522: $? = 0
-configure:2531: result: yes
-configure:2547: : CXXFLAGS="$CXXFLAGS"
-configure:2550: $? = 0
-configure:2503: checking whether C++ compiler accepts -Wall
-configure:2522: g++ -c -g -O2 -O3 -fPIC -pipe  -Wall  conftest.cpp >&5
-configure:2522: $? = 0
-configure:2531: result: yes
-configure:2547: : CXXFLAGS="$CXXFLAGS"
-configure:2550: $? = 0
-configure:2503: checking whether C++ compiler accepts -ffast-math
-configure:2522: g++ -c -g -O2 -O3 -fPIC -pipe -Wall  -ffast-math  conftest.cpp >&5
-configure:2522: $? = 0
-configure:2531: result: yes
-configure:2547: : CXXFLAGS="$CXXFLAGS"
-configure:2550: $? = 0
-configure:2503: checking whether C++ compiler accepts -fomit-frame-pointer
-configure:2522: g++ -c -g -O2 -O3 -fPIC -pipe -Wall -ffast-math  -fomit-frame-pointer  conftest.cpp >&5
-configure:2522: $? = 0
-configure:2531: result: yes
-configure:2547: : CXXFLAGS="$CXXFLAGS"
-configure:2550: $? = 0
-configure:2503: checking whether C++ compiler accepts -flto
-configure:2522: g++ -c -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer  -flto  conftest.cpp >&5
-configure:2522: $? = 0
-configure:2531: result: yes
-configure:2547: : CXXFLAGS="$CXXFLAGS"
-configure:2550: $? = 0
-configure:2503: checking whether C++ compiler accepts -DARMA_DONT_USE_WRAPPER
-configure:2522: g++ -c -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto  -DARMA_DONT_USE_WRAPPER  conftest.cpp >&5
-configure:2522: $? = 0
-configure:2531: result: yes
-configure:2547: : CXXFLAGS="$CXXFLAGS"
-configure:2550: $? = 0
 configure:2584: checking whether g++ supports C++11 features by default
-configure:2878: g++ -c -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER  conftest.cpp >&5
+configure:2878: g++ -c -UNDEBUG -Wall -pedantic -g -O0  conftest.cpp >&5
 conftest.cpp:20:2: error: "This is not a C++11 compiler"
 #error "This is not a C++11 compiler"
  ^
@@ -467,11 +419,11 @@ configure: failed program was:
 | 
 configure:2885: result: no
 configure:2896: checking whether g++ supports C++11 features with -std=c++11
-configure:3192: g++ -std=c++11 -c -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER  conftest.cpp >&5
+configure:3192: g++ -std=c++11 -c -UNDEBUG -Wall -pedantic -g -O0  conftest.cpp >&5
 configure:3192: $? = 0
 configure:3201: result: yes
 configure:3241: checking for g++ -std=c++11 option to support OpenMP
-configure:3256: g++ -std=c++11 -o conftest -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER   conftest.cpp  >&5
+configure:3256: g++ -std=c++11 -o conftest -UNDEBUG -Wall -pedantic -g -O0   conftest.cpp  >&5
 conftest.cpp:12:2: error: unknown type name 'choke'
  choke me
  ^
@@ -497,7 +449,7 @@ configure: failed program was:
 | #include <omp.h>
 | int main () { return omp_get_num_threads (); }
 | 
-configure:3274: g++ -std=c++11 -o conftest -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER -fopenmp   conftest.cpp  >&5
+configure:3274: g++ -std=c++11 -o conftest -UNDEBUG -Wall -pedantic -g -O0 -fopenmp   conftest.cpp  >&5
 clang: error: unsupported option '-fopenmp'
 clang: error: unsupported option '-fopenmp'
 configure:3274: $? = 1
@@ -518,7 +470,7 @@ configure: failed program was:
 | #include <omp.h>
 | int main () { return omp_get_num_threads (); }
 | 
-configure:3274: g++ -std=c++11 -o conftest -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER -xopenmp   conftest.cpp  >&5
+configure:3274: g++ -std=c++11 -o conftest -UNDEBUG -Wall -pedantic -g -O0 -xopenmp   conftest.cpp  >&5
 clang: error: language not recognized: 'openmp'
 configure:3274: $? = 1
 configure: failed program was:
@@ -538,7 +490,7 @@ configure: failed program was:
 | #include <omp.h>
 | int main () { return omp_get_num_threads (); }
 | 
-configure:3274: g++ -std=c++11 -o conftest -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER -openmp   conftest.cpp  >&5
+configure:3274: g++ -std=c++11 -o conftest -UNDEBUG -Wall -pedantic -g -O0 -openmp   conftest.cpp  >&5
 conftest.cpp:12:2: error: unknown type name 'choke'
  choke me
  ^
@@ -564,7 +516,7 @@ configure: failed program was:
 | #include <omp.h>
 | int main () { return omp_get_num_threads (); }
 | 
-configure:3274: g++ -std=c++11 -o conftest -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER -mp   conftest.cpp  >&5
+configure:3274: g++ -std=c++11 -o conftest -UNDEBUG -Wall -pedantic -g -O0 -mp   conftest.cpp  >&5
 clang: error: unknown argument: '-mp'
 configure:3274: $? = 1
 configure: failed program was:
@@ -584,7 +536,7 @@ configure: failed program was:
 | #include <omp.h>
 | int main () { return omp_get_num_threads (); }
 | 
-configure:3274: g++ -std=c++11 -o conftest -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER -omp   conftest.cpp  >&5
+configure:3274: g++ -std=c++11 -o conftest -UNDEBUG -Wall -pedantic -g -O0 -omp   conftest.cpp  >&5
 conftest.cpp:12:2: error: unknown type name 'choke'
  choke me
  ^
@@ -610,7 +562,7 @@ configure: failed program was:
 | #include <omp.h>
 | int main () { return omp_get_num_threads (); }
 | 
-configure:3274: g++ -std=c++11 -o conftest -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER -qsmp=omp   conftest.cpp  >&5
+configure:3274: g++ -std=c++11 -o conftest -UNDEBUG -Wall -pedantic -g -O0 -qsmp=omp   conftest.cpp  >&5
 clang: error: unknown argument: '-qsmp=omp'
 configure:3274: $? = 1
 configure: failed program was:
@@ -630,7 +582,7 @@ configure: failed program was:
 | #include <omp.h>
 | int main () { return omp_get_num_threads (); }
 | 
-configure:3274: g++ -std=c++11 -o conftest -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER -homp   conftest.cpp  >&5
+configure:3274: g++ -std=c++11 -o conftest -UNDEBUG -Wall -pedantic -g -O0 -homp   conftest.cpp  >&5
 clang: error: unknown argument: '-homp'
 configure:3274: $? = 1
 configure: failed program was:
@@ -650,7 +602,7 @@ configure: failed program was:
 | #include <omp.h>
 | int main () { return omp_get_num_threads (); }
 | 
-configure:3274: g++ -std=c++11 -o conftest -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER -Popenmp   conftest.cpp  >&5
+configure:3274: g++ -std=c++11 -o conftest -UNDEBUG -Wall -pedantic -g -O0 -Popenmp   conftest.cpp  >&5
 clang: error: unknown argument: '-Popenmp'
 configure:3274: $? = 1
 configure: failed program was:
@@ -670,7 +622,7 @@ configure: failed program was:
 | #include <omp.h>
 | int main () { return omp_get_num_threads (); }
 | 
-configure:3274: g++ -std=c++11 -o conftest -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER --openmp   conftest.cpp  >&5
+configure:3274: g++ -std=c++11 -o conftest -UNDEBUG -Wall -pedantic -g -O0 --openmp   conftest.cpp  >&5
 clang: error: unsupported option '--openmp'
 configure:3274: $? = 1
 configure: failed program was:
@@ -692,11 +644,10 @@ configure: failed program was:
 | 
 configure:3288: result: unsupported
 configure:3300: checking for library containing cblas_dgemm
-configure:3331: g++ -std=c++11 -o conftest -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER   conftest.cpp  >&5
-undef: _cblas_dgemm
+configure:3331: g++ -std=c++11 -o conftest -UNDEBUG -Wall -pedantic -g -O0   conftest.cpp  >&5
 Undefined symbols for architecture x86_64:
   "_cblas_dgemm", referenced from:
-      _main in cc-4534a5.o
+      _main in conftest-1a7f50.o
 ld: symbol(s) not found for architecture x86_64
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
 configure:3331: $? = 1
@@ -725,7 +676,7 @@ configure: failed program was:
 |   ;
 |   return 0;
 | }
-configure:3331: g++ -std=c++11 -o conftest -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER   conftest.cpp -lopenblas   >&5
+configure:3331: g++ -std=c++11 -o conftest -UNDEBUG -Wall -pedantic -g -O0   conftest.cpp -lopenblas   >&5
 ld: library not found for -lopenblas
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
 configure:3331: $? = 1
@@ -756,11 +707,10 @@ configure: failed program was:
 | }
 configure:3348: result: no
 configure:3360: checking for library containing dgemm
-configure:3391: g++ -std=c++11 -o conftest -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER   conftest.cpp  >&5
-undef: _dgemm
+configure:3391: g++ -std=c++11 -o conftest -UNDEBUG -Wall -pedantic -g -O0   conftest.cpp  >&5
 Undefined symbols for architecture x86_64:
   "_dgemm", referenced from:
-      _main in cc-acc6e8.o
+      _main in conftest-b771d5.o
 ld: symbol(s) not found for architecture x86_64
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
 configure:3391: $? = 1
@@ -789,7 +739,7 @@ configure: failed program was:
 |   ;
 |   return 0;
 | }
-configure:3391: g++ -std=c++11 -o conftest -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER   conftest.cpp -lblas   >&5
+configure:3391: g++ -std=c++11 -o conftest -UNDEBUG -Wall -pedantic -g -O0   conftest.cpp -lblas   >&5
 configure:3391: $? = 0
 configure:3408: result: -lblas
 configure:3414: using blas
@@ -812,12 +762,11 @@ on bs-mbpr134.d.ethz.ch
 
 config.status:792: creating src/Makevars
 config.status:792: creating src/config.h
-config.status:962: src/config.h is unchanged
 configure:4717: result:
 	Have fun with: netReg
 
 	CXX:        g++ -std=c++11
-	CXXFLAGS:   -g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER
+	CXXFLAGS:   -UNDEBUG -Wall -pedantic -g -O0
 
 
 ## ---------------- ##
@@ -829,8 +778,8 @@ ac_cv_env_CCC_set=
 ac_cv_env_CCC_value=
 ac_cv_env_CPPFLAGS_set=
 ac_cv_env_CPPFLAGS_value=
-ac_cv_env_CXXFLAGS_set=
-ac_cv_env_CXXFLAGS_value=
+ac_cv_env_CXXFLAGS_set=set
+ac_cv_env_CXXFLAGS_value='-UNDEBUG -Wall -pedantic -g -O0'
 ac_cv_env_CXX_set=
 ac_cv_env_CXX_value=
 ac_cv_env_LDFLAGS_set=
@@ -851,14 +800,6 @@ ac_cv_prog_cxx_g=yes
 ac_cv_prog_cxx_openmp=unsupported
 ac_cv_search_cblas_dgemm=no
 ac_cv_search_dgemm=-lblas
-ax_cv_check_cxxflags___DARMA_DONT_USE_WRAPPER=yes
-ax_cv_check_cxxflags___O3=yes
-ax_cv_check_cxxflags___Wall=yes
-ax_cv_check_cxxflags___fPIC=yes
-ax_cv_check_cxxflags___ffast_math=yes
-ax_cv_check_cxxflags___flto=yes
-ax_cv_check_cxxflags___fomit_frame_pointer=yes
-ax_cv_check_cxxflags___pipe=yes
 ax_cv_cxx_compile_cxx11=no
 ax_cv_cxx_compile_cxx11__std_cpp11=yes
 
@@ -868,7 +809,7 @@ ax_cv_cxx_compile_cxx11__std_cpp11=yes
 
 CPPFLAGS=''
 CXX='g++ -std=c++11'
-CXXFLAGS='-g -O2 -O3 -fPIC -pipe -Wall -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER'
+CXXFLAGS='-UNDEBUG -Wall -pedantic -g -O0'
 DEFS='-DHAVE_CONFIG_H'
 ECHO_C='\c'
 ECHO_N=''

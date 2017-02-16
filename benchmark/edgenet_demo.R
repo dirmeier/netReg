@@ -41,13 +41,15 @@ edgenet.pure.R <- function(X, Y, G.X, G.Y, lambda, psigx, psigy, thresh, maxit)
     niter <- niter + 1
      for (i in seq(q))
      {
-        .uccd(p, q,
+        l <- .uccd(p, q,
               thresh, maxit,
               lambda,
               psigx, psigy,
               TXX, TXY,LX, LY,
               B, B.old,
               i);
+        B     <- l$B
+        B.old <- B.old
      }
     
     if (sum(abs(B-B.old)) <= thresh | niter < maxit) break
@@ -63,26 +65,59 @@ edgenet.pure.R <- function(X, Y, G.X, G.Y, lambda, psigx, psigy, thresh, maxit)
     niter <- niter + 1
     for (pi in seq(p))
     {
-      Bold[pi, qi] <- B[pi, qi]
+      B.old[pi, qi] <- B[pi, qi]
       s <-  (TXY[pi, qi] + (TXX[pi, pi] * B[pi, qi])) - sum(TXX[pi, ] %*% cfs[,qi])
       norm <- TXX[pi, pi]
-      if (psigx != 0) 
+      if (psigx > 0.00001) 
       {
-        
+        x.penalty <- .x.graph.penalize(LX, B, pi, qi)
+        s         <- s - 2 * psigx * x.penalty;
+        norm      <- norm + 2 * psigx * LX[pi, pi];
       }
+      if (psigy > 0.00001) 
+      {
+        y.penalty <- .y.graph.penalize(LY, B, pi, qi)
+        s         <- s - 2 * psigy * y.penalty
+        norm      <- norm + 2 * psigy * LY[qi, qi]
+      }
+      B[pi, qi] <- .softnorm(s, lambda, norm)
     }
     if (sum(abs(B[,qi] - B.old[,qi])) <= thresh | niter < maxit) break  
   }
-    
+  list(B=B, B.old=B.old)
 }
 
-    set_params
-    (s, norm, TXX, TXY, coef,
-      LX, LY, P, Q, pi, qi, psigx, psigy, false);
-    //                // soft-thresholded version of estimate
-    coef(pi, qi) = softnorm(s, lalph, enorm * norm)
+.softnorm <- function(s, lalph, norm)
+{
+  sabs  <- abs(s)
+  if (lalph < sabs)
+  {
+    if (s > 0)
+      return (s - lalph) / norm;
+    return (s + lalph) / norm;
+  }
+  0.0
+}
 
+.x.graph.penalize <- function(G, cfs, pi, qi)
+{
+  penalty <- 0
+  if (pi <= nrow(G) && pi <= ncol(G))
+  {
+    penalty <- -G[pi, pi] * cfs[pi, qi] + sum(G[pi, ] * cfs[ ,qi])
+  }
+  penalty
+}
 
+.y.graph.penalize <- function(G, cfs, pi, qi)
+{
+  penalty <- 0
+  if (qi <= nrow(G) && qi <= ncol(G))
+  {
+    penalty <- - cfs[pi, qi] * G[qi, qi] + sum(cfs[pi, ] %*% G[ ,qi])
+  }
+  penalty
+}
 
 .laplacian <- function(X)
 {

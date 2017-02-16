@@ -199,7 +199,7 @@ namespace netreg
         if (psigx <= 0.001)
             return;
         double xPenalty = 0.0;
-        if (qi < LX.n_rows && qi < LX.n_cols)
+        if (pi < LX.n_rows && pi < LX.n_cols)
         {
             xPenalty = -LX(pi, pi) * cfs(pi, qi) + arma::accu(LX.row(pi) * cfs.col(qi));
         }
@@ -217,8 +217,7 @@ namespace netreg
         double yPenalty = 0.0;
         if (qi < LY.n_rows && qi < LY.n_cols)
         {
-            yPenalty = -cfs(pi, qi) * LY(qi, qi) +
-                       arma::accu(cfs.row(pi) * LY.col(qi));
+            yPenalty = -cfs(pi, qi) * LY(qi, qi) + arma::accu(cfs.row(pi) * LY.col(qi));
         }
         s = s - 2 * psigy * yPenalty;
         norm += 2 * psigy * LY(qi, qi);

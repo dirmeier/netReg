@@ -1,3 +1,4 @@
+benchmark
 ^.*\.Rproj$
 ^\.Rproj\.user$
 .gitignore
