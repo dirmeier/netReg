@@ -1,21 +1,11 @@
 cmake_minimum_required(VERSION 3.5)
 project(netReg)
 
-find_package(OpenMP)
-if(OPENMP_FOUND)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-else()
-    message("OpenMP could not be found. ${PROJECT_NAME} will still work, albeit in single-threaded mode")
-endif()
-
-
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11  -g -pipe  -ffast-math -fomit-frame-pointer -flto -DARMA_DONT_USE_WRAPPER   -fPIC  -Wall -mtune=core2 -g -O2")
-
-target_include_directories(ngshmmalign /Users/simondi/Library/R/3.3/library/Rcpp/include /Library/Frameworks/R.framework/Versions/3.3/Resources/library/RcppArmadillo/include)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g -pipe -ffast-math -fomit-frame-pointer -flto -fPIC -Wall -mtune=core2 -g -O2")
 
 set(SOURCE_FILES
         config.h
@@ -46,4 +36,15 @@ set(SOURCE_FILES
         vector_functions.cpp
         vector_functions.hpp
         main.cpp)
+
+include_directories(netReg
+        "/Users/simondi/Library/R/3.3/library/Rcpp/include"
+        "/Library/Frameworks/R.framework/Versions/3.3/Resources/library/RcppArmadillo/include"
+        "/Library/Frameworks/R.framework/Resources/include"
+        "/usr/local/include" "/opt/X11/include" "/usr/local/include/freetype2" )
+
+link_libraries("/Library/Frameworks/R.framework/Resources/lib"
+        "/usr/local/lib")
+
+
 add_executable(netReg ${SOURCE_FILES})
