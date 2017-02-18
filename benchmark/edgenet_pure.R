@@ -18,8 +18,9 @@
 # along with netReg. If not, see <http://www.gnu.org/licenses/>.
 
 
-#' 
+ 
 #' Demo script of an R implementation of edgenet for benchmarking
+#' 
 #' @noRd
 #' 
 edgenet.pure.R <- function(X, Y, G.X, G.Y, lambda, psigx, psigy, thresh, maxit)
@@ -49,14 +50,16 @@ edgenet.pure.R <- function(X, Y, G.X, G.Y, lambda, psigx, psigy, thresh, maxit)
               B, B.old,
               i);
         B     <- l$B
-        B.old <- B.old
+        B.old <- l$B.old
      }
     
-    if (sum(abs(B-B.old)) <= thresh | niter < maxit) break
+    if (sum(abs(B - B.old)) <= thresh | niter > maxit) break
   } 
+  
+  B
 }
 
-.uucd <- function(p, q, thresh, maxit, lambda, psigx, psigy,
+.uccd <- function(p, q, thresh, maxit, lambda, psigx, psigy,
                   TXX, TXY,LX, LY, B, B.old, qi)
 {
   niter <- 0
@@ -66,15 +69,15 @@ edgenet.pure.R <- function(X, Y, G.X, G.Y, lambda, psigx, psigy, thresh, maxit)
     for (pi in seq(p))
     {
       B.old[pi, qi] <- B[pi, qi]
-      s <-  (TXY[pi, qi] + (TXX[pi, pi] * B[pi, qi])) - sum(TXX[pi, ] %*% cfs[,qi])
+      s <-  (TXY[pi, qi] + (TXX[pi, pi] * B[pi, qi])) - sum(TXX[pi, ] %*% B[,qi])
       norm <- TXX[pi, pi]
-      if (psigx > 0.00001) 
+      if (psigx > 0.00001)
       {
         x.penalty <- .x.graph.penalize(LX, B, pi, qi)
         s         <- s - 2 * psigx * x.penalty;
         norm      <- norm + 2 * psigx * LX[pi, pi];
       }
-      if (psigy > 0.00001) 
+      if (psigy > 0.00001)
       {
         y.penalty <- .y.graph.penalize(LY, B, pi, qi)
         s         <- s - 2 * psigy * y.penalty
@@ -90,13 +93,15 @@ edgenet.pure.R <- function(X, Y, G.X, G.Y, lambda, psigx, psigy, thresh, maxit)
 .softnorm <- function(s, lalph, norm)
 {
   sabs  <- abs(s)
+  r <- 0.0
   if (lalph < sabs)
   {
     if (s > 0)
-      return (s - lalph) / norm;
-    return (s + lalph) / norm;
+      r <- (s - lalph) / norm
+    else
+      r <- (s + lalph) / norm
   }
-  0.0
+  r
 }
 
 .x.graph.penalize <- function(G, cfs, pi, qi)
