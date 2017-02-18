@@ -19,17 +19,22 @@
 
 
 #' @noRd
-intercept <-
-  function(Y, X, B, n)
+intercept <-function(Y, X, B, n)
+{
     ((t(Y - X %*% B) %*% rep(1, n)) / n)
+}
 
 #' @noRd
 intercept.matrix <- function(n, mu)
-  rep(1, n) %*% t(mu)
+{
+    rep(1, n) %*% t(mu)
+}
 
 #' @noRd
-rss <- function(Y, Y.hat)
+rss <- function(Y, Y.hat) 
+{
   sum((Y - Y.hat) ** 2)
+}
 
 #' @noRd
 #' @importFrom stats runif

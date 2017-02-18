@@ -111,7 +111,7 @@ namespace netreg
                       LX, LY,
                       coef, old_coef,
                       qi);
-                if (iter % 100 == 0) Rcpp::checkUserInterrupt();
+                if (iter % 10 == 0) Rcpp::checkUserInterrupt();
             }
         }
         while (arma::accu(arma::abs(coef - old_coef)) > thresh &&
@@ -152,6 +152,7 @@ namespace netreg
                      LX, LY, P, Q, pi, qi, psigx, psigy, false);
 //                // soft-thresholded version of estimate
                 coef(pi, qi) = softnorm(s, lalph, enorm * norm);
+                if (iter % 10 == 0) Rcpp::checkUserInterrupt();
             }
         }
         while (

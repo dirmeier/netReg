@@ -56,7 +56,7 @@ edgenet.pure.R <- function(X, Y, G.X, G.Y, lambda, psigx, psigy, thresh, maxit)
     if (sum(abs(B - B.old)) <= thresh | niter > maxit) break
   } 
   
-  B
+  list(B=B, mu=netReg:::intercept(Y, X, B, n))
 }
 
 .uccd <- function(p, q, thresh, maxit, lambda, psigx, psigy,
