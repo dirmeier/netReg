@@ -43,8 +43,10 @@ include_directories(netReg
         "/Library/Frameworks/R.framework/Resources/include"
         "/usr/local/include" "/opt/X11/include" "/usr/local/include/freetype2" )
 
-link_libraries("/Library/Frameworks/R.framework/Resources/lib"
+link_directories(
+        "/Library/Frameworks/R.framework/Resources/lib"
+        "/Library/Frameworks/R.framework/Versions/3.3/Resources/library/Rcpp/libs"
+        "/Library/Frameworks/R.framework/Versions/3.3/Resources/library/RcppArmadillo/libs"
         "/usr/local/lib")
-
 
 add_executable(netReg ${SOURCE_FILES})

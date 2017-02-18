@@ -22,6 +22,10 @@
  * @email: simon.dirmeier@gmx.de
  */
 
+#ifndef NDEBUG
+#include <ctime>
+#endif
+
 #include "edgenet_gaussian.hpp"
 
 #include "cv_set.hpp"
