@@ -2498,7 +2498,7 @@ if test "x${enable_cxxflags_setting}" = "xyes"; then :
 
 
 
-for flag in -ffast-math -DUSE_RCPPARMADILLO; do
+for flag in -pipe -ffast-math -fomit-frame-pointer -flto -DUSE_RCPPARMADILLO; do
   as_CACHEVAR=`$as_echo "ax_cv_check_cxxflags__$flag" | $as_tr_sh`
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C++ compiler accepts $flag" >&5
 $as_echo_n "checking whether C++ compiler accepts $flag... " >&6; }
@@ -2573,6 +2573,78 @@ done
 
 
 fi
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing cblas_dgemm" >&5
+$as_echo_n "checking for library containing cblas_dgemm... " >&6; }
+if ${ac_cv_search_cblas_dgemm+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_func_search_save_LIBS=$LIBS
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char cblas_dgemm ();
+int
+main ()
+{
+return cblas_dgemm ();
+  ;
+  return 0;
+}
+_ACEOF
+for ac_lib in '' openblas; do
+  if test -z "$ac_lib"; then
+    ac_res="none required"
+  else
+    ac_res=-l$ac_lib
+    LIBS="-l$ac_lib  $ac_func_search_save_LIBS"
+  fi
+  if ac_fn_cxx_try_link "$LINENO"; then :
+  ac_cv_search_cblas_dgemm=$ac_res
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext
+  if ${ac_cv_search_cblas_dgemm+:} false; then :
+  break
+fi
+done
+if ${ac_cv_search_cblas_dgemm+:} false; then :
+
+else
+  ac_cv_search_cblas_dgemm=no
+fi
+rm conftest.$ac_ext
+LIBS=$ac_func_search_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_search_cblas_dgemm" >&5
+$as_echo "$ac_cv_search_cblas_dgemm" >&6; }
+ac_res=$ac_cv_search_cblas_dgemm
+if test "$ac_res" != no; then :
+  test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
+
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: using openblas" >&5
+$as_echo "$as_me: using openblas" >&6;}
+	netReg_LDLIBS="${netReg_LDLIBS} -lopenblas"
+
+else
+
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: using rblas" >&5
+$as_echo "$as_me: using rblas" >&6;}
+	RBLAS=`"${R_HOME}/bin/R" CMD config BLAS_LIBS`
+	netReg_LDLIBS="${netReg_LDLIBS} $RBLAS"
+
+fi
+
+
+RLAPACK=`"${R_HOME}/bin/R" CMD config LAPACK_LIBS`
+RFORT=`"${R_HOME}/bin/R" CMD config FLIBS`
+netReg_LDLIBS="${netReg_LDLIBS} $RLAPACK $RFORT"
 
       ax_cxx_compile_cxx11_required=true
   ac_ext=cpp

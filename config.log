@@ -30,8 +30,8 @@ Kernel configured for up to 4 processors.
 Processor type: x86_64h (Intel x86-64h Haswell)
 Processors active: 0 1 2 3
 Primary memory available: 16.00 gigabytes
-Default processor set: 261 tasks, 1188 threads, 4 processors
-Load average: 2.58, Mach factor: 1.63
+Default processor set: 258 tasks, 1207 threads, 4 processors
+Load average: 2.60, Mach factor: 1.90
 /bin/machine           = unknown
 /usr/bin/oslevel       = unknown
 /bin/universe          = unknown
@@ -115,32 +115,106 @@ configure:2396: result: /usr/bin/sed
 configure:2444: checking for ranlib
 configure:2460: found /usr/bin/ranlib
 configure:2471: result: ranlib
-configure:2503: checking whether C++ compiler accepts -ffast-math
-configure:2522: g++ -c -g -O2  -ffast-math  conftest.cpp >&5
+configure:2503: checking whether C++ compiler accepts -pipe
+configure:2522: g++ -c -g -O2  -pipe  conftest.cpp >&5
 configure:2522: $? = 0
 configure:2531: result: yes
 configure:2547: : CXXFLAGS="$CXXFLAGS"
 configure:2550: $? = 0
-configure:2503: checking whether C++ compiler accepts -DARMA_DONT_USE_WRAPPER
-configure:2522: g++ -c -g -O2 -ffast-math  -DARMA_DONT_USE_WRAPPER  conftest.cpp >&5
+configure:2503: checking whether C++ compiler accepts -ffast-math
+configure:2522: g++ -c -g -O2 -pipe  -ffast-math  conftest.cpp >&5
+configure:2522: $? = 0
+configure:2531: result: yes
+configure:2547: : CXXFLAGS="$CXXFLAGS"
+configure:2550: $? = 0
+configure:2503: checking whether C++ compiler accepts -fomit-frame-pointer
+configure:2522: g++ -c -g -O2 -pipe -ffast-math  -fomit-frame-pointer  conftest.cpp >&5
+configure:2522: $? = 0
+configure:2531: result: yes
+configure:2547: : CXXFLAGS="$CXXFLAGS"
+configure:2550: $? = 0
+configure:2503: checking whether C++ compiler accepts -flto
+configure:2522: g++ -c -g -O2 -pipe -ffast-math -fomit-frame-pointer  -flto  conftest.cpp >&5
 configure:2522: $? = 0
 configure:2531: result: yes
 configure:2547: : CXXFLAGS="$CXXFLAGS"
 configure:2550: $? = 0
 configure:2503: checking whether C++ compiler accepts -DUSE_RCPPARMADILLO
-configure:2522: g++ -c -g -O2 -ffast-math -DARMA_DONT_USE_WRAPPER  -DUSE_RCPPARMADILLO  conftest.cpp >&5
+configure:2522: g++ -c -g -O2 -pipe -ffast-math -fomit-frame-pointer -flto  -DUSE_RCPPARMADILLO  conftest.cpp >&5
 configure:2522: $? = 0
 configure:2531: result: yes
 configure:2547: : CXXFLAGS="$CXXFLAGS"
 configure:2550: $? = 0
-configure:2586: checking whether g++ supports C++11 features by default
-configure:2880: g++ -c -g -O2 -ffast-math -DARMA_DONT_USE_WRAPPER -DUSE_RCPPARMADILLO -framework Accelerate  conftest.cpp >&5
-clang: warning: -framework Accelerate: 'linker' input unused
+configure:2577: checking for library containing cblas_dgemm
+configure:2608: g++ -o conftest -g -O2 -pipe -ffast-math -fomit-frame-pointer -flto -DUSE_RCPPARMADILLO   conftest.cpp  >&5
+undef: _cblas_dgemm
+Undefined symbols for architecture x86_64:
+  "_cblas_dgemm", referenced from:
+      _main in cc-487a8a.o
+ld: symbol(s) not found for architecture x86_64
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+configure:2608: $? = 1
+configure: failed program was:
+| /* confdefs.h */
+| #define PACKAGE_NAME "netReg"
+| #define PACKAGE_TARNAME "netReg"
+| #define PACKAGE_VERSION "0.99.0"
+| #define PACKAGE_STRING "netReg 0.99.0"
+| #define PACKAGE_BUGREPORT "simon.dirmeier@gmx.de"
+| #define PACKAGE_URL "https://github.com/dirmeier/netReg"
+| /* end confdefs.h.  */
+| 
+| /* Override any GCC internal prototype to avoid an error.
+|    Use char because int might match the return type of a GCC
+|    builtin and then its argument prototype would still apply.  */
+| #ifdef __cplusplus
+| extern "C"
+| #endif
+| char cblas_dgemm ();
+| int
+| main ()
+| {
+| return cblas_dgemm ();
+|   ;
+|   return 0;
+| }
+configure:2608: g++ -o conftest -g -O2 -pipe -ffast-math -fomit-frame-pointer -flto -DUSE_RCPPARMADILLO   conftest.cpp -lopenblas   >&5
+ld: library not found for -lopenblas
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+configure:2608: $? = 1
+configure: failed program was:
+| /* confdefs.h */
+| #define PACKAGE_NAME "netReg"
+| #define PACKAGE_TARNAME "netReg"
+| #define PACKAGE_VERSION "0.99.0"
+| #define PACKAGE_STRING "netReg 0.99.0"
+| #define PACKAGE_BUGREPORT "simon.dirmeier@gmx.de"
+| #define PACKAGE_URL "https://github.com/dirmeier/netReg"
+| /* end confdefs.h.  */
+| 
+| /* Override any GCC internal prototype to avoid an error.
+|    Use char because int might match the return type of a GCC
+|    builtin and then its argument prototype would still apply.  */
+| #ifdef __cplusplus
+| extern "C"
+| #endif
+| char cblas_dgemm ();
+| int
+| main ()
+| {
+| return cblas_dgemm ();
+|   ;
+|   return 0;
+| }
+configure:2625: result: no
+configure:2637: using rblas
+configure:2656: checking whether g++ supports C++11 features by default
+configure:2950: g++ -c -g -O2 -pipe -ffast-math -fomit-frame-pointer -flto -DUSE_RCPPARMADILLO  conftest.cpp >&5
 conftest.cpp:20:2: error: "This is not a C++11 compiler"
 #error "This is not a C++11 compiler"
  ^
 1 error generated.
-configure:2880: $? = 1
+configure:2950: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "netReg"
@@ -436,14 +510,13 @@ configure: failed program was:
 | 
 | 
 | 
-configure:2887: result: no
-configure:2898: checking whether g++ supports C++11 features with -std=c++11
-configure:3194: g++ -std=c++11 -c -g -O2 -ffast-math -DARMA_DONT_USE_WRAPPER -DUSE_RCPPARMADILLO -framework Accelerate  conftest.cpp >&5
-clang: warning: -framework Accelerate: 'linker' input unused
-configure:3194: $? = 0
-configure:3203: result: yes
-configure:3243: checking for g++ -std=c++11 option to support OpenMP
-configure:3258: g++ -std=c++11 -o conftest -g -O2 -ffast-math -DARMA_DONT_USE_WRAPPER -DUSE_RCPPARMADILLO -framework Accelerate   conftest.cpp  >&5
+configure:2957: result: no
+configure:2968: checking whether g++ supports C++11 features with -std=c++11
+configure:3264: g++ -std=c++11 -c -g -O2 -pipe -ffast-math -fomit-frame-pointer -flto -DUSE_RCPPARMADILLO  conftest.cpp >&5
+configure:3264: $? = 0
+configure:3273: result: yes
+configure:3313: checking for g++ -std=c++11 option to support OpenMP
+configure:3328: g++ -std=c++11 -o conftest -g -O2 -pipe -ffast-math -fomit-frame-pointer -flto -DUSE_RCPPARMADILLO   conftest.cpp  >&5
 conftest.cpp:12:2: error: unknown type name 'choke'
  choke me
  ^
@@ -451,7 +524,7 @@ conftest.cpp:14:10: fatal error: 'omp.h' file not found
 #include <omp.h>
          ^
 2 errors generated.
-configure:3258: $? = 1
+configure:3328: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "netReg"
@@ -469,10 +542,10 @@ configure: failed program was:
 | #include <omp.h>
 | int main () { return omp_get_num_threads (); }
 | 
-configure:3276: g++ -std=c++11 -o conftest -g -O2 -ffast-math -DARMA_DONT_USE_WRAPPER -DUSE_RCPPARMADILLO -framework Accelerate -fopenmp   conftest.cpp  >&5
+configure:3346: g++ -std=c++11 -o conftest -g -O2 -pipe -ffast-math -fomit-frame-pointer -flto -DUSE_RCPPARMADILLO -fopenmp   conftest.cpp  >&5
 clang: error: unsupported option '-fopenmp'
 clang: error: unsupported option '-fopenmp'
-configure:3276: $? = 1
+configure:3346: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "netReg"
@@ -490,9 +563,9 @@ configure: failed program was:
 | #include <omp.h>
 | int main () { return omp_get_num_threads (); }
 | 
-configure:3276: g++ -std=c++11 -o conftest -g -O2 -ffast-math -DARMA_DONT_USE_WRAPPER -DUSE_RCPPARMADILLO -framework Accelerate -xopenmp   conftest.cpp  >&5
+configure:3346: g++ -std=c++11 -o conftest -g -O2 -pipe -ffast-math -fomit-frame-pointer -flto -DUSE_RCPPARMADILLO -xopenmp   conftest.cpp  >&5
 clang: error: language not recognized: 'openmp'
-configure:3276: $? = 1
+configure:3346: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "netReg"
@@ -510,7 +583,7 @@ configure: failed program was:
 | #include <omp.h>
 | int main () { return omp_get_num_threads (); }
 | 
-configure:3276: g++ -std=c++11 -o conftest -g -O2 -ffast-math -DARMA_DONT_USE_WRAPPER -DUSE_RCPPARMADILLO -framework Accelerate -openmp   conftest.cpp  >&5
+configure:3346: g++ -std=c++11 -o conftest -g -O2 -pipe -ffast-math -fomit-frame-pointer -flto -DUSE_RCPPARMADILLO -openmp   conftest.cpp  >&5
 conftest.cpp:12:2: error: unknown type name 'choke'
  choke me
  ^
@@ -518,7 +591,7 @@ conftest.cpp:14:10: fatal error: 'omp.h' file not found
 #include <omp.h>
          ^
 2 errors generated.
-configure:3276: $? = 1
+configure:3346: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "netReg"
@@ -536,9 +609,9 @@ configure: failed program was:
 | #include <omp.h>
 | int main () { return omp_get_num_threads (); }
 | 
-configure:3276: g++ -std=c++11 -o conftest -g -O2 -ffast-math -DARMA_DONT_USE_WRAPPER -DUSE_RCPPARMADILLO -framework Accelerate -mp   conftest.cpp  >&5
+configure:3346: g++ -std=c++11 -o conftest -g -O2 -pipe -ffast-math -fomit-frame-pointer -flto -DUSE_RCPPARMADILLO -mp   conftest.cpp  >&5
 clang: error: unknown argument: '-mp'
-configure:3276: $? = 1
+configure:3346: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "netReg"
@@ -556,7 +629,7 @@ configure: failed program was:
 | #include <omp.h>
 | int main () { return omp_get_num_threads (); }
 | 
-configure:3276: g++ -std=c++11 -o conftest -g -O2 -ffast-math -DARMA_DONT_USE_WRAPPER -DUSE_RCPPARMADILLO -framework Accelerate -omp   conftest.cpp  >&5
+configure:3346: g++ -std=c++11 -o conftest -g -O2 -pipe -ffast-math -fomit-frame-pointer -flto -DUSE_RCPPARMADILLO -omp   conftest.cpp  >&5
 conftest.cpp:12:2: error: unknown type name 'choke'
  choke me
  ^
@@ -564,7 +637,7 @@ conftest.cpp:14:10: fatal error: 'omp.h' file not found
 #include <omp.h>
          ^
 2 errors generated.
-configure:3276: $? = 1
+configure:3346: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "netReg"
@@ -582,9 +655,9 @@ configure: failed program was:
 | #include <omp.h>
 | int main () { return omp_get_num_threads (); }
 | 
-configure:3276: g++ -std=c++11 -o conftest -g -O2 -ffast-math -DARMA_DONT_USE_WRAPPER -DUSE_RCPPARMADILLO -framework Accelerate -qsmp=omp   conftest.cpp  >&5
+configure:3346: g++ -std=c++11 -o conftest -g -O2 -pipe -ffast-math -fomit-frame-pointer -flto -DUSE_RCPPARMADILLO -qsmp=omp   conftest.cpp  >&5
 clang: error: unknown argument: '-qsmp=omp'
-configure:3276: $? = 1
+configure:3346: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "netReg"
@@ -602,9 +675,9 @@ configure: failed program was:
 | #include <omp.h>
 | int main () { return omp_get_num_threads (); }
 | 
-configure:3276: g++ -std=c++11 -o conftest -g -O2 -ffast-math -DARMA_DONT_USE_WRAPPER -DUSE_RCPPARMADILLO -framework Accelerate -homp   conftest.cpp  >&5
+configure:3346: g++ -std=c++11 -o conftest -g -O2 -pipe -ffast-math -fomit-frame-pointer -flto -DUSE_RCPPARMADILLO -homp   conftest.cpp  >&5
 clang: error: unknown argument: '-homp'
-configure:3276: $? = 1
+configure:3346: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "netReg"
@@ -622,9 +695,9 @@ configure: failed program was:
 | #include <omp.h>
 | int main () { return omp_get_num_threads (); }
 | 
-configure:3276: g++ -std=c++11 -o conftest -g -O2 -ffast-math -DARMA_DONT_USE_WRAPPER -DUSE_RCPPARMADILLO -framework Accelerate -Popenmp   conftest.cpp  >&5
+configure:3346: g++ -std=c++11 -o conftest -g -O2 -pipe -ffast-math -fomit-frame-pointer -flto -DUSE_RCPPARMADILLO -Popenmp   conftest.cpp  >&5
 clang: error: unknown argument: '-Popenmp'
-configure:3276: $? = 1
+configure:3346: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "netReg"
@@ -642,9 +715,9 @@ configure: failed program was:
 | #include <omp.h>
 | int main () { return omp_get_num_threads (); }
 | 
-configure:3276: g++ -std=c++11 -o conftest -g -O2 -ffast-math -DARMA_DONT_USE_WRAPPER -DUSE_RCPPARMADILLO -framework Accelerate --openmp   conftest.cpp  >&5
+configure:3346: g++ -std=c++11 -o conftest -g -O2 -pipe -ffast-math -fomit-frame-pointer -flto -DUSE_RCPPARMADILLO --openmp   conftest.cpp  >&5
 clang: error: unsupported option '--openmp'
-configure:3276: $? = 1
+configure:3346: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "netReg"
@@ -662,8 +735,8 @@ configure: failed program was:
 | #include <omp.h>
 | int main () { return omp_get_num_threads (); }
 | 
-configure:3290: result: unsupported
-configure:3422: creating ./config.status
+configure:3360: result: unsupported
+configure:3492: creating ./config.status
 
 ## ---------------------- ##
 ## Running config.status. ##
@@ -680,13 +753,14 @@ generated by GNU Autoconf 2.69.  Invocation command line was
 
 on bs-mbpr134.d.ethz.ch
 
-config.status:792: creating src/Makevars
-config.status:792: creating src/config.h
-configure:4587: result:
+config.status:793: creating src/Makevars
+config.status:793: creating src/config.h
+config.status:963: src/config.h is unchanged
+configure:4657: result:
 	Have fun with: netReg
 
 	CXX:        g++ -std=c++11
-	CXXFLAGS:   -g -O2 -ffast-math -DARMA_DONT_USE_WRAPPER -DUSE_RCPPARMADILLO -framework Accelerate
+	CXXFLAGS:   -g -O2 -pipe -ffast-math -fomit-frame-pointer -flto -DUSE_RCPPARMADILLO
 
 
 ## ---------------- ##
@@ -718,9 +792,12 @@ ac_cv_prog_ac_ct_CXX=g++
 ac_cv_prog_ac_ct_RANLIB=ranlib
 ac_cv_prog_cxx_g=yes
 ac_cv_prog_cxx_openmp=unsupported
-ax_cv_check_cxxflags___DARMA_DONT_USE_WRAPPER=yes
+ac_cv_search_cblas_dgemm=no
 ax_cv_check_cxxflags___DUSE_RCPPARMADILLO=yes
 ax_cv_check_cxxflags___ffast_math=yes
+ax_cv_check_cxxflags___flto=yes
+ax_cv_check_cxxflags___fomit_frame_pointer=yes
+ax_cv_check_cxxflags___pipe=yes
 ax_cv_cxx_compile_cxx11=no
 ax_cv_cxx_compile_cxx11__std_cpp11=yes
 
@@ -730,7 +807,7 @@ ax_cv_cxx_compile_cxx11__std_cpp11=yes
 
 CPPFLAGS=''
 CXX='g++ -std=c++11'
-CXXFLAGS='-g -O2 -ffast-math -DARMA_DONT_USE_WRAPPER -DUSE_RCPPARMADILLO -framework Accelerate'
+CXXFLAGS='-g -O2 -pipe -ffast-math -fomit-frame-pointer -flto -DUSE_RCPPARMADILLO'
 DEFS='-DHAVE_CONFIG_H'
 ECHO_C='\c'
 ECHO_N=''
@@ -771,7 +848,7 @@ localedir='${datarootdir}/locale'
 localstatedir='${prefix}/var'
 mandir='${datarootdir}/man'
 netReg_CPPFLAGS=''
-netReg_LDLIBS=''
+netReg_LDLIBS=' -L/Library/Frameworks/R.framework/Resources/lib -lRblas -L/Library/Frameworks/R.framework/Resources/lib -lRlapack -L/usr/local/lib/gcc/x86_64-apple-darwin13.0.0/4.8.2 -lgfortran -lquadmath -lm'
 oldincludedir='/usr/include'
 pdfdir='${docdir}'
 prefix='/usr/local'

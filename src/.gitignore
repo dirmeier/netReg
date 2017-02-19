@@ -1,3 +1,6 @@
+netReg
+netReg.so
+*.o
 CMakeCache.txt
 CMakeFiles/*
 Makefile
