@@ -5,7 +5,11 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g -pipe -ffast-math -fomit-frame-pointer -flto -fPIC -Wall -mtune=core2 -g -O2")
+find_package(Armadillo REQUIRED)
+
+include_directories(${ARMADILLO_INCLUDE_DIRS})
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g -pipe -ffast-math -fomit-frame-pointer -flto -fPIC -Wall -mtune=core2 -g -O2 -DARMA_DONT_USE_WRAPPER -framework Accelerate")
 
 set(SOURCE_FILES
         config.h
@@ -33,11 +37,8 @@ set(SOURCE_FILES
         vector_functions.hpp
         main.cpp)
 
-include_directories(netReg
-        "/opt/local/boost/boost_1_61_0/"
-        "/opt/local/armadillo/usr/local/include")
+include_directories("/opt/local/boost/boost_1_61_0/" ${ARMADILLO_INCLUDE_DIRS})
 
-link_directories(netReg
-        "/opt/local/armadillo/usr/local/lib")
+link_directories("/opt/local/armadillo/usr/local/lib")
 
-add_executable(netReg ${SOURCE_FILES})
+add_executable(netReg ${SOURCE_FILES} ${ARMADILLO_LIBRARIES})

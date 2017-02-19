@@ -28,7 +28,6 @@
 
 #include <vector>
 
-#include "edgenet_wrapper.hpp"
 #include "graph_penalized_linear_model_data.hpp"
 #include "graph_penalized_linear_model_cv_data.hpp"
 #include "cv_fold.hpp"
@@ -46,7 +45,7 @@ namespace netreg
     /**
      * Class for estimating the coeffiecients of a edge-regularized linear regression model.
      */
-    class edgenet_gaussian: public edgenet_wrapper
+    class edgenet_gaussian
     {
     public:
         /**
@@ -54,7 +53,7 @@ namespace netreg
          *
          * @param data an object that holds all required data for the model
          */
-        virtual arma::Mat<double> run(graph_penalized_linear_model_data &data) const;
+        arma::Mat<double> run(graph_penalized_linear_model_data &data) const;
 
         /**
          * Calulates the optimal set of shrinkage parameters of a
@@ -68,7 +67,7 @@ namespace netreg
          *
          * @return returns the estimated coefficients
          */
-        virtual arma::Mat<double> run_cv
+        arma::Mat<double> run_cv
             (graph_penalized_linear_model_cv_data &data,
              const double lambda,
              const double alpha,

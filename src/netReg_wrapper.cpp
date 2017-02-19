@@ -75,7 +75,7 @@ SEXP edgenet_cpp
          Rcpp::as<double>(psigx), Rcpp::as<double>(psigy),
          Rcpp::as<int>(niter), Rcpp::as<double>(thresh), f);
     // TODO change that back and include family in data
-    netreg::edgenet edge;
+    netreg::edgenet_wrapper edge;
 //    return R_NilValue;
     return edge.run(data);
     END_RCPP;
@@ -124,7 +124,7 @@ SEXP cv_edgenet_cpp
     const int *xdim = INTEGER(Rf_getAttrib(X, R_DimSymbol));
     const int *ydim = INTEGER(Rf_getAttrib(Y, R_DimSymbol));
     const int lenfoldid = Rcpp::as<int>(lenfs);
-    netreg::edgenet_model_selection e;
+    netreg::edgenet_model_selection_wrapper e;
     if (lenfoldid == xdim[0])
     {
         netreg::graph_penalized_linear_model_cv_data data(

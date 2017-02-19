@@ -149,7 +149,9 @@ namespace netreg
                      LX, LY, P, Q, pi, qi, psigx, psigy, false);
 //                // soft-thresholded version of estimate
                 coef(pi, qi) = softnorm(s, lalph, enorm * norm);
+#ifdef USE_RCPPARMADILLO
                 if (iter % 10 == 0) Rcpp::checkUserInterrupt();
+#endif
             }
         }
         while (

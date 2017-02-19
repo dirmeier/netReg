@@ -78,14 +78,8 @@ namespace netreg
                const int P,
                const bool lower)
     {
-
-        if (lower)
-            return l_pls(TXX, TXY, cfs, pi, qi, P);
-        else
-        {
-            double s = TXY(pi, qi) + (TXX(pi, pi) * cfs(pi, qi))
+            return TXY(pi, qi) + (TXX(pi, pi) * cfs(pi, qi))
                        - arma::accu(TXX.row(pi) * cfs.col(qi));
-            return s;
-        }
+            
     }
 }

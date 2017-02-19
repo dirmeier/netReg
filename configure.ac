@@ -34,10 +34,12 @@ AC_PROG_RANLIB
 AS_IF(
 	[test "x${enable_cxxflags_setting}" = "xyes"],
 	[	 
-		AX_APPEND_COMPILE_FLAGS([-pipe -ffast-math -fomit-frame-pointer -flto -DUSE_RCPPARMADILLO], [CXXFLAGS])
+		AX_APPEND_COMPILE_FLAGS([-ffast-math -DARMA_DONT_USE_WRAPPER -DUSE_RCPPARMADILLO], [CXXFLAGS])
 		CXXFLAGS=$( echo $CXXFLAGS | $SED -e 's/^ *//' -e 's/ *$//' )
 	]	
 )
+
+#CXXFLAGS="${CXXFLAGS} -framework Accelerate"
 
 dnl Other dependencies
 AX_CXX_COMPILE_STDCXX_11([noext], [mandatory])

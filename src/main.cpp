@@ -7,6 +7,8 @@
 #include <boost/math/distributions/normal.hpp>
 #include <boost/random.hpp>
 
+#include "armadillo"
+
 int main()
 {
     boost::mt19937 rng; // I don't seed it on purpouse (it's not relevant)
@@ -15,7 +17,7 @@ int main()
         boost::normal_distribution<> > var_nor(rng, nd);
 
     const int n = 1000;
-    const int p = 100;
+    const int p = 10000;
     const int q = 10;
 
     double *x = new double[n*p];
@@ -36,7 +38,15 @@ int main()
          100000, 0.00001, netreg::family::GAUSSIAN);
 
     netreg::edgenet_gaussian e;
-    e.run(data);
+    arma::Mat<double> m = e.run(data);
+
+    std::cout << m << std::endl;
+
+
+    delete [] x;
+    delete [] y;
+    delete [] gx;
+    delete [] gy;
 
     return 0;
 

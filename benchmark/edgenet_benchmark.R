@@ -3,6 +3,8 @@ library(netReg)
 library(microbenchmark)
 library(uuid)
 
+p <- 1000
+
 cms    <- commandArgs(trailingOnly=T)
 stopifnot(length(cms) != 0)
 p      <- as.integer(cms[1])
@@ -10,7 +12,7 @@ stopifnot(!is.na(p), is.numeric(p))
 
 n      <- 1000
 q      <- 10
-lambda <- 30
+lambda <- 10
 psigx  <- psigy <- 5
 thresh <- 1e-7
 maxit  <- 10000
@@ -20,10 +22,10 @@ B <- matrix(rnorm(p*q), p, q)
 E <- matrix(rnorm(n*q), n, q)
 Y <- X %*% B + E
 
-G.X <- matrix(0, p, p) 
+G.X <- matrix(1, p, p) 
 G.X[upper.tri(G.X)] <- rbeta(p * (p-1) / 2, 1, 2)
 G.X <- t(G.X) + G.X
-G.Y <- matrix(0, q, q) 
+G.Y <- matrix(1, q, q) 
 G.Y[upper.tri(G.Y)] <- rbeta(q * (q-1) / 2, 1, 2)
 G.Y <- t(G.Y) + G.Y
 
