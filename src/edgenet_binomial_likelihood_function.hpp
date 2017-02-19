@@ -27,8 +27,12 @@
 #include <numeric>
 #include <cmath>
 
+#ifdef USE_RCPPARMADILLO
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
+#else
+#include "armadillo"
+#endif
 
 #ifdef HAVE_OPENMP
 #include <omp.h>

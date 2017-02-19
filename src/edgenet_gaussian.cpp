@@ -22,10 +22,6 @@
  * @email: simon.dirmeier@gmx.de
  */
 
-#ifndef NDEBUG
-#include <ctime>
-#endif
-
 #include "edgenet_gaussian.hpp"
 
 #include "cv_set.hpp"
@@ -34,7 +30,7 @@
 
 namespace netreg
 {
-    SEXP edgenet_gaussian::run(graph_penalized_linear_model_data &data) const
+    arma::Mat<double> edgenet_gaussian::run(graph_penalized_linear_model_data &data) const
     {
         const int P = data.covariable_count();
         const int Q = data.response_count();
@@ -64,19 +60,14 @@ namespace netreg
                       LX, LY,
                       coef, old_coef,
                       qi);
-                if (iter % 100 == 0) Rcpp::checkUserInterrupt();
+#ifdef USE_RCPPARMADILLO
+                if (iter % 10 == 0) Rcpp::checkUserInterrupt();
+#endif
             }
         }
         while (arma::accu(arma::abs(coef - old_coef)) > thresh &&
                iter++ < niter);
-        // calculate intercepts of the linear model
-        arma::Col<double> intr = intercept(data.design(), data.response(),
-                                         coef);
-        // TODO exclude intercept and coefficients from model data
-        return Rcpp::List::create(
-            Rcpp::Named("coefficients") = coef,
-            Rcpp::Named("intercept") = intr
-        );
+        return coef;
     }
 
     arma::Mat<double> edgenet_gaussian::run_cv(
@@ -115,7 +106,9 @@ namespace netreg
                       LX, LY,
                       coef, old_coef,
                       qi);
+#ifdef USE_RCPPARMADILLO
                 if (iter % 10 == 0) Rcpp::checkUserInterrupt();
+#endif
             }
         }
         while (arma::accu(arma::abs(coef - old_coef)) > thresh &&

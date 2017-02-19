@@ -29,9 +29,12 @@
 #include <string>
 #include <utility>
 
+#ifdef USE_RCPPARMADILLO
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
-
+#else
+#include "armadillo"
+#endif
 #include "family.hpp"
 
 namespace netreg

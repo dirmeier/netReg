@@ -25,10 +25,14 @@
 #ifndef NETREG_BINOMIAL_EDGENET_HPP
 #define NETREG_BINOMIAL_EDGENET_HPP
 
+#ifdef USE_RCPPARMADILLO
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
+#else
+#include "armadillo"
+#endif
 
-#include "edgenet.hpp"
+#include "edgenet_wrapper.hpp"
 
 #include "graph_penalized_linear_model_data.hpp"
 #include "graph_penalized_linear_model_cv_data.hpp"
@@ -39,7 +43,7 @@ namespace netreg
     /**
      * Class for estimating the coeffiecients of a edge-regularized linear regression model.
      */
-    class edgenet_binomial :public edgenet
+    class edgenet_binomial :public edgenet_wrapper
     {
     public:
         /**

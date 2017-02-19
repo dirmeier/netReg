@@ -27,8 +27,8 @@
 
 #include "graph_penalized_linear_model_data.hpp"
 #include "graph_penalized_linear_model_cv_data.hpp"
-#include "edgenet.hpp"
-#include "edgenet_model_selection.hpp"
+#include "edgenet_wrapper.hpp"
+#include "edgenet_model_selection_wrapper.hpp"
 #include "family.hpp"
 
 // [[Rcpp::depends(RcppArmadillo)]]

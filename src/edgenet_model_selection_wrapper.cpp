@@ -23,14 +23,11 @@
  */
 
 
-#include "edgenet_model_selection.hpp"
+#include "edgenet_model_selection_wrapper.hpp"
 
 #include <numeric>
 #include <vector>
 #include <map>
-
-// [[Rcpp::depends(RcppArmadillo)]]
-#include <RcppArmadillo.h>
 
 #ifdef HAVE_OPENMP
 #include <omp.h>
@@ -43,7 +40,7 @@
 namespace netreg
 {
 
-    SEXP edgenet_model_selection::regularization_path
+    SEXP edgenet_model_selection_wrapper::regularization_path
         (graph_penalized_linear_model_cv_data &data)
     {
         optim opt;

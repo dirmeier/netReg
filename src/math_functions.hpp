@@ -27,8 +27,12 @@
 #include <vector>
 #include <cmath>
 
+#ifdef USE_RCPPARMADILLO
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
+#else
+#include "armadillo"
+#endif
 
 namespace netreg
 {

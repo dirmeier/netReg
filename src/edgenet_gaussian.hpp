@@ -28,20 +28,25 @@
 
 #include <vector>
 
-#include "edgenet.hpp"
+#include "edgenet_wrapper.hpp"
 #include "graph_penalized_linear_model_data.hpp"
 #include "graph_penalized_linear_model_cv_data.hpp"
 #include "cv_fold.hpp"
 
+
+#ifdef USE_RCPPARMADILLO
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
+#else
+#include "armadillo"
+#endif
 
 namespace netreg
 {
     /**
      * Class for estimating the coeffiecients of a edge-regularized linear regression model.
      */
-    class edgenet_gaussian: public edgenet
+    class edgenet_gaussian: public edgenet_wrapper
     {
     public:
         /**
@@ -49,7 +54,7 @@ namespace netreg
          *
          * @param data an object that holds all required data for the model
          */
-        virtual SEXP run(graph_penalized_linear_model_data &data) const;
+        virtual arma::Mat<double> run(graph_penalized_linear_model_data &data) const;
 
         /**
          * Calulates the optimal set of shrinkage parameters of a

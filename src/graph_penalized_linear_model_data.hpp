@@ -10,8 +10,12 @@
 
 #include <string>
 
+#ifdef USE_RCPPARMADILLO
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
+#else
+#include "armadillo"
+#endif
 
 #include "family.hpp"
 #include "graph_functions.hpp"

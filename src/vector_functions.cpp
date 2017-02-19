@@ -25,8 +25,13 @@
 #include "vector_functions.hpp"
 #include <numeric>
 
+#ifdef USE_RCPPARMADILLO
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
+#else
+#include <random>
+#include "armadillo"
+#endif
 
 namespace netreg
 {
@@ -40,19 +45,26 @@ namespace netreg
     void shuffle(std::vector<int> &vec)
     {
         const int size = (int) vec.size();
+        #ifdef USE_RCPPARMADILLO
         GetRNGstate();
         Rcpp::Environment base_env("package:base");
         Rcpp::Function set_seed_r = base_env["set.seed"];
         set_seed_r(23);
+        #endif
         for (std::vector<int>::size_type i = 0; i < vec.size(); ++i)
         {
-            int idx1 = unif_rand() * size;
-            int idx2 = unif_rand() * size;
-            int a = vec[idx1];
-            vec[idx1] = vec[idx2];
-            vec[idx2] = a;
+            #ifdef USE_RCPPARMADILLO
+            int idx = unif_rand() * size;
+            #else
+            int idx = std::rand() % size;
+            #endif
+            int a = vec[idx];
+            vec[idx] = vec[i];
+            vec[i] = a;
         }
+        #ifdef USE_RCPPARMADILLO
         PutRNGstate();
+        #endif
     }
 
     std::vector<int> shuffle(const int le, int start)

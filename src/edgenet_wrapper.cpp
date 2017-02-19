@@ -22,19 +22,28 @@
  * @email: simon.dirmeier@gmx.de
  */
 
-
-#include "edgenet.hpp"
+#include "edgenet_wrapper.hpp"
 #include "edgenet_gaussian.hpp"
+#include "stat_functions.hpp"
 
 namespace netreg
 {
-    SEXP edgenet::run(graph_penalized_linear_model_data &data) const
+    SEXP edgenet_wrapper::run(graph_penalized_linear_model_data &data) const
     {
         netreg::edgenet_gaussian edge;
-        return edge.run(data);
+        arma::Mat<double> coef =  edge.run(data);
+        arma::Col<double> intr = intercept(data.design(),
+                                           data.response(),
+                                           coef);
+
+        return Rcpp::List::create(
+            Rcpp::Named("coefficients") = coef,
+            Rcpp::Named("intercept") = intr
+        );
+
     }
 
-    arma::Mat<double> edgenet::run_cv
+    arma::Mat<double> edgenet_wrapper::run_cv
         (graph_penalized_linear_model_cv_data &data,
          const double lambda, const double alpha,
          const double psigx,  const double psigy,

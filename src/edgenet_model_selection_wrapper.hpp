@@ -31,12 +31,13 @@
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
 
+
 namespace netreg
 {
     /**
      * Class that selects the best parameters of a model-selection using cross-validation
      */
-    class edgenet_model_selection
+    class edgenet_model_selection_wrapper
     {
     public:
 

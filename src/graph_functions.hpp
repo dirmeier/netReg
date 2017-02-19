@@ -25,8 +25,12 @@
 #ifndef NETREG_GRAPH_FUNCTIONS_HPP
 #define NETREG_GRAPH_FUNCTIONS_HPP
 
+#ifdef USE_RCPPARMADILLO
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
+#else
+#include "armadillo"
+#endif
 
 namespace netreg
 {

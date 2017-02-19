@@ -33,9 +33,10 @@
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
 
+
 namespace netreg
 {
-    class edgenet
+    class edgenet_wrapper
     {
     public:
 
