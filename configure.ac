@@ -7,7 +7,7 @@ AC_INIT(
 	[netReg],
 	[https://github.com/dirmeier/netReg])
 AC_CONFIG_HEADERS([src/config.h])
-AC_CONFIG_SRCDIR([src/edgenet.cpp])
+AC_CONFIG_SRCDIR([src/edgenet_wrapper.cpp])
 
 AC_MSG_NOTICE([${R_HOME}])
 AC_MSG_NOTICE([building from R])

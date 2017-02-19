@@ -585,7 +585,7 @@ PACKAGE_STRING='netReg 0.99.0'
 PACKAGE_BUGREPORT='simon.dirmeier@gmx.de'
 PACKAGE_URL='https://github.com/dirmeier/netReg'
 
-ac_unique_file="src/edgenet.cpp"
+ac_unique_file="src/edgenet_wrapper.cpp"
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
 netReg_CPPFLAGS
