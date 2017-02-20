@@ -9,6 +9,7 @@
 #include "penalized_linear_model_data.hpp"
 
 #include <string>
+#include <vector>
 
 #ifdef USE_RCPPARMADILLO
 // [[Rcpp::depends(RcppArmadillo)]]
@@ -59,11 +60,14 @@ namespace netreg
             : penalized_linear_model_data(x, y, n, p, q, lambda,
                                           alpha, niter, thresh, fam),
               psi_gx(psi_gx), psi_gy(psi_gy),
-              // TODO
               GX(gx, p, p, false, true), GY(gy, q, q, false, true),
-              LX(laplacian(gx, p, p, psi_gx)), LY(laplacian(gy, q, q, psi_gy))
+              LX(laplacian(gx, p, p, psi_gx)), LY(laplacian(gy, q, q, psi_gy)),
+              lx_rows_(p)
         {
-
+            for(std::vector< arma::Row<double> >::size_type i = 0; i < LX.n_rows;  ++i)
+            {
+                lx_rows_[i] = LX.row(i);
+            }
         }
         /**
          * Getter for penalization term for laplacian of X
@@ -95,6 +99,11 @@ namespace netreg
             return LX;
         }
 
+        std::vector< arma::Row<double> > &lx_rows()
+        {
+            return lx_rows_;
+        }
+
         /**
          * Getter for laplacian matrix of X
          *
@@ -112,6 +121,7 @@ namespace netreg
         arma::Mat<double> GY;    // prior graph for response matrix
         arma::Mat<double> LX;    // Normalized Laplacian of GX
         arma::Mat<double> LY;    // Normalized Laplacian of GY
+        std::vector<arma::Row<double>> lx_rows_;
     };
 }
 #endif //NETREG_GRAPHPENALIZEDLINEARMODELDATA_HPP

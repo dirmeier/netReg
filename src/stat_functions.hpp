@@ -58,7 +58,7 @@ namespace netreg
      * @param qi the current index of the column of Y
      * @param lower is only lower of TXX is initialized
      */
-    double pls(std::vector< arma::rowvec >& txx_rows,
+    double pls( arma::rowvec & txx_rows,
                arma::Mat<double> &TXY, arma::Mat<double> &cfs,
                const int pi, const int qi, const int P);
 }

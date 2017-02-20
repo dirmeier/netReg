@@ -48,7 +48,7 @@ namespace netreg
         arma::Mat<double> &LX = data.lx();
         arma::Mat<double> &LY = data.ly();
         std::vector< arma::rowvec >& txx_rows = data.txx_rows();
-
+        std::vector< arma::Row<double> >& lx_rows = data.lx_rows();
         int iter = 0;
         do
         {
@@ -62,7 +62,7 @@ namespace netreg
                       TXX, TXY,
                       LX, LY,
                       coef, old_coef,
-                      qi, txx_rows);
+                      qi, txx_rows, lx_rows);
 #ifdef USE_RCPPARMADILLO
                 if (iter % 10 == 0) Rcpp::checkUserInterrupt();
 #endif
@@ -96,7 +96,7 @@ namespace netreg
         arma::Mat<double> train_txx = TXtrain * Xtrain;
         arma::Mat<double> train_txy = TXtrain * Ytrain;
         std::vector< arma::rowvec >& txx_rows = data.txx_rows();
-
+        std::vector< arma::Row<double> >& lx_rows = data.lx_rows();
         int iter = 0;
         do
         {
@@ -110,7 +110,7 @@ namespace netreg
                       train_txx, train_txy,
                       LX, LY,
                       coef, old_coef,
-                      qi, txx_rows);
+                      qi, txx_rows, lx_rows);
 #ifdef USE_RCPPARMADILLO
                 if (iter % 10 == 0) Rcpp::checkUserInterrupt();
 #endif
@@ -131,7 +131,8 @@ namespace netreg
          arma::Mat<double> &coef,
          arma::Mat<double> &old_coef,
          const int qi,
-         std::vector< arma::rowvec >& txx_rows) const
+         std::vector< arma::rowvec >& txx_rows,
+         std::vector< arma::rowvec >& lx_rows) const
     {
         // weighted penalization param of Elastic-net
         const double lalph = alpha * lambda;
@@ -152,7 +153,7 @@ namespace netreg
                 double norm = 0.0;
                 set_params
                     (s, norm, TXX, TXY, coef,
-                     LX, LY, P, Q, pi, qi, psigx, psigy, txx_rows);
+                     LX, LY, P, Q, pi, qi, psigx, psigy, txx_rows[pi], lx_rows[pi]);
 //                // soft-thresholded version of estimate
                 coef(pi, qi) = softnorm(s, lalph, enorm * norm);
 #ifdef USE_RCPPARMADILLO
@@ -176,13 +177,14 @@ namespace netreg
          const int pi, const int qi,
          const double psigx,
          const double psigy,
-         std::vector< arma::rowvec >& txx_rows) const
+         arma::rowvec& txx_rows,
+         arma::rowvec& lx_rows) const
     {
         s = pls(txx_rows, TXY, coef, pi, qi, P);
-        norm = txx_rows[pi](pi);
+        norm = txx_rows(pi);
         graph_penalize(s, norm, psigx, psigy,
                        LX, LY, coef,
-                       P, Q, pi, qi);
+                       P, Q, pi, qi, lx_rows);
     }
 
     void edgenet_gaussian::graph_penalize
@@ -190,10 +192,10 @@ namespace netreg
          const double psigx, const double psigy,
          arma::Mat<double> &LX, arma::Mat<double> &LY, arma::Mat<double> &cfs,
          const int P, const int Q,
-         const int pi, const int qi) const
+         const int pi, const int qi, arma::rowvec& lx_rows) const
     {
         if (psigx != 0)
-            lx_penalize(s, norm, psigx, LX, cfs, P, pi, qi);
+            lx_penalize(s, norm, psigx, LX, cfs, P, pi, qi, lx_rows);
         if (psigy != 0)
             ly_penalize(s, norm, psigy, LY, cfs, Q, pi, qi);
     }
@@ -201,17 +203,17 @@ namespace netreg
     void edgenet_gaussian::lx_penalize
         (double &s, double &norm, const double psigx,
          arma::Mat<double> &LX, arma::Mat<double> &cfs, const int P,
-         const int pi, const int qi) const
+         const int pi, const int qi,  arma::rowvec& lx_rows) const
     {
         if (psigx <= 0.001)
             return;
         double xPenalty = 0.0;
         if (pi < LX.n_rows && pi < LX.n_cols)
         {
-            xPenalty = -LX(pi, pi) * cfs(pi, qi) + arma::accu(LX.row(pi) * cfs.col(qi));
+            xPenalty = -lx_rows(pi) * cfs(pi, qi) + arma::accu(lx_rows * cfs.col(qi));
         }
         s = s - 2 * psigx * xPenalty;
-        norm += 2 * psigx * LX(pi, pi);
+        norm += 2 * psigx * lx_rows(pi);
     }
 
     void edgenet_gaussian::ly_penalize

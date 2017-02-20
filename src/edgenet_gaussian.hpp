@@ -96,7 +96,8 @@ namespace netreg
              arma::Mat<double> &coef,
              arma::Mat<double> &old_coef,
              int qi,
-             std::vector< arma::rowvec >& txx_rows) const;
+             std::vector< arma::rowvec >& txx_rows,
+             std::vector< arma::rowvec >& lx_rows) const;
 
         /**
          * Updates the softthresholding parameter and the normalization
@@ -119,7 +120,7 @@ namespace netreg
              const double psigx, const double psigy,
              arma::Mat<double> &LX, arma::Mat<double> &LY, arma::Mat<double> &cfs,
              const int P, const int Q,
-             const int pi, const int qi) const;
+             const int pi, const int qi, arma::rowvec& lx_rows) const;
 
         /**
          * Adds the penalty from the Laplacian of X to the softthresholding
@@ -137,7 +138,7 @@ namespace netreg
         void lx_penalize
             (double &s, double &norm, const double psigx, arma::Mat<double> &LX,
              arma::Mat<double> &cfs, const int P, const int pi,
-             const int qi) const;
+             const int qi, arma::rowvec& lx_rows) const;
 
         /**
          * Adds the penalty from the Laplacian of X to the softthresholding
@@ -182,7 +183,7 @@ namespace netreg
              arma::Mat<double> &LX, arma::Mat<double> &LY,
              const int P, const int Q, const int pi, const int qi,
              const double psigx, const double psigy,
-             std::vector< arma::rowvec >& txx_rows) const;
+             arma::rowvec& txx_rows, arma::rowvec& lx_rows) const;
     };
 }
 
