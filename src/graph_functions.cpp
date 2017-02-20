@@ -32,6 +32,7 @@
 
 namespace netreg
 {
+    // TODO
     arma::Mat<double> laplacian(const double * x, const int n, const int m, const double px)
     {
 

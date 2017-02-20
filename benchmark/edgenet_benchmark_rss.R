@@ -32,6 +32,7 @@ B <- matrix(rnorm(p*q), p, q)
 E <- matrix(rnorm(n*q, 0, sig), n, q)
 Y <- X %*% B + E
 
+# TODO
 for (cv in 1:10)
 {
   cve <- list()

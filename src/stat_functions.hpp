@@ -46,37 +46,6 @@ namespace netreg
                               arma::Mat<double> &B);
 
     /**
-     * Calculate the partial residual with respect to pi given a row and a response.
-     *
-     * @param X the design matrix
-     * @param Y the response matrix
-     * @param B the estimated coefficient matrix
-     * @param row the row for which the partial residual is calculated
-     * @param pi the index of the coefficient
-     * @param qi the index of the response
-     */
-    double partial_residual(arma::Mat<double> &X,
-                            arma::Mat<double> &Y,
-                            arma::Mat<double> &B,
-                            const int row,
-                            const int pi,
-                            const int qi);
-    /**
-     * Calculates the partial residual of the current coefficient that is estimated
-     * IF ONLY THE LOWER TRIANGULAR MATRIX of TXX is given
-     *
-     * @param TXX the square of the design matrix
-     * @param TXY the design times the response matrix
-     * @param cfs the current estimate of the coefficients
-     * @param P the number of covariables
-     * @param pi the current index of the column of X
-     * @param qi the current index of the column of Y
-     */
-    double l_pls(arma::Mat<double> &TXX, arma::Mat<double> &TXY,
-                 arma::Mat<double> &cfs,
-                 const int cidx, const int qi, const int P);
-
-    /**
      * Calculates the partial residual of the current coefficient that is estimated.
      *
      * @param TXX the square of the design matrix

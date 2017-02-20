@@ -59,6 +59,7 @@ namespace netreg
             : penalized_linear_model_data(x, y, n, p, q, lambda,
                                           alpha, niter, thresh, fam),
               psi_gx(psi_gx), psi_gy(psi_gy),
+              // TODO
               GX(gx, p, p), GY(gy, q, q),
               LX(laplacian(gx, p, p, psi_gx)), LY(laplacian(gy, q, q, psi_gy))
         {

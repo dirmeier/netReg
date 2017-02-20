@@ -36,40 +36,6 @@ namespace netreg
         return intr;
     }
 
-    double partial_residual(arma::Mat<double> &X,
-                            arma::Mat<double> &Y,
-                            arma::Mat<double> &B,
-                            const int row,
-                            const int pi,
-                            const int qi)
-    {
-        double res = -X(row, pi) * B(pi, qi);
-        const int length = static_cast<int>(B.n_rows);
-        for (int p = 0; p < length; ++p)
-            res += X(row, p) * B(p, qi);
-        return Y(row, qi) - res;
-    }
-
-    double l_pls(arma::Mat<double> &TXX,
-                 arma::Mat<double> &TXY,
-                 arma::Mat<double> &cfs,
-                 const int cidx,
-                 const int qi,
-                 const int P)
-    {
-
-        double s = TXY(cidx, qi) + (TXX(cidx, cidx) * cfs(cidx, cidx));
-        for (int j = 0; j < P; ++j)
-        {
-            // we only initialized the lower triangular arma::Mat<double> of TXX
-            if (j > cidx)
-                s -= TXX(j, cidx) * cfs(j, cidx);
-            else
-                s -= TXX(cidx, j) * cfs(j, cidx);
-        }
-        return s;
-    }
-
     double pls(arma::Mat<double> &TXX,
                arma::Mat<double> &TXY,
                arma::Mat<double> &cfs,

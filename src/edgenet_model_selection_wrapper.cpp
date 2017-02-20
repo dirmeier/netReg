@@ -66,5 +66,6 @@ namespace netreg
                 END_RCPP
             }
         }
+        return R_NilValue;
     }
 }
