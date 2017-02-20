@@ -178,8 +178,8 @@ namespace netreg
          const double psigy,
          std::vector< arma::rowvec >& txx_rows) const
     {
-        s = pls(TXX, TXY, coef, pi, qi, P, txx_rows);
-        norm = (TXX)(pi, pi);
+        s = pls(txx_rows, TXY, coef, pi, qi, P);
+        norm = txx_rows[pi](pi);
         graph_penalize(s, norm, psigx, psigy,
                        LX, LY, coef,
                        P, Q, pi, qi);

@@ -36,15 +36,14 @@ namespace netreg
         return intr;
     }
 
-    double pls(arma::Mat<double> &TXX,
+    double pls(std::vector< arma::rowvec >& txx_rows,
                arma::Mat<double> &TXY,
                arma::Mat<double> &cfs,
                const int pi,
                const int qi,
-               const int P,
-               std::vector< arma::rowvec >& txx_rows)
+               const int P)
     {
-            return TXY(pi, qi) + (TXX(pi, pi) * cfs(pi, qi))
+            return TXY(pi, qi) + (txx_rows[pi](pi) * cfs(pi, qi))
                        - arma::accu(txx_rows[pi] * cfs.col(qi));
             
     }
