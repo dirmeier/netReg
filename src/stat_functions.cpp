@@ -42,10 +42,10 @@ namespace netreg
                const int pi,
                const int qi,
                const int P,
-               const bool lower)
+               std::vector< arma::rowvec >& txx_rows)
     {
             return TXY(pi, qi) + (TXX(pi, pi) * cfs(pi, qi))
-                       - arma::accu(TXX.row(pi) * cfs.col(qi));
+                       - arma::accu(txx_rows[pi] * cfs.col(qi));
             
     }
 }

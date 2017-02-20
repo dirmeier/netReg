@@ -34,7 +34,7 @@ AC_PROG_RANLIB
 AS_IF(
 	[test "x${enable_cxxflags_setting}" = "xyes"],
 	[	 
-		AX_APPEND_COMPILE_FLAGS([-pipe -ffast-math -fomit-frame-pointer -flto -DUSE_RCPPARMADILLO], [CXXFLAGS])
+		AX_APPEND_COMPILE_FLAGS([-pipe -ffast-math -fomit-frame-pointer -flto], [CXXFLAGS])
 		CXXFLAGS=$( echo $CXXFLAGS | $SED -e 's/^ *//' -e 's/ *$//' )
 	]	
 )
@@ -45,14 +45,15 @@ AC_SEARCH_LIBS([cblas_dgemm], [openblas],
 	netReg_LDLIBS="${netReg_LDLIBS} -lopenblas"
 ],
 [
-	AC_MSG_NOTICE([using rblas]) 
-	RBLAS=`"${R_HOME}/bin/R" CMD config BLAS_LIBS`	
-	netReg_LDLIBS="${netReg_LDLIBS} $RBLAS" 
+	AC_MSG_NOTICE([using rblas])
+	RBLAS=`"${R_HOME}/bin/R" CMD config BLAS_LIBS`
+	netReg_LDLIBS="${netReg_LDLIBS} $RBLAS"
 ])
 
 RLAPACK=`"${R_HOME}/bin/R" CMD config LAPACK_LIBS`
 RFORT=`"${R_HOME}/bin/R" CMD config FLIBS`
-netReg_LDLIBS="${netReg_LDLIBS} $RLAPACK $RFORT" 
+netReg_LDLIBS="${netReg_LDLIBS} $RLAPACK $RFORT"
+netReg_CPPFLAGS="-DUSE_RCPPARMADILLO"
 
 dnl Other dependencies
 AX_CXX_COMPILE_STDCXX_11([noext], [mandatory])

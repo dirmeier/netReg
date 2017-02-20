@@ -60,7 +60,7 @@ namespace netreg
                                           alpha, niter, thresh, fam),
               psi_gx(psi_gx), psi_gy(psi_gy),
               // TODO
-              GX(gx, p, p), GY(gy, q, q),
+              GX(gx, p, p, false, true), GY(gy, q, q, false, true),
               LX(laplacian(gx, p, p, psi_gx)), LY(laplacian(gy, q, q, psi_gy))
         {
 

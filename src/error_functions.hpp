@@ -32,6 +32,9 @@
 #include "armadillo"
 #endif
 
+#include <vector>
+
+
 namespace netreg
 {
     /**

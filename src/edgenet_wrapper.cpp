@@ -40,7 +40,6 @@ namespace netreg
             Rcpp::Named("coefficients") = coef,
             Rcpp::Named("intercept") = intr
         );
-
     }
 
     arma::Mat<double> edgenet_wrapper::run_cv

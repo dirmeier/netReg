@@ -56,7 +56,7 @@ SEXP edgenet_cpp
      SEXP lambda, SEXP psigx, SEXP psigy,
      SEXP niter, SEXP thresh, SEXP fs)
 {
-    BEGIN_RCPP;
+    BEGIN_RCPP
     std::string fam = Rcpp::as<std::string>(fs);
     netreg::family f = //fam == "binomial" ? netreg::family::BINOMIAL :
                        fam == "gaussian" ? netreg::family::GAUSSIAN
@@ -78,7 +78,8 @@ SEXP edgenet_cpp
     netreg::edgenet_wrapper edge;
 //    return R_NilValue;
     return edge.run(data);
-    END_RCPP;
+    END_RCPP
+    return R_NilValue;
 }
 };
 
@@ -112,7 +113,7 @@ SEXP cv_edgenet_cpp
      SEXP nfolds, SEXP foldids, SEXP lenfs,
      SEXP fs)
 {
-    BEGIN_RCPP;
+    BEGIN_RCPP
     std::string fam = Rcpp::as<std::string>(fs);
     netreg::family f = fam == "gaussian" ? netreg::family::GAUSSIAN
                                          : netreg::family::NONE;
@@ -140,7 +141,8 @@ SEXP cv_edgenet_cpp
         Rcpp::as<int>(niter), Rcpp::as<double>(thresh),
         Rcpp::as<int>(nfolds), f);
     return e.regularization_path(data);
-    END_RCPP;
+    END_RCPP
+    return R_NilValue;
 }
 };
 

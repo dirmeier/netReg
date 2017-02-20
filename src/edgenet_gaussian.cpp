@@ -24,6 +24,7 @@
 
 #include "edgenet_gaussian.hpp"
 
+
 #include "cv_set.hpp"
 #include "math_functions.hpp"
 #include "stat_functions.hpp"
@@ -46,6 +47,8 @@ namespace netreg
         arma::Mat<double> &TXY = data.txy();
         arma::Mat<double> &LX = data.lx();
         arma::Mat<double> &LY = data.ly();
+        std::vector< arma::rowvec >& txx_rows = data.txx_rows();
+
         int iter = 0;
         do
         {
@@ -59,7 +62,7 @@ namespace netreg
                       TXX, TXY,
                       LX, LY,
                       coef, old_coef,
-                      qi);
+                      qi, txx_rows);
 #ifdef USE_RCPPARMADILLO
                 if (iter % 10 == 0) Rcpp::checkUserInterrupt();
 #endif
@@ -92,6 +95,8 @@ namespace netreg
         arma::Mat<double> TXtrain = Xtrain.t();
         arma::Mat<double> train_txx = TXtrain * Xtrain;
         arma::Mat<double> train_txy = TXtrain * Ytrain;
+        std::vector< arma::rowvec >& txx_rows = data.txx_rows();
+
         int iter = 0;
         do
         {
@@ -105,7 +110,7 @@ namespace netreg
                       train_txx, train_txy,
                       LX, LY,
                       coef, old_coef,
-                      qi);
+                      qi, txx_rows);
 #ifdef USE_RCPPARMADILLO
                 if (iter % 10 == 0) Rcpp::checkUserInterrupt();
 #endif
@@ -125,7 +130,8 @@ namespace netreg
          arma::Mat<double> &LX, arma::Mat<double> &LY,
          arma::Mat<double> &coef,
          arma::Mat<double> &old_coef,
-         const int qi) const
+         const int qi,
+         std::vector< arma::rowvec >& txx_rows) const
     {
         // weighted penalization param of Elastic-net
         const double lalph = alpha * lambda;
@@ -146,7 +152,7 @@ namespace netreg
                 double norm = 0.0;
                 set_params
                     (s, norm, TXX, TXY, coef,
-                     LX, LY, P, Q, pi, qi, psigx, psigy, false);
+                     LX, LY, P, Q, pi, qi, psigx, psigy, txx_rows);
 //                // soft-thresholded version of estimate
                 coef(pi, qi) = softnorm(s, lalph, enorm * norm);
 #ifdef USE_RCPPARMADILLO
@@ -161,7 +167,8 @@ namespace netreg
 
     void edgenet_gaussian::set_params
         (double &s, double &norm,
-         arma::Mat<double> &TXX, arma::Mat<double> &TXY,
+         arma::Mat<double> &TXX,
+         arma::Mat<double> &TXY,
          arma::Mat<double> &coef,
          arma::Mat<double> &LX,
          arma::Mat<double> &LY,
@@ -169,9 +176,9 @@ namespace netreg
          const int pi, const int qi,
          const double psigx,
          const double psigy,
-         const bool lower) const
+         std::vector< arma::rowvec >& txx_rows) const
     {
-        s = pls(TXX, TXY, coef, pi, qi, P, lower);
+        s = pls(TXX, TXY, coef, pi, qi, P, txx_rows);
         norm = (TXX)(pi, pi);
         graph_penalize(s, norm, psigx, psigy,
                        LX, LY, coef,

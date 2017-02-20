@@ -29,13 +29,14 @@ G.Y <- matrix(1, q, q)
 G.Y[upper.tri(G.Y)] <- rbeta(q * (q-1) / 2, 1, 2)
 G.Y <- t(G.Y) + G.Y
 
-m <- microbenchmark(
-              Pure=edgenet.pure.R(X, Y, G.X, G.Y, lambda, psigx, psigy, thresh, maxit),
+m2 <- 
+  microbenchmark(
+              #Pure=edgenet.pure.R(X, Y, G.X, G.Y, lambda, psigx, psigy, thresh, maxit),
                Cpp=.Call("edgenet_cpp", X, Y, G.X, G.Y,
                      as.double(lambda), as.double(psigx),  as.double(psigy),
                      as.integer(maxit), as.double(thresh),
                      as.character("gaussian"))$coefficients,
-               times=10)
+               times=3)
 
 uuid <- uuid::UUIDgenerate()
 path                         <- "~/PROJECTS/netreg_project/results/"

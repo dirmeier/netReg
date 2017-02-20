@@ -63,16 +63,20 @@ namespace netreg
                           const int niter, const double thresh,
                           const family fam)
             : N(n), P(p), Q(q),
-              X(x, n, p),
-              Y(y, n, q),
+              X(x, n, p , false, true),
+              Y(y, n, q, false, true),
               intrcpt(q), coeffs(p, q, arma::fill::ones),
               THRESH(thresh), N_ITER(niter),
-              TXX(p, p), TXY(p, q),
+              TXX(p, p), TXY(p, q),txx_rows_(p),
               family_(fam)
         {
             arma::Mat<double> TX = X.t();
             TXX = TX * X;
             TXY = TX * Y;
+            for(std::vector< arma::Row<double> >::size_type i = 0; i < TXX.n_rows;  ++i)
+            {
+                txx_rows_[i] = TXX.row(i);
+            }
         }
 
     public:
@@ -86,6 +90,8 @@ namespace netreg
         {
             return family_;
         }
+
+
 
         /**
          * Getter for number of samples.
@@ -127,6 +133,16 @@ namespace netreg
         double &coefficients(const int i, const int j) 
         {
             return coeffs(i, j);
+        }
+
+        arma::rowvec& txx_row(const int i)
+        {
+            return txx_rows_[i];
+        }
+
+        std::vector< arma::rowvec >& txx_rows()
+        {
+            return txx_rows_;
         }
 
         /**
@@ -221,6 +237,7 @@ namespace netreg
         const int N_ITER;        // max number iterations if CCD does not converge
         arma::Mat<double> TXX;      // (p x p)-dimensional matrix: X'X
         arma::Mat<double> TXY;      // (p x q)-dimensional matrix: X'Y
+        std::vector< arma::Row<double> > txx_rows_;
         const enum family family_;      // family of distribution of y
     };
 }

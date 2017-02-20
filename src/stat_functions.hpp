@@ -31,6 +31,8 @@
 #include "armadillo"
 #endif
 
+#include <vector>
+
 namespace netreg
 {
     /**
@@ -57,6 +59,7 @@ namespace netreg
      * @param lower is only lower of TXX is initialized
      */
     double pls(arma::Mat<double> &TXX, arma::Mat<double> &TXY, arma::Mat<double> &cfs,
-               const int pi, const int qi, const int P, const bool lower);
+               const int pi, const int qi, const int P,
+               std::vector< arma::rowvec >& txx_rows);
 }
 #endif //NETREG_STAT_FUNCTIONS_HPP

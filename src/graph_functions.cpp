@@ -51,7 +51,7 @@ namespace netreg
                 rowSum += x[i + n * j];
             degrees[i] = rowSum;
         }
-        double *  laplacian = new double[n * m];
+        arma::Mat<double> lap(n, m);
         // calculate normalized Laplacian matrix of source
         #pragma omp parallel for
         for (int i = 0; i < n; ++i)
@@ -59,16 +59,14 @@ namespace netreg
             for (int j = 0; j < m; ++j)
             {
                 if (i == j && degrees[i] != 0)
-                    laplacian[i + n * j] = 1 - (x[i + n * j] / degrees[i]);
+                    lap(i, j) = 1 - (x[i + n * j] / degrees[i]);
                 else if (i != j && x[i + n * j] != 0)
-                    laplacian[i + n * j] =
+                    lap(i, j) =
                         -x[i + n * j] / std::sqrt(degrees[i] * degrees[j]);
                 else
-                    laplacian[i + n * j] = 0.0;
+                    lap(i, j) = 0.0;
             }
         }
-        arma::Mat<double> lap(laplacian, n, m, true, true);
-        delete [] laplacian;
         return lap;
     }
 }

@@ -95,7 +95,8 @@ namespace netreg
              arma::Mat<double> &LX, arma::Mat<double> &LY,
              arma::Mat<double> &coef,
              arma::Mat<double> &old_coef,
-             int qi) const;
+             int qi,
+             std::vector< arma::rowvec >& txx_rows) const;
 
         /**
          * Updates the softthresholding parameter and the normalization
@@ -181,47 +182,7 @@ namespace netreg
              arma::Mat<double> &LX, arma::Mat<double> &LY,
              const int P, const int Q, const int pi, const int qi,
              const double psigx, const double psigy,
-             const bool lower) const;
-
-        /**
-         * In cross-validation most of the parameters can be updated iteratively when needed.
-         * This is done here and probably buggy, since a lot is calculated on the fly.
-         * TODO check this
-         *
-         * @param soft reference to softthresholding parameter
-         * @param norm reference to normalization term
-         * @param TXX X'X matrix
-         * @param TXY X'Y matrix
-         * @param TXX_train X'X matrix only with training indeexs
-         * @param TXY_train X'Y matrix only with testing indexes
-         * @param train_idxs the indexes of the training set
-         * @param test_idxs the indexes of the testing set
-         * @param B the current estimate of the coefficients
-         * @param X the design matrix
-         * @param Y the response matrix
-         * @param LX normalized graph laplacian for X
-         * @param LY normalized graph laplacian for Y
-         * @param pi current coefficient index
-         * @param qi current response index
-         * @param psigx penalization for LX
-         * @param psigy penalization for LY
-         * @param P number of covariables
-         * @param Q number of responses
-         */
-        void preset_params
-            (double &soft, double &norm,
-             arma::Mat<double> &TXX,
-             arma::Mat<double> &TXY,
-             arma::Mat<double> &TXX_train,
-             arma::Mat<double> &TXY_train,
-             std::vector<int> &train_idxs, std::vector<int> &testIidxs,
-             arma::Mat<double> &B,
-             arma::Mat<double> &X, arma::Mat<double> &Y,
-             arma::Mat<double> &LX, arma::Mat<double> &LY,
-             const int pi, const int qi,
-             const double psigx, const double psigy,
-             const int P, const int Q) const;
-
+             std::vector< arma::rowvec >& txx_rows) const;
     };
 }
 
