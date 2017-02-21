@@ -134,6 +134,7 @@ namespace netreg
          std::vector< arma::rowvec >& txx_rows,
          std::vector< arma::rowvec >& lx_rows) const
     {
+      // TODO extern
         // weighted penalization param of Elastic-net
         const double lalph = alpha * lambda;
         // normalization for soft-thresholding
@@ -149,6 +150,7 @@ namespace netreg
             {
                 // safe current estimate of coefficients
                 old_coef(pi, qi) = coef(pi, qi);
+              // TODO extern
                 double s = 0.0;
                 double norm = 0.0;
                 set_params

@@ -44,7 +44,7 @@ namespace netreg
      * @param pi the column of matrix<double> source1
      * @param qi the column of matrix<double> source2
      */
-    double abs_dprod(const arma::Col<double> &lhs,
+    inline double abs_dprod(const arma::Col<double> &lhs,
                      const arma::Col<double> &rhs);
 
     /**
@@ -55,7 +55,7 @@ namespace netreg
      * @param norm normalization constant
      * @return returns soft-thresholded normalized version of current coefficient
      */
-    double softnorm(const double s,
+    inline double softnorm(const double s,
                     const double lalph,
                     const double norm);
 
@@ -67,7 +67,7 @@ namespace netreg
      *
      * @return return the maximal element
      */
-    template <typename T> T max_element(T *const ptr, int len);
+    inline template <typename T> T max_element(T *const ptr, int len);
 
 
     /**
@@ -77,7 +77,7 @@ namespace netreg
      *
      * @return returns the sigmoid function value
      */
-    double sigmoid(double d);
+    inline double sigmoid(double d);
 
 }
 #endif //NETREG_MATH_HPP

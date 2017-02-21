@@ -11,8 +11,8 @@ p      <- as.integer(cms[1])
 stopifnot(!is.na(p), is.numeric(p))
 
 n      <- 1000
-q      <- 10
-lambda <- 10
+q      <- 10000
+lambda <- 1
 psigx  <- psigy <- 5
 thresh <- 1e-7
 maxit  <- 10000
