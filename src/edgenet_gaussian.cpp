@@ -24,45 +24,60 @@
 
 #include "edgenet_gaussian.hpp"
 
-
 #include "cv_set.hpp"
 #include "math_functions.hpp"
 #include "stat_functions.hpp"
 
 namespace netreg
 {
-    arma::Mat<double> edgenet_gaussian::run(graph_penalized_linear_model_data &data) const
+    arma::Mat<double> edgenet_gaussian::run(
+        graph_penalized_linear_model_data &data) const
     {
         const int P = data.covariable_count();
         const int Q = data.response_count();
-        arma::Mat<double> coef(P, Q, arma::fill::ones);
-        arma::Mat<double> old_coef(P, Q);
+
         const double thresh = data.threshold();
         const int niter = data.max_iter();
+
         const double lambda = data.lambda();
         const double alpha = data.alpha();
         const double psigx = data.psigx();
         const double psigy = data.psigy();
-        arma::Mat<double> &TXX = data.txx();
+
         arma::Mat<double> &TXY = data.txy();
-        arma::Mat<double> &LX = data.lx();
         arma::Mat<double> &LY = data.ly();
-        std::vector< arma::rowvec >& txx_rows = data.txx_rows();
-        std::vector< arma::Row<double> >& lx_rows = data.lx_rows();
+
+        std::vector <arma::rowvec> &txx_rows = data.txx_rows();
+        std::vector <arma::Row<double>> &lx_rows = data.lx_rows();
+
+        arma::Mat<double> coef(P, Q, arma::fill::ones);
+        arma::Mat<double> old_coef(P, Q);
+        std::vector <arma::rowvec> coef_rows(P);
+//        for (std::vector<arma::Row < double >>::size_type i = 0; i < coef.n_rows; ++i) {
+//            coef_rows[i] = coef.row(i);
+//        }
+
+        // weighted penalization param of Elastic-net
+        const double lalph = alpha * lambda;
+        // normalization for soft-thresholding
+        const double enorm = 1.0 + lambda * (1 - alpha);
+
         int iter = 0;
         do
         {
             // This is definitely not parallizable
+            // do not try it in the future
             for (int qi = 0; qi < Q; ++qi)
             {
-                uccd_(P, Q,
+                uccd_(P, Q, qi,
                       thresh, niter,
-                      lambda, alpha,
+                      lalph, enorm,
                       psigx, psigy,
-                      TXX, TXY,
-                      LX, LY,
+                      TXY, LY,
                       coef, old_coef,
-                      qi, txx_rows, lx_rows);
+                      txx_rows,
+                      lx_rows,
+                      coef_rows);
 #ifdef USE_RCPPARMADILLO
                 if (iter % 100 == 0) Rcpp::checkUserInterrupt();
 #endif
@@ -81,36 +96,54 @@ namespace netreg
     {
         const int P = data.covariable_count();
         const int Q = data.response_count();
-        arma::Mat<double> coef(P, Q, arma::fill::ones);
-        arma::Mat<double> old_coef(P, Q);
+
         const double thresh = data.threshold();
         const int niter = data.max_iter();
+
         arma::Mat<double> &X = data.design();
         arma::Mat<double> &Y = data.response();
-        arma::Mat<double> &LX = data.lx();
         arma::Mat<double> &LY = data.ly();
         arma::uvec &trainIdxs = fold.train_set();
+
         arma::Mat<double> Xtrain = X.rows(trainIdxs);
         arma::Mat<double> Ytrain = Y.rows(trainIdxs);
         arma::Mat<double> TXtrain = Xtrain.t();
         arma::Mat<double> train_txx = TXtrain * Xtrain;
         arma::Mat<double> train_txy = TXtrain * Ytrain;
-        std::vector< arma::rowvec >& txx_rows = data.txx_rows();
-        std::vector< arma::Row<double> >& lx_rows = data.lx_rows();
+
+        std::vector <arma::rowvec> txx_rows(p);
+//        for (std::vector < arma::Row < double > > ::size_type i = 0; i < train_txx.n_rows; ++i) {
+//            txx_rows_[i] = train_txx.row(i);
+//        }
+        std::vector <arma::Row<double>> &lx_rows = data.lx_rows();
+
+        arma::Mat<double> coef(P, Q, arma::fill::ones);
+        arma::Mat<double> old_coef(P, Q);
+        std::vector <arma::rowvec> coef_rows(P);
+//        for (std::vector < arma::Row < double > > ::size_type i = 0; i < coef.n_rows; ++i) {
+//            coef_rows[i] = coef.row(i);
+//        }
+
+        // weighted penalization param of Elastic-net
+        const double lalph = alpha * lambda;
+        // normalization for soft-thresholding
+        const double enorm = 1.0 + lambda * (1 - alpha);
+
         int iter = 0;
         do
         {
             // This is definitely not parallizable!
             for (int qi = 0; qi < Q; ++qi)
             {
-                uccd_(P, Q,
+                uccd_(P, Q, qi,
                       thresh, niter,
-                      lambda, alpha,
+                      lalph, enorm,
                       psigx, psigy,
-                      train_txx, train_txy,
-                      LX, LY,
+                      train_txy, LY,
                       coef, old_coef,
-                      qi, txx_rows, lx_rows);
+                      txx_rows,
+                      lx_rows,
+                      coef_rows);
 #ifdef USE_RCPPARMADILLO
                 if (iter % 100 == 0) Rcpp::checkUserInterrupt();
 #endif
@@ -122,25 +155,22 @@ namespace netreg
     }
 
     void edgenet_gaussian::uccd_
-        (const int P, const int Q,
-         const double thresh, const int niter,
-         const double lambda, const double alpha,
-         const double psigx, const double psigy,
-         arma::Mat<double> &TXX, arma::Mat<double> &TXY,
-         arma::Mat<double> &LX, arma::Mat<double> &LY,
+        (int P, int Q, int qi,
+         double thresh, int niter,
+         double lalph, double enorm,
+         double psigx, double psigy,
+         arma::Mat<double> &TXY,
+         arma::Mat<double> &LY,
          arma::Mat<double> &coef,
          arma::Mat<double> &old_coef,
-         const int qi,
-         std::vector< arma::rowvec >& txx_rows,
-         std::vector< arma::rowvec >& lx_rows) const
+         std::vector <arma::rowvec> &txx_rows,
+         std::vector <arma::rowvec> &lx_rows,
+         std::vector <arma::rowvec> &coef_rows) const
     {
-      // TODO extern
-        // weighted penalization param of Elastic-net
-        const double lalph = alpha * lambda;
-        // normalization for soft-thresholding
-        const double enorm = 1.0 + lambda * (1 - alpha);
         // iteration counter
         int iter = 0;
+        double s = 0.0;
+        double norm = 0.0;
         // do while estimation of params does not converge
         do
         {
@@ -150,14 +180,17 @@ namespace netreg
             {
                 // safe current estimate of coefficients
                 old_coef(pi, qi) = coef(pi, qi);
-              // TODO extern
-                double s = 0.0;
-                double norm = 0.0;
                 set_params
-                    (s, norm, TXX, TXY, coef,
-                     LX, LY, P, Q, pi, qi, psigx, psigy, txx_rows[pi], lx_rows[pi]);
-//                // soft-thresholded version of estimate
-                coef(pi, qi) = softnorm(s, lalph, enorm * norm);
+                    (s, norm, P, Q,
+                     pi, qi, psigx, psigy,
+                     TXY, LY, coef,
+                     txx_rows[pi],
+                     lx_rows[pi],
+                     coef_rows[pi]);
+                // soft-thresholded version of estimate
+                const double d = softnorm(s, lalph, enorm * norm);
+                coef(pi, qi) = d;
+                coef_rows[pi](qi) = d;
 #ifdef USE_RCPPARMADILLO
                 if (iter % 100 == 0) Rcpp::checkUserInterrupt();
 #endif
@@ -170,67 +203,67 @@ namespace netreg
 
     void edgenet_gaussian::set_params
         (double &s, double &norm,
-         arma::Mat<double> &TXX,
+         int P, int Q,
+         int pi, int qi,
+         double psigx,
+         double psigy,
          arma::Mat<double> &TXY,
-         arma::Mat<double> &coef,
-         arma::Mat<double> &LX,
          arma::Mat<double> &LY,
-         const int P, const int Q,
-         const int pi, const int qi,
-         const double psigx,
-         const double psigy,
-         arma::rowvec& txx_rows,
-         arma::rowvec& lx_rows) const
+         arma::Mat<double> &coef,
+         arma::rowvec &txx_row,
+         arma::rowvec &lx_row,
+         arma::rowvec &coef_row) const
     {
-        //s = pls(txx_rows, TXY, coef, pi, qi, P);
-        s = TXY(pi, qi) + (txx_rows(pi) * coef(pi, qi)) - arma::accu(txx_rows * coef.col(qi));
-        norm = txx_rows(pi);
-        graph_penalize(s, norm, psigx, psigy,
-                       LX, LY, coef,
-                       P, Q, pi, qi, lx_rows);
+        s = partial_least_squares(txx_row, TXY, coef, pi, qi);
+        norm = txx_row(pi);
+        graph_penalize(s, norm,
+                       pi, qi,
+                       psigx, psigy,
+                       Q,
+                       lx_row,
+                       LY,
+                       coef,
+                       coef_row);
     }
 
     void edgenet_gaussian::graph_penalize
         (double &s, double &norm,
-         const double psigx, const double psigy,
-         arma::Mat<double> &LX, arma::Mat<double> &LY, arma::Mat<double> &cfs,
-         const int P, const int Q,
-         const int pi, const int qi, arma::rowvec& lx_rows) const
+         int pi, int qi,
+         double psigx, double psigy,
+         int Q,
+         arma::rowvec &lx_row,
+         arma::Mat<double> &LY,
+         arma::Mat<double> &cfs,
+         arma::rowvec &cfs_row) const
     {
-        if (psigx != 0)
-            lx_penalize(s, norm, psigx, LX, cfs, P, pi, qi, lx_rows);
-        if (psigy != 0)
-            ly_penalize(s, norm, psigy, LY, cfs, Q, pi, qi);
+        if (psigx > 0.001)
+            lx_penalize(s, norm, pi, qi, psigx, cfs, lx_row);
+        if (psigy > 0.001 && Q > 1)
+            ly_penalize(s, norm, pi, qi, psigy, LY, cfs_row);
     }
 
     void edgenet_gaussian::lx_penalize
-        (double &s, double &norm, const double psigx,
-         arma::Mat<double> &LX, arma::Mat<double> &cfs, const int P,
-         const int pi, const int qi,  arma::rowvec& lx_rows) const
+        (double &s, double &norm,
+         int pi, int qi,
+         double psigx,
+         arma::Mat<double> &cfs,
+         arma::rowvec &lx_row) const
     {
-        if (psigx <= 0.001)
-            return;
-        double xPenalty = 0.0;
-        if (pi < LX.n_rows && pi < LX.n_cols)
-        {
-            xPenalty = -lx_rows(pi) * cfs(pi, qi) + arma::accu(lx_rows * cfs.col(qi));
-        }
+        double xPenalty =
+            -lx_row(pi) * cfs(pi, qi) + arma::accu(lx_row * cfs.col(qi));
         s = s - 2 * psigx * xPenalty;
-        norm += 2 * psigx * lx_rows(pi);
+        norm += 2 * psigx * lx_row(pi);
     }
 
     void edgenet_gaussian::ly_penalize
-        (double &s, double &norm, const double psigy,
-         arma::Mat<double> &LY, arma::Mat<double> &cfs, const int Q,
-         const int pi, const int qi) const
+        (double &s, double &norm,
+         int pi, int qi,
+         double psigy,
+         arma::Mat<double> &LY,
+         arma::rowvec &cfs_row) const
     {
-        if (psigy <= 0.001 || Q == 1)
-            return;
-        double yPenalty = 0.0;
-        if (qi < LY.n_rows && qi < LY.n_cols)
-        {
-            yPenalty = -cfs(pi, qi) * LY(qi, qi) + arma::accu(cfs.row(pi) * LY.col(qi));
-        }
+        double yPenalty =
+            -cfs_row(qi) * LY(qi, qi) + arma::accu(cfs_row * LY.col(qi));
         s = s - 2 * psigy * yPenalty;
         norm += 2 * psigy * LY(qi, qi);
     }

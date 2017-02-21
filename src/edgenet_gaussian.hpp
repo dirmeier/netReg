@@ -32,7 +32,6 @@
 #include "graph_penalized_linear_model_cv_data.hpp"
 #include "cv_fold.hpp"
 
-
 #ifdef USE_RCPPARMADILLO
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
@@ -87,76 +86,17 @@ namespace netreg
          * @param qi the index of a column of the multivariate response amtrox
          */
         void uccd_
-            (int P, int Q,
-             double thresh, int niter,
-             double lambda, double alpha,
-             double psigx, const double psigy,
-             arma::Mat<double> &TXX, arma::Mat<double> &TXY,
-             arma::Mat<double> &LX, arma::Mat<double> &LY,
+            (const int P, const int Q, const int qi,
+             const double thresh, const int niter,
+             const double lalph, const double enorm,
+             const double psigx, const double psigy,
+             arma::Mat<double> &TXY,
+             arma::Mat<double> &LY,
              arma::Mat<double> &coef,
              arma::Mat<double> &old_coef,
-             int qi,
-             std::vector< arma::rowvec >& txx_rows,
-             std::vector< arma::rowvec >& lx_rows) const;
-
-        /**
-         * Updates the softthresholding parameter and the normalization
-         * constant using the graph Laplacians.
-         *
-         * @param s the softthresholding parameter to be set
-         * @param norm the normalization constant to be set
-         * @param cfs the current estimate of the coefficients
-         * @param LX the normalized laplacian of X
-         * @param LY the normalized laplacian of Y
-         * @param P the number of covariables
-         * @param Q the number of responses
-         * @param pi the current index of the column of X
-         * @param qi the current index of the column of Y
-         * @param psigx the penalty for the Laplacian of X
-         * @param psigy the penalty for the Laplacien of Y
-         */
-        inline void graph_penalize
-            (double &s, double &norm,
-             const double psigx, const double psigy,
-             arma::Mat<double> &LX, arma::Mat<double> &LY, arma::Mat<double> &cfs,
-             const int P, const int Q,
-             const int pi, const int qi, arma::rowvec& lx_rows) const;
-
-        /**
-         * Adds the penalty from the Laplacian of X to the softthresholding
-         * parameter s and the normalization constant norm.
-         *
-         * @param s the softthresholding parameter to be set
-         * @param norm the normalization constant to be set
-         * @param cfs the current estimate of the coefficients
-         * @param LX the normalized laplacian of X
-         * @param P the number of covariables
-         * @param pi the current index of the column of X
-         * @param qi the current index of the column of Y
-         * @param psigx the penalty for the Laplacian of X
-         */
-        inline void lx_penalize
-            (double &s, double &norm, const double psigx, arma::Mat<double> &LX,
-             arma::Mat<double> &cfs, const int P, const int pi,
-             const int qi, arma::rowvec& lx_rows) const;
-
-        /**
-         * Adds the penalty from the Laplacian of X to the softthresholding
-         * parameter s and the normalization constant norm.
-         *
-         * @param s the softthresholding parameter to be set
-         * @param norm the normalization constant to be set
-         * @param psigy the penalty for the Laplacien of Y
-         * @param LY the normalized laplacian of Y
-         * @param B the current estimate of the coefficients
-         * @param Q the number of responses
-         * @param pi the current index of the column of X
-         * @param qi the current index of the column of Y
-         */
-        inline void ly_penalize
-            (double &s, double &norm, const double psigy,
-             arma::Mat<double> &LY, arma::Mat<double> &B, const int Q,
-             const int pi, const int qi) const;
+             std::vector <arma::rowvec> &txx_rows,
+             std::vector <arma::rowvec> &lx_rows,
+             std::vector <arma::rowvec> &coef_rows) const;
 
         /**
          * Calculates the softhresholding parameter as well as the normalisation constant.
@@ -178,12 +118,83 @@ namespace netreg
          */
         inline void set_params
             (double &s, double &norm,
-             arma::Mat<double> &TXX, arma::Mat<double> &TXY,
-             arma::Mat<double> &B,
-             arma::Mat<double> &LX, arma::Mat<double> &LY,
-             const int P, const int Q, const int pi, const int qi,
+             const int P, const int Q,
+             const int pi, const int qi,
+             const double psigx,
+             const double psigy,
+             arma::Mat<double> &TXY,
+             arma::Mat<double> &LY,
+             arma::Mat<double> &coef,
+             arma::rowvec &txx_row,
+             arma::rowvec &lx_row,
+             arma::rowvec &coef_row) const;
+
+        /**
+         * Updates the softthresholding parameter and the normalization
+         * constant using the graph Laplacians.
+         *
+         * @param s the softthresholding parameter to be set
+         * @param norm the normalization constant to be set
+         * @param cfs the current estimate of the coefficients
+         * @param LX the normalized laplacian of X
+         * @param LY the normalized laplacian of Y
+         * @param P the number of covariables
+         * @param Q the number of responses
+         * @param pi the current index of the column of X
+         * @param qi the current index of the column of Y
+         * @param psigx the penalty for the Laplacian of X
+         * @param psigy the penalty for the Laplacien of Y
+         */
+        inline graph_penalize
+            (double &s, double &norm,
+             const int pi, const int qi,
              const double psigx, const double psigy,
-             arma::rowvec& txx_rows, arma::rowvec& lx_rows) const;
+             const int Q,
+             arma::rowvec &lx_row,
+             arma::Mat<double> &LY,
+             arma::Mat<double> &cfs,
+             arma::rowvec &cfs_row) const;
+
+        /**
+         * Adds the penalty from the Laplacian of X to the softthresholding
+         * parameter s and the normalization constant norm.
+         *
+         * @param s the softthresholding parameter to be set
+         * @param norm the normalization constant to be set
+         * @param cfs the current estimate of the coefficients
+         * @param LX the normalized laplacian of X
+         * @param P the number of covariables
+         * @param pi the current index of the column of X
+         * @param qi the current index of the column of Y
+         * @param psigx the penalty for the Laplacian of X
+         */
+        inline void lx_penalize
+            (double &s, double &norm,
+             const int pi, const int qi,
+             const double psigx,
+             arma::Mat<double> &cfs,
+             arma::rowvec &lx_row) const;
+
+        /**
+         * Adds the penalty from the Laplacian of X to the softthresholding
+         * parameter s and the normalization constant norm.
+         *
+         * @param s the softthresholding parameter to be set
+         * @param norm the normalization constant to be set
+         * @param psigy the penalty for the Laplacien of Y
+         * @param LY the normalized laplacian of Y
+         * @param B the current estimate of the coefficients
+         * @param Q the number of responses
+         * @param pi the current index of the column of X
+         * @param qi the current index of the column of Y
+         */
+        inline void ly_penalize
+            (double &s, double &norm,
+             const int pi, const int qi,
+             const double psigy,
+             arma::Mat<double> &LY,
+             arma::rowvec &cfs_row) const;
+
     };
 }
 

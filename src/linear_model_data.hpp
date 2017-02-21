@@ -65,13 +65,12 @@ namespace netreg
             : N(n), P(p), Q(q),
               X(x, n, p , false, true),
               Y(y, n, q, false, true),
-              intrcpt(q), coeffs(p, q, arma::fill::ones),
               THRESH(thresh), N_ITER(niter),
-              TXX(p, p), TXY(p, q),txx_rows_(p),
+              TXY(p, q), txx_rows_(p),
               family_(fam)
         {
             arma::Mat<double> TX = X.t();
-            TXX = TX * X;
+            arma::Mat<double> TXX = TX * X;
             TXY = TX * Y;
             for(std::vector< arma::Row<double> >::size_type i = 0; i < TXX.n_rows;  ++i)
             {
@@ -90,8 +89,6 @@ namespace netreg
         {
             return family_;
         }
-
-
 
         /**
          * Getter for number of samples.
@@ -123,18 +120,6 @@ namespace netreg
             return P;
         }
 
-        /**
-         * Getter for the coefficient matrix at element i,i
-         *
-         * @param i the index of the row
-         * @param j the index of the column
-         * @return a reference to an element in the coefficient matrix
-         */
-        double &coefficients(const int i, const int j) 
-        {
-            return coeffs(i, j);
-        }
-
         arma::rowvec& txx_row(const int i)
         {
             return txx_rows_[i];
@@ -143,16 +128,6 @@ namespace netreg
         std::vector< arma::rowvec >& txx_rows()
         {
             return txx_rows_;
-        }
-
-        /**
-         * Getter for the intercept vector.
-         *
-         * @return a reference to the vector of intercepts
-         */
-        arma::Col<double> &intercept() 
-        {
-            return intrcpt;
         }
 
         /**
@@ -173,26 +148,6 @@ namespace netreg
          arma::Mat<double> &response()
         {
             return Y;
-        }
-
-        /**
-         * Getter for the coefficient matrix.
-         *
-         * @return a reference to the coefficient matrix
-         */
-        arma::Mat<double> &coefficients() 
-        {
-            return coeffs;
-        }
-
-        /**
-         * Getter for X'X matrix.
-         *
-         * @return a reference to X'X matrix.
-         */
-        arma::Mat<double> &txx() 
-        {
-            return TXX;
         }
 
         /**
@@ -231,11 +186,8 @@ namespace netreg
         const int Q;             // number of responses: q
         arma::Mat<double> X;        // (n x p)-dimensional design matrix
         arma::Mat<double> Y;        // (n x q)-dimensional response matrix
-        arma::Col<double> intrcpt; // q-dimensional intercept vector
-        arma::Mat<double> coeffs;   // (p x q)-dimensional coefficient matrix
         const double THRESH;     // convergence threshold
         const int N_ITER;        // max number iterations if CCD does not converge
-        arma::Mat<double> TXX;      // (p x p)-dimensional matrix: X'X
         arma::Mat<double> TXY;      // (p x q)-dimensional matrix: X'Y
         std::vector< arma::Row<double> > txx_rows_;
         const enum family family_;      // family of distribution of y

@@ -44,8 +44,8 @@ namespace netreg
      * @return returns a column vector
      */
     arma::Col<double> intercept(arma::Mat<double> &X,
-                              arma::Mat<double> &Y,
-                              arma::Mat<double> &B);
+                                arma::Mat<double> &Y,
+                                arma::Mat<double> &B);
 
     /**
      * Calculates the partial residual of the current coefficient that is estimated.
@@ -53,13 +53,12 @@ namespace netreg
      * @param TXX the square of the design matrix
      * @param TXY the design times the response matrix
      * @param cfs the current estimate of the coefficients
-     * @param P the number of covariables
      * @param pi the current index of the column of X
      * @param qi the current index of the column of Y
-     * @param lower is only lower of TXX is initialized
      */
-    inline double pls( arma::rowvec & txx_rows,
-               arma::Mat<double> &TXY, arma::Mat<double> &cfs,
-               const int pi, const int qi, const int P);
+    inline double partial_least_squares(arma::rowvec &txx_rows,
+                                        arma::Mat<double> &TXY,
+                                        arma::Mat<double> &cfs,
+                                        const int pi, const int qi);
 }
 #endif //NETREG_STAT_FUNCTIONS_HPP

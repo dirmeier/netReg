@@ -30,6 +30,10 @@
 #include <vector>
 #include <map>
 
+
+// [[Rcpp::depends(RcppArmadillo)]]
+#include <RcppArmadillo.h>
+
 #include "../inst/include/dlib/optimization.h"
 #include "graph_penalized_linear_model_cv_data.hpp"
 #include "cv_set.hpp"

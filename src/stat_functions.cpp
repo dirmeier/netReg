@@ -28,7 +28,7 @@ namespace netreg
 {
     arma::Col<double> intercept(arma::Mat<double> &X,
                                 arma::Mat<double> &Y,
-                              arma::Mat<double> &B)
+                                arma::Mat<double> &B)
     {
         arma::Mat<double> terr = (Y - (X * B)).t();
         arma::Col<double> rep(Y.n_rows, arma::fill::ones);
@@ -36,15 +36,13 @@ namespace netreg
         return intr;
     }
 
-    double pls( arma::rowvec & txx_rows,
-               arma::Mat<double> &TXY,
-               arma::Mat<double> &cfs,
-               const int pi,
-               const int qi,
-               const int P)
+    double partial_least_squares(arma::rowvec &txx_rows,
+                                 arma::Mat<double> &TXY,
+                                 arma::Mat<double> &cfs,
+                                 const int pi, const int qi)
     {
-            return TXY(pi, qi) + (txx_rows(pi) * cfs(pi, qi))
-                       - arma::accu(txx_rows * cfs.col(qi));
-            
+        return TXY(pi, qi) + (txx_rows(pi) * cfs(pi, qi))
+               - arma::accu(txx_rows * cfs.col(qi));
+
     }
 }
