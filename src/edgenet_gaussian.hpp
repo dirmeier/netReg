@@ -145,7 +145,7 @@ namespace netreg
          * @param psigx the penalty for the Laplacian of X
          * @param psigy the penalty for the Laplacien of Y
          */
-        inline graph_penalize
+        inline void graph_penalize
             (double &s, double &norm,
              const int pi, const int qi,
              const double psigx, const double psigy,

@@ -59,6 +59,10 @@ namespace netreg
     inline double partial_least_squares(arma::rowvec &txx_rows,
                                         arma::Mat<double> &TXY,
                                         arma::Mat<double> &cfs,
-                                        const int pi, const int qi);
+                                        const int pi, const int qi)
+    {
+        return TXY(pi, qi) + (txx_rows(pi) * cfs(pi, qi))
+               - arma::accu(txx_rows * cfs.col(qi));
+    }
 }
 #endif //NETREG_STAT_FUNCTIONS_HPP

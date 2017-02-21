@@ -57,7 +57,17 @@ namespace netreg
      */
     inline double softnorm(const double s,
                     const double lalph,
-                    const double norm);
+                    const double norm)
+    {
+        const double sabs = std::abs(s);
+        if (lalph < sabs)
+        {
+            if (s > 0)
+                return (s - lalph) / norm;
+            return (s + lalph) / norm;
+        }
+        return 0.0;
+    }
 
     /**
      * Returns the maximal element of a ptr
@@ -67,7 +77,7 @@ namespace netreg
      *
      * @return return the maximal element
      */
-    inline template <typename T> T max_element(T *const ptr, int len);
+    template <typename T> T max_element(T *const ptr, int len);
 
 
     /**

@@ -52,10 +52,10 @@ namespace netreg
 
         arma::Mat<double> coef(P, Q, arma::fill::ones);
         arma::Mat<double> old_coef(P, Q);
-        std::vector <arma::rowvec> coef_rows(P);
-//        for (std::vector<arma::Row < double >>::size_type i = 0; i < coef.n_rows; ++i) {
-//            coef_rows[i] = coef.row(i);
-//        }
+        std::vector <arma::rowvec> coef_rows(static_cast<unsigned int>(P));
+        for (std::vector<arma::Row < double >>::size_type i = 0; i < coef.n_rows; ++i) {
+            coef_rows[i] = coef.row(i);
+        }
 
         // weighted penalization param of Elastic-net
         const double lalph = alpha * lambda;
@@ -111,18 +111,19 @@ namespace netreg
         arma::Mat<double> train_txx = TXtrain * Xtrain;
         arma::Mat<double> train_txy = TXtrain * Ytrain;
 
-        std::vector <arma::rowvec> txx_rows(p);
-//        for (std::vector < arma::Row < double > > ::size_type i = 0; i < train_txx.n_rows; ++i) {
-//            txx_rows_[i] = train_txx.row(i);
-//        }
+        std::vector <arma::rowvec> txx_rows(P);
+        for (std::vector < arma::Row < double > > ::size_type i = 0; i < train_txx.n_rows; ++i) {
+            txx_rows[i] = train_txx.row(i);
+        }
+
         std::vector <arma::Row<double>> &lx_rows = data.lx_rows();
 
         arma::Mat<double> coef(P, Q, arma::fill::ones);
         arma::Mat<double> old_coef(P, Q);
         std::vector <arma::rowvec> coef_rows(P);
-//        for (std::vector < arma::Row < double > > ::size_type i = 0; i < coef.n_rows; ++i) {
-//            coef_rows[i] = coef.row(i);
-//        }
+        for (std::vector < arma::Row < double > > ::size_type i = 0; i < coef.n_rows; ++i) {
+            coef_rows[i] = coef.row(i);
+        }
 
         // weighted penalization param of Elastic-net
         const double lalph = alpha * lambda;

@@ -28,18 +28,6 @@
 
 namespace netreg
 {
-    double softnorm(const double s, const double lalph,
-                    const double norm)
-    {
-        const double sabs = std::abs(s);
-        if (lalph < sabs)
-        {
-            if (s > 0)
-                return (s - lalph) / norm;
-            return (s + lalph) / norm;
-        }
-        return 0.0;
-    }
 
     double abs_dprod(const arma::Col<double> &lhs, const arma::Col<double> &rhs)
     {
