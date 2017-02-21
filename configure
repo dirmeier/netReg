@@ -2498,7 +2498,7 @@ if test "x${enable_cxxflags_setting}" = "xyes"; then :
 
 
 
-for flag in -pipe -ffast-math -fomit-frame-pointer -flto -DUSE_RCPPARMADILLO; do
+for flag in -pipe -ffast-math -fomit-frame-pointer -flto; do
   as_CACHEVAR=`$as_echo "ax_cv_check_cxxflags__$flag" | $as_tr_sh`
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C++ compiler accepts $flag" >&5
 $as_echo_n "checking whether C++ compiler accepts $flag... " >&6; }
@@ -2645,6 +2645,7 @@ fi
 RLAPACK=`"${R_HOME}/bin/R" CMD config LAPACK_LIBS`
 RFORT=`"${R_HOME}/bin/R" CMD config FLIBS`
 netReg_LDLIBS="${netReg_LDLIBS} $RLAPACK $RFORT"
+netReg_CPPFLAGS="-DUSE_RCPPARMADILLO"
 
       ax_cxx_compile_cxx11_required=true
   ac_ext=cpp

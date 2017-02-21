@@ -115,7 +115,7 @@ namespace netreg
          * @param psigx the penalty for the Laplacian of X
          * @param psigy the penalty for the Laplacien of Y
          */
-        void graph_penalize
+        inline void graph_penalize
             (double &s, double &norm,
              const double psigx, const double psigy,
              arma::Mat<double> &LX, arma::Mat<double> &LY, arma::Mat<double> &cfs,
@@ -135,7 +135,7 @@ namespace netreg
          * @param qi the current index of the column of Y
          * @param psigx the penalty for the Laplacian of X
          */
-        void lx_penalize
+        inline void lx_penalize
             (double &s, double &norm, const double psigx, arma::Mat<double> &LX,
              arma::Mat<double> &cfs, const int P, const int pi,
              const int qi, arma::rowvec& lx_rows) const;
@@ -153,7 +153,7 @@ namespace netreg
          * @param pi the current index of the column of X
          * @param qi the current index of the column of Y
          */
-        void ly_penalize
+        inline void ly_penalize
             (double &s, double &norm, const double psigy,
              arma::Mat<double> &LY, arma::Mat<double> &B, const int Q,
              const int pi, const int qi) const;
@@ -176,7 +176,7 @@ namespace netreg
          * @param psigy the penalty for the Laplacien of Y
          * @param lower boolean flag whether only the lower triangular matrix of TXX is initialized
          */
-        void set_params
+        inline void set_params
             (double &s, double &norm,
              arma::Mat<double> &TXX, arma::Mat<double> &TXY,
              arma::Mat<double> &B,

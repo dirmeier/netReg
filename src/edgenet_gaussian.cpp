@@ -64,7 +64,7 @@ namespace netreg
                       coef, old_coef,
                       qi, txx_rows, lx_rows);
 #ifdef USE_RCPPARMADILLO
-                if (iter % 10 == 0) Rcpp::checkUserInterrupt();
+                if (iter % 100 == 0) Rcpp::checkUserInterrupt();
 #endif
             }
         }
@@ -112,7 +112,7 @@ namespace netreg
                       coef, old_coef,
                       qi, txx_rows, lx_rows);
 #ifdef USE_RCPPARMADILLO
-                if (iter % 10 == 0) Rcpp::checkUserInterrupt();
+                if (iter % 100 == 0) Rcpp::checkUserInterrupt();
 #endif
             }
         }
@@ -157,7 +157,7 @@ namespace netreg
 //                // soft-thresholded version of estimate
                 coef(pi, qi) = softnorm(s, lalph, enorm * norm);
 #ifdef USE_RCPPARMADILLO
-                if (iter % 10 == 0) Rcpp::checkUserInterrupt();
+                if (iter % 100 == 0) Rcpp::checkUserInterrupt();
 #endif
             }
         }
@@ -180,7 +180,8 @@ namespace netreg
          arma::rowvec& txx_rows,
          arma::rowvec& lx_rows) const
     {
-        s = pls(txx_rows, TXY, coef, pi, qi, P);
+        //s = pls(txx_rows, TXY, coef, pi, qi, P);
+        s = TXY(pi, qi) + (txx_rows(pi) * coef(pi, qi)) - arma::accu(txx_rows * coef.col(qi));
         norm = txx_rows(pi);
         graph_penalize(s, norm, psigx, psigy,
                        LX, LY, coef,

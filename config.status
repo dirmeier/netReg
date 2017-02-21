@@ -603,7 +603,7 @@ echo 'BEGIN {' >"$ac_tmp/subs1.awk" &&
 cat >>"$ac_tmp/subs1.awk" <<\_ACAWK &&
 S["LTLIBOBJS"]=""
 S["LIBOBJS"]=""
-S["netReg_CPPFLAGS"]=""
+S["netReg_CPPFLAGS"]="-DUSE_RCPPARMADILLO"
 S["netReg_LDLIBS"]=" -L/Library/Frameworks/R.framework/Resources/lib -lRblas -L/Library/Frameworks/R.framework/Resources/lib -lRlapack -L/usr/local/lib/gcc/x86_64-apple"\
 "-darwin13.0.0/4.8.2 -lgfortran -lquadmath -lm"
 S["OPENMP_CXXFLAGS"]=""
@@ -615,7 +615,7 @@ S["EXEEXT"]=""
 S["ac_ct_CXX"]="g++"
 S["CPPFLAGS"]=""
 S["LDFLAGS"]=""
-S["CXXFLAGS"]="-g -O2 -pipe -ffast-math -fomit-frame-pointer -flto -DUSE_RCPPARMADILLO"
+S["CXXFLAGS"]="-g -O2 -pipe -ffast-math -fomit-frame-pointer -flto"
 S["CXX"]="g++ -std=c++11"
 S["target_alias"]=""
 S["host_alias"]=""
