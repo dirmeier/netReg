@@ -55,7 +55,7 @@ namespace netreg
      * @param norm normalization constant
      * @return returns soft-thresholded normalized version of current coefficient
      */
-    inline double softnorm(const double s,
+     inline double softnorm(const double s,
                     const double lalph,
                     const double norm)
     {

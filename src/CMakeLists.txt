@@ -9,7 +9,7 @@ find_package(Armadillo REQUIRED)
 
 include_directories(${ARMADILLO_INCLUDE_DIRS})
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g -pipe -ffast-math -fomit-frame-pointer -flto -fPIC -Wall -mtune=core2 -g -O2 -DARMA_DONT_USE_WRAPPER -framework Accelerate")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fno-inline -g -pipe -ffast-math -fomit-frame-pointer -flto -fPIC -Wall -mtune=core2 -g -O2 -DARMA_DONT_USE_WRAPPER -framework Accelerate")
 
 set(SOURCE_FILES
         config.h

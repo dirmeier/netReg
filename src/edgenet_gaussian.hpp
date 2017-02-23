@@ -31,6 +31,8 @@
 #include "graph_penalized_linear_model_data.hpp"
 #include "graph_penalized_linear_model_cv_data.hpp"
 #include "cv_fold.hpp"
+#include "math_functions.hpp"
+#include "stat_functions.hpp"
 
 #ifdef USE_RCPPARMADILLO
 // [[Rcpp::depends(RcppArmadillo)]]
@@ -116,7 +118,7 @@ namespace netreg
          * @param psigy the penalty for the Laplacien of Y
          * @param lower boolean flag whether only the lower triangular matrix of TXX is initialized
          */
-        inline void set_params
+         inline void set_params
             (double &s, double &norm,
              const int P, const int Q,
              const int pi, const int qi,
@@ -127,7 +129,19 @@ namespace netreg
              arma::Mat<double> &coef,
              arma::rowvec &txx_row,
              arma::rowvec &lx_row,
-             arma::rowvec &coef_row) const;
+             arma::rowvec &coef_row) const
+        {
+            s = partial_least_squares(txx_row, TXY, coef, pi, qi);
+            norm = txx_row(pi);
+            graph_penalize(s, norm,
+                           pi, qi,
+                           psigx, psigy,
+                           Q,
+                           lx_row,
+                           LY,
+                           coef,
+                           coef_row);
+        }
 
         /**
          * Updates the softthresholding parameter and the normalization
@@ -145,7 +159,7 @@ namespace netreg
          * @param psigx the penalty for the Laplacian of X
          * @param psigy the penalty for the Laplacien of Y
          */
-        inline void graph_penalize
+         inline void graph_penalize
             (double &s, double &norm,
              const int pi, const int qi,
              const double psigx, const double psigy,
@@ -153,7 +167,13 @@ namespace netreg
              arma::rowvec &lx_row,
              arma::Mat<double> &LY,
              arma::Mat<double> &cfs,
-             arma::rowvec &cfs_row) const;
+             arma::rowvec &cfs_row) const
+        {
+            if (psigx > 0.001)
+                lx_penalize(s, norm, pi, qi, psigx, cfs, lx_row);
+            if (psigy > 0.001 && Q > 1)
+                ly_penalize(s, norm, pi, qi, psigy, LY, cfs_row);
+        }
 
         /**
          * Adds the penalty from the Laplacian of X to the softthresholding
@@ -168,12 +188,18 @@ namespace netreg
          * @param qi the current index of the column of Y
          * @param psigx the penalty for the Laplacian of X
          */
-        inline void lx_penalize
+         void lx_penalize
             (double &s, double &norm,
              const int pi, const int qi,
              const double psigx,
              arma::Mat<double> &cfs,
-             arma::rowvec &lx_row) const;
+             arma::rowvec &lx_row) const
+        {
+            double xPenalty =
+                -lx_row(pi) * cfs(pi, qi) + arma::accu(lx_row * cfs.col(qi));
+            s = s - 2 * psigx * xPenalty;
+            norm += 2 * psigx * lx_row(pi);
+        }
 
         /**
          * Adds the penalty from the Laplacian of X to the softthresholding
@@ -193,7 +219,13 @@ namespace netreg
              const int pi, const int qi,
              const double psigy,
              arma::Mat<double> &LY,
-             arma::rowvec &cfs_row) const;
+             arma::rowvec &cfs_row) const
+        {
+            double yPenalty =
+                -cfs_row(qi) * LY(qi, qi) + arma::accu(cfs_row * LY.col(qi));
+            s = s - 2 * psigy * yPenalty;
+            norm += 2 * psigy * LY(qi, qi);
+        }
 
     };
 }

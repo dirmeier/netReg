@@ -17,8 +17,8 @@ int main()
         boost::normal_distribution<> > var_nor(rng, nd);
 
     const int n = 1000;
-    const int p = 1000;
-    const int q = 10;
+    const int p = 10000;
+    const int q = 1;
 
     double *x = new double[n*p];
     double *y = new double[n*q];

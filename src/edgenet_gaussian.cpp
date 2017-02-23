@@ -25,8 +25,7 @@
 #include "edgenet_gaussian.hpp"
 
 #include "cv_set.hpp"
-#include "math_functions.hpp"
-#include "stat_functions.hpp"
+
 
 namespace netreg
 {
@@ -88,11 +87,13 @@ namespace netreg
         return coef;
     }
 
-    arma::Mat<double> edgenet_gaussian::run_cv(
-        graph_penalized_linear_model_cv_data &data,
-        const double lambda, const double alpha,
-        const double psigx, const double psigy,
-        cv_fold &fold) const
+    arma::Mat<double> edgenet_gaussian::run_cv
+        (graph_penalized_linear_model_cv_data &data,
+         const double lambda,
+         const double alpha,
+         const double psigx,
+         const double psigy,
+         cv_fold &fold) const
     {
         const int P = data.covariable_count();
         const int Q = data.response_count();
@@ -156,10 +157,10 @@ namespace netreg
     }
 
     void edgenet_gaussian::uccd_
-        (int P, int Q, int qi,
-         double thresh, int niter,
-         double lalph, double enorm,
-         double psigx, double psigy,
+        (const int P, const int Q, const int qi,
+         const double thresh, const int niter,
+         const double lalph, const double enorm,
+         const double psigx, const double psigy,
          arma::Mat<double> &TXY,
          arma::Mat<double> &LY,
          arma::Mat<double> &coef,
@@ -201,72 +202,4 @@ namespace netreg
             arma::accu(arma::abs(coef.col(qi) - old_coef.col(qi))) > thresh &&
             iter++ < niter);
     }
-
-    void edgenet_gaussian::set_params
-        (double &s, double &norm,
-         int P, int Q,
-         int pi, int qi,
-         double psigx,
-         double psigy,
-         arma::Mat<double> &TXY,
-         arma::Mat<double> &LY,
-         arma::Mat<double> &coef,
-         arma::rowvec &txx_row,
-         arma::rowvec &lx_row,
-         arma::rowvec &coef_row) const
-    {
-        s = partial_least_squares(txx_row, TXY, coef, pi, qi);
-        norm = txx_row(pi);
-        graph_penalize(s, norm,
-                       pi, qi,
-                       psigx, psigy,
-                       Q,
-                       lx_row,
-                       LY,
-                       coef,
-                       coef_row);
-    }
-
-    void edgenet_gaussian::graph_penalize
-        (double &s, double &norm,
-         int pi, int qi,
-         double psigx, double psigy,
-         int Q,
-         arma::rowvec &lx_row,
-         arma::Mat<double> &LY,
-         arma::Mat<double> &cfs,
-         arma::rowvec &cfs_row) const
-    {
-        if (psigx > 0.001)
-            lx_penalize(s, norm, pi, qi, psigx, cfs, lx_row);
-        if (psigy > 0.001 && Q > 1)
-            ly_penalize(s, norm, pi, qi, psigy, LY, cfs_row);
-    }
-
-    void edgenet_gaussian::lx_penalize
-        (double &s, double &norm,
-         int pi, int qi,
-         double psigx,
-         arma::Mat<double> &cfs,
-         arma::rowvec &lx_row) const
-    {
-        double xPenalty =
-            -lx_row(pi) * cfs(pi, qi) + arma::accu(lx_row * cfs.col(qi));
-        s = s - 2 * psigx * xPenalty;
-        norm += 2 * psigx * lx_row(pi);
-    }
-
-    void edgenet_gaussian::ly_penalize
-        (double &s, double &norm,
-         int pi, int qi,
-         double psigy,
-         arma::Mat<double> &LY,
-         arma::rowvec &cfs_row) const
-    {
-        double yPenalty =
-            -cfs_row(qi) * LY(qi, qi) + arma::accu(cfs_row * LY.col(qi));
-        s = s - 2 * psigy * yPenalty;
-        norm += 2 * psigy * LY(qi, qi);
-    }
-
 }
