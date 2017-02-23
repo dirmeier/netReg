@@ -188,7 +188,7 @@ namespace netreg
          * @param qi the current index of the column of Y
          * @param psigx the penalty for the Laplacian of X
          */
-         void lx_penalize
+         inline void lx_penalize
             (double &s, double &norm,
              const int pi, const int qi,
              const double psigx,
