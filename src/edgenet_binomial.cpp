@@ -61,5 +61,5 @@ namespace netreg
         //TODO
         return coef;
     }
-
 }
+

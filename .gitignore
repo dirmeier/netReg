@@ -1,5 +1,5 @@
 build/
-config.log
+config.*
 inst/doc/*
 src/tests/build/.*
 src/tests/a.out

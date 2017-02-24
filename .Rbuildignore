@@ -1,3 +1,4 @@
+build/*
 benchmark
 ^.*\.Rproj$
 ^\.Rproj\.user$
@@ -14,3 +15,4 @@ LICENSE
 .lintr
 .travis.yml
 .codecov.yml
+CMakeLists.txt
