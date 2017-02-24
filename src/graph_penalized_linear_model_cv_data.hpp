@@ -71,7 +71,7 @@ namespace netreg
          * @param fold_ids fold id mappings
          */
         graph_penalized_linear_model_cv_data
-            (double *const x, double *const y,
+            (double *const  x,  double *const y,
              double *const gx, double *const gy,
              const int n, const int p, const int q,
              const double lambda, const double alpha,
@@ -81,7 +81,7 @@ namespace netreg
             : graph_penalized_linear_model_data
                   (x, y, gx, gy, n, p, q, lambda, alpha, psi_gx, psi_gy,
                    niter, thresh, fam),
-              fold_ids_(design().n_rows), cvset_(n, nfolds)
+              fold_ids_(design().n_rows), cvset_(n, nfolds, X, Y)
         {
             set_fold_ids();
         }
@@ -115,7 +115,7 @@ namespace netreg
             : graph_penalized_linear_model_data
                   (x, y, gx, gy, n, p, q, lambda, alpha, psi_gx, psi_gy,
                    niter, thresh, fam),
-              fold_ids_(design().n_rows), cvset_(n, fold_ids)
+              fold_ids_(design().n_rows), cvset_(n, fold_ids, X, Y)
         {
             set_fold_ids();
         }

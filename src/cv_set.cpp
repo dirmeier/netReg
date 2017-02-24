@@ -21,16 +21,19 @@
  * @author: Simon Dirmeier
  * @email: simon.dirmeier@gmx.de
  */
+
 #include "cv_set.hpp"
 
-#include <utility>
+#ifdef HAVE_OPENMP
+#include <omp.h>
+#endif
 
+#include <utility>
 #include "vector_functions.hpp"
-#include "not_implemented_exception.hpp"
 
 namespace netreg
 {
-    void cv_set::init()
+    void cv_set::init(arma::Mat<double> &X, arma::Mat<double> &Y)
     {
         // get a random permutation of the indexes from 1 to N_
         std::vector<int> perms = netreg::shuffle(N_, 0);
@@ -66,15 +69,16 @@ namespace netreg
             }
         }
 
+        #pragma omp parallel for
         for (int i = 0; i < N_FOLDS_; ++i)
-            folds_.push_back(cv_fold(trains[i], tests[i]));
+            folds_.push_back(cv_fold(trains[i], tests[i], X, Y));
 
     }
 
 /*
  * TODO: this might need debugging ... looks correct though
  */
-void cv_set::init(int *const foldids)
+void cv_set::init(int *const foldids, arma::Mat<double> &X, arma::Mat<double> &Y)
 {
     throw not_implemented_exception();
 }

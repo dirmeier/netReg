@@ -35,6 +35,10 @@
 #include "armadillo"
 #endif
 
+#ifdef HAVE_OPENMP
+#include <omp.h>
+#endif
+
 namespace netreg
 {
 /**
@@ -47,14 +51,32 @@ namespace netreg
         cv_fold()
         { }
 
-        cv_fold(std::vector<int> &train_idxs, std::vector<int> &test_idxs):
+        cv_fold(std::vector<int> &train_idxs,
+                std::vector<int> &test_idxs,
+                arma::Mat<double> &X,
+                arma::Mat<double> &Y):
             train_indexes_(train_idxs.size()),
-            test_indexes_(test_idxs.size())
+            test_indexes_(test_idxs.size()),
+            train_txx_rows_(X.n_cols),
+            train_txy_(X.n_cols, Y.n_cols)
         {
             for (unsigned int j = 0; j < train_idxs.size(); ++j)
                 train_indexes_(j) = train_idxs[j];
             for (unsigned int j = 0; j < test_idxs.size(); ++j)
                 test_indexes_(j) = test_idxs[j];
+
+            arma::Mat<double> Xtrain = X.rows(train_indexes_);
+            arma::Mat<double> Ytrain = Y.rows(train_indexes_);
+            arma::Mat<double> TXtrain = Xtrain.t();
+
+            train_txy_ = TXtrain * Ytrain;
+            arma::Mat<double> txx= TXtrain * Xtrain;
+
+            #pragma omp parallel for
+            for (std::vector<arma::Row<double> >::size_type i = 0; i < txx.n_rows; ++i)
+            {
+                train_txx_rows_[i] = txx.row(i);
+            }
         }
 
         /**
@@ -80,6 +102,8 @@ namespace netreg
     private:
         arma::uvec train_indexes_; // indexes of train set
         arma::uvec test_indexes_;  // indexes of test set
+        std::vector<arma::rowvec> train_txx_rows_;
+        arma::Mat<double> train_txy_;
     };
 }
 #endif //NETREG_FOLD_HPP

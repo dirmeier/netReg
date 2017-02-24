@@ -24,11 +24,12 @@
 
 #include "graph_penalized_linear_model_cv_data.hpp"
 
+#include <vector>
+#include <cmath>
+
 #ifdef HAVE_OPENMP
 #include <omp.h>
 #endif
-#include <vector>
-#include <cmath>
 
 namespace netreg
 {

@@ -1,13 +1,15 @@
 #include <iostream>
+#include <map>
+#include <string>
 
 #include "../src/family.hpp"
 #include "../src/edgenet_gaussian.hpp"
-#include "../src/graph_penalized_linear_model_data.hpp"
+#include "../src/graph_penalized_linear_model_cv_data.hpp"
+#include "../src/edgenet_gaussian_model_selection.hpp"
 
 #include <boost/math/distributions/normal.hpp>
 #include <boost/random.hpp>
 
-#include "armadillo"
 
 int main()
 {
@@ -17,7 +19,7 @@ int main()
         boost::normal_distribution<> > var_nor(rng, nd);
 
     const int n = 1000;
-    const int p = 10000;
+    const int p = 100;
     const int q = 1;
 
     double *x = new double[n*p];
@@ -30,20 +32,20 @@ int main()
     for (int k = 0; k < p*p; ++k) gx[k] = 1;
     for (int k = 0; k < q*q; ++k) gy[k] = 1;
 
-    netreg::graph_penalized_linear_model_data data
-        (x,y, gx, gy,
-         n,p, q,
-         10, 1.0,
-         10, 10,
-         100000, 0.00001, netreg::family::GAUSSIAN);
+    netreg::graph_penalized_linear_model_cv_data data
+        (x, y, gx, gy, n, p, q,
+         -1, 1.0, -1, 0, 100000, 0.0000000001, 10,
+         netreg::family::GAUSSIAN);
 
-    netreg::edgenet_gaussian e;
-    arma::Mat<double> m = e.run(data);
+    netreg::edgenet_gaussian_model_selection e;
+    std::map<std::string, double> m = e.regularization_path(data);
 
     delete [] x;
     delete [] y;
     delete [] gx;
     delete [] gy;
+
+
 
     return 0;
 

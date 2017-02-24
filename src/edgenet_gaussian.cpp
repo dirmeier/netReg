@@ -24,8 +24,11 @@
 
 #include "edgenet_gaussian.hpp"
 
-#include "cv_set.hpp"
+#ifdef HAVE_OPENMP
+#include <omp.h>
+#endif
 
+#include "cv_set.hpp"
 
 namespace netreg
 {
@@ -52,6 +55,8 @@ namespace netreg
         arma::Mat<double> coef(P, Q, arma::fill::ones);
         arma::Mat<double> old_coef(P, Q);
         std::vector <arma::rowvec> coef_rows(static_cast<unsigned int>(P));
+
+        #pragma omp parallel for
         for (std::vector<arma::Row < double >>::size_type i = 0; i < coef.n_rows; ++i) {
             coef_rows[i] = coef.row(i);
         }
@@ -113,6 +118,7 @@ namespace netreg
         arma::Mat<double> train_txy = TXtrain * Ytrain;
 
         std::vector <arma::rowvec> txx_rows(P);
+        #pragma omp parallel for
         for (std::vector < arma::Row < double > > ::size_type i = 0; i < train_txx.n_rows; ++i) {
             txx_rows[i] = train_txx.row(i);
         }
@@ -122,6 +128,7 @@ namespace netreg
         arma::Mat<double> coef(P, Q, arma::fill::ones);
         arma::Mat<double> old_coef(P, Q);
         std::vector <arma::rowvec> coef_rows(P);
+        #pragma omp parallel for
         for (std::vector < arma::Row < double > > ::size_type i = 0; i < coef.n_rows; ++i) {
             coef_rows[i] = coef.row(i);
         }

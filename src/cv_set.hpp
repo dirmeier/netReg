@@ -27,8 +27,17 @@
 
 #include <vector>
 
+#ifdef USE_RCPPARMADILLO
+// [[Rcpp::depends(RcppArmadillo)]]
+#include <RcppArmadillo.h>
+#else
+#include "armadillo"
+#endif
+
 #include "cv_fold.hpp"
 #include "math_functions.hpp"
+
+#include "not_implemented_exception.hpp"
 
 /**
  * Class that respresents a k-fold cross-validation set.
@@ -46,11 +55,11 @@ namespace netreg
          * @param n the number of samples provided (e.g. 100)
          * @param n_folds the number of folds to be created (e.g. 10)
          */
-        cv_set(const int n, const int n_folds):
+        cv_set(const int n, const int n_folds,
+               arma::Mat<double> &X, arma::Mat<double> &Y):
             N_FOLDS_(n_folds), N_(n)
         {
-            init();
-
+            init(X, Y);
         }
 
         /**
@@ -59,9 +68,12 @@ namespace netreg
          * @param size the number of samples provided (e.g. 100)
          * @param foldids fold assignments for all samples
          */
-        cv_set(const int n, int *const foldids): N_FOLDS_(n), N_(n)
+        cv_set(const int n, int *const foldids,
+               arma::Mat<double> &X, arma::Mat<double> &Y):
+            N_FOLDS_(n), N_(n)
         {
-            init(foldids);
+            throw not_implemented_exception();
+            init(foldids, X, Y);
         }
 
         /**
@@ -88,7 +100,7 @@ namespace netreg
         /**
          * Getter for the sample size
          *
-         * @return the numer of samples
+         * @return the number of samples
          */
         const int n()
         {
@@ -97,13 +109,16 @@ namespace netreg
 
     private:
         // init folds from scratch
-        void init();
+        void init(arma::Mat<double> &X, arma::Mat<double> &Y);
         // init folds using predefined fold ids
-        void init(int *const foldids);
+        void init(int *const foldids,
+                  arma::Mat<double> &X,
+                  arma::Mat<double> &Y);
 
         const int N_FOLDS_;           // the number of folds
         const int N_;              // the sample size
-        std::vector <cv_fold> folds_; // the fold objects
+        std::vector<cv_fold> folds_; // the fold objects
     };
 }
 #endif //NETREG_CVSET_HPP
+

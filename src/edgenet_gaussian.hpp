@@ -226,7 +226,6 @@ namespace netreg
             s = s - 2 * psigy * yPenalty;
             norm += 2 * psigy * LY(qi, qi);
         }
-
     };
 }
 

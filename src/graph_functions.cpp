@@ -36,7 +36,7 @@ namespace netreg
     arma::Mat<double> laplacian(const double * x, const int n, const int m, const double px)
     {
 
-        if (px == 0)
+        if (px < 0.001)
         {
             arma::Mat<double> lap(1, 1, arma::fill::zeros);
             return lap;

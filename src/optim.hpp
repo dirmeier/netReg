@@ -30,9 +30,13 @@
 #include <vector>
 #include <map>
 
-
+#ifdef USE_RCPPARMADILLO
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
+#else
+#include "armadillo"
+#include <iostream>
+#endif
 
 #include "../inst/include/dlib/optimization.h"
 #include "graph_penalized_linear_model_cv_data.hpp"
@@ -89,7 +93,9 @@ namespace netreg
             // minimize the loss_function
             try
             {
+                #ifdef USE_RCPPARMADILLO
                 GetRNGstate();
+                #endif
                 dlib::find_min_bobyqa(
                     loss_function(data),
                     par,
@@ -99,11 +105,17 @@ namespace netreg
                     radius_start,
                     radius_stop,
                     niter);
+                #ifdef USE_RCPPARMADILLO
                 PutRNGstate();
+                #endif
             }
             catch (const std::exception &e)
             {
+                #ifdef USE_RCPPARMADILLO
                 Rprintf("Error estimating optim shrinkage parameters.");
+                #else
+                std::cerr << "Error estimating optim shrinkage parameters." << std::endl;
+                #endif
             }
             return {{"lambda", par(0, 0)},
                     {"psigx",  data.psigx() == -1 ? par(1, 0) : 0.0},

@@ -18,6 +18,10 @@
 #include "armadillo"
 #endif
 
+#ifdef HAVE_OPENMP
+#include <omp.h>
+#endif
+
 #include "family.hpp"
 #include "graph_functions.hpp"
 
@@ -64,6 +68,7 @@ namespace netreg
               LX(laplacian(gx, p, p, psi_gx)), LY(laplacian(gy, q, q, psi_gy)),
               lx_rows_(p)
         {
+            #pragma omp parallel for
             for(std::vector< arma::Row<double> >::size_type i = 0; i < LX.n_rows;  ++i)
             {
                 lx_rows_[i] = LX.row(i);

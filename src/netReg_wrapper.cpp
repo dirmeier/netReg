@@ -28,7 +28,6 @@
 #include "graph_penalized_linear_model_data.hpp"
 #include "graph_penalized_linear_model_cv_data.hpp"
 #include "edgenet_wrapper.hpp"
-#include "edgenet_model_selection_wrapper.hpp"
 #include "family.hpp"
 
 // [[Rcpp::depends(RcppArmadillo)]]
@@ -76,7 +75,6 @@ SEXP edgenet_cpp
          Rcpp::as<int>(niter), Rcpp::as<double>(thresh), f);
     // TODO change that back and include family in data
     netreg::edgenet_wrapper edge;
-//    return R_NilValue;
     return edge.run(data);
     END_RCPP
     return R_NilValue;
@@ -125,7 +123,7 @@ SEXP cv_edgenet_cpp
     const int *xdim = INTEGER(Rf_getAttrib(X, R_DimSymbol));
     const int *ydim = INTEGER(Rf_getAttrib(Y, R_DimSymbol));
     const int lenfoldid = Rcpp::as<int>(lenfs);
-    netreg::edgenet_model_selection_wrapper e;
+    netreg::edgenet_wrapper e;
     if (lenfoldid == xdim[0])
     {
         netreg::graph_penalized_linear_model_cv_data data(

@@ -26,12 +26,18 @@
 #include "edgenet_gaussian.hpp"
 #include "stat_functions.hpp"
 
+#include <numeric>
+#include <vector>
+#include <string>
+#include <map>
+
 namespace netreg
 {
     SEXP edgenet_wrapper::run(graph_penalized_linear_model_data &data) const
     {
+        BEGIN_RCPP
         netreg::edgenet_gaussian edge;
-        arma::Mat<double> coef =  edge.run(data);
+        arma::Mat<double> coef = edge.run(data);
         arma::Col<double> intr = intercept(data.design(),
                                            data.response(),
                                            coef);
@@ -40,15 +46,22 @@ namespace netreg
             Rcpp::Named("coefficients") = coef,
             Rcpp::Named("intercept") = intr
         );
+        END_RCPP
+        return R_NilValue;
     }
 
-    arma::Mat<double> edgenet_wrapper::run_cv
-        (graph_penalized_linear_model_cv_data &data,
-         const double lambda, const double alpha,
-         const double psigx,  const double psigy,
-         cv_fold &fold) const
+    SEXP regularization_path
+        (graph_penalized_linear_model_cv_data &data)
     {
-        netreg::edgenet_gaussian edge;
-        return edge.run_cv(data, lambda, alpha, psigx, psigy, fold);
+        BEGIN_RCPP
+        netreg::edgenet_gaussian_model_selection edge;
+        std::map<std::string, double> res = edge.regularization_path(data);
+
+        return Rcpp::List::create(
+            Rcpp::Named("parameters") = Rcpp::wrap(res),
+            Rcpp::Named("folds") = data.fold_ids()
+        );
+        END_RCPP
+        return R_NilValue;
     }
 }

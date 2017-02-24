@@ -27,6 +27,14 @@
 
 #include <numeric>
 
+#ifdef USE_RCPPARMADILLO
+// [[Rcpp::depends(RcppArmadillo)]]
+#include <RcppArmadillo.h>
+#else
+#include "armadillo"
+#include <iostream>
+#endif
+
 #ifdef HAVE_OPENMP
 #include <omp.h>
 #endif
@@ -35,10 +43,9 @@
 #include "graph_penalized_linear_model_cv_data.hpp"
 #include "cv_set.hpp"
 #include "error_functions.hpp"
+
 #include "../inst/include/dlib/matrix.h"
 
-// [[Rcpp::depends(RcppArmadillo)]]
-#include <RcppArmadillo.h>
 
 namespace netreg
 {
