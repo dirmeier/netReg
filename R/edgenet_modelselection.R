@@ -133,6 +133,8 @@ cv.edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
     stop("Please provide either an integer vector or NULL for foldid")
   if (q == 1)     psigy  <- 0
   if (n < nfolds) nfolds <- n
+  # set static to avoid memory overload
+  if (n >= 1000 && p >= 500) nfolds <- 10
   family                 <- match.arg(family)
   # estimate shrinkage parameters
   ret <- .cv.edgenet(X=X, Y=Y,

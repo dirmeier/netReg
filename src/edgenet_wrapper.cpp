@@ -24,6 +24,7 @@
 
 #include "edgenet_wrapper.hpp"
 #include "edgenet_gaussian.hpp"
+#include "edgenet_gaussian_model_selection.hpp"
 #include "stat_functions.hpp"
 
 #include <numeric>
@@ -36,7 +37,7 @@ namespace netreg
     SEXP edgenet_wrapper::run(graph_penalized_linear_model_data &data) const
     {
         BEGIN_RCPP
-        netreg::edgenet_gaussian edge;
+        edgenet_gaussian edge;
         arma::Mat<double> coef = edge.run(data);
         arma::Col<double> intr = intercept(data.design(),
                                            data.response(),
@@ -50,11 +51,11 @@ namespace netreg
         return R_NilValue;
     }
 
-    SEXP regularization_path
+    SEXP edgenet_wrapper::regularization_path
         (graph_penalized_linear_model_cv_data &data)
     {
         BEGIN_RCPP
-        netreg::edgenet_gaussian_model_selection edge;
+        edgenet_gaussian_model_selection edge;
         std::map<std::string, double> res = edge.regularization_path(data);
 
         return Rcpp::List::create(

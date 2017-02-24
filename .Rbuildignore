@@ -1,6 +1,7 @@
 src/main.cpp
 build/*
 benchmark
+cmd_line
 ^.*\.Rproj$
 ^\.Rproj\.user$
 .gitignore
