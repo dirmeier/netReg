@@ -45,7 +45,7 @@ set(SOURCE_FILES
         src/utility_functions.hpp
         src/vector_functions.cpp
         src/vector_functions.hpp
-        src/main.cpp)
+        cmd_line/main.cpp)
 
 include_directories(${Boost_INCLUDE_DIRS} ${ARMADILLO_INCLUDE_DIRS})
 add_executable(netReg ${SOURCE_FILES} ${ARMADILLO_LIBRARIES})
