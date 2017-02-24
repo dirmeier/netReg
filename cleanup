@@ -13,7 +13,6 @@ rm -rf \
 	test-driver \
 	Makefile \
 	src/netReg.so \
-	src/config.h \
 	src/.deps \
 	src/stamp-h1 \
 	src/tests/.deps \

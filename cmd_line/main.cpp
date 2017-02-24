@@ -1,8 +1,8 @@
 #include <iostream>
 
-#include "family.hpp"
-#include "edgenet_gaussian.hpp"
-#include "graph_penalized_linear_model_data.hpp"
+#include "../src/family.hpp"
+#include "../src/edgenet_gaussian.hpp"
+#include "../src/graph_penalized_linear_model_data.hpp"
 
 #include <boost/math/distributions/normal.hpp>
 #include <boost/random.hpp>
