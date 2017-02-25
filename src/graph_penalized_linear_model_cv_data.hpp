@@ -30,6 +30,7 @@
 
 #include <vector>
 #include <string>
+#include <iostream>
 
 #ifdef USE_RCPPARMADILLO
 // [[Rcpp::depends(RcppArmadillo)]]

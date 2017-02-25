@@ -10,6 +10,7 @@
 
 #include <string>
 #include <vector>
+#include <iostream>
 
 #ifdef USE_RCPPARMADILLO
 // [[Rcpp::depends(RcppArmadillo)]]
@@ -65,14 +66,57 @@ namespace netreg
                                           alpha, niter, thresh, fam),
               psi_gx(psi_gx), psi_gy(psi_gy),
               GX(gx, p, p, false, true), GY(gy, q, q, false, true),
-              LX(laplacian(gx, p, p, psi_gx)), LY(laplacian(gy, q, q, psi_gy)),
-              lx_rows_(p)
+              LX(laplacian(gx, p, p, psi_gx)),
+              LY(laplacian(gy, q, q, psi_gy)),
+              lx_rows_(LX.n_rows)
         {
+
+            // copies LX rows as single vectors so that access can be faster
             #pragma omp parallel for
-            for(std::vector< arma::Row<double> >::size_type i = 0; i < LX.n_rows;  ++i)
+            for (std::vector<arma::Row<double> >::size_type i = 0;
+                 i < LX.n_rows; ++i)
             {
                 lx_rows_[i] = LX.row(i);
             }
+
+            std::cout << "X\n";
+            for (int i = 0; i < X.n_rows; ++i)
+            {
+                for (int j = 0; j < X.n_cols; ++j)
+                {
+                    std::cout << X(i, j) << " ";
+                }
+                std::cout << std::endl;
+            }
+            std::cout << std::endl;
+            std::cout << "Y\n";
+            for (int i = 0; i < Y.n_rows; ++i)
+            {
+                for (int j = 0; j < Y.n_cols; ++j)
+                {
+                    std::cout << Y(i, j) << " ";
+                }
+                std::cout << std::endl;
+            }
+            std::cout << "LX\n";
+            for (int i = 0; i < lx_rows_.size(); ++i)
+            {
+                arma::Row<double> v = lx_rows_[i];
+
+                std::cout << v << std::endl;
+            }
+            std::cout << std::endl;
+            std::cout << "LY\n";
+            for (int i = 0; i < LY.n_rows; ++i)
+            {
+                for (int j = 0; j < LY.n_cols; ++j)
+                {
+                    std::cout << LY(i, j) << " ";
+                }
+                std::cout << std::endl;
+            }
+            std::cout << std::endl;
+            std::cout << "X\n";
         }
         /**
          * Getter for penalization term for laplacian of X
@@ -99,12 +143,12 @@ namespace netreg
          *
          * @return reference to laplacian matrix
          */
-        arma::Mat<double> &lx()
+        arma::Mat<double>& lx()
         {
             return LX;
         }
 
-        std::vector< arma::Row<double> > &lx_rows()
+        std::vector<arma::Row<double> >& lx_rows()
         {
             return lx_rows_;
         }
@@ -114,7 +158,7 @@ namespace netreg
          *
          * @return reference to laplacian matrix
          */
-        arma::Mat<double> &ly()
+        arma::Mat<double>& ly()
         {
             return LY;
         }

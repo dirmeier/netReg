@@ -46,7 +46,6 @@
 
 #include "../inst/include/dlib/matrix.h"
 
-
 namespace netreg
 {
     /**
@@ -62,7 +61,7 @@ namespace netreg
          * @param cvset a cross-validation set
          */
         edgenet_gaussian_loss_function
-            (graph_penalized_linear_model_cv_data &data):
+            (graph_penalized_linear_model_cv_data& data):
             data_(data),
             cvset_(data.cvset()),
             X_(data.design()),
@@ -78,14 +77,14 @@ namespace netreg
          *
          * @param params the free parameters on the objective function
          */
-        double operator()(const dlib::matrix<double> &p) const
+        double operator()(const dlib::matrix<double>& p) const
         {
             std::vector<double> sses(nfolds_);
             // do n-fold cross-validation
             #pragma omp parallel for
             for (int fc = 0; fc < nfolds_; ++fc)
             {
-                cv_fold &fold = cvset_.get_fold(fc);
+                cv_fold& fold = cvset_.get_fold(fc);
                 arma::Mat<double> coef;
                 if (do_psigx_ && do_psigy_)
                 {
@@ -106,7 +105,7 @@ namespace netreg
                 {
                     coef = edgenet_.run_cv(data_, p(0, 0), 1.0, 0, 0, fold);
                 }
-                double err = sse(coef, X_, Y_, fold.test_set());
+                double err = sse(coef, fold.test_x(), fold.test_y());
                 sses[fc] = err;
             }
             double err = std::accumulate(sses.begin(), sses.end(), 0.0);
@@ -115,10 +114,10 @@ namespace netreg
 
     private:
         // data required for a edge-regularized regression model
-        graph_penalized_linear_model_cv_data &data_;
-        cv_set &cvset_;          // cv-set on which the selected model is evaluated
-        arma::Mat<double> &X_;      // design matrix
-        arma::Mat<double> &Y_;      // response matrix
+        graph_penalized_linear_model_cv_data& data_;
+        cv_set& cvset_;          // cv-set on which the selected model is evaluated
+        arma::Mat<double>& X_;      // design matrix
+        arma::Mat<double>& Y_;      // response matrix
         const int nfolds_;             // number of folds
         const edgenet_gaussian edgenet_;
         const bool do_psigx_;

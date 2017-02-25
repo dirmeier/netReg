@@ -31,7 +31,6 @@ set(SOURCE_FILES
         src/edgenet_gaussian_model_selection.cpp
         src/edgenet_gaussian_model_selection.hpp
         src/family.hpp
-        src/error_functions.cpp
         src/error_functions.hpp
         src/graph_functions.cpp
         src/graph_functions.hpp

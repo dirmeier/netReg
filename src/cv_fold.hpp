@@ -60,31 +60,33 @@ namespace netreg
             train_indexes_(train_idxs.size()),
             test_indexes_(test_idxs.size()),
             train_txx_rows_(X.n_cols),
-            train_txy_(X.n_cols, Y.n_cols)
+            train_txy_(X.n_cols, Y.n_cols),
+            test_x_(X.rows(test_indexes_)),
+            test_y_(Y.rows(test_indexes_))
         {
+            // set training uvec
             for (unsigned int j = 0; j < train_idxs.size(); ++j)
-            {
                 train_indexes_(j) = train_idxs[j];
-                std::cout << train_indexes_(j) << std::endl;
-            }
-            std::cout << "b;a" << std::endl;
+            // set testing uvec
             for (unsigned int j = 0; j < test_idxs.size(); ++j)
-            {
                 test_indexes_(j) = test_idxs[j];
-                std::cout << test_indexes_(j) << std::endl;
-            }
+
+            /*
+             * Set training matrices
+             */
             arma::Mat<double> Xtrain = X.rows(train_indexes_);
             arma::Mat<double> Ytrain = Y.rows(train_indexes_);
             arma::Mat<double> TXtrain = Xtrain.t();
 
+            // safe the train matrix txy
             train_txy_ = TXtrain * Ytrain;
-            arma::Mat<double> txx = TXtrain * Xtrain;
+            arma::Mat<double> train_txx = TXtrain * Xtrain;
 
-//            #pragma omp parallel for
-            for (std::vector<arma::Row<double> >::size_type i = 0; i < txx.n_rows; ++i)
-            {
-                train_txx_rows_[i] = txx.row(i);
-            }
+            // safe train matrix txx
+            #pragma omp parallel for
+            for (std::vector<arma::Row<double> >::size_type i = 0; i < train_txx.n_rows; ++i)
+                train_txx_rows_[i] = train_txx.row(i);
+
         }
 
         /**
@@ -107,11 +109,33 @@ namespace netreg
             return train_indexes_;
         }
 
+        std::vector<arma::rowvec>& train_txx_rows()
+        {
+            return train_txx_rows_;
+        }
+
+        arma::Mat<double>& train_txy()
+        {
+            return train_txy_;
+        }
+
+        arma::Mat<double>& test_x()
+        {
+            return test_x_;
+        }
+
+        arma::Mat<double>& test_y()
+        {
+            return test_y_;
+        }
+
     private:
         arma::uvec train_indexes_; // indexes of train set
         arma::uvec test_indexes_;  // indexes of test set
         std::vector<arma::rowvec> train_txx_rows_;
         arma::Mat<double> train_txy_;
+        arma::Mat<double> test_x_;
+        arma::Mat<double> test_y_;
     };
 }
 #endif //NETREG_FOLD_HPP

@@ -43,9 +43,9 @@ namespace netreg
      * @param B the estimated coefficients
      * @return returns a column vector
      */
-    arma::Col<double> intercept(arma::Mat<double> &X,
-                                arma::Mat<double> &Y,
-                                arma::Mat<double> &B);
+    arma::Col<double> intercept(arma::Mat<double>& X,
+                                arma::Mat<double>& Y,
+                                arma::Mat<double>& B);
 
     /**
      * Calculates the partial residual of the current coefficient that is estimated.
@@ -56,12 +56,12 @@ namespace netreg
      * @param pi the current index of the column of X
      * @param qi the current index of the column of Y
      */
-    inline double partial_least_squares(arma::rowvec &txx_rows,
-                                        arma::Mat<double> &TXY,
-                                        arma::Mat<double> &cfs,
+    inline double partial_least_squares(arma::rowvec& txx_rows,
+                                        arma::Mat<double>& txy,
+                                        arma::Mat<double>& cfs,
                                         const int pi, const int qi)
     {
-        return TXY(pi, qi) + (txx_rows(pi) * cfs(pi, qi))
+        return txy(pi, qi) + (txx_rows(pi) * cfs(pi, qi))
                - arma::accu(txx_rows * cfs.col(qi));
     }
 }

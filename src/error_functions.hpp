@@ -32,22 +32,23 @@
 #include "armadillo"
 #endif
 
-#include <vector>
-
-
 namespace netreg
 {
     /**
      * Calculate the sum of squaerd errors.
      *
      * @param B the estimator for the coefficient matrix
-     * @param X the design matrix
-     * @param Y the response matrix
-     * @param test_set a vector of indexed of the test set
+     * @param X the test design matrix
+     * @param Y the test response matrix
      */
-    double sse(arma::Mat<double> &B,
-               arma::Mat<double> &X,
-               arma::Mat<double> &Y,
-               arma::uvec &test_set);
+    inline double sse(arma::Mat<double>& B,
+                      arma::Mat<double>& X,
+                      arma::Mat<double>& Y)
+    {
+        // sum of all elements of residuals
+        double sum = arma::accu(Y - (X * B));
+        return sum * sum;
+    }
 }
 #endif //SRC_ERROR_FUNCTIONS_HPP
+
