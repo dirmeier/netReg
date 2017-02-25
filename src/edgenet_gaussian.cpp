@@ -104,31 +104,24 @@ namespace netreg
         // normalization for soft-thresholding
         const double enorm = 1.0 + lambda * (1 - alpha);
 
-        int iter = 0;
-        do
+        for (int qi = 0; qi < Q; ++qi)
         {
-            // This is definitely not parallizable!
-            for (int qi = 0; qi < Q; ++qi)
-            {
-                uccd_(P, Q,
-                      qi,
-                      thresh, niter,
-                      lalph, enorm,
-                      psigx, psigy,
-                      txx_rows,
-                      txy,
-                      lx_rows,
-                      ly,
-                      coef,
-                      old_coef,
-                      coef_rows);
+            uccd_(P, Q,
+                  qi,
+                  thresh, niter,
+                  lalph, enorm,
+                  psigx, psigy,
+                  txx_rows,
+                  txy,
+                  lx_rows,
+                  ly,
+                  coef,
+                  old_coef,
+                  coef_rows);
 #ifdef USE_RCPPARMADILLO
-                if (iter % 100 == 0) Rcpp::checkUserInterrupt();
+            if (qi % 100 == 0) Rcpp::checkUserInterrupt();
 #endif
-            }
         }
-        while (arma::accu(arma::abs(coef - old_coef)) > thresh &&
-               iter++ < niter);
         return coef;
     }
 

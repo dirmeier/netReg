@@ -33,13 +33,14 @@
 #include <RcppArmadillo.h>
 #else
 #include "armadillo"
+#ifndef NDEBUG
+#include <iostream>
+#endif
 #endif
 
 #ifdef HAVE_OPENMP
 #include <omp.h>
 #endif
-
-#include <iostream>
 
 namespace netreg
 {
@@ -53,23 +54,26 @@ namespace netreg
         cv_fold()
         { }
 
-        cv_fold(std::vector<int> &train_idxs,
-                std::vector<int> &test_idxs,
-                arma::Mat<double> &X,
-                arma::Mat<double> &Y):
+        cv_fold(std::vector<int>& train_idxs,
+                std::vector<int>& test_idxs,
+                arma::Mat<double>& X,
+                arma::Mat<double>& Y):
             train_indexes_(train_idxs.size()),
             test_indexes_(test_idxs.size()),
             train_txx_rows_(X.n_cols),
-            train_txy_(X.n_cols, Y.n_cols),
-            test_x_(X.rows(test_indexes_)),
-            test_y_(Y.rows(test_indexes_))
+            train_txy_(X.n_cols, Y.n_cols)
         {
+
             // set training uvec
             for (unsigned int j = 0; j < train_idxs.size(); ++j)
                 train_indexes_(j) = train_idxs[j];
             // set testing uvec
             for (unsigned int j = 0; j < test_idxs.size(); ++j)
                 test_indexes_(j) = test_idxs[j];
+
+            // set testing matrices
+            test_x_ = (X.rows(test_indexes_));
+            test_y_ = (Y.rows(test_indexes_));
 
             /*
              * Set training matrices
@@ -84,9 +88,21 @@ namespace netreg
 
             // safe train matrix txx
             #pragma omp parallel for
-            for (std::vector<arma::Row<double> >::size_type i = 0; i < train_txx.n_rows; ++i)
+            for (unsigned int i = 0; i < train_txx.n_rows; ++i)
                 train_txx_rows_[i] = train_txx.row(i);
 
+#ifndef NDEBUG
+            std::cout << "Printing fold" << std::endl;
+            std::cout << train_indexes_ << std::endl;
+            std::cout << test_indexes_ << std::endl;
+            std::cout << test_x_ << std::endl;
+            std::cout << test_y_ << std::endl;
+            for (unsigned int i = 0; i < train_txx_rows_.size(); ++i)
+            {
+                std::cout << train_txx_rows_[i] << std::endl;
+            }
+            std::cout << train_txy_ << std::endl;
+#endif
         }
 
         /**
@@ -94,7 +110,7 @@ namespace netreg
          *
          * @return vector of indexes of the test set
          */
-        arma::uvec &test_set()
+        arma::uvec& test_set()
         {
             return test_indexes_;
         }
@@ -104,7 +120,7 @@ namespace netreg
          *
          * @return vector of indexes of the train set
          */
-        arma::uvec &train_set()
+        arma::uvec& train_set()
         {
             return train_indexes_;
         }

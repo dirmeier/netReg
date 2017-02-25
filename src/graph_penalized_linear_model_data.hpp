@@ -17,6 +17,9 @@
 #include <RcppArmadillo.h>
 #else
 #include "armadillo"
+#ifndef NDEBUG
+#include <iostream>
+#endif
 #endif
 
 #ifdef HAVE_OPENMP
@@ -70,7 +73,6 @@ namespace netreg
               LY(laplacian(gy, q, q, psi_gy)),
               lx_rows_(LX.n_rows)
         {
-
             // copies LX rows as single vectors so that access can be faster
             #pragma omp parallel for
             for (std::vector<arma::Row<double> >::size_type i = 0;
@@ -79,44 +81,16 @@ namespace netreg
                 lx_rows_[i] = LX.row(i);
             }
 
-            std::cout << "X\n";
-            for (int i = 0; i < X.n_rows; ++i)
+            #ifndef NDEBUG
+            std::cout << "Data" << std::endl;
+            for (unsigned int i = 0; i < txx_rows_.size(); ++i)
             {
-                for (int j = 0; j < X.n_cols; ++j)
-                {
-                    std::cout << X(i, j) << " ";
-                }
-                std::cout << std::endl;
+                std::cout << txx_rows_[i] << std::endl;
             }
-            std::cout << std::endl;
-            std::cout << "Y\n";
-            for (int i = 0; i < Y.n_rows; ++i)
-            {
-                for (int j = 0; j < Y.n_cols; ++j)
-                {
-                    std::cout << Y(i, j) << " ";
-                }
-                std::cout << std::endl;
-            }
-            std::cout << "LX\n";
-            for (int i = 0; i < lx_rows_.size(); ++i)
-            {
-                arma::Row<double> v = lx_rows_[i];
-
-                std::cout << v << std::endl;
-            }
-            std::cout << std::endl;
-            std::cout << "LY\n";
-            for (int i = 0; i < LY.n_rows; ++i)
-            {
-                for (int j = 0; j < LY.n_cols; ++j)
-                {
-                    std::cout << LY(i, j) << " ";
-                }
-                std::cout << std::endl;
-            }
-            std::cout << std::endl;
-            std::cout << "X\n";
+            std::cout << TXY << std::endl;
+            std::cout << LX << std::endl;
+            std::cout << LY << std::endl;
+            #endif
         }
         /**
          * Getter for penalization term for laplacian of X

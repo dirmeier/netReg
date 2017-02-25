@@ -32,7 +32,9 @@
 #include <RcppArmadillo.h>
 #else
 #include "armadillo"
+#ifndef NDEBUG
 #include <iostream>
+#endif
 #endif
 
 #ifdef HAVE_OPENMP
@@ -88,21 +90,33 @@ namespace netreg
                 arma::Mat<double> coef;
                 if (do_psigx_ && do_psigy_)
                 {
+                    #ifndef NDEBUG
+                    std::cout << "Doing both " <<  p(1, 0) <<  " "  << p(1, 0) << std::endl:
+                    #endif
                     coef = edgenet_.run_cv(data_, p(0, 0), 1.0, p(1, 0),
-                                           p(2, 0), fold);
+                                           p(1, 0), fold);
                 }
                 else if (do_psigy_)
                 {
+                    #ifndef NDEBUG
+                    std::cout << "Doing y "  << do_psigy_ <<std::endl:
+                    #endif
                     coef = edgenet_.run_cv(data_, p(0, 0), 1.0, 0, p(2, 0),
                                            fold);
                 }
                 else if (do_psigx_)
                 {
+                    #ifndef NDEBUG
+                    std::cout << "Doing x "  << do_psigx_ << std::endl:
+                    #endif
                     coef = edgenet_.run_cv(data_, p(0, 0), 1.0, p(1, 0), 0,
                                            fold);
                 }
                 else
                 {
+                    #ifndef NDEBUG
+                    std::cout << "Doing none "  << do_psigxy_ << std::endl:
+                    #endif
                     coef = edgenet_.run_cv(data_, p(0, 0), 1.0, 0, 0, fold);
                 }
                 double err = sse(coef, fold.test_x(), fold.test_y());

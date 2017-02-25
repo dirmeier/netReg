@@ -37,13 +37,8 @@ namespace netreg
     {
         // get a random permutation of the indexes from 1 to N_
         std::vector<int> perms = netreg::shuffle(N_, 0);
-        // init fold objects
-        for (size_t j = 0; j < perms.size(); ++j)
-        {
-            std::cout << perms[j] << " ";
-        }
-        std::cout << "\n";
 
+        // init fold objects
         std::vector<std::vector<int>> trains(N_FOLDS_);
         std::vector<std::vector<int>> tests(N_FOLDS_);
         for (int i = 0; i < N_FOLDS_; ++i)
@@ -51,6 +46,7 @@ namespace netreg
             trains.push_back(std::vector<int>());
             tests.push_back(std::vector<int>());
         }
+
         // running variable
         int test_idx = 0;
         // fill fold objects with sample indexes
@@ -74,14 +70,11 @@ namespace netreg
                 test_idx++;
             }
         }
-        std::cout << "size " << folds_.size()<< "\n";
-        // #pragma omp parallel for
+        #pragma omp parallel for
         for (size_t i = 0; i < folds_.size(); ++i)
         {
-            std::cout << "fold " << i << "\n";
             folds_[i] = cv_fold(trains[i], tests[i], X, Y);
         }
-
     }
 
 /*

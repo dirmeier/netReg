@@ -18,7 +18,7 @@ int main()
                              boost::normal_distribution<> > var_nor(rng, nd);
 
     const int n = 10;
-    const int p = 10;
+    const int p = 100;
     const int q = 10;
 
     double *x = new double[n * p];
@@ -42,11 +42,11 @@ int main()
 
     netreg::graph_penalized_linear_model_cv_data data
         (x, y, gx, gy, n, p, q,
-         -1, 1.0, -1, -1, 100000, 0.0000000001, 5,
+         -1, 1.0, 0.0, 0.0, 100000, 0.0000000001, 5,
          netreg::family::GAUSSIAN);
 
     netreg::edgenet_gaussian_model_selection e;
-//    std::map<std::string, double> m = e.regularization_path(data);
+    std::map<std::string, double> m = e.regularization_path(data);
     std::cout << "done2" << std::endl;
 
     delete[] x;
