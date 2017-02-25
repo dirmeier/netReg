@@ -91,31 +91,28 @@ namespace netreg
                 if (do_psigx_ && do_psigy_)
                 {
                     #ifndef NDEBUG
-                    std::cout << "Doing both " <<  p(1, 0) <<  " "  << p(1, 0) << std::endl:
+                    std::cout << "Doing lambda, psigx, psigy: " <<  p(0, 0) << ", " <<  p(1, 0) <<  ", "  << p(2, 0) << std::endl:
                     #endif
-                    coef = edgenet_.run_cv(data_, p(0, 0), 1.0, p(1, 0),
-                                           p(1, 0), fold);
+                    coef = edgenet_.run_cv(data_, p(0, 0), 1.0, p(1, 0), p(2, 0), fold);
                 }
                 else if (do_psigy_)
                 {
                     #ifndef NDEBUG
-                    std::cout << "Doing y "  << do_psigy_ <<std::endl:
+                    std::cout << "Doing lambda, psigy: " <<  p(0, 0) <<  " "  << p(2, 0) << std::endl:
                     #endif
-                    coef = edgenet_.run_cv(data_, p(0, 0), 1.0, 0, p(2, 0),
-                                           fold);
+                    coef = edgenet_.run_cv(data_, p(0, 0), 1.0, 0, p(2, 0), fold);
                 }
                 else if (do_psigx_)
                 {
                     #ifndef NDEBUG
-                    std::cout << "Doing x "  << do_psigx_ << std::endl:
+                    std::cout << "Doing lambda, psigx: " <<  p(0, 0) <<  " "  << p(1, 0) << std::endl:
                     #endif
-                    coef = edgenet_.run_cv(data_, p(0, 0), 1.0, p(1, 0), 0,
-                                           fold);
+                    coef = edgenet_.run_cv(data_, p(0, 0), 1.0, p(1, 0), 0, fold);
                 }
                 else
                 {
                     #ifndef NDEBUG
-                    std::cout << "Doing none "  << do_psigxy_ << std::endl:
+                    std::cout << "Doing lambda: " <<  p(0, 0) << std::endl:
                     #endif
                     coef = edgenet_.run_cv(data_, p(0, 0), 1.0, 0, 0, fold);
                 }
