@@ -39,6 +39,7 @@
 #endif
 
 #include "cv_set.hpp"
+#include "not_implemented_exception.hpp"
 
 namespace netreg
 {
@@ -117,6 +118,7 @@ namespace netreg
                    niter, thresh, fam),
               fold_ids_(design().n_rows), cvset_(n, fold_ids, X, Y)
         {
+            throw not_implemented_exception();
             set_fold_ids();
         }
 

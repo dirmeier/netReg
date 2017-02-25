@@ -39,6 +39,8 @@
 #include <omp.h>
 #endif
 
+#include <iostream>
+
 namespace netreg
 {
 /**
@@ -61,18 +63,24 @@ namespace netreg
             train_txy_(X.n_cols, Y.n_cols)
         {
             for (unsigned int j = 0; j < train_idxs.size(); ++j)
+            {
                 train_indexes_(j) = train_idxs[j];
+                std::cout << train_indexes_(j) << std::endl;
+            }
+            std::cout << "b;a" << std::endl;
             for (unsigned int j = 0; j < test_idxs.size(); ++j)
+            {
                 test_indexes_(j) = test_idxs[j];
-
+                std::cout << test_indexes_(j) << std::endl;
+            }
             arma::Mat<double> Xtrain = X.rows(train_indexes_);
             arma::Mat<double> Ytrain = Y.rows(train_indexes_);
             arma::Mat<double> TXtrain = Xtrain.t();
 
             train_txy_ = TXtrain * Ytrain;
-            arma::Mat<double> txx= TXtrain * Xtrain;
+            arma::Mat<double> txx = TXtrain * Xtrain;
 
-            #pragma omp parallel for
+//            #pragma omp parallel for
             for (std::vector<arma::Row<double> >::size_type i = 0; i < txx.n_rows; ++i)
             {
                 train_txx_rows_[i] = txx.row(i);

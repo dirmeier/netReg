@@ -24,9 +24,6 @@
 
 #include "graph_penalized_linear_model_cv_data.hpp"
 
-#include <vector>
-#include <cmath>
-
 #ifdef HAVE_OPENMP
 #include <omp.h>
 #endif
@@ -37,13 +34,21 @@ namespace netreg
     {
         if (static_cast<int>(fold_ids_.size()) != N)
             fold_ids_.resize(static_cast<std::vector<int>::size_type>(N));
+        std::cout << "bluuuub\n";
         #pragma omp parallel for
         for (int i = 0; i < cvset_.fold_count(); i++)
         {
             cv_fold &fold = cvset_.get_fold(i);
-            for (arma::uvec::iterator j = fold.test_set().begin();
-                 j != fold.test_set().end(); ++j)
+            for (arma::uvec::iterator j = fold.test_set().begin(); j != fold.test_set().end(); ++j)
+            {
                 fold_ids_[*j] = i;
+            }
         }
+
+        for (unsigned int k = 0; k < fold_ids_.size(); ++k)
+        {
+            std::cout << fold_ids_[k] << " ";
+        }
+        std::cout << "\n";
     }
 }

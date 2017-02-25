@@ -18,7 +18,7 @@ int main()
     boost::variate_generator<boost::mt19937&,
         boost::normal_distribution<> > var_nor(rng, nd);
 
-    const int n = 1000;
+    const int n = 10;
     const int p = 100;
     const int q = 1;
 
@@ -34,7 +34,7 @@ int main()
 
     netreg::graph_penalized_linear_model_cv_data data
         (x, y, gx, gy, n, p, q,
-         -1, 1.0, -1, 0, 100000, 0.0000000001, 10,
+         -1, 1.0, -1, 0, 100000, 0.0000000001, 5,
          netreg::family::GAUSSIAN);
 
     netreg::edgenet_gaussian_model_selection e;
@@ -44,8 +44,6 @@ int main()
     delete [] y;
     delete [] gx;
     delete [] gy;
-
-
 
     return 0;
 

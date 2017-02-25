@@ -38,8 +38,14 @@ namespace netreg
         // get a random permutation of the indexes from 1 to N_
         std::vector<int> perms = netreg::shuffle(N_, 0);
         // init fold objects
-        std::vector <std::vector<int>> trains(N_FOLDS_);
-        std::vector <std::vector<int>> tests(N_FOLDS_);
+        for (size_t j = 0; j < perms.size(); ++j)
+        {
+            std::cout << perms[j] << " ";
+        }
+        std::cout << "\n";
+
+        std::vector<std::vector<int>> trains(N_FOLDS_);
+        std::vector<std::vector<int>> tests(N_FOLDS_);
         for (int i = 0; i < N_FOLDS_; ++i)
         {
             trains.push_back(std::vector<int>());
@@ -56,32 +62,36 @@ namespace netreg
                     break;
                 // add current N_ perms[test_idx] to test set
                 if (test_idx < N_)
-                    tests[cv].push_back(perms[test_idx]);
-                // add the same index to ALL other train sets
-                for (int k = 0; k < N_FOLDS_; ++k)
                 {
-                    if (k == cv)
-                        continue;
-                    if (test_idx < N_)
-                        trains[k].push_back(perms[test_idx]);
+                    tests[cv].push_back(perms[test_idx]);
+                    // add the same index to ALL other train sets
+                    for (int k = 0; k < N_FOLDS_; ++k)
+                    {
+                        if (k != cv)
+                            trains[k].push_back(perms[test_idx]);
+                    }
                 }
                 test_idx++;
             }
         }
-
-        #pragma omp parallel for
-        for (int i = 0; i < N_FOLDS_; ++i)
-            folds_.push_back(cv_fold(trains[i], tests[i], X, Y));
+        std::cout << "size " << folds_.size()<< "\n";
+        // #pragma omp parallel for
+        for (size_t i = 0; i < folds_.size(); ++i)
+        {
+            std::cout << "fold " << i << "\n";
+            folds_[i] = cv_fold(trains[i], tests[i], X, Y);
+        }
 
     }
 
 /*
  * TODO: this might need debugging ... looks correct though
  */
-void cv_set::init(int *const foldids, arma::Mat<double> &X, arma::Mat<double> &Y)
-{
-    throw not_implemented_exception();
-}
+    void cv_set::init(int *const foldids, arma::Mat<double> &X,
+                      arma::Mat<double> &Y)
+    {
+        throw not_implemented_exception();
+    }
 //        for (int i = 0; i < N_FOLDS_; ++i)
 //            folds_.push_back(cv_fold());
 //        // iterate over all sample indeces

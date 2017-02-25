@@ -32,6 +32,7 @@
 #include <RcppArmadillo.h>
 #else
 #include "armadillo"
+#include <iostream>
 #endif
 
 #include "cv_fold.hpp"
@@ -57,7 +58,7 @@ namespace netreg
          */
         cv_set(const int n, const int n_folds,
                arma::Mat<double> &X, arma::Mat<double> &Y):
-            N_FOLDS_(n_folds), N_(n)
+            N_FOLDS_(n_folds), N_(n), folds_(N_FOLDS_)
         {
             init(X, Y);
         }
