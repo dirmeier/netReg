@@ -1,45 +1,74 @@
 library(netReg)
-library(glmnet)
 library(uuid)
 
-cms    <- commandArgs(trailingOnly=T)
-stopifnot(length(cms) != 3)
-p      <- as.integer(cms[1])
-stopifnot(!is.na(p), is.numeric(p))
-q      <- as.integer(cms[2])
-stopifnot(!is.na(q), is.numeric(q))
-sig      <- as.integer(cms[3])
-stopifnot(!is.na(sig), is.numeric(sig))
+args    <- commandArgs(trailingOnly=T)
+stopifnot(length(args) == 8)
+p <- q <- sig <- n <- 0
+for (i in seq(args))
+{
+  if      (args[i] == "-s") sig <- as.integer(args[i + 1])
+  else if (args[i] == "-n")   n <- as.integer(args[i + 1])
+  else if (args[i] == "-p")   p <- as.integer(args[i + 1])
+  else if (args[i] == "-q")   q <- as.integer(args[i + 1])
+  else stop(paste("wrong flag", args[i], "\n"))
+}
+cat(paste0("Measuring rss with n=", n, ", p=", p, ", q=", q, ", sig=", sig, "\n"))
 
-n      <- 1000
+
 thresh <- 1e-7
 maxit  <- 100000
 
 G.X <- matrix(0, p, p) 
 G.X[1:floor(p/3), 1:floor(p/3)]                       <- 1
-G.X[floor(p/3):floor(2*p/3), floor(p/3):floor(2*p/3)] <- 1
-G.X[floor(2*p/3):p, floor(2*p/3):p]                   <- 1
-diag(G.X)                                             <- 0
+G.X[(1+floor(p/3)):floor(2*p/3), (1+floor(p/3)):floor(2*p/3)] <- 1
+G.X[(1+floor(2*p/3)):p,(1+floor(2*p/3)):p]                   <- 1
 
 G.Y <- matrix(0, q, q) 
 G.Y[1:floor(q/3), 1:floor(q/3)]                       <- 1
-G.Y[floor(q/3):floor(2*q/3), floor(q/3):floor(2*q/3)] <- 1
-G.Y[floor(2*q/3):q, floor(2*q/3):q]                   <- 1
-diag(G.Y)                                             <- 0
+G.Y[(1+floor(q/3)):floor(2*q/3), (1+floor(q/3)):floor(2*q/3)] <- 1
+G.Y[(1+floor(2*q/3)):q, (1+floor(2*q/3)):q]                   <- 1
+
+B <- matrix(0, p, q)
+B[1:floor(p/3), 1:floor(q/3)]                           <- rnorm(length(1:floor(p/3)) * length(1:floor(q/3)), 1, 0.25)
+B[(1+floor(p/3)):floor(2*p/3), floor(q/3):floor(2*q/3)] <- rnorm(length((1+floor(p/3)):floor(2*p/3)) * length(floor(q/3):floor(2*q/3)), 2, 0.25)
+B[(1+floor(2*p/3)):p, (1+floor(2*q/3)):q]               <- rnorm(length((1+floor(2*p/3)):p) * length((1+floor(2*q/3)):q), 3, 0.25)
 
 X <- matrix(rnorm(n*p), n, p)
-B <- matrix(rnorm(p*q), p, q)
 E <- matrix(rnorm(n*q, 0, sig), n, q)
+
 Y <- X %*% B + E
 
-# TODO
-for (cv in 1:10)
+
+n.folds <- 5
+folds <- sample(cut(seq_along(1:n), n.folds, labels = FALSE))
+
+.rss <- function(obj, X, Y)
 {
-  cve <- list()
-  for (i in 1:q)
-  {
-    cve[[i]] <- cv.glmnet(X, Y[,i], type.measure="mse", thresh=thresh, 
-                          standardize=F, maxit=maxit) 
-  }
-  cv.edge  <- cv.edgenet(X, Y, G.X=G.Y, G.Y=G.Y, thresh=thresh, maxit=maxit, family="gaussian" )
+  Y.hat <- predict(obj, X)
+  netReg:::rss(Y, Y.hat)
 }
+
+l <- list()
+for (cv in 1:n.folds)
+{
+  X.train  <- X[folds != cv, ]
+  Y.train  <- Y[folds != cv, ]
+  X.test  <-  X[folds == cv, ]
+  Y.test  <-  Y[folds == cv, ]
+  cv.lasso <- cv.edgenet(X.train, Y.train, 
+                         thresh=thresh, maxit=maxit, family="gaussian", nfolds=5) 
+  las     <-  edgenet(X.train, Y.train,
+                     lambda=cv.lasso$lambda,
+                     thresh=thresh, maxit=maxit, family="gaussian")
+  
+  cv.edge  <- cv.edgenet(X.train, Y.train, G.X=G.Y, G.Y=G.Y,
+                         thresh=thresh, maxit=maxit, family="gaussian", nfolds=5)
+  edge <-  cv.edgenet(X.train, Y.train, G.X=G.Y, G.Y=G.Y,
+                      lambda=cv.lasso$lambda, psigx=cv.edge$psigx, psigy=cv.edge$psigy,
+                      thresh=thresh, maxit=maxit, family="gaussian")
+  
+  rss.lasso <- .rss(las, X.test, Y.test)
+  rss.edge  <- .rss(edge, X.test, Y.test)
+}
+
+

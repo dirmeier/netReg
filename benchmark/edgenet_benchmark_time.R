@@ -4,16 +4,15 @@ library(microbenchmark)
 library(uuid)
 
 args    <- commandArgs(trailingOnly=T)
-stopifnot(length(args) != 4)
+stopifnot(length(args) == 4)
 n <- p <- 0
 for (i in seq(args))
 {
-  if      (args[i] == "-n") n <- as.integer(cms[i+1])  
-  else if (args[i] == "-p") p <- as.integer(cms[i+1])  
+  if      (args[i] == "-n") n <- as.integer(args[i + 1])  
+  else if (args[i] == "-p") p <- as.integer(args[i + 1])
+  else stop(paste("wrong flag", args[i], "\n"))
 }
-cat(paste0("Measuring time with n=", n, ", p=", p))
-stop("2")
-stopifnot(!is.na(p), is.numeric(p), !is.na(n), is.numeric(n))
+cat(paste0("Measuring time with n=", n, ", p=", p, "\n"))
 
 q      <- 1
 lambda <- 10
