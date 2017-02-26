@@ -13,9 +13,9 @@ if test -z "${R_HOME}";
 then
   AC_MSG_ERROR([no R_HOME found])
 else
-  AC_MSG_NOTICE(["R home found in: ${R_HOME}])
+  AC_MSG_NOTICE([R home found in ${R_HOME}])
   CXX=`"${R_HOME}/bin/R" CMD config CXX1X`
-  AC_MSG_NOTICE([CXX: ${CXX}])
+  AC_MSG_NOTICE([setting CXX to ${CXX}])
 fi
  
 AC_LANG([C++])

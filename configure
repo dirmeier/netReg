@@ -1793,15 +1793,15 @@ ac_config_headers="$ac_config_headers src/config.h"
 
 
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: ${R_HOME}" >&5
-$as_echo "$as_me: ${R_HOME}" >&6;}
-{ $as_echo "$as_me:${as_lineno-$LINENO}: building from R" >&5
-$as_echo "$as_me: building from R" >&6;}
 if test -z "${R_HOME}";
 then
- 	{ $as_echo "$as_me:${as_lineno-$LINENO}: no R_HOME found" >&5
-$as_echo "$as_me: no R_HOME found" >&6;}
-	CXX=`"${R_HOME}/bin/R" CMD config CXX1X`
+  as_fn_error $? "no R_HOME found" "$LINENO" 5
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: \"R home found in: ${R_HOME}" >&5
+$as_echo "$as_me: \"R home found in: ${R_HOME}" >&6;}
+  CXX=`"${R_HOME}/bin/R" CMD config CXX1X`
+  { $as_echo "$as_me:${as_lineno-$LINENO}: CXX: ${CXX}" >&5
+$as_echo "$as_me: CXX: ${CXX}" >&6;}
 fi
 
 ac_ext=cpp

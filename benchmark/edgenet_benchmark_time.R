@@ -3,7 +3,7 @@ library(netReg)
 library(microbenchmark)
 library(uuid)
 
-p <- 1000
+p <- 10
 
 #cms    <- commandArgs(trailingOnly=T)
 #stopifnot(length(cms) != 0)
@@ -37,8 +37,6 @@ microbenchmark(
             as.integer(maxit), as.double(thresh),
             as.character("gaussian"))$coefficients,
   times=3)
-
-s <- lassoshooting::lassoshooting(X, Y[,1],lambda=10)$coefficients
 
 #uuid <- uuid::UUIDgenerate()
 #path                         <- "~/PROJECTS/netreg_project/results/"
