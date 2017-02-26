@@ -79,7 +79,7 @@ namespace netreg
         {
             std::vector<double> sses(nfolds_);
             // do n-fold cross-validation
-             #pragma omp parallel for
+            // DO NOT PARALLELIZE. R can't handle it (great language)
            for (int fc = 0; fc < nfolds_; ++fc)
             {
                 cv_fold& fold = cvset_.get_fold(fc);
