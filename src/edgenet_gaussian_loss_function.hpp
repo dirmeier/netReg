@@ -66,8 +66,6 @@ namespace netreg
             (graph_penalized_linear_model_cv_data& data):
             data_(data),
             cvset_(data.cvset()),
-            X_(data.design()),
-            Y_(data.response()),
             nfolds_(static_cast<int>(data.cvset().fold_count())),
             edgenet_(),
             do_psigx_(data.psigx() == -1),
@@ -91,33 +89,32 @@ namespace netreg
                 if (do_psigx_ && do_psigy_)
                 {
                     #ifndef NDEBUG
-                    std::cout << "Doing lambda, psigx, psigy: " <<  p(0, 0) << ", " <<  p(1, 0) <<  ", "  << p(2, 0) << std::endl:
+                    std::cout << "Doing lambda, psigx, psigy: " <<  p(0, 0) << ", " <<  p(1, 0) <<  ", "  << p(2, 0) << std::endl;
                     #endif
                     coef = edgenet_.run_cv(data_, p(0, 0), 1.0, p(1, 0), p(2, 0), fold);
                 }
                 else if (do_psigy_)
                 {
                     #ifndef NDEBUG
-                    std::cout << "Doing lambda, psigy: " <<  p(0, 0) <<  " "  << p(2, 0) << std::endl:
+                    std::cout << "Doing lambda, psigy: " <<  p(0, 0) <<  " "  << p(2, 0) << std::endl;
                     #endif
                     coef = edgenet_.run_cv(data_, p(0, 0), 1.0, 0, p(2, 0), fold);
                 }
                 else if (do_psigx_)
                 {
                     #ifndef NDEBUG
-                    std::cout << "Doing lambda, psigx: " <<  p(0, 0) <<  " "  << p(1, 0) << std::endl:
+                    std::cout << "Doing lambda, psigx: " <<  p(0, 0) <<  " "  << p(1, 0) << std::endl;
                     #endif
                     coef = edgenet_.run_cv(data_, p(0, 0), 1.0, p(1, 0), 0, fold);
                 }
                 else
                 {
                     #ifndef NDEBUG
-                    std::cout << "Doing lambda: " <<  p(0, 0) << std::endl:
+                    std::cout << "Doing lambda: " <<  p(0, 0) << std::endl;
                     #endif
                     coef = edgenet_.run_cv(data_, p(0, 0), 1.0, 0, 0, fold);
                 }
-                double err = sse(coef, fold.test_x(), fold.test_y());
-                sses[fc] = err;
+                sses[fc] = sse(coef, fold.test_x(), fold.test_y());;
             }
             double err = std::accumulate(sses.begin(), sses.end(), 0.0);
             return err;
@@ -127,8 +124,6 @@ namespace netreg
         // data required for a edge-regularized regression model
         graph_penalized_linear_model_cv_data& data_;
         cv_set& cvset_;          // cv-set on which the selected model is evaluated
-        arma::Mat<double>& X_;      // design matrix
-        arma::Mat<double>& Y_;      // response matrix
         const int nfolds_;             // number of folds
         const edgenet_gaussian edgenet_;
         const bool do_psigx_;
