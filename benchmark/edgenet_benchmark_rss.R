@@ -14,6 +14,9 @@ for (i in seq(args))
 }
 cat(paste0("Measuring rss with n=", n, ", p=", p, ", q=", q, ", sig=", sig, "\n"))
 
+n <- 10
+p <- q <- 10
+sig <- 1
 
 thresh <- 1e-7
 maxit  <- 100000
@@ -63,7 +66,7 @@ for (cv in 1:n.folds)
   
   cv.edge  <- cv.edgenet(X.train, Y.train, G.X=G.Y, G.Y=G.Y,
                          thresh=thresh, maxit=maxit, family="gaussian", nfolds=5)
-  edge <-  cv.edgenet(X.train, Y.train, G.X=G.Y, G.Y=G.Y,
+  edge <-  edgenet(X.train, Y.train, G.X=G.Y, G.Y=G.Y,
                       lambda=cv.lasso$lambda, psigx=cv.edge$psigx, psigy=cv.edge$psigy,
                       thresh=thresh, maxit=maxit, family="gaussian")
   
@@ -72,3 +75,8 @@ for (cv in 1:n.folds)
 }
 
 
+cv.edge  <- 
+  cv.edgenet(X, Y, thresh=thresh, maxit=maxit, family="gaussian", nfolds=5)
+edge <-  edgenet(Y, X, G.X=G.Y, G.Y=G.Y,
+                 lambda=1, psigx=1, psigy=1,
+                 thresh=thresh, maxit=maxit, family="gaussian")

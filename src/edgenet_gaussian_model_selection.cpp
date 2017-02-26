@@ -14,7 +14,7 @@ namespace netreg
 {
 
     std::map<std::string, double> edgenet_gaussian_model_selection::regularization_path(
-        graph_penalized_linear_model_cv_data &data)
+        graph_penalized_linear_model_cv_data &data) const
     {
         optim opt;
 

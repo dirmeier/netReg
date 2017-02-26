@@ -39,6 +39,8 @@
 #include <omp.h>
 #endif
 
+#include <iostream>
+
 namespace netreg
 {
 /**
@@ -86,6 +88,21 @@ namespace netreg
             #pragma omp parallel for
             for (unsigned int i = 0; i < train_txx.n_rows; ++i)
                 train_txx_rows_[i] = train_txx.row(i);
+
+          std::cout << "Printing fold" << std::endl;
+          std::cout << "Printing indexes" << std::endl;
+          std::cout << train_indexes_.t();
+          std::cout << test_indexes_.t();
+          std::cout << "Printing test matrices" << std::endl;
+          std::cout << test_x_ ;
+          std::cout << test_y_ ;
+          std::cout << "Printing train txx" << std::endl;
+          for (unsigned int i = 0; i < train_txx_rows_.size(); ++i)
+          {
+              std::cout << train_txx_rows_[i];
+          }
+          std::cout << "Printing train txy" << std::endl;
+          std::cout << train_txy_;
         }
 
         /**

@@ -26,6 +26,7 @@
 #define NETREG_EDGENET_GAUSSIAN_LOSSFUNCTION_HPP
 
 #include <numeric>
+#include <iostream>
 
 #ifdef USE_RCPPARMADILLO
 // [[Rcpp::depends(RcppArmadillo)]]
@@ -78,8 +79,8 @@ namespace netreg
         {
             std::vector<double> sses(nfolds_);
             // do n-fold cross-validation
-            #pragma omp parallel for
-            for (int fc = 0; fc < nfolds_; ++fc)
+             #pragma omp parallel for
+           for (int fc = 0; fc < nfolds_; ++fc)
             {
                 cv_fold& fold = cvset_.get_fold(fc);
                 arma::Mat<double> coef;
