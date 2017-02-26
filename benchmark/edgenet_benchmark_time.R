@@ -36,7 +36,7 @@ microbenchmark(
             as.double(lambda), as.double(0),  as.double(0),
             as.integer(maxit), as.double(thresh),
             as.character("gaussian"))$coefficients,
-  times=3)
+  times=10)
 
 #uuid <- uuid::UUIDgenerate()
 #path                         <- "~/PROJECTS/netreg_project/results/"

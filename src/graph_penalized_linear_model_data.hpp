@@ -10,16 +10,12 @@
 
 #include <string>
 #include <vector>
-#include <iostream>
 
 #ifdef USE_RCPPARMADILLO
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
 #else
 #include "armadillo"
-#ifndef NDEBUG
-#include <iostream>
-#endif
 #endif
 
 #ifdef HAVE_OPENMP
@@ -80,17 +76,6 @@ namespace netreg
             {
                 lx_rows_[i] = LX.row(i);
             }
-
-            #ifndef NDEBUG
-            std::cout << "Data" << std::endl;
-            for (unsigned int i = 0; i < txx_rows_.size(); ++i)
-            {
-                std::cout << txx_rows_[i] << std::endl;
-            }
-            std::cout << TXY << std::endl;
-            std::cout << LX << std::endl;
-            std::cout << LY << std::endl;
-            #endif
         }
         /**
          * Getter for penalization term for laplacian of X

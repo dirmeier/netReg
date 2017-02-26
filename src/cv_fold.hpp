@@ -33,9 +33,6 @@
 #include <RcppArmadillo.h>
 #else
 #include "armadillo"
-#ifndef NDEBUG
-#include <iostream>
-#endif
 #endif
 
 #ifdef HAVE_OPENMP
@@ -63,7 +60,6 @@ namespace netreg
             train_txx_rows_(X.n_cols),
             train_txy_(X.n_cols, Y.n_cols)
         {
-
             // set training uvec
             for (unsigned int j = 0; j < train_idxs.size(); ++j)
                 train_indexes_(j) = train_idxs[j];
@@ -90,19 +86,6 @@ namespace netreg
             #pragma omp parallel for
             for (unsigned int i = 0; i < train_txx.n_rows; ++i)
                 train_txx_rows_[i] = train_txx.row(i);
-
-#ifndef NDEBUG
-            std::cout << "Printing fold" << std::endl;
-            std::cout << train_indexes_ << std::endl;
-            std::cout << test_indexes_ << std::endl;
-            std::cout << test_x_ << std::endl;
-            std::cout << test_y_ << std::endl;
-            for (unsigned int i = 0; i < train_txx_rows_.size(); ++i)
-            {
-                std::cout << train_txx_rows_[i] << std::endl;
-            }
-            std::cout << train_txy_ << std::endl;
-#endif
         }
 
         /**

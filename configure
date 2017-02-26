@@ -1797,11 +1797,11 @@ if test -z "${R_HOME}";
 then
   as_fn_error $? "no R_HOME found" "$LINENO" 5
 else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: \"R home found in: ${R_HOME}" >&5
-$as_echo "$as_me: \"R home found in: ${R_HOME}" >&6;}
+  { $as_echo "$as_me:${as_lineno-$LINENO}: R home found in ${R_HOME}" >&5
+$as_echo "$as_me: R home found in ${R_HOME}" >&6;}
   CXX=`"${R_HOME}/bin/R" CMD config CXX1X`
-  { $as_echo "$as_me:${as_lineno-$LINENO}: CXX: ${CXX}" >&5
-$as_echo "$as_me: CXX: ${CXX}" >&6;}
+  { $as_echo "$as_me:${as_lineno-$LINENO}: setting CXX to ${CXX}" >&5
+$as_echo "$as_me: setting CXX to ${CXX}" >&6;}
 fi
 
 ac_ext=cpp
@@ -2645,7 +2645,7 @@ fi
 RLAPACK=`"${R_HOME}/bin/R" CMD config LAPACK_LIBS`
 RFORT=`"${R_HOME}/bin/R" CMD config FLIBS`
 netReg_LDLIBS="${netReg_LDLIBS} $RLAPACK $RFORT"
-netReg_CPPFLAGS="-DUSE_RCPPARMADILLO"
+netReg_CPPFLAGS="-DUSE_RCPPARMADILLO -DNDEBUG"
 
       ax_cxx_compile_cxx11_required=true
   ac_ext=cpp
