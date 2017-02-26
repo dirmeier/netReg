@@ -9,14 +9,15 @@ AC_INIT(
 AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_SRCDIR([src/edgenet_wrapper.cpp])
 
-AC_MSG_NOTICE([${R_HOME}])
-AC_MSG_NOTICE([building from R])
-if test -z "${R_HOME}"; 
+if test -z "${R_HOME}";
 then
- 	AC_MSG_NOTICE([no R_HOME found])
-	CXX=`"${R_HOME}/bin/R" CMD config CXX1X`
-fi	
-
+  AC_MSG_ERROR([no R_HOME found])
+else
+  AC_MSG_NOTICE(["R home found in: ${R_HOME}])
+  CXX=`"${R_HOME}/bin/R" CMD config CXX1X`
+  AC_MSG_NOTICE([CXX: ${CXX}])
+fi
+ 
 AC_LANG([C++])
 
 AC_MSG_CHECKING([whether configure should try to set CXXFLAGS])
