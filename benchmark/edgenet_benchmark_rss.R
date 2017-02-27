@@ -3,8 +3,9 @@ library(uuid)
 
 args    <- commandArgs(trailingOnly=T)
 stopifnot(length(args) == 8)
+
 p <- q <- sig <- n <- 0
-for (i in seq(args))
+for (i in seq(1, length(args), by=2))
 {
   if      (args[i] == "-s") sig <- as.integer(args[i + 1])
   else if (args[i] == "-n")   n <- as.integer(args[i + 1])
@@ -12,6 +13,7 @@ for (i in seq(args))
   else if (args[i] == "-q")   q <- as.integer(args[i + 1])
   else stop(paste("wrong flag", args[i], "\n"))
 }
+
 cat(paste0("Measuring rss with n=", n, ", p=", p, ", q=", q, ", sig=", sig, "\n"))
 
 thresh <- 1e-10
@@ -47,34 +49,34 @@ folds <- sample(cut(seq_along(1:n), n.folds, labels = FALSE))
   netReg:::rss(Y, Y.hat)
 }
 
-l <- list()
+l <- c()
 for (cv in 1:n.folds)
 {
   X.train  <- X[folds != cv, ]
   Y.train  <- Y[folds != cv, ]
   X.test  <-  X[folds == cv, ]
   Y.test  <-  Y[folds == cv, ]
-  cv.lasso <- cv.edgenet(X.train, Y.train, 
-                         thresh=thresh, maxit=maxit, family="gaussian", nfolds=5) 
+  
+  cv.lasso <- cv.edgenet(X.train, Y.train,
+                         thresh=thresh, maxit=maxit, family="gaussian", nfolds=5)
   las     <-  edgenet(X.train, Y.train,
                      lambda=cv.lasso$lambda,
                      thresh=thresh, maxit=maxit, family="gaussian")
-  
+
   cv.edge  <- cv.edgenet(X.train, Y.train, G.X=G.Y, G.Y=G.Y,
                          thresh=thresh, maxit=maxit, family="gaussian", nfolds=5)
   edge <-  edgenet(X.train, Y.train, G.X=G.Y, G.Y=G.Y,
                       lambda=cv.edge$lambda, psigx=cv.edge$psigx, psigy=cv.edge$psigy,
                       thresh=thresh, maxit=maxit, family="gaussian")
-  
-  rss.lasso <- .rss(las, X.test, Y.test)
+
+  rss.lasso <- .rss(las,  X.test, Y.test)
   rss.edge  <- .rss(edge, X.test, Y.test)
-  rss.lasso
-  rss.edge
+  l <- rbind(l, c(Lasso=rss.lasso, Edgenet=rss.edge))
 }
 
-
-cv.edge  <- 
-  cv.edgenet(X, Y, thresh=thresh, maxit=maxit, family="gaussian", nfolds=5)
-edge <-  edgenet(Y, X, G.X=G.Y, G.Y=G.Y,
-                 lambda=1, psigx=1, psigy=1,
-                 thresh=thresh, maxit=maxit, family="gaussian")
+uuid                         <- uuid::UUIDgenerate()
+path                         <- "~/PROJECTS/netreg_project/results/"
+if (!file.exists(path)) path <- "/cluster/home/simondi/results/netReg/"
+path                         <- paste0(path, "benchmark_rss_n_", n, "_p_", p, "_q_", q, "_sig_", sig, "_", uuid, ".rds")
+cat(paste("going to:", path, "\n"))
+saveRDS(l , path)

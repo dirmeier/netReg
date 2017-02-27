@@ -39,6 +39,7 @@
 #endif
 
 #include "../inst/include/dlib/optimization.h"
+
 #include "graph_penalized_linear_model_cv_data.hpp"
 #include "cv_set.hpp"
 #include "edgenet_gaussian_loss_function.hpp"

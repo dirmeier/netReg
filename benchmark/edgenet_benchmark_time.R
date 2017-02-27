@@ -5,13 +5,15 @@ library(uuid)
 
 args    <- commandArgs(trailingOnly=T)
 stopifnot(length(args) == 4)
+
 n <- p <- 0
-for (i in seq(args))
+for (i in seq(1, length(args), by=2))
 {
   if      (args[i] == "-n") n <- as.integer(args[i + 1])  
   else if (args[i] == "-p") p <- as.integer(args[i + 1])
   else stop(paste("wrong flag", args[i], "\n"))
 }
+
 cat(paste0("Measuring time with n=", n, ", p=", p, "\n"))
 
 q      <- 1
@@ -44,6 +46,6 @@ m <-
 uuid                         <- uuid::UUIDgenerate()
 path                         <- "~/PROJECTS/netreg_project/results/"
 if (!file.exists(path)) path <- "/cluster/home/simondi/results/netReg/"
-path                         <- paste0(path, "benchmark_", p, "_", uuid, ".rds")
+path                         <- paste0(path, "benchmark_time_n_", n, "_p_", p, "_", uuid, ".rds")
 cat(paste("going to:", path, "\n"))
 saveRDS(m , path)
