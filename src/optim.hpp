@@ -81,7 +81,7 @@ namespace netreg
              const double radius_stop,
              const int niter)
         {
-            int sz = static_cast<int>(start.size());
+            const int sz = static_cast<int>(start.size());
             // convert to dlib objects
             dlib::matrix<double> par(sz, 1), lb(sz, 1), ub(sz, 1);
             for (int i = 0; i < sz; ++i)

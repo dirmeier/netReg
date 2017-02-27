@@ -32,7 +32,7 @@
 #include <RcppArmadillo.h>
 #else
 #include "armadillo"
-#include <iostream>
+//#include <iostream>
 #endif
 
 #include "cv_fold.hpp"
@@ -122,4 +122,3 @@ namespace netreg
     };
 }
 #endif //NETREG_CVSET_HPP
-

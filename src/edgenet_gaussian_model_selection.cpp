@@ -22,7 +22,7 @@ namespace netreg
         std::vector<double> lower_bound{0.0, 0.0, 0.0};
         std::vector<double> upper_bound{100.0, 10000.0, 10000.0};
         const double rad_start = 0.49, rad_end = 1e-6;
-        const int niter = 1000;
+        const int niter = 100000;
 
         switch (data.distribution_family())
         {
