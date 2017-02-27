@@ -26,17 +26,13 @@
 #define NETREG_EDGENET_GAUSSIAN_LOSSFUNCTION_HPP
 
 #include <numeric>
-#include <iostream>
+// #include <iostream>
 
 #ifdef USE_RCPPARMADILLO
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
 #else
 #include "armadillo"
-#endif
-
-#ifdef HAVE_OPENMP
-#include <omp.h>
 #endif
 
 #include "edgenet_gaussian.hpp"

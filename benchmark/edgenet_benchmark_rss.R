@@ -14,10 +14,6 @@ for (i in seq(args))
 }
 cat(paste0("Measuring rss with n=", n, ", p=", p, ", q=", q, ", sig=", sig, "\n"))
 
-n <- 10
-p <- q <- 10
-sig <- 1
-
 thresh <- 1e-7
 maxit  <- 100000
 
