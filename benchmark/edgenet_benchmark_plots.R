@@ -2,17 +2,22 @@ library(stringr)
 library(ggplot2)
 library(microbenchmark)
 
-bench.fls <- list.files("../../../results/", full.names=T)
+setwd("~/PROJECTS/netreg_project/results/")
+bench.fls <- list.files(".", full.names=T)
 bench.df <- c()
 ben.l <- list()
 for (fl in bench.fls)
 {
-  p <- as.numeric(stringr::str_match(fl, "benchmark_([[:digit:]]+)_.*")[[2]])
+  m <- stringr::str_match(fl, "benchmark_time_n_([[:digit:]]+)_p_([[:digit:]]+)_.*")
+  n <- as.numeric(m[2])
+  p <- as.numeric(m[3])
   r <- readRDS(fl)
-  bench.df <- rbind(bench.df, cbind(p,r ))
-  ben.l[[paste(p)]] <- r
+  bench.df <- rbind(bench.df, cbind(n,p,r))
+  ben.l[[paste("n", n, "p", p, sep="_")]] <- r
 }
 bench.df
+
+ben.l
 
 bench.df$expr <- factor(bench.df$expr)
 
