@@ -63,9 +63,9 @@ for (cv in 1:n.folds)
                      lambda=cv.lasso$lambda,
                      thresh=thresh, maxit=maxit, family="gaussian")
 
-  cv.edge  <- cv.edgenet(X.train, Y.train, G.X=G.Y, G.Y=G.Y,
+  cv.edge  <- cv.edgenet(X.train, Y.train, G.X=G.X, G.Y=G.Y,
                          thresh=thresh, maxit=maxit, family="gaussian", nfolds=5)
-  edge <-  edgenet(X.train, Y.train, G.X=G.Y, G.Y=G.Y,
+  edge <-  edgenet(X.train, Y.train, G.X=G.X, G.Y=G.Y,
                       lambda=cv.edge$lambda, psigx=cv.edge$psigx, psigy=cv.edge$psigy,
                       thresh=thresh, maxit=maxit, family="gaussian")
 
