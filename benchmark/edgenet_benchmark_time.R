@@ -1,18 +1,18 @@
-source("./edgenet_pure.R")
+# source("./edgenet_pure.R")
 library(netReg)
 library(microbenchmark)
 library(uuid)
 
-args    <- commandArgs(trailingOnly=T)
-stopifnot(length(args) == 4)
+# args    <- commandArgs(trailingOnly=T)
+# stopifnot(length(args) == 4)
 
-n <- p <- 0
-for (i in seq(1, length(args), by=2))
-{
-  if      (args[i] == "-n") n <- as.integer(args[i + 1])  
-  else if (args[i] == "-p") p <- as.integer(args[i + 1])
-  else stop(paste("wrong flag", args[i], "\n"))
-}
+# n <- p <- 0
+# for (i in seq(1, length(args), by=2))
+# {
+#   if      (args[i] == "-n") n <- as.integer(args[i + 1])  
+#   else if (args[i] == "-p") p <- as.integer(args[i + 1])
+#   else stop(paste("wrong flag", args[i], "\n"))
+# }
 
 
 .bench <- function(n, p, q, times)
@@ -50,14 +50,20 @@ for (i in seq(1, length(args), by=2))
 
 m1 <- .bench(100, 100, 100, 10)
 m1
-m2 <- .bench(1000, 100, 100, 10)
+saveRDS(m1, "~/Desktop/m1.rds" )
+m2 <- .bench(1000, 1000, 1, 1)
 m2
+saveRDS(m2, "~/Desktop/m2.rds" )
 m3 <- .bench(1000, 1000, 1000, 10)
 m3
+saveRDS(m3, "~/Desktop/m3.rds" )
+m4 <- .bench(1000, 100, 1000, 10)
+m4
+saveRDS(m4, "~/Desktop/m3.rds" )
 
-uuid                         <- uuid::UUIDgenerate()
-path                         <- "~/PROJECTS/netreg_project/results/"
-if (!file.exists(path)) path <- "/cluster/home/simondi/results/netReg/"
-path                         <- paste0(path, "benchmark_time_n_", n, "_p_", p, "_", uuid, ".rds")
-cat(paste("going to:", path, "\n"))
-saveRDS(m , path)
+# uuid                         <- uuid::UUIDgenerate()
+# path                         <- "~/PROJECTS/netreg_project/results/"
+# if (!file.exists(path)) path <- "/cluster/home/simondi/results/netReg/"
+# path                         <- paste0(path, "benchmark_time_n_", n, "_p_", p, "_", uuid, ".rds")
+# cat(paste("going to:", path, "\n"))
+# saveRDS(m , path)
