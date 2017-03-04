@@ -19,6 +19,4 @@ Imports: Rcpp, stats
 biocViews: StatisticalMethod, Regression, DimensionReduction,
         GraphAndNetwork, Network
 NeedsCompilation: yes
-Packaged: 2017-02-05 13:05:16 UTC; simondi
-Author: Simon Dirmeier [aut, cre]
-Maintainer: Simon Dirmeier <mail@simon.dirmeier.net>
+

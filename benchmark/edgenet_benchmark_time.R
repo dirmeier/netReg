@@ -1,4 +1,4 @@
-# source("./edgenet_pure.R")
+ source("./edgenet_pure.R")
 library(netReg)
 library(microbenchmark)
 library(uuid)
