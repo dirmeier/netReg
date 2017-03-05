@@ -7,17 +7,26 @@ Authors@R: person("Simon", "Dirmeier",
                   email = "mail@simon.dirmeier.net", role = c("aut", "cre"))
 Maintainer: Simon Dirmeier <mail@simon-dirmeier.net>
 Description: netReg fits linear regression models using network-penalization.
-    Graph prior knowledge is incorporated into the likelihood of the linear
-    model in the form of the Laplacian matrices of the graphs. 
-    The Laplacians penalize the estimation of the coefficients for 
-    smooth solutions.
+    Graph prior knowledge, in the form of biological networks, is being 
+    incorporated into the likelihood of the linear model. The networks describe 
+    biological relationships such as co-regulation or dependency of the same 
+    transcription factors/metabolites/etc. yielding a part sparse and part
+    smooth solution for coefficient profiles.
 URL: https://github.com/dirmeier/netReg
 BugReports: https://github.com/dirmeier/netReg/issues
-biocViews: StatisticalMethod, Regression, DimensionReduction,
-    GraphAndNetwork, Network
+biocViews:
+    StatisticalMethod,
+    Regression,
+    DimensionReduction,
+    GraphAndNetwork,
+    Network
 License: GPL-3
 Encoding: UTF-8
-Suggests: knitr, rmarkdown, testthat, lintr
+Suggests:
+    knitr,
+    rmarkdown,
+    testthat,
+    lintr
 VignetteBuilder: knitr
 RoxygenNote: 6.0.0
 SystemRequirements: C++11
