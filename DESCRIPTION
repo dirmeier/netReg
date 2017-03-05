@@ -4,10 +4,13 @@ Title: Network-Regularized Regression Models
 Version: 0.99.0
 Date: 2015-05-15
 Authors@R: person("Simon", "Dirmeier", email = "mail@simon.dirmeier.net", role = c("aut", "cre"))
+Maintainer: SImon Dirmeier <mail@simon-dirmeier.net>
 Description: netReg fits linear regression models using network-penalization.
     Graph prior knowledge is incorporated into the likelihood of the linear
     model in the form of the Laplacian matrices of the graphs. The Laplacians penalize the estimation
     of the coefficients for smooth solutions.
+URL: https://github.com/dirmeier/netReg
+BugReports: https://github.com/dirmeier/netReg/issues
 License: GPL-3
 Encoding: UTF-8
 Suggests: knitr, rmarkdown, testthat, lintr
