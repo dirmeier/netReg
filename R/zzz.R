@@ -20,5 +20,5 @@
 
 .onUnload <- function(libpath)
 {
-  library.dynam.unload("netReg", libpath)
+    library.dynam.unload("netReg", libpath)
 }

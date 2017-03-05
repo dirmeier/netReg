@@ -73,8 +73,7 @@
 #'  \url{http://www.damtp.cam.ac.uk/user/na/NA_papers/NA2009_06.pdf}
 #'
 #' @examples
-#' \dontrun{
-#' X <- matrix(rnorm(100*10),100,10)
+#' X <- matrix(rnorm(100*10), 100, 10)
 #' b <- rnorm(10)
 #' G.X <- matrix(rpois(10*10,1),10)
 #' G.X <- t(G.X) + G.X
@@ -83,13 +82,12 @@
 #' # fit a Gaussian model
 #' Y <- X%*%b + rnorm(100)
 #' cv.edge <- cv.edgenet(X=X, Y=Y, G.X=G.X, family="gaussian")
-#' }
 cv.edgenet <- function (X, Y, G.X=NULL, G.Y=NULL,
                         thresh=1e-5, maxit=1e5,
                         family=c("gaussian"),
                         nfolds=10, ...)
 {
-  UseMethod("cv.edgenet")
+    UseMethod("cv.edgenet")
 }
 
 #' @export
@@ -99,54 +97,54 @@ cv.edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
                                family=c("gaussian"),
                                nfolds=10, ...)
 {
-  check.matrices(X, Y)
-  n <- dim(X)[1]
-  p <- dim(X)[2]
-  q <- dim(Y)[2]
-  psigx <- psigy <- -1
-  if (is.null(G.X)) G.X <- matrix(0, 1, 1)
-  if (is.null(G.Y)) G.Y <- matrix(0, 1, 1)
-  if (all(G.X == 0)) psigx <- 0
-  if (all(G.Y == 0)) psigy <- 0
-  check.graphs(X, Y, G.X, G.Y, psigx, psigy)
-  check.dimensions(X, Y, n, p, q)
-  if (maxit < 0)
-  {
-    warning("maxit < 0, setting to 1e5!")
-    maxit <- 1e5
-  }
-  if (thresh < 0)
-  {
-    warning("thresh < 0, setting to 1e-5!")
-    thresh <- 1e-5
-  }
-  # TODO; implement this
-  foldid <- NULL
-  # check if some parameters have values
-  if (!is.null(foldid) & is.numeric(foldid))
-  {
-    nfolds <- max(foldid)
-    stopifnot(length(foldid) == n)
-  }
-  if (is.null(foldid)) foldid <- NA_integer_
-  if (!is.numeric(foldid))
-    stop("Please provide either an integer vector or NULL for foldid")
-  if (q == 1)     psigy  <- 0
-  if (n < nfolds) nfolds <- n
-  # set static to avoid memory overload
-  if (n >= 1000 && p >= 500) nfolds <- 10
-  family                 <- match.arg(family)
-  # estimate shrinkage parameters
-  ret <- .cv.edgenet(X=X, Y=Y,
-                     G.X=G.X, G.Y=G.Y,
-                     psigx=psigx, psigy=psigy,
-                     thresh=thresh, maxit=maxit,
-                     family=family,
-                     nfolds=nfolds,
-                     foldid=foldid)
-  ret$call   <- match.call()
-  class(ret) <- c(class(ret), "cv.edgenet")
-  ret
+    check.matrices(X, Y)
+    n <- dim(X)[1]
+    p <- dim(X)[2]
+    q <- dim(Y)[2]
+    psigx <- psigy <- -1
+    if (is.null(G.X)) G.X <- matrix(0, 1, 1)
+    if (is.null(G.Y)) G.Y <- matrix(0, 1, 1)
+    if (all(G.X == 0)) psigx <- 0
+    if (all(G.Y == 0)) psigy <- 0
+    check.graphs(X, Y, G.X, G.Y, psigx, psigy)
+    check.dimensions(X, Y, n, p, q)
+    if (maxit < 0)
+    {
+       warning("maxit < 0, setting to 1e5!")
+        maxit <- 1e5
+    }
+    if (thresh < 0)
+    {
+        warning("thresh < 0, setting to 1e-5!")
+        thresh <- 1e-5
+    }
+    # TODO; implement this
+    foldid <- NULL
+    # check if some parameters have values
+    if (!is.null(foldid) & is.numeric(foldid))
+    {
+        nfolds <- max(foldid)
+        stopifnot(length(foldid) == n)
+    }
+    if (is.null(foldid)) foldid <- NA_integer_
+    if (!is.numeric(foldid))
+        stop("Please provide either an integer vector or NULL for foldid")
+    if (q == 1)     psigy  <- 0
+    if (n < nfolds) nfolds <- n
+    # set static to avoid memory overload
+    if (n >= 1000 && p >= 500) nfolds <- 10
+    family                 <- match.arg(family)
+    # estimate shrinkage parameters
+    ret <- .cv.edgenet(X=X, Y=Y,
+                       G.X=G.X, G.Y=G.Y,
+                       psigx=psigx, psigy=psigy,
+                       thresh=thresh, maxit=maxit,
+                       family=family,
+                       nfolds=nfolds,
+                       foldid=foldid)
+    ret$call   <- match.call()
+    class(ret) <- c(class(ret), "cv.edgenet")
+    ret
 }
 
 #' @noRd
@@ -155,17 +153,17 @@ cv.edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
                         psigx, psigy, thresh, maxit, family,
                         nfolds, foldid)
 {
-  cv <- .Call("cv_edgenet_cpp", X, Y, G.X, G.Y,
-              as.double(psigx),  as.double(psigy),
-              as.integer(maxit), as.double(thresh),
-              as.integer(nfolds), as.integer(foldid),
-              as.integer(length(foldid)),
-              as.character(family))
-  ret        <- list(lambda    =cv$parameters[1],
-                     psigx     =cv$parameters[2],
-                     psigy     =cv$parameters[3],
-                     folds     =cv$folds+1)
-  ret$family <- family
-  class(ret) <- paste0(family, ".cv.edgenet")
-  ret
+    cv <- .Call("cv_edgenet_cpp", X, Y, G.X, G.Y,
+                as.double(psigx),  as.double(psigy),
+                as.integer(maxit), as.double(thresh),
+                as.integer(nfolds), as.integer(foldid),
+                as.integer(length(foldid)),
+                as.character(family))
+    ret        <- list(lambda    =cv$parameters[1],
+                       psigx     =cv$parameters[2],
+                       psigy     =cv$parameters[3],
+                       folds     =cv$folds+1)
+    ret$family <- family
+    class(ret) <- paste0(family, ".cv.edgenet")
+    ret
 }

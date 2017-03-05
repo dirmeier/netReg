@@ -71,7 +71,6 @@
 #'  \emph{Bioinformatics}
 #'
 #' @examples
-#' \dontrun{
 #' X <- matrix(rnorm(100*10), 100, 10)
 #' b <- rnorm(10)
 #' G.X <- matrix(rpois(100,1), 10)
@@ -81,11 +80,10 @@
 #' # fit a Gaussian model
 #' Y <- X%*%b + rnorm(100)
 #' fit <- edgenet(X=X, Y=Y, G.X=G.X, family="gaussian")
-#' }
 edgenet <- function(X, Y, G.X=NULL, G.Y=NULL, lambda=1, psigx=1, psigy=1,
                     thresh=1e-5, maxit=1e5, family=c("gaussian"), ...)
 {
-  UseMethod("edgenet")
+    UseMethod("edgenet")
 }
 
 #' @export
@@ -95,53 +93,53 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
                             thresh=1e-5, maxit=1e5,
                             family=c("gaussian"), ...)
 {
-  check.matrices(X, Y)
-  n <- dim(X)[1]
-  p <- dim(X)[2]
-  q <- dim(Y)[2]
-  if (is.null(G.X)) G.X <- matrix(0, 1, 1)
-  if (is.null(G.Y)) G.Y <- matrix(0, 1, 1)
-  if (all(G.X == 0)) psigx <- 0
-  if (all(G.Y == 0)) psigy <- 0
-  check.graphs(X, Y, G.X, G.Y, psigx, psigy)
-  check.dimensions(X, Y, n, p, q)
-  if (lambda < 0)
-  {
-    warning("lambda < 0, setting to 0!")
-    lambda <- 0
-  }
-  if (psigx < 0)
-  {
-    warning("psigx < 0, setting to 0!")
-    psigx <- 0
-  }
-  if (psigy < 0)
-  {
-    warning("psigy < 0, setting to 0!")
-    psigy <- 0
-  }
-  if (maxit < 0)
-  {
-    warning("maxit < 0, setting to 1e5!")
-    maxit <- 1e5
-  }
-  if (thresh < 0)
-  {
-    warning("thresh < 0, setting to 1e-5!")
-    thresh <- 1e-5
-  }
-  if (q == 1) psigy <- 0
-  family <- match.arg(family)
-  # estimate coefficients
-  ret <- .edgenet(X=X, Y=Y,
-                  G.X=G.X, G.Y=G.Y,
-                  lambda=lambda,
-                  psigx=psigx, psigy=psigy,
-                  thresh=thresh, maxit=maxit,
-                  family=family)
-  ret$call   <- match.call()
-  class(ret) <- c(class(ret), "edgenet")
-  ret
+    check.matrices(X, Y)
+    n <- dim(X)[1]
+    p <- dim(X)[2]
+    q <- dim(Y)[2]
+    if (is.null(G.X)) G.X <- matrix(0, 1, 1)
+    if (is.null(G.Y)) G.Y <- matrix(0, 1, 1)
+    if (all(G.X == 0)) psigx <- 0
+    if (all(G.Y == 0)) psigy <- 0
+    check.graphs(X, Y, G.X, G.Y, psigx, psigy)
+    check.dimensions(X, Y, n, p, q)
+    if (lambda < 0)
+    {
+        warning("lambda < 0, setting to 0!")
+        lambda <- 0
+    }
+    if (psigx < 0)
+    {
+        warning("psigx < 0, setting to 0!")
+        psigx <- 0
+    }
+    if (psigy < 0)
+    {
+        warning("psigy < 0, setting to 0!")
+        psigy <- 0
+    }
+    if (maxit < 0)
+    {
+        warning("maxit < 0, setting to 1e5!")
+        maxit <- 1e5
+    }
+    if (thresh < 0)
+    {
+        warning("thresh < 0, setting to 1e-5!")
+        thresh <- 1e-5
+    }
+    if (q == 1) psigy <- 0
+    family <- match.arg(family)
+    # estimate coefficients
+    ret <- .edgenet(X=X, Y=Y,
+                    G.X=G.X, G.Y=G.Y,
+                    lambda=lambda,
+                    psigx=psigx, psigy=psigy,
+                    thresh=thresh, maxit=maxit,
+                    family=family)
+    ret$call   <- match.call()
+    class(ret) <- c(class(ret), "edgenet")
+    ret
 }
 
 #' @noRd
@@ -150,21 +148,21 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
                     lambda, psigx, psigy,
                     thresh, maxit, family)
 {
-  res <- .Call("edgenet_cpp", X, Y, G.X, G.Y,
-               as.double(lambda), as.double(psigx),  as.double(psigy),
-               as.integer(maxit), as.double(thresh),
-               as.character(family))
-  # finalize output
-  coefficients <- matrix(res$coefficients, ncol(X))
-  intr         <- res$intercept
-  rownames(coefficients) <- colnames(X)
-  colnames(coefficients) <- colnames(Y)
-  ret <- list(coefficients=coefficients,
-              intercept=intr,
-              lambda=lambda,
-              psigx=psigx,
-              psigy=psigy)
-  ret$family <- family
-  class(ret) <- paste0(family, ".edgenet")
-  ret
+    res <- .Call("edgenet_cpp", X, Y, G.X, G.Y,
+                 as.double(lambda), as.double(psigx),  as.double(psigy),
+                 as.integer(maxit), as.double(thresh),
+                 as.character(family))
+    # finalize output
+    coefficients <- matrix(res$coefficients, ncol(X))
+    intr         <- res$intercept
+    rownames(coefficients) <- colnames(X)
+    colnames(coefficients) <- colnames(Y)
+    ret <- list(coefficients=coefficients,
+                intercept=intr,
+                lambda=lambda,
+                psigx=psigx,
+                psigy=psigy)
+    ret$family <- family
+    class(ret) <- paste0(family, ".edgenet")
+    ret
 }
