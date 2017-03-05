@@ -1,10 +1,16 @@
 language: r
-r:  bioc-release
+r:
+  - oldrel
+  - release
+  - devel
 
 sudo: required
-dist: trusty
 
 cache: packages
+
+os:
+  - linux
+  - osx
 
 matrix:
   include:
@@ -30,6 +36,7 @@ env:
   global:
     - R_BUILD_ARGS="--no-build-vignettes --no-manual"
     - R_CHECK_ARGS="--no-build-vignettes --no-manual --as-cran"
+    - OS=$(uname -s)
 
 r_packages:
   - covr
@@ -41,6 +48,8 @@ before_install:
   - sudo apt-get install --only-upgrade automake
   - sudo apt-get install --only-upgrade autotools-dev
   - sudo apt-get install autoconf-archive
+  - if test ${OS} = Darwin; then curl -O http://r.research.att.com/libs/gfortran-4.8.2-darwin13.tar.bz2; fi
+  - if test ${OS} = Darwin; then sudo tar fvxz gfortran-4.8.2-darwin13.tar.bz2 -C /; fi
 
 before_script:
   - autoreconf -vif
@@ -48,3 +57,4 @@ before_script:
 after_success:
   - tar -C .. -xf $PKG_TARBALL
   - Rscript -e 'covr::codecov()'
+  - Rscript -e 'covr::package_coverage(quiet=F)'
