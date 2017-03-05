@@ -13,6 +13,8 @@ Description: netReg fits linear regression models using network-penalization.
     smooth solutions.
 URL: https://github.com/dirmeier/netReg
 BugReports: https://github.com/dirmeier/netReg/issues
+biocViews: StatisticalMethod, Regression, DimensionReduction,
+    GraphAndNetwork, Network
 License: GPL-3
 Encoding: UTF-8
 Suggests: knitr, rmarkdown, testthat, lintr
