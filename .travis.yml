@@ -41,7 +41,6 @@ before_install:
   - sudo apt-get install --only-upgrade automake
   - sudo apt-get install --only-upgrade autotools-dev
   - sudo apt-get install autoconf-archive
-  - curl -O http://r.research.att.com/libs/gfortran-4.8.2-darwin13.tar.bz2 && sudo tar fvxz gfortran-4.8.2-darwin13.tar.bz2 -C /
 
 before_script:
   - autoreconf -vif
