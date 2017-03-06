@@ -16,7 +16,7 @@ coverage:
     patch: true
     project: true
   ignore:
-    - "inst/*"
+    - "inst/**/*"
 parsers:
   gcov:
     branch_detection:

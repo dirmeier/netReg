@@ -8,10 +8,9 @@ linters: list(linelen=line_length_linter(80),
               trailingwhites=trailing_whitespace_linter)
 exclusions: list("tests/testthat.R",                 
                  "tests/testthat/test_util.R",
-                 "tests/testthat/test_predict.R",
-                 "tests/testthat/test_lint.R",
-                 "tests/testthat/test_gaussian_edgenet.R",
-                 "tests/testthat/test_binomial_edgenet.R",
+                 "tests/testthat/test_edgenet.R",
+                 "tests/testthat/test_edgenet_modelselection.R,
+                 "tests/testthat/test_edgenet_predict.R",
                  "inst/doc/netReg.R")
 exclude: "# Exclude Linting"
 exclude_start: "# Begin Exclude Linting"
