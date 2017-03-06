@@ -32,7 +32,7 @@ X   <- matrix(rnorm(n * p), n, p)
 B   <- matrix(rnorm(p * q), p, q)
 Y   <- X %*% B + matrix(rnorm(n * q), n)
 
-e <- edgenet(X, Y, lambda=1, maxit=1000, thresh=1e-5)$
+e <- edgenet(X, Y, lambda=1, maxit=1000, thresh=1e-5)
 
 test_that("gaussian edgenet returns s3 class", {
   testthat::expect_s3_class(e, "edgenet")
