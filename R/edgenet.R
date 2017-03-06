@@ -102,7 +102,7 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
     if (all(G.X == 0)) psigx <- 0
     if (all(G.Y == 0)) psigy <- 0
     check.graphs(X, Y, G.X, G.Y, psigx, psigy)
-    check.dimensions(X, Y, n, p, q)
+    check.dimensions(X, Y, n, p)
     if (lambda < 0)
     {
         warning("lambda < 0, setting to 0!")
@@ -144,9 +144,9 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
 
 #' @noRd
 #' @import Rcpp
-.edgenet <-function(X, Y, G.X, G.Y,
-                    lambda, psigx, psigy,
-                    thresh, maxit, family)
+.edgenet <- function(X, Y, G.X, G.Y,
+                     lambda, psigx, psigy,
+                     thresh, maxit, family)
 {
     res <- .Call("edgenet_cpp", X, Y, G.X, G.Y,
                  as.double(lambda), as.double(psigx),  as.double(psigy),

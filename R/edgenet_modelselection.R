@@ -97,54 +97,55 @@ cv.edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
                                family=c("gaussian"),
                                nfolds=10, ...)
 {
-    check.matrices(X, Y)
-    n <- dim(X)[1]
-    p <- dim(X)[2]
-    q <- dim(Y)[2]
-    psigx <- psigy <- -1
-    if (is.null(G.X)) G.X <- matrix(0, 1, 1)
-    if (is.null(G.Y)) G.Y <- matrix(0, 1, 1)
-    if (all(G.X == 0)) psigx <- 0
-    if (all(G.Y == 0)) psigy <- 0
-    check.graphs(X, Y, G.X, G.Y, psigx, psigy)
-    check.dimensions(X, Y, n, p, q)
-    if (maxit < 0)
-    {
-       warning("maxit < 0, setting to 1e5!")
-        maxit <- 1e5
-    }
-    if (thresh < 0)
-    {
-        warning("thresh < 0, setting to 1e-5!")
-        thresh <- 1e-5
-    }
-    # TODO; implement this
-    foldid <- NULL
-    # check if some parameters have values
-    if (!is.null(foldid) & is.numeric(foldid))
-    {
-        nfolds <- max(foldid)
-        stopifnot(length(foldid) == n)
-    }
-    if (is.null(foldid)) foldid <- NA_integer_
-    if (!is.numeric(foldid))
-        stop("Please provide either an integer vector or NULL for foldid")
-    if (q == 1)     psigy  <- 0
-    if (n < nfolds) nfolds <- n
-    # set static to avoid memory overload
-    if (n >= 1000 && p >= 500) nfolds <- 10
-    family                 <- match.arg(family)
-    # estimate shrinkage parameters
-    ret <- .cv.edgenet(X=X, Y=Y,
-                       G.X=G.X, G.Y=G.Y,
-                       psigx=psigx, psigy=psigy,
-                       thresh=thresh, maxit=maxit,
-                       family=family,
-                       nfolds=nfolds,
-                       foldid=foldid)
-    ret$call   <- match.call()
-    class(ret) <- c(class(ret), "cv.edgenet")
-    ret
+  stopifnot(is.numeric(nfolds), nfolds > 0)
+  check.matrices(X, Y)
+  n <- dim(X)[1]
+  p <- dim(X)[2]
+  q <- dim(Y)[2]
+  psigx <- psigy <- -1
+  if (is.null(G.X)) G.X <- matrix(0, 1, 1)
+  if (is.null(G.Y)) G.Y <- matrix(0, 1, 1)
+  if (all(G.X == 0)) psigx <- 0
+  if (all(G.Y == 0)) psigy <- 0
+  check.graphs(X, Y, G.X, G.Y, psigx, psigy)
+  check.dimensions(X, Y, n, p)
+  if (maxit < 0)
+  {
+     warning("maxit < 0, setting to 1e5!")
+      maxit <- 1e5
+  }
+  if (thresh < 0)
+  {
+      warning("thresh < 0, setting to 1e-5!")
+      thresh <- 1e-5
+  }
+  # TODO; implement this
+  foldid <- NULL
+  # check if some parameters have values
+  if (!is.null(foldid) & is.numeric(foldid))
+  {
+      nfolds <- max(foldid)
+      stopifnot(length(foldid) == n)
+  }
+  if (is.null(foldid)) foldid <- NA_integer_
+  if (!is.numeric(foldid))
+      stop("Please provide either an integer vector or NULL for foldid")
+  if (q == 1)     psigy  <- 0
+  if (n < nfolds) nfolds <- n
+  # set static to avoid memory overload
+  if (n >= 1000 && p >= 500) nfolds <- 10
+  family                 <- match.arg(family)
+  # estimate shrinkage parameters
+  ret <- .cv.edgenet(X=X, Y=Y,
+                     G.X=G.X, G.Y=G.Y,
+                     psigx=psigx, psigy=psigy,
+                     thresh=thresh, maxit=maxit,
+                     family=family,
+                     nfolds=nfolds,
+                     foldid=foldid)
+  ret$call   <- match.call()
+  class(ret) <- c(class(ret), "cv.edgenet")
+  ret
 }
 
 #' @noRd

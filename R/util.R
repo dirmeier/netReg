@@ -65,7 +65,6 @@ check.matrices <- function(X, Y)
 }
 
 #' @noRd
-#'
 check.graphs <- function(X, Y, G.X, G.Y, psigx, psigy)
 {
     stopifnot(is.matrix(G.X), is.matrix(G.Y))
@@ -80,11 +79,14 @@ check.graphs <- function(X, Y, G.X, G.Y, psigx, psigy)
 }
 
 #' @noRd
-check.dimensions <- function(X, Y, n, p, q)
+check.dimensions <- function(X, Y, n, p)
 {
-    # check if X and Y are valid
-    if (n != dim(Y)[1])
-        stop("X and Y have not same number of observations!")
-    if (p < 2)
-        stop("Pls use a X matrix with at least 2 covariables!")
+  if (dim(X)[1] != n)
+    stop("X and Y have not same number of observations!")
+  if (dim(X)[1] != dim(Y)[1])
+    stop("X and Y have not same number of observations!")
+  if (n != dim(Y)[1])
+    stop("X and Y have not same number of observations!")
+  if (p < 2)
+    stop("Pls use a X matrix with at least 2 covariables!")
 }
