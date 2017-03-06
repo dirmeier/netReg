@@ -63,3 +63,4 @@ predict.gaussian.edgenet <- function(object, newdata=NULL, ...)
     Y.hat <- X %*% coefs + intercept.matrix(n=n, mu=mu)
     Y.hat
 }
+
