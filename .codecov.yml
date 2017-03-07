@@ -1,33 +1,30 @@
 codecov:
   notify:
     require_ci_to_pass: true
+
 comment:
+  layout: "header, diff"
   behavior: default
-  layout: header, diff
-  require_changes: false
+  require_changes: no
+
 coverage:
   precision: 2
-  range:
-  - 70.0
-  - 100.0
-  round: down
+  round: up
+  range: "50...100"
+
   status:
-    changes: false
-    patch: true
-    project: true
-  ignore:
-    - "inst/include/dlib"
-    - "inst"
+    project: yes
+    patch: yes
+    changes: no
+
 parsers:
   gcov:
     branch_detection:
-      conditional: true
-      loop: true
-      macro: false
-      method: false
-  javascript:
-    enable_partials: false
-ignore:
- - "inst/include/dlib"
- - "inst"
+      conditional: yes
+      loop: yes
+      method: no
+      macro: no
 
+ignore:
+  - "inst/include/dlib/"
+  - "inst/"
