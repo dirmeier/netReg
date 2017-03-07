@@ -45,15 +45,15 @@ check.matrices <- function(X, Y)
 #' @noRd
 check.graphs <- function(X, Y, G.X, G.Y, psigx, psigy)
 {
-    stopifnot(is.matrix(G.X), is.matrix(G.Y))
-    if (psigx != 0 & any(dim(G.X) != dim(X)[2]))
-      stop("ncol(X) and dim(G.X) do not fit!")
-    if (psigy != 0 & any(dim(G.Y) != dim(Y)[2]))
-      stop("ncol(Y) and dim(G.Y) do not fit!")
-    if (any(G.X < 0))
-      stop("Some elements G.X<0; please use non-negative matrix!")
-    if (any(G.Y < 0))
-      stop("Some elements G.Y<0; please use non-negative matrix!")
+  stopifnot(is.matrix(G.X), is.matrix(G.Y))
+  if (psigx != 0 & any(dim(G.X) != dim(X)[2]))
+    stop("ncol(X) and dim(G.X) do not fit!")
+  if (psigy != 0 & any(dim(G.Y) != dim(Y)[2]))
+    stop("ncol(Y) and dim(G.Y) do not fit!")
+  if (any(G.X < 0))
+    stop("Some elements G.X<0; please use non-negative matrix!")
+  if (any(G.Y < 0))
+    stop("Some elements G.Y<0; please use non-negative matrix!")
 }
 
 #' @noRd
