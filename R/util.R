@@ -37,28 +37,6 @@ rss <- function(Y, Y.hat)
 }
 
 #' @noRd
-#' @importFrom stats runif
-cvsets <- function(n, folds = 10, seed = 23)
-{
-    if (n < 1)
-        stop("n<1; need positive integer!")
-    if (folds < 0)
-        stop("folds<0; need positive integer!")
-    n <- as.integer(n)
-    folds <- as.integer(folds)
-    if (n < folds)
-        stop("n<folds; need n>folds!")
-    id <- (1:n)[order(stats::runif(n))]
-    k <- as.integer(n * seq(1, folds - 1) / folds)
-    k <- matrix(c(0, rep(k, each = 2), n), ncol = 2, byrow = TRUE)
-    k[, 1] <- k[, 1] + 1
-    l <- lapply(seq.int(folds), function(x, k, d)
-      list(train = d[!(seq(d) %in% seq(k[x, 1], k[x, 2]))],
-           test = d[seq(k[x, 1], k[x, 2])]), k = k, d = id)
-    return(l)
-}
-
-#' @noRd
 check.matrices <- function(X, Y)
 {
   stopifnot(is.matrix(X), is.matrix(Y))
