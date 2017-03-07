@@ -126,3 +126,9 @@ test_that("check.dimensions throws at wrong Y/n", {
   testthat::expect_error(check.dimensions(X, Y, n, 1))
 })
 
+test_that("rss works correctly", {
+  X <- matrix(2, 10, 3)
+  Y <- matrix(1, 10, 3)
+  testthat::expect_equal(netReg:::rss(X, Y), 1 * 10 * 3)
+})
+
