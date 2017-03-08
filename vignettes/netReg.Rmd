@@ -2,7 +2,7 @@
 title: "netReg"
 author: "Simon Dirmeier"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: rmarkdown::pdf_document
 vignette: >
   %\VignetteIndexEntry{netReg tutorial}
   %\VignetteEngine{knitr::rmarkdown}
@@ -11,7 +11,7 @@ vignette: >
 
 ## Introduction
 
-**netReg** is a package for graph-regularized linear regression. Graph prior knowledge is incorporated into the likelihood of the linear model in the form of the Laplacian matrices of the graphs. The Laplacians penalize the estimation of the coefficients for smooth solutions. 
+`netReg` is a package for graph-regularized linear regression. Graph prior knowledge is incorporated into the likelihood of the linear model in the form of the Laplacian matrices of the graphs. The Laplacians penalize the estimation of the coefficients for smooth solutions. 
 
 For high-dimensional data-sets often no unique solutions exist. With graph-regularization high-dimensional data-sets can be fitted efficiently.
 
@@ -23,9 +23,9 @@ This section explains how to fit a linear model and do parameter estimation usin
 At first we generate some toy data randomly:
 
 ```{r}
-  X <- matrix(rnorm(100*5), 100)
-  b <- rnorm(5)
-  Y <- X%*%b + rnorm(100)
+  set.seed(23)
+  X <- matrix(rnorm(1000*5), 1000)
+  Y <- matrix(rnorm(1000*5), 1000)
 ```
 
 Then we load the `netReg` library
@@ -37,8 +37,8 @@ Then we load the `netReg` library
 For `edgenet` we need to create an affinity matrix for the co-variables first. We also can create a graph for the responses, but this is not necessary to demonstrate the method. We could create a random graph like this:
 
 ```{r}
-  aff.mat <- matrix(rpois(5*5, 1),5) * abs(rnorm(5*5))
-  aff.mat <- t(aff.mat) + aff.mat
+  aff.mat <- matrix(rbeta(25, 1, 5),  5)
+  aff.mat <- (t(aff.mat) + aff.mat) / 2
   diag(aff.mat) <- 0
 ```
 
@@ -61,6 +61,37 @@ The `fit` object contains information about coefficients, intercepts, residuals,
 ```
 
 The `pred` objects contains the predicted values for the responses.
+
+### Model selection
+
+In most cases we do not have the optimal shrinkage parameters $\lambda$, $\psi_{gx}$ and $\psi_{gy}$. For these settings you can use `netReg`'s included model selection.
+We use Powell's BOBYQA algorithm for gradient-free optimization that is included in the `C++` library `Dlib`. Doing the model selection only requires calling `cv.edgnet`:
+
+```{r}
+  cv <- cv.edgenet(X=X, Y=Y, G.X=aff.mat, family="gaussian", maxit=1000)
+  print(cv)
+```
+
+You can use the fitted parameters for the normal `edgenet` function. In this scenario $\lambda$, $\psi_{gx}$ and $\psi_{gy}$ should be roughly $0$ for three reasons:
+
+* we had enough enough data and a small number of covariables ($n > p$), so we can find the *BLUE* estimator
+* we created `X` and `Y` independent of each other
+* our prior graph `aff.mat` had little weight
+
+If we choose a scenario with more emphasis on the edge-weights the picture should change a bit. We choose a small $p$, such that the computation does not take too long.
+
+```{r}
+  p <- 25
+  X <- matrix(rnorm(10*p), 10)
+  Y <- matrix(rnorm(10*p), 10)
+  aff.mat <- matrix(rgamma(p * p, 5, 1), p)
+  aff.mat <- (t(aff.mat) + aff.mat)
+  diag(aff.mat) <- 0
+  cv <- cv.edgenet(X=X, Y=Y, G.X=aff.mat, family="gaussian", maxit=1000)
+  print(cv)
+```
+
+In the above example $\lambda$ should have changed quite a bit, while $\psi_{gy}$ should still be $0$. Since we generated `aff.mat` randomly `\psi_{gx}` should be roughly zero as well. This makes sense intuitively since we did not put any biological relationships into the affinity matrices.
 
 ## References
 
