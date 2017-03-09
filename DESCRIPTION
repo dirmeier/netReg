@@ -31,6 +31,10 @@ Suggests:
 VignetteBuilder: knitr
 RoxygenNote: 6.0.0
 SystemRequirements: C++11
-LinkingTo: Rcpp, RcppArmadillo
-Imports: Rcpp, stats
+LinkingTo: 
+    Rcpp,
+    RcppArmadillo
+Imports: 
+    Rcpp,
+    stats
 NeedsCompilation: yes
