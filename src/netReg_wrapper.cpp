@@ -109,7 +109,7 @@ SEXP cv_edgenet_cpp
      SEXP psigx, SEXP psigy,
      SEXP niter, SEXP thresh,
      SEXP nfolds, SEXP foldids, SEXP lenfs,
-     SEXP fs)
+     SEXP fs, SEXP doApprox, SEXP optim_niter)
 {
     BEGIN_RCPP
     std::string fam = Rcpp::as<std::string>(fs);
@@ -131,14 +131,14 @@ SEXP cv_edgenet_cpp
             -1, 1.0, Rcpp::as<double>(psigx), Rcpp::as<double>(psigy),
             Rcpp::as<int>(niter), Rcpp::as<double>(thresh),
             INTEGER(foldids), f);
-        return e.regularization_path(data);
+        return e.regularization_path(data, *LOGICAL(x), Rcpp::as<int>(optim_niter));
     }
     netreg::graph_penalized_linear_model_cv_data data(
         REAL(X), REAL(Y), REAL(GX), REAL(GY), xdim[0], xdim[1], ydim[1],
         -1, 1.0, Rcpp::as<double>(psigx), Rcpp::as<double>(psigy),
         Rcpp::as<int>(niter), Rcpp::as<double>(thresh),
         Rcpp::as<int>(nfolds), f);
-    return e.regularization_path(data);
+    return e.regularization_path(data, *LOGICAL(x), Rcpp::as<int>(optim_niter));
     END_RCPP
     return R_NilValue;
 }

@@ -26,7 +26,9 @@ namespace netreg
          * @returns returns a map of shrinkage parameters
          */
         std::map<std::string, double> regularization_path
-          (graph_penalized_linear_model_cv_data &data) const;
+          (graph_penalized_linear_model_cv_data &data,
+           bool do_approx,
+           int niter) const;
     };
 }
 #endif //NETREG_EDGENET_GAUSSIAN_MODEL_SELECTION_HPP

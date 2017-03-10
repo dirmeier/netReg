@@ -122,6 +122,21 @@ namespace netreg
                     {"psigx",  data.psigx() == -1 ? par(1, 0) : 0.0},
                     {"psigy",  data.psigy() == -1 ? par(2, 0) : 0.0}};
         }
+
+        template<typename loss_function>
+        std::map<std::string, double> bifurcation
+          (graph_penalized_linear_model_cv_data &data,
+           std::vector<double> &start,
+           std::vector<double> &lower_bound,
+           std::vector<double> &upper_bound,
+           const double radius_start,
+           const double radius_stop,
+           const int niter)
+           {
+
+           }
+
+        
     };
 }
 #endif //NETREG_OPTIM_HPP
