@@ -29,8 +29,23 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <cmath>
+
+#ifdef USE_RCPPARMADILLO
+// [[Rcpp::depends(RcppArmadillo)]]
+#include <RcppArmadillo.h>
+#else
+#include "armadillo"
+#include <iostream>
+#endif
 
 #include "graph_penalized_linear_model_cv_data.hpp"
+#include "cv_set.hpp"
+#include "edgenet_gaussian_loss_function.hpp"
+
+#include "graph_penalized_linear_model_cv_data.hpp"
+
+#include "../inst/include/dlib/optimization.h"
 
 namespace netreg
 {
@@ -68,17 +83,147 @@ namespace netreg
              std::vector<double> &upper_bound,
              const double radius_start,
              const double radius_stop,
-             const int niter);
+             const int niter) const
+             {
+                 const int sz = static_cast<int>(start.size());
+                 // convert to dlib objects
+                 dlib::matrix<double> par(sz, 1), lb(sz, 1), ub(sz, 1);
+                 for (int i = 0; i < sz; ++i)
+                 {
+                     par(i, 0) = start[i];
+                     lb(i, 0) = lower_bound[i];
+                     ub(i, 0) = upper_bound[i];
+                 }
+                 // minimize the loss_function
+                 try
+                 {
+                     #ifdef USE_RCPPARMADILLO
+                     GetRNGstate();
+                     #endif
+                     dlib::find_min_bobyqa(
+                         loss_function(data),
+                         par,
+                         par.size() * 2 + 1,
+                         lb,
+                         ub,
+                         radius_start,
+                         radius_stop,
+                         niter);
+                     #ifdef USE_RCPPARMADILLO
+                     PutRNGstate();
+                     #endif
+                 }
+                 catch (const std::exception &e)
+                 {
+                     #ifdef USE_RCPPARMADILLO
+                     Rprintf("Error estimating optim shrinkage parameters.");
+                     #else
+                     std::cerr << "Error estimating optim shrinkage parameters." << std::endl;
+                     #endif
+                 }
+                 return {{"lambda", par(0, 0)},
+                         {"psigx",  data.psigx() == -1 ? par(1, 0) : 0.0},
+                         {"psigy",  data.psigy() == -1 ? par(2, 0) : 0.0}};
+             }
 
         // todo
         template<typename loss_function>
         std::map<std::string, double> bifurcation
           (graph_penalized_linear_model_cv_data &data,
-           std::vector<double> &start,
            std::vector<double> &lower_bound,
            std::vector<double> &upper_bound,
            const double epsilon,
-           const int niter);
+           const int niter) const
+           {
+             const int sz = static_cast<int>(lower_bound.size());
+             loss_function loss(data);
+             // convert to dlib objects
+             dlib::matrix<double> par(sz, 1);
+             for (int i = 0; i < sz; ++i) par(i, 0) = lower_bound[i];
+             // minimize the loss_function
+             try
+             {
+                for (std::vector<double>::size_type i = 0;
+                     i < upper_bound.size();
+                     ++i)
+                  {
+                      double opt = blockwise_bifurcation<loss_function>(
+                        par, i, loss,
+                        lower_bound, upper_bound,
+                        epsilon, niter);
+                      par(i, 0) = opt;
+                  }
+             }
+             catch (const std::exception &e)
+             {
+                 #ifdef USE_RCPPARMADILLO
+                 Rprintf("Error estimating optim shrinkage parameters.");
+                 #else
+                 std::cerr << "Error estimating optim shrinkage parameters." << std::endl;
+                 #endif
+             }
+             return {{"lambda", par(0, 0)},
+                     {"psigx",  data.psigx() == -1 ? par(1, 0) : 0.0},
+                     {"psigy",  data.psigy() == -1 ? par(2, 0) : 0.0}};
+           }
+
+    private:
+
+        template<typename loss_function>
+        double blockwise_bifurcation
+          (dlib::matrix<double>& par, const int idx,
+           loss_function &loss,
+           std::vector<double> &lower_bound,
+           std::vector<double> &upper_bound,
+           const double epsilon,
+           const int niter) const
+           {
+
+               int iter = 0;
+               double l_left  = lower_bound[idx];
+               double l_right = upper_bound[ idx];
+               double err_old = 100000.0;
+               double err_new = 0;
+               double l_mid;
+               do
+               {
+                   err_old = err_new;
+
+                   l_mid = (l_right  - l_left) / 2;
+
+                   std::vector<double> ls = {{ l_left, l_mid, l_right }};
+                   std::vector<double> errs(3);
+
+                   // parallelize
+                   for (std::vector<double>::size_type i = 0;
+                        i < ls.size();
+                        ++i)
+                   {
+                       dlib::matrix<double> m = par;
+                       m(i, 0) = ls[i];
+                       errs[i] = loss(m);
+                   }
+
+                   if      (errs[1] <  errs[2])  l_right = l_mid;
+                   else if (errs[1] <  errs[0])  l_left  = l_mid;
+                   else if (errs[1] == errs[2]) l_right = l_mid;
+                   else
+                   {
+                     #ifdef USE_RCPPARMADILLO
+                     Rprintf("Error estimating parameter %d using bifurcation!", idx);
+                     #else
+                     std::cerr << "Error estimating parameter " << idx << " using bifurcation!" << std::endl;
+                     #endif
+                     // return smallest value so far
+                     return l_mid;
+                   }
+
+                   err_new = errs[1] ;
+               }
+               while(std::abs(err_new - err_old) > epsilon && ++iter < niter);
+
+               return l_mid;
+           }
     };
 }
 #endif //NETREG_OPTIM_HPP

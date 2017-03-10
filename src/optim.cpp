@@ -22,7 +22,9 @@
  * @email: simon.dirmeier@gmx.de
  */
 
-#include <cmath>;
+#include "optim.hpp"
+
+#include <cmath>
 
 #ifdef USE_RCPPARMADILLO
 // [[Rcpp::depends(RcppArmadillo)]]
@@ -31,8 +33,6 @@
 #include "armadillo"
 #include <iostream>
 #endif
-
-#include "../inst/include/dlib/optimization.h"
 
 #include "graph_penalized_linear_model_cv_data.hpp"
 #include "cv_set.hpp"
@@ -49,7 +49,7 @@ namespace netreg
              std::vector<double> &upper_bound,
              const double radius_start,
              const double radius_stop,
-             const int niter)
+             const int niter) const
         {
             const int sz = static_cast<int>(start.size());
             // convert to dlib objects
@@ -98,13 +98,13 @@ namespace netreg
            std::vector<double> &lower_bound,
            std::vector<double> &upper_bound,
            const double epsilon,
-           const int niter)
+           const int niter) const
            {
-             const int sz = static_cast<int>(start.size());
+             const int sz = static_cast<int>(lower_bound.size());
              loss_function loss(data);
              // convert to dlib objects
              dlib::matrix<double> par(sz, 1);
-             for (int i = 0; i < sz; ++i) par(i, 0) = start[i];
+             for (int i = 0; i < sz; ++i) par(i, 0) = lower_bound[i];
              // minimize the loss_function
              try
              {
@@ -113,7 +113,7 @@ namespace netreg
                      ++i)
                   {
                       double opt = blockwise_bifurcation<loss_function>(
-                        par, i, liss,
+                        par, i, loss,
                         lower_bound, upper_bound,
                         epsilon, niter);
                       par(i, 0) = opt;
@@ -134,25 +134,25 @@ namespace netreg
 
            template<typename loss_function>
            double optim::blockwise_bifurcation
-             (const dlib::matrix<double>& par, const int idx,
+             (dlib::matrix<double>& par, const int idx,
               loss_function &loss,
               std::vector<double> &lower_bound,
               std::vector<double> &upper_bound,
               const double epsilon,
-              const int niter)
+              const int niter) const
               {
 
                   int iter = 0;
-                  double l_left  = lower_bound(i, 1);
-                  double l_right = upper_bound(i, 1);
+                  double l_left  = lower_bound[idx];
+                  double l_right = upper_bound[ idx];
                   double err_old = 100000.0;
                   double err_new = 0;
-
+                  double l_mid;
                   do
                   {
                       err_old = err_new;
 
-                      double l_mid = (l_right  - l_left) / 2;
+                      l_mid = (l_right  - l_left) / 2;
 
                       std::vector<double> ls = {{ l_left, l_mid, l_right }};
                       std::vector<double> errs(3);
@@ -169,23 +169,22 @@ namespace netreg
 
                       if      (errs[1] <  errs[2])  l_right = l_mid;
                       else if (errs[1] <  errs[0])  l_left  = l_mid;
-                      else if (errs[1] == errs[2]]) l_right = l_mid;
+                      else if (errs[1] == errs[2]) l_right = l_mid;
                       else
                       {
                         #ifdef USE_RCPPARMADILLO
-                        Rprintf("Error estimating parameter %d using bifurcation!", i);
+                        Rprintf("Error estimating parameter %d using bifurcation!", idx);
                         #else
-                        std::cerr << "Error estimating parameter " << i << " using bifurcation!" << std::endl;
+                        std::cerr << "Error estimating parameter " << idx << " using bifurcation!" << std::endl;
                         #endif
                         // return smallest value so far
                         return l_mid;
                       }
 
-                      err_new = errs[1];
+                      err_new = errs[1] ;
                   }
-                  while(std::abs(err - err_old) > epsilon && ++iter < niter);
+                  while(std::abs(err_new - err_old) > epsilon && ++iter < niter);
 
                   return l_mid;
               }
-    };
 }

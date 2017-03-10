@@ -17,7 +17,7 @@ int main()
     boost::variate_generator<boost::mt19937&,
                              boost::normal_distribution<> > var_nor(rng, nd);
 
-    const int n = 1000;
+    const int n = 100;
     const int p = 100;
     const int q = 10;
 
@@ -46,8 +46,12 @@ int main()
          netreg::family::GAUSSIAN);
 
     netreg::edgenet_gaussian_model_selection e;
-    std::map<std::string, double> m = e.regularization_path(data);
-    std::cout << "done2" << std::endl;
+
+    std::map<std::string, double> m = e.regularization_path(data, true, 1000000);
+    std::cout << m["lambda"] << " " << m["psigx"] << " " << m["psigy"] << std::endl;
+
+    m = e.regularization_path(data, false, 1000000);
+    std::cout << m["lambda"] << " " << m["psigx"] << " " << m["psigy"] << std::endl;
 
     delete[] x;
     delete[] y;
