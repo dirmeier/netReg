@@ -131,4 +131,3 @@ test_that("rss works correctly", {
   Y <- matrix(1, 10, 3)
   testthat::expect_equal(netReg:::rss(X, Y), 1 * 10 * 3)
 })
-

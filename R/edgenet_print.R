@@ -22,26 +22,26 @@
 #' @method print edgenet
 print.edgenet <- function(x,...)
 {
-  cat("\nCall: ")
-  print(x$call)
-  cat("\nCoefficients:\n")
-  print(x$coefficients)
-  cat("Intercept:\n")
-  print(x$intercept)
-  cat("Parameters:\n")
-  print(c(lambda=x$lambda, psi_gx=x$psigx, psi_gy=x$psigy))
-  cat("Family:\n")
-  print(x$family)
+    cat("\nCall: ")
+    print(x$call)
+    cat("\nCoefficients:\n")
+    print(x$coefficients)
+    cat("Intercept:\n")
+    print(x$intercept)
+    cat("Parameters:\n")
+    print(c(lambda=x$lambda, psi_gx=x$psigx, psi_gy=x$psigy))
+    cat("Family:\n")
+    print(x$family)
 }
 
 #' @export
 #' @method print cv.edgenet
 print.cv.edgenet <- function(x, ...)
 {
-  cat("\nCall: ")
-  print(x$call)
-  cat("\nParameters:\n")
-  print(c(x$lambda, x$psigx, x$psigy))
-  cat("Family:\n")
-  print(x$family)
+    cat("\nCall: ")
+    print(x$call)
+    cat("\nParameters:\n")
+    print(c(x$lambda, x$psigx, x$psigy))
+    cat("Family:\n")
+    print(x$family)
 }
