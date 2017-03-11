@@ -139,5 +139,3 @@ intuitively since we did not put any biological relationships into the
 affinity matrices.
 
 ## References
-
-
