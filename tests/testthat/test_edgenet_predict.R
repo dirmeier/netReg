@@ -35,9 +35,9 @@ Y   <- X %*% B + matrix(rnorm(n * q), n)
 e <- edgenet(X, Y, lambda=1, maxit=1000, thresh=1e-5)
 
 test_that("predict throws at NULL", {
-  testthat::expect_error(predict(e, NULL))
+    testthat::expect_error(predict(e, NULL))
 })
 
 test_that("predict throws at wrong newdata dimension", {
-  testthat::expect_error(predict(e, matrix(1, 25)))
+    testthat::expect_error(predict(e, matrix(1, 25)))
 })

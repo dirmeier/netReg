@@ -8,38 +8,38 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # netReg is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with netReg. If not, see <http://www.gnu.org/licenses/>.
 
 
-#' Fit a graph-regularized linear regression model using 
+#' Fit a graph-regularized linear regression model using
 #'  edge-based regularization.
-#' 
+#'
 #' @export
-#' 
+#'
 #' @author Simon Dirmeier | \email{mail@@simon-dirmeier.net}
-#' 
-#' @description  Fit a graph-regularized linear regression model using 
-#' edge-penalization. The coefficients are computed using graph-prior 
+#'
+#' @description  Fit a graph-regularized linear regression model using
+#' edge-penalization. The coefficients are computed using graph-prior
 #' knowledge in the form of one/two affinity matrices. Graph-regularization is
-#' an extension to previously introduced regularization techniques, 
+#' an extension to previously introduced regularization techniques,
 #' such as the LASSO.
 #'
-#' @param X  input matrix, of dimension (\code{n} x \code{p}) 
-#' where \code{n} is the number of observations and \code{p} is the number 
+#' @param X  input matrix, of dimension (\code{n} x \code{p})
+#' where \code{n} is the number of observations and \code{p} is the number
 #' of covariables. Each row is an observation vector.
-#' @param Y  output matrix, of dimension (\code{n} x \code{q}) 
-#' where \code{n} is the number of observations and \code{q} is the number 
+#' @param Y  output matrix, of dimension (\code{n} x \code{q})
+#' where \code{n} is the number of observations and \code{q} is the number
 #' of response variables Each row is an observation vector.
-#' @param G.X  non-negativ affinity matrix for \code{n}, of dimensions 
+#' @param G.X  non-negativ affinity matrix for \code{n}, of dimensions
 #' (\code{p} x \code{p}) where \code{p} is the number of covariables \code{X}
-#' @param G.Y  non-negativ affinity matrix for \code{n}, of dimensions 
+#' @param G.Y  non-negativ affinity matrix for \code{n}, of dimensions
 #' (\code{q} x \code{q}) where \code{q} is the number of covariables \code{Y}
 #' @param lambda  shrinkage parameter for LASSO.
 #' @param psigx  shrinkage parameter for graph-regularization of \code{G.X}
@@ -48,25 +48,25 @@
 #' @param maxit  maximum number of iterations
 #' @param family  family of response, e.g. gaussian
 #' @param ...  additional params
-#' 
+#'
 #' @return An object of class \code{edgenet}
-#' \item{coefficients }{ the estimated (\code{p} x \code{q})-dimensional 
+#' \item{coefficients }{ the estimated (\code{p} x \code{q})-dimensional
 #'  coefficient matrix B.hat}
-#' \item{intercept }{ the estimated (\code{q} x \code{1})-dimensional 
+#' \item{intercept }{ the estimated (\code{q} x \code{1})-dimensional
 #'  vector of intercepts}
 #' \item{call }{ the call that produced the object}
 #' \item{family }{ the family of the response}
-#' 
-#' @references 
-#'  Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007), 
+#'
+#' @references
+#'  Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007),
 #'  Pathwise coordinate optimization.\cr
 #'  \emph{The Annals of Applied Statistics}\cr \cr
 #'  Friedman J., Hastie T. and Tibshirani R. (2010),
-#'  Regularization Paths for Generalized Linear Models via 
+#'  Regularization Paths for Generalized Linear Models via
 #'  Coordinate Descent.\cr \emph{Journal of Statistical Software}\cr \cr
 #'  Fu W. J. (1998),  Penalized Regression: The Bridge Versus the Lasso.\cr
 #'  \emph{Journal of Computational and Graphical Statistics}\cr \cr
-#'  Cheng W. and Wang W. (2014), Graph-regularized dual Lasso for robust 
+#'  Cheng W. and Wang W. (2014), Graph-regularized dual Lasso for robust
 #'  eQTL mapping.\cr
 #'  \emph{Bioinformatics}
 #'
@@ -76,7 +76,7 @@
 #' G.X <- matrix(rpois(100,1), 10)
 #' G.X <- t(G.X) + G.X
 #' diag(G.X) <- 0
-#' 
+#'
 #' # fit a Gaussian model
 #' Y <- X%*%b + rnorm(100)
 #' fit <- edgenet(X=X, Y=Y, G.X=G.X, family="gaussian")
@@ -149,9 +149,9 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
                      thresh, maxit, family)
 {
     res <- .Call("edgenet_cpp", X, Y, G.X, G.Y,
-                 as.double(lambda), as.double(psigx),  as.double(psigy),
-                 as.integer(maxit), as.double(thresh),
-                 as.character(family))
+                    as.double(lambda), as.double(psigx),  as.double(psigy),
+                    as.integer(maxit), as.double(thresh),
+                    as.character(family))
     # finalize output
     coefficients <- matrix(res$coefficients, ncol(X))
     intr         <- res$intercept

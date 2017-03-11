@@ -8,35 +8,35 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # netReg is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with netReg. If not, see <http://www.gnu.org/licenses/>.
 
 
 #' Find the optimal shrinkage parameters for edgenet
-#' 
+#'
 #' @export
-#' 
+#'
 #' @author Simon Dirmeier, \email{mail@@simon-dirmeier.net}
-#' 
-#' @description Finds the optimal shrinkage parameters 
-#'  using cross-validation for edgenet. We use the BOBYQA algorithm to 
+#'
+#' @description Finds the optimal shrinkage parameters
+#'  using cross-validation for edgenet. We use the BOBYQA algorithm to
 #'  minimize the sum of squared residuals objective function.
 #'
-#' @param X  input matrix, of dimension (\code{n} x \code{p}) 
-#' where \code{n} is the number of observations and \code{p} is the number 
+#' @param X  input matrix, of dimension (\code{n} x \code{p})
+#' where \code{n} is the number of observations and \code{p} is the number
 #' of covariables. Each row is an observation vector.
-#' @param Y  output matrix, of dimension (\code{n} x \code{q}) 
-#' where \code{n} is the number of observations and \code{q} is the number 
+#' @param Y  output matrix, of dimension (\code{n} x \code{q})
+#' where \code{n} is the number of observations and \code{q} is the number
 #' of response variables Each row is an observation vector.
-#' @param G.X  non-negativ affinity matrix for \code{n}, of dimensions 
+#' @param G.X  non-negativ affinity matrix for \code{n}, of dimensions
 #' (\code{p} x \code{p}) where \code{p} is the number of covariables \code{X}
-#' @param G.Y  non-negativ affinity matrix for \code{n}, of dimensions 
+#' @param G.Y  non-negativ affinity matrix for \code{n}, of dimensions
 #' (\code{q} x \code{q}) where \code{q} is the number of covariables \code{Y}
 #' @param thresh  threshold for coordinate descent
 #' @param maxit  maximum number of iterations
@@ -45,34 +45,34 @@
 #'   Usually 1e-3 is a good choice.
 #' @param approx.maxit the maximum number of iterations for BOBYQA
 #'   (if choosen). Usually 1e4 is a good choice.
-#' @param nfolds  the number of folds to be used - default is 10 
-#'  (minimum 3, maximum nrow(X)). 
+#' @param nfolds  the number of folds to be used - default is 10
+#'  (minimum 3, maximum nrow(X)).
 #' @param ...  additional parameters
 
 #' @return An object of class \code{cv.edgenet}
 #' \item{call }{ the call that produced the object}
-#' \item{lambda }{ the estimated (\code{p} x \code{q})-dimensional 
+#' \item{lambda }{ the estimated (\code{p} x \code{q})-dimensional
 #'  coefficient matrix B.hat}
 #' \item{psigx }{ the estimated (\code{q} x \code{1})-dimensional
 #'  vector of intercepts}
-#' \item{psigy }{ the estimated (\code{q} x \code{1})-dimensional vector 
+#' \item{psigy }{ the estimated (\code{q} x \code{1})-dimensional vector
 #'  of intercepts}
-#' 
-#' @references 
-#'  Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007), 
+#'
+#' @references
+#'  Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007),
 #'  Pathwise coordinate optimization.\cr
 #'  \emph{The Annals of Applied Statistics}\cr \cr
 #'  Friedman J., Hastie T. and Tibshirani R. (2010),
-#'  Regularization Paths for Generalized Linear Models via 
+#'  Regularization Paths for Generalized Linear Models via
 #'   Coordinate Descent. \cr
 #'  \emph{Journal of Statistical Software}\cr \cr
 #'  Fu W. J. (1998),  Penalized Regression: The Bridge Versus the Lasso.\cr
 #'  \emph{Journal of Computational and Graphical Statistics}\cr \cr
-#'  Cheng W. and Wang W. (2014), Graph-regularized dual Lasso for 
+#'  Cheng W. and Wang W. (2014), Graph-regularized dual Lasso for
 #'   robust eQTL mapping.\cr
 #'  \emph{Bioinformatics}\cr \cr
-#'  Powell M.J.D. (2009), 
-#'  The BOBYQA algorithm for bound constrained optimization without 
+#'  Powell M.J.D. (2009),
+#'  The BOBYQA algorithm for bound constrained optimization without
 #'   derivatives.\cr
 #'  \url{http://www.damtp.cam.ac.uk/user/na/NA_papers/NA2009_06.pdf}
 #'
@@ -82,7 +82,7 @@
 #' G.X <- matrix(rpois(10*10,1),10)
 #' G.X <- t(G.X) + G.X
 #' diag(G.X) <- 0
-#' 
+#'
 #' # fit a Gaussian model
 #' Y <- X%*%b + rnorm(100)
 #' cv.edge <- cv.edgenet(X=X, Y=Y, G.X=G.X, family="gaussian")
@@ -104,8 +104,8 @@ cv.edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
                                nfolds=10, ...)
 {
     stopifnot(is.numeric(nfolds), nfolds > 0,
-              is.numeric(epsilon), is.numeric(approx.maxit),
-              is.numeric(maxit), is.numeric(thresh))
+                is.numeric(epsilon), is.numeric(approx.maxit),
+                is.numeric(maxit), is.numeric(thresh))
     check.matrices(X, Y)
     n <- dim(X)[1]
     p <- dim(X)[2]
@@ -119,7 +119,7 @@ cv.edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
     check.dimensions(X, Y, n, p)
     if (maxit < 0)
     {
-       warning("maxit < 0, setting to 1e5!")
+        warning("maxit < 0, setting to 1e5!")
         maxit <- 1e5
     }
     if (thresh < 0)
@@ -129,13 +129,13 @@ cv.edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
     }
     if (epsilon < 0)
     {
-      warning("epsilon < 0; settint to 1e-3")
-      epsilon <- 1e-3
+        warning("epsilon < 0; settint to 1e-3")
+        epsilon <- 1e-3
     }
     if (approx.maxit < 0)
     {
-      warning("approx.maxit < 0; settint to 1e4")
-      approx.maxit <- 1e4
+        warning("approx.maxit < 0; settint to 1e4")
+        approx.maxit <- 1e4
     }
     # TODO; implement this
     foldid <- NULL
