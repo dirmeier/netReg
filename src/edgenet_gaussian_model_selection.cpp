@@ -15,7 +15,6 @@ namespace netreg
 
     std::map<std::string, double> edgenet_gaussian_model_selection::regularization_path(
         graph_penalized_linear_model_cv_data &data,
-        const bool do_approx,
         const int niter,
         const double epsilon) const
     {
@@ -32,17 +31,9 @@ namespace netreg
             case family::GAUSSIAN:
             default:
             {
-              if (!do_approx)
-              {
                 return opt.bobyqa<edgenet_gaussian_loss_function>
                         (data, start, lower_bound, upper_bound,
                          rad_start, rad_end, niter);
-              }
-              else
-              {
-                return opt.bifurcation<edgenet_gaussian_loss_function>
-                        (data, lower_bound, upper_bound, epsilon, niter);
-              }
             }
         }
         return res;

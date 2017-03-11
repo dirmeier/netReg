@@ -51,14 +51,14 @@ namespace netreg
     }
 
     SEXP edgenet_wrapper::regularization_path
-        (graph_penalized_linear_model_cv_data &data,         
+        (graph_penalized_linear_model_cv_data &data,
          const int niter,
          const double epsilon) const
     {
         BEGIN_RCPP
         edgenet_gaussian_model_selection edge;
         std::map<std::string, double> res =
-            edge.regularization_path(data, do_approx, niter, epsilon);
+            edge.regularization_path(data, niter, epsilon);
         return Rcpp::List::create(
             Rcpp::Named("parameters") = Rcpp::wrap(res),
             Rcpp::Named("folds")      = data.fold_ids()
