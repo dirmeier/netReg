@@ -41,14 +41,13 @@ namespace netreg
      * @param X the test design matrix
      * @param Y the test response matrix
      */
-    inline double sse(arma::Mat<double>& B,
+    inline double mse(arma::Mat<double>& B,
                       arma::Mat<double>& X,
                       arma::Mat<double>& Y)
     {
         // sum of all elements of residuals
         double sum = arma::accu(Y - (X * B));
-        return sum * sum;
+        return (sum * sum) / static_cast<double>(X.n_rows);
     }
 }
 #endif //SRC_ERROR_FUNCTIONS_HPP
-

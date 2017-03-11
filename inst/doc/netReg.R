@@ -19,7 +19,3 @@
   X.new <-  matrix(rnorm(10*5),10)
   pred  <- predict(fit, X.new)
 
-## ------------------------------------------------------------------------
-  cv <- cv.edgenet(X=X, Y=Y, G.X=aff.mat, family="gaussian")
-  print(cv)
-

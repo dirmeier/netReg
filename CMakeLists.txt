@@ -54,8 +54,6 @@ set(SOURCE_FILES
         src/penalized_linear_model_data.hpp
         src/stat_functions.cpp
         src/stat_functions.hpp
-        src/utility_functions.cpp
-        src/utility_functions.hpp
         src/vector_functions.cpp
         src/vector_functions.hpp
         cmd_line/main.cpp)

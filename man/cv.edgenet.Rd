@@ -5,7 +5,8 @@
 \title{Find the optimal shrinkage parameters for edgenet}
 \usage{
 cv.edgenet(X, Y, G.X = NULL, G.Y = NULL, thresh = 1e-05, maxit = 1e+05,
-  family = c("gaussian"), nfolds = 10, ...)
+  family = c("gaussian"), epsilon = 0.001, approx.maxit = 10000,
+  nfolds = 10, ...)
 }
 \arguments{
 \item{X}{input matrix, of dimension (\code{n} x \code{p}) 
@@ -27,6 +28,12 @@ of response variables Each row is an observation vector.}
 \item{maxit}{maximum number of iterations}
 
 \item{family}{family of response, e.g. gaussian}
+
+\item{epsilon}{the threshold criterion for BOBYQA to stop.
+Usually 1e-3 is a good choice.}
+
+\item{approx.maxit}{the maximum number of iterations for BOBYQA
+(if choosen). Usually 1e4 is a good choice.}
 
 \item{nfolds}{the number of folds to be used - default is 10 
 (minimum 3, maximum nrow(X)).}

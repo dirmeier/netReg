@@ -14,27 +14,28 @@ namespace netreg
 {
 
     std::map<std::string, double> edgenet_gaussian_model_selection::regularization_path(
-        graph_penalized_linear_model_cv_data &data) const
+        graph_penalized_linear_model_cv_data &data,
+        const int niter,
+        const double epsilon) const
     {
         optim opt;
 
         std::vector<double> start{0, 0, 0};
         std::vector<double> lower_bound{0.0, 0.0, 0.0};
         std::vector<double> upper_bound{100.0, 10000.0, 10000.0};
-        const double rad_start = 0.49, rad_end = 1e-6;
-        const int niter = 100000;
+        const double rad_start = 0.49, rad_end = epsilon;
 
+        std::map<std::string, double> res;
         switch (data.distribution_family())
         {
             case family::GAUSSIAN:
             default:
             {
-                std::map<std::string, double> res =
-                    opt.bobyqa<edgenet_gaussian_loss_function>(
-                        data, start, lower_bound, upper_bound, rad_start,
-                        rad_end, niter);
-                return res;
+                return opt.bobyqa<edgenet_gaussian_loss_function>
+                        (data, start, lower_bound, upper_bound,
+                         rad_start, rad_end, niter);
             }
         }
+        return res;
     }
 }

@@ -96,7 +96,7 @@ namespace netreg
                 {
                     coef = edgenet_.run_cv(data_, p(0, 0), 1.0, 0, 0, fold);
                 }
-                sses[fc] = sse(coef, fold.test_x(), fold.test_y());;
+                sses[fc] = mse(coef, fold.test_x(), fold.test_y());
             }
             double err = std::accumulate(sses.begin(), sses.end(), 0.0);
             return err;

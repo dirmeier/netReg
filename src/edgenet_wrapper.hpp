@@ -32,7 +32,6 @@
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
 
-
 namespace netreg
 {
     class edgenet_wrapper
@@ -54,7 +53,10 @@ namespace netreg
          *
          * @return returns the estimated parameters and foldids
          */
-        SEXP regularization_path(graph_penalized_linear_model_cv_data &data) const;
+        SEXP regularization_path(
+          graph_penalized_linear_model_cv_data &data,
+          int niter,
+          double epsilon) const;
     };
 }
 #endif //NETREG_EDGENET_HPP
