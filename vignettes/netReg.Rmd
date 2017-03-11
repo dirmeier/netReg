@@ -7,18 +7,20 @@ vignette: >
   %\VignetteIndexEntry{netReg tutorial}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
+bibliography: netReg.bib
 ---
 
 ## Introduction
 
-`netReg` is a package for graph-regularized linear regression. Graph prior knowledge is incorporated into the likelihood of the linear model in the form of the Laplacian matrices of the graphs. The Laplacians penalize the estimation of the coefficients for smooth solutions. 
+Modelling biological associations or dependencies using linear regression models is often complicated when the analysed data-sets are high-dimensional and less observations than variables are available ($n \ll p$). For these scenarios methods utilizing a priori knowledge, e.g. in the form of biological networks, have been proposed, arguing that this information might provide better estimates for regression coefficients. Recently several network-based regularization techniques have been proposed [@li2008network, @kim2013network, @cheng2014graph].
 
-For high-dimensional data-sets often no unique solutions exist. With graph-regularization high-dimensional data-sets can be fitted efficiently.
+`netReg` provides a highly-efficient implementation of these graph-penalized regression model. The models introduce a priori generated biological graph information into generalized linear models yielding sparse or smooth solutions for regression coefficients.  
 
+`netReg` computes coefficients using \textit{cyclic coordinate descent} as previously introduced [@fu1998penalized, @friedman2007pathwise, @friedman2010regularization]. The package is an R-wrapper to an external C++ library that uses \texttt{RcppArmadillo} [@eddelbuettel2014rcpparmadillo] for fast matrix calculations and \texttt{dlib} [@king2009dlib] for gradient-free convex optimization for model selection.
 
 ## Edgenet tutorial
 
-This section explains how to fit a linear model and do parameter estimation using `edgenet`-regularization.
+This section explains how to fit a linear model and do parameter estimation using `edgenet`-regularization. The model is a truncated version from [@cheng2014graph] that is able to introduce prior graphs for the design and response matrices for penalization.
 
 At first we generate some toy data randomly:
 
@@ -28,7 +30,7 @@ At first we generate some toy data randomly:
   Y <- matrix(rnorm(1000*5), 1000)
 ```
 
-Then we load the `netReg` library
+Then we load the `netReg` library:
 
 ```{r}
   library(netReg)
@@ -42,21 +44,23 @@ For `edgenet` we need to create an affinity matrix for the co-variables first. W
   diag(aff.mat) <- 0
 ```
 
-We created the affinity matrix absolutely random, although in practice a *real* (biological) observed affinity matrix should be used, because in the end the affinity matrix decides the shrinkage of the coefficients. 
+We created the affinity matrix absolutely random, although in practice a *real* (biological) observed affinity matrix should be used, because in the end the affinity matrix decides the shrinkage of the coefficients.
 
 ### Model fitting
 
-Fitting a model using edge-based regularization is done with:
+Fitting a model using edge-based regularization with `netReg` is easy:
 
 ```{r}
   fit <- edgenet(X=X, Y=Y, G.X=aff.mat, lambda=1, psigx=1, family="gaussian")
   print(fit)
 ```
 
+In this case we used a single affinity matrix `G.X` which represents the relationship of the covariables $\mathit{X}$. If the design matrix has $p$ variables, `G.X` has to be an $(p \times p)$-dimensional symmetric matrix. We can also include a matrix for the response matrix `Y` with $q$ dependent variables. In that case the affinity matrix `G.Y` has to be $(q \times q)$-dimensional (and also symmetric).
+
 The `fit` object contains information about coefficients, intercepts, residuals, etc. Having the coefficients estimated we are able to predict novel data-sets:
 
 ```{r}
-  X.new <-  matrix(rnorm(10*5),10)
+  X.new <- matrix(rnorm(10*5),10)
   pred  <- predict(fit, X.new)
 ```
 
@@ -65,7 +69,7 @@ The `pred` objects contains the predicted values for the responses.
 ### Model selection
 
 In most cases we do not have the optimal shrinkage parameters $\lambda$, $\psi_{gx}$ and $\psi_{gy}$. For these settings you can use `netReg`'s included model selection.
-We use Powell's BOBYQA algorithm for gradient-free optimization that is included in the `C++` library `Dlib`. Doing the model selection only requires calling `cv.edgnet`:
+We use Powell's BOBYQA algorithm ([@powell2009bobyqa]) for gradient-free optimization that is included in the `C++` library `Dlib`. Doing the model selection only requires calling `cv.edgnet`:
 
 ```{r}
   cv <- cv.edgenet(X=X, Y=Y, G.X=aff.mat, family="gaussian", maxit=1000)
@@ -74,11 +78,11 @@ We use Powell's BOBYQA algorithm for gradient-free optimization that is included
 
 You can use the fitted parameters for the normal `edgenet` function. In this scenario $\lambda$, $\psi_{gx}$ and $\psi_{gy}$ should be roughly $0$ for three reasons:
 
-* we had enough enough data and a small number of covariables ($n > p$), so we can find the *BLUE* estimator
-* we created `X` and `Y` independent of each other
-* our prior graph `aff.mat` had little weight
+* we had enough data and a small number of covariables ($n > p$), so we can find the *BLUE* estimator,
+* we created `X` and `Y` independent of each other,
+* our prior graph `aff.mat` had little weight.
 
-If we choose a scenario with more emphasis on the edge-weights the picture should change a bit. We choose a small $p$, such that the computation does not take too long.
+Let's do a scenario where we need to shrink some coefficients, i.e. $n \ll p$. We choose a small $p$, such that the computation does not take too long.
 
 ```{r}
   p <- 25
@@ -91,19 +95,8 @@ If we choose a scenario with more emphasis on the edge-weights the picture shoul
   print(cv)
 ```
 
-In the above example $\lambda$ should have changed quite a bit, while $\psi_{gy}$ should still be $0$. Since we generated `aff.mat` randomly `\psi_{gx}` should be roughly zero as well. This makes sense intuitively since we did not put any biological relationships into the affinity matrices.
+In the above example $\lambda$ should have changed quite a bit, while $\psi_{gy}$ should still be $0$. Since we generated `aff.mat` randomly $\psi_{gx}$ should be roughly (or exact) zero as well. This makes sense intuitively since we did not put any biological relationships into the affinity matrices.
 
 ## References
 
-<p>Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007), Pathwise coordinate optimization.<br>
-  <i>The Annals of Applied Statistics</i>
-</p>  
-<p>Friedman J., Hastie T. and Tibshirani R. (2010), Regularization Paths for Generalized Linear Models via Coordinate Descent.<br>
-  <i>Journal of statistical software</i>
-</p>
-<p>Fu W. J. (1998), Penalized Regression: The Bridge Versus the Lasso.<br>
-  <i>Journal of computational and graphical statistics</i>
-</p>
-<p>Cheng W. and Wang W. (2014), Graph-regularized dual Lasso for robust eQTL mapping.<br>
-  <i>Bioinformatics</i>
-</p>
+

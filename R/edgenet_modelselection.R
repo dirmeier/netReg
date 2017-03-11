@@ -104,9 +104,8 @@ cv.edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
                                nfolds=10, ...)
 {
   stopifnot(is.numeric(nfolds), nfolds > 0,
-            is.numeric(epsilon), 
-            is.numeric(maxit), is.numeric(threshold), 
-            is.numeric(approx.maxit))
+            is.numeric(epsilon), is.numeric(approx.maxit),
+            is.numeric(maxit), is.numeric(thresh))
   check.matrices(X, Y)
   n <- dim(X)[1]
   p <- dim(X)[2]

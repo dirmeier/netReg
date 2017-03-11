@@ -67,6 +67,26 @@ test_that("gaussian edgenet warns at thresh<0", {
   testthat::expect_warning(edgenet(X, Y, G.X, G.Y, thresh=-1))
 })
 
+test_that("gaussian edgenet throws at wrong dim[1] G.X", {
+  G.X <- matrix(1, p - 1, p)
+  testthat::expect_error(edgenet(X, Y, G.X, G.Y, thresh=-1))
+})
+
+test_that("gaussian edgenet throws at wrong dim[2] G.X", {
+  G.X <- matrix(1, p, p - 1)
+  testthat::expect_error(edgenet(X, Y, G.X, G.Y, thresh=-1))
+})
+
+test_that("gaussian edgenet throws at wrong dim[1] G.Y", {
+  G.Y <- matrix(1, q - 1, q)
+  testthat::expect_error(edgenet(X, Y, G.X, G.Y, thresh=-1))
+})
+
+test_that("gaussian edgenet throws at wrong dim[2] G.Y", {
+  G.Y <- matrix(1, q, q - 1)
+  testthat::expect_error(edgenet(X, Y, G.X, G.Y, thresh=-1))
+})
+
 if (requireNamespace("lassoshooting", quietly = TRUE)) {
   test_that("gaussian edgenet correct output", {
     l <- lassoshooting::lassoshooting(X, Y[,1], lambda=1, maxit=1000, thr=1e-5)$coefficients
