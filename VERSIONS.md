@@ -1,12 +1,8 @@
 Versions
 ========
 
-### v0.99.0
-
-* Implementation of Gaussian edgenet regularization
-* Implementation of model selection for edgenet
-* Basic setup
+For versions and updates see *NEWS* file.
 
 ### Author
 
-* Simon Dirmeier <a href="mailto:simon.dirmeier@gmx.de">simon.dirmeier@gmx.de</a>
+* Simon Dirmeier <a href="mailto:mail@simon-dirmeier.net">mail@simon-dirmeier.net</a>

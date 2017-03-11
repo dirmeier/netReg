@@ -19,6 +19,7 @@ biocViews:
     StatisticalMethod,
     Regression,
     FeatureExtraction,
+    Network,
     GraphAndNetwork
 License: GPL-3
 Encoding: UTF-8
