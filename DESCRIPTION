@@ -4,7 +4,7 @@ Title: Network-Regularized Regression Models
 Version: 0.99.0
 Date: 2015-05-15
 Authors@R: person("Simon", "Dirmeier", 
-                  email = "mail@simon.dirmeier.net", role = c("aut", "cre"))
+                  email = "mail@simon-dirmeier.net", role = c("aut", "cre"))
 Maintainer: Simon Dirmeier <mail@simon-dirmeier.net>
 Description: netReg fits linear regression models using network-penalization.
     Graph prior knowledge, in the form of biological networks, is being 
