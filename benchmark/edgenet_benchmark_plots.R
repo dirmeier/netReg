@@ -1,10 +1,14 @@
 library(stringr)
 library(ggplot2)
 library(tidyr)
+library(dplyr)
+library(data.table)
+library(xtable)
 library(tibble)
 library(microbenchmark)
 
 setwd("~/PROJECTS/netreg_project/results/")
+
 
 do.time <- function()
 {
@@ -25,9 +29,34 @@ do.time <- function()
                   N=as.factor(N),
                   P=as.factor(P),
                   Language=as.factor(Language))
-  
-  ben.l
-  
+
+  id <- group_indices(df, N, P, Language)
+  df$grp <- id
+  tab <- do.call("rbind", lapply(unique(id), function(e) {
+        g <- dplyr::filter(df, grp==e)
+        times <- quantile(g$Time, probs=c(0.25, 0.5, 0.75))
+        cbind(N=as.character(g$N[1]), P=as.character(g$P[1]),
+              Language=as.character(g$Language)[1],
+              Min=min(g$Time),Mean=mean(g$Time), Median=median(g$Time), Max=max(g$Time))
+    })) %>% as.data.table %>%
+      dplyr::transmute(n=as.integer(N),
+                    p=as.integer(P),
+                    Model=as.character(Language),
+                    Min=as.double(Min) / 1000 / 1000,
+                    Max=as.double(Max) / 1000 / 1000,
+                    Median=as.double(Median)   / 1000 / 1000,
+                    Mean=as.double(Mean)   / 1000 / 1000)
+  align <- rep("r", ncol(tab) + 1)
+  bold <- function(x) {paste('{\\textbf{',x,'}}', sep ='')}
+  caption <- "Timings of pure R vs R/C++ implementation in seconds."
+  label <- "tab:timings"
+  print(xtable(tab, align=align, digits=2,
+               label=label, caption=caption),
+        comment=F, booktabs=T,
+        sanitize.colnames.function=bold,
+        sanitize.subheadings.function = bold,
+        include.rownames = FALSE)
+
 }
 
 do.rss <- function()
@@ -46,14 +75,14 @@ do.rss <- function()
     bench.df <- rbind(bench.df, cbind(N=n, P=p ,Q=q, SD=sig, R=r))
     ben.l[[paste("n", n, "p", p, "q", q, "sig", sig, sep="_")]] <- r
   }
-  df <- as_tibble(bench.df) %>% 
+  df <- as_tibble(bench.df) %>%
     tidyr::gather(Model, RSS, Lasso, Edgenet) %>%
     dplyr::mutate(Model=as.factor(Model),
                   MSE=log(RSS/N),
-                  NPQ=as.factor(paste(paste0("N=", N), paste0("P=", P), paste0("Q=", Q), sep=", ")),
-                  N=as.factor(paste0("N=", N)),
-                  P=as.factor(paste0("P=", P)),
-                  Q=as.factor(paste0("Q=", Q)),
+                  NPQ=as.factor(paste(paste0("n=", N), paste0("p=", P), paste0("q=", Q), sep=", ")),
+                  n=as.factor(paste0("N=", N)),
+                  p=as.factor(paste0("P=", P)),
+                  q=as.factor(paste0("Q=", Q)),
                   sd=as.factor(SD))
   df$Noise <- "Low"
   df$Noise[df$SD == 2] <- "Medium"
@@ -65,5 +94,5 @@ do.rss <- function()
     ggplot2::theme_bw() +
     ggplot2::theme(strip.background=element_rect(fill="black")) +
     ggplot2::theme(strip.text=element_text(color="white", face="bold")) +
-    ylab("log(MSE)")
+    ylab("MSE")
 }
