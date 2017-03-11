@@ -188,8 +188,8 @@ namespace netreg
                double l_left  = lower_bound[idx];
                double l_right = upper_bound[idx];
                double err_old = 100000.0;
-               double err_new = 0;
-               double l_mid, l_left_mid, l_right_mid;
+               double err_new = 100000.0;
+               double l_mid;
 
                std::string bifur = "none";
                std::vector<double> errs = {0, 0, 0};
@@ -198,10 +198,8 @@ namespace netreg
                do
                {
                    err_old = err_new;
-
                    l_mid = (l_right  + l_left) / 2;
-
-                   std::vector<double> ls = {{ l_left, l_mid, l_right}};
+                   std::vector<double> ls = {{ l_left, l_mid, l_right }};
 
                   #pragma omp parallel for
                    for (std::vector<double>::size_type i = 0;
@@ -219,10 +217,8 @@ namespace netreg
                         errs_old = errs;
                         if (i != 1)
                         {
-                          if (i == 0 && bifur == "left") {
-                            errs[i] = errs_old[1];
-                          }
-                          else if (i == 2 && bifur == "right") {
+                          if ((i == 0 && bifur == "left" ) ||
+                              (i == 2 && bifur == "right")) {
                             errs[i] = errs_old[1];
                           }
                         }
@@ -257,7 +253,6 @@ namespace netreg
                      return l_mid;
                    }
                    err_new = errs[1];
-                   std::cout << err_old << " " <<err_new << std::endl;
                }
                while(std::abs(err_new - err_old) > epsilon && ++iter < niter);
                //
