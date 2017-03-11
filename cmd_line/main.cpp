@@ -26,8 +26,8 @@ int main()
     double *gx = new double[p * p];
     double *gy = new double[q * q];
 
-    for (int j = 0; j < n * p; ++j) x[j] = var_nor();
-    for (int j = 0; j < n * q; ++j) y[j] = var_nor();
+    for (int j = 0; j < n * p; ++j) x[j] = 1;
+    for (int j = 0; j < n * q; ++j) y[j] = 2;
     for (int k = 0; k < p * p; ++k) gx[k] = 1;
     for (int k = 0; k < q * q; ++k) gy[k] = 1;
 
@@ -47,10 +47,10 @@ int main()
 
     netreg::edgenet_gaussian_model_selection e;
 
-    std::map<std::string, double> m = e.regularization_path(data, true, 1000000);
+    std::map<std::string, double> m = e.regularization_path(data, true, 1000, 0.001);
     std::cout << m["lambda"] << " " << m["psigx"] << " " << m["psigy"] << std::endl;
 
-    m = e.regularization_path(data, false, 1000000);
+    m = e.regularization_path(data, false, 1000, 0.001);
     std::cout << m["lambda"] << " " << m["psigx"] << " " << m["psigy"] << std::endl;
 
     delete[] x;

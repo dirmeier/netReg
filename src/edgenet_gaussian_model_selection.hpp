@@ -28,7 +28,8 @@ namespace netreg
         std::map<std::string, double> regularization_path
           (graph_penalized_linear_model_cv_data &data,
            bool do_approx,
-           int niter) const;
+           int niter,
+           double epsilon) const;
     };
 }
 #endif //NETREG_EDGENET_GAUSSIAN_MODEL_SELECTION_HPP

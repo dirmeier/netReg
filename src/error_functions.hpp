@@ -47,7 +47,7 @@ namespace netreg
     {
         // sum of all elements of residuals
         double sum = arma::accu(Y - (X * B));
-        return (sum * sum) / X.n_rows;
+        return (sum * sum) / static_cast<double>(X.n_rows);
     }
 }
 #endif //SRC_ERROR_FUNCTIONS_HPP

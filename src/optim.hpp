@@ -39,6 +39,10 @@
 #include <iostream>
 #endif
 
+#ifdef HAVE_OPENMP
+#include <omp.h>
+#endif
+
 #include "graph_penalized_linear_model_cv_data.hpp"
 #include "cv_set.hpp"
 #include "edgenet_gaussian_loss_function.hpp"
@@ -152,6 +156,7 @@ namespace netreg
                         lower_bound, upper_bound,
                         epsilon, niter);
                       par(i, 0) = opt;
+                      break;
                   }
              }
              catch (const std::exception &e)
@@ -181,32 +186,66 @@ namespace netreg
 
                int iter = 0;
                double l_left  = lower_bound[idx];
-               double l_right = upper_bound[ idx];
+               double l_right = upper_bound[idx];
                double err_old = 100000.0;
                double err_new = 0;
-               double l_mid;
+               double l_mid, l_left_mid, l_right_mid;
+
+               std::string bifur = "none";
+               std::vector<double> errs = {0, 0, 0};
+               std::vector<double> errs_old = {1, 1, 1};
+
                do
                {
                    err_old = err_new;
 
-                   l_mid = (l_right  - l_left) / 2;
+                   l_mid = (l_right  + l_left) / 2;
 
-                   std::vector<double> ls = {{ l_left, l_mid, l_right }};
-                   std::vector<double> errs(3);
+                   std::vector<double> ls = {{ l_left, l_mid, l_right}};
 
-                   // parallelize
+                  #pragma omp parallel for
                    for (std::vector<double>::size_type i = 0;
                         i < ls.size();
                         ++i)
                    {
-                       dlib::matrix<double> m = par;
-                       m(i, 0) = ls[i];
-                       errs[i] = loss(m);
+                      dlib::matrix<double> m = par;
+                      m(0, 0) = ls[i];
+                      if (iter == 0)
+                      {
+                        errs[i] = loss(m);
+                      }
+                      else
+                      {
+                        errs_old = errs;
+                        if (i != 1)
+                        {
+                          if (i == 0 && bifur == "left") {
+                            errs[i] = errs_old[1];
+                          }
+                          else if (i == 2 && bifur == "right") {
+                            errs[i] = errs_old[1];
+                          }
+                        }
+                        else {
+                          errs[i] = loss(m);
+                        }
+                      }
                    }
-
-                   if      (errs[1] <  errs[2])  l_right = l_mid;
-                   else if (errs[1] <  errs[0])  l_left  = l_mid;
-                   else if (errs[1] == errs[2]) l_right = l_mid;
+                   if (errs[1] <  errs[2])
+                   {
+                     l_right = l_mid;
+                      bifur = "right";
+                   }
+                   else if (errs[1] <  errs[0])
+                   {
+                     l_left  = l_mid;
+                     bifur = "left";
+                   }
+                   else if (errs[1] == errs[2])
+                   {
+                     l_right = l_mid;
+                     bifur = "right";
+                   }
                    else
                    {
                      #ifdef USE_RCPPARMADILLO
@@ -217,11 +256,11 @@ namespace netreg
                      // return smallest value so far
                      return l_mid;
                    }
-
-                   err_new = errs[1] ;
+                   err_new = errs[1];
+                   std::cout << err_old << " " <<err_new << std::endl;
                }
                while(std::abs(err_new - err_old) > epsilon && ++iter < niter);
-
+               //
                return l_mid;
            }
     };
