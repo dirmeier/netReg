@@ -109,7 +109,7 @@ SEXP cv_edgenet_cpp
      SEXP psigx, SEXP psigy,
      SEXP niter, SEXP thresh,
      SEXP nfolds, SEXP foldids, SEXP lenfs,
-     SEXP fs, SEXP do_approx, SEXP optim_niter, SEXP epsilon)
+     SEXP fs, SEXP optim_niter, SEXP epsilon)
 {
     BEGIN_RCPP
     std::string fam = Rcpp::as<std::string>(fs);
@@ -131,7 +131,7 @@ SEXP cv_edgenet_cpp
             -1, 1.0, Rcpp::as<double>(psigx), Rcpp::as<double>(psigy),
             Rcpp::as<int>(niter), Rcpp::as<double>(thresh),
             INTEGER(foldids), f);
-        return e.regularization_path(data, *LOGICAL(do_approx),
+        return e.regularization_path(data,
                                      Rcpp::as<int>(optim_niter),
                                      Rcpp::as<double>(epsilon));
     }
@@ -140,7 +140,7 @@ SEXP cv_edgenet_cpp
         -1, 1.0, Rcpp::as<double>(psigx), Rcpp::as<double>(psigy),
         Rcpp::as<int>(niter), Rcpp::as<double>(thresh),
         Rcpp::as<int>(nfolds), f);
-    return e.regularization_path(data, *LOGICAL(do_approx),
+    return e.regularization_path(data,
                                  Rcpp::as<int>(optim_niter),
                                  Rcpp::as<double>(epsilon));
     END_RCPP

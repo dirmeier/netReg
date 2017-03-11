@@ -48,10 +48,10 @@ int main()
     netreg::edgenet_gaussian_model_selection e;
 
     std::map<std::string, double> m = e.regularization_path(data, true, 1000, 0.001);
-    std::cout << m["lambda"] << " " << m["psigx"] << " " << m["psigy"] << std::endl;
+    std::cout << "Approx: " << m["lambda"] << " " << m["psigx"] << " " << m["psigy"] << std::endl;
 
-    m = e.regularization_path(data, false, 1000, 0.001);
-    std::cout << m["lambda"] << " " << m["psigx"] << " " << m["psigy"] << std::endl;
+    // std::map<std::string, double> m = e.regularization_path(data, false, 1000, 0.001);
+    // std::cout << "True: " <<  m["lambda"] << " " << m["psigx"] << " " << m["psigy"] << std::endl;
 
     delete[] x;
     delete[] y;

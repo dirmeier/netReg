@@ -55,7 +55,6 @@ namespace netreg
          */
         SEXP regularization_path(
           graph_penalized_linear_model_cv_data &data,
-          bool do_approx,
           int niter,
           double epsilon) const;
     };

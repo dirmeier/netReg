@@ -41,6 +41,10 @@
 #' @param thresh  threshold for coordinate descent
 #' @param maxit  maximum number of iterations
 #' @param family  family of response, e.g. gaussian
+#' @param epsilon the threshold criterion for BOBYQA to stop.
+#'   Usually 1e-3 is a good choice.
+#' @param approx.maxit the maximum number of iterations for BOBYQA
+#'   (if choosen). Usually 1e4 is a good choice.
 #' @param nfolds  the number of folds to be used - default is 10 
 #'  (minimum 3, maximum nrow(X)). 
 #' @param ...  additional parameters
@@ -85,6 +89,7 @@
 cv.edgenet <- function (X, Y, G.X=NULL, G.Y=NULL,
                         thresh=1e-5, maxit=1e5,
                         family=c("gaussian"),
+                        epsilon=1e-3, approx.maxit=1e4,
                         nfolds=10, ...)
 {
     UseMethod("cv.edgenet")
@@ -95,9 +100,13 @@ cv.edgenet <- function (X, Y, G.X=NULL, G.Y=NULL,
 cv.edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
                                thresh=1e-5, maxit=1e5,
                                family=c("gaussian"),
+                               epsilon=1e-3, approx.maxit=1e4,
                                nfolds=10, ...)
 {
-  stopifnot(is.numeric(nfolds), nfolds > 0)
+  stopifnot(is.numeric(nfolds), nfolds > 0,
+            is.numeric(epsilon), 
+            is.numeric(maxit), is.numeric(threshold), 
+            is.numeric(approx.maxit))
   check.matrices(X, Y)
   n <- dim(X)[1]
   p <- dim(X)[2]
@@ -118,6 +127,16 @@ cv.edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
   {
       warning("thresh < 0, setting to 1e-5!")
       thresh <- 1e-5
+  }
+  if (epsilon < 0)
+  {
+    warning("eplsion < 0; settint to 1e-3")
+    epsilon <- 1e-3
+  }
+  if (approx.maxit < 0)
+  {
+    warning("approx.maxit < 0; settint to 1e4")
+    approx.maxit <- 1e4
   }
   # TODO; implement this
   foldid <- NULL
@@ -142,7 +161,9 @@ cv.edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
                      thresh=thresh, maxit=maxit,
                      family=family,
                      nfolds=nfolds,
-                     foldid=foldid)
+                     foldid=foldid,
+                     approx.maxit=approx.maxit,
+                     epsilon=epsilon)
   ret$call   <- match.call()
   class(ret) <- c(class(ret), "cv.edgenet")
   ret
@@ -152,14 +173,16 @@ cv.edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
 #' @import Rcpp
 .cv.edgenet <- function(X, Y, G.X, G.Y,
                         psigx, psigy, thresh, maxit, family,
-                        nfolds, foldid)
+                        nfolds, foldid, approx.maxit, epsilon)
 {
     cv <- .Call("cv_edgenet_cpp", X, Y, G.X, G.Y,
                 as.double(psigx),  as.double(psigy),
                 as.integer(maxit), as.double(thresh),
                 as.integer(nfolds), as.integer(foldid),
                 as.integer(length(foldid)),
-                as.character(family))
+                as.character(family),
+                as.interger(approx.maxit),
+                as.double(epsilon))
     ret        <- list(lambda    =cv$parameters[1],
                        psigx     =cv$parameters[2],
                        psigy     =cv$parameters[3],

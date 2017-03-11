@@ -51,8 +51,7 @@ namespace netreg
     }
 
     SEXP edgenet_wrapper::regularization_path
-        (graph_penalized_linear_model_cv_data &data,
-         const bool do_approx,
+        (graph_penalized_linear_model_cv_data &data,         
          const int niter,
          const double epsilon) const
     {
