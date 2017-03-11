@@ -39,16 +39,9 @@
 #include <iostream>
 #endif
 
-#ifdef HAVE_OPENMP
-#include <omp.h>
-#endif
-
 #include "graph_penalized_linear_model_cv_data.hpp"
 #include "cv_set.hpp"
 #include "edgenet_gaussian_loss_function.hpp"
-
-#include "graph_penalized_linear_model_cv_data.hpp"
-
 #include "../inst/include/dlib/optimization.h"
 
 namespace netreg

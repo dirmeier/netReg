@@ -4,7 +4,7 @@ author: "Simon Dirmeier"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{netReg}
+  %\VignetteIndexEntry{netReg tutorial}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
@@ -61,15 +61,6 @@ The `fit` object contains information about coefficients, intercepts, residuals,
 ```
 
 The `pred` objects contains the predicted values for the responses.
-
-### Model-selection
-
-In some cases we do not know the optimal shrinkage parameters. In that case we can just use `cv.edgenet` to find the best parameters for us. With *best* parameters we mean the ones reducing the *residual sum of squares* for Gaussian regression models:
-
-```{r}
-  cv <- cv.edgenet(X=X, Y=Y, G.X=aff.mat, family="gaussian")
-  print(cv)
-```
 
 ## References
 

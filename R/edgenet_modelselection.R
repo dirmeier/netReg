@@ -181,7 +181,7 @@ cv.edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
                 as.integer(nfolds), as.integer(foldid),
                 as.integer(length(foldid)),
                 as.character(family),
-                as.interger(approx.maxit),
+                as.integer(approx.maxit),
                 as.double(epsilon))
     ret        <- list(lambda    =cv$parameters[1],
                        psigx     =cv$parameters[2],
