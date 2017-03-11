@@ -153,7 +153,7 @@ SEXP cv_edgenet_cpp
 
 static R_CallMethodDef callMethods[] = {
     {"edgenet_cpp", (DL_FUNC) &edgenet_cpp, 10},
-    {"cv_edgenet_cpp", (DL_FUNC) &cv_edgenet_cpp, 12},
+    {"cv_edgenet_cpp", (DL_FUNC) &cv_edgenet_cpp, 14},
     {NULL, NULL, 0}
 };
 

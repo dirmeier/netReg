@@ -1,0 +1,6 @@
+0.99.0
+======
+
+* Devel version 0.99.0
+		* *edgenet* penalization using CCD
+		* Implementation of model selection using Dlib

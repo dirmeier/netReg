@@ -16,5 +16,6 @@ VERSIONS.md
 LICENSE
 .lintr
 .travis.yml
-.codecov.yml
+codecov.yml
 CMakeLists.txt
+inst/tests

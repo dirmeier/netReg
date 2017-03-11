@@ -1,5 +1,5 @@
 language: r
-r: bioc-release
+r: bioc-devel 
 
 sudo: required
 dist: trusty
@@ -39,6 +39,9 @@ r_packages:
 r_github_packages:
   - jimhester/lintr
 
+bioc_packages:
+  - BiocCheck
+
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get install --only-upgrade autoconf
@@ -53,3 +56,4 @@ after_success:
   - tar -C .. -xf $PKG_TARBALL
   - Rscript -e 'covr::codecov()'
   - Rscript -e 'lintr::lint_package()'
+  - R CMD BiocCheck $PKG_TARBALL
