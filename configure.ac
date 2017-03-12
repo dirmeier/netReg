@@ -14,8 +14,11 @@ then
   AC_MSG_ERROR([no R_HOME found])
 else
   AC_MSG_NOTICE([R home found in ${R_HOME}])
-  CXX=`"${R_HOME}/bin/R" CMD config CXX1X`
-	CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXXFLAGS`
+	
+	CXX1X=`"${R_HOME}/bin/R" CMD config CXX1X`
+	CXX1XSTD=`"${R_HOME}/bin/R" CMD config CXX1XSTD`
+	CXX="${CXX1X} ${CXX1XSTD}"
+	CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXX1XFLAGS`
 	CPPFLAGS=`"${R_HOME}/bin/R" CMD config CPPFLAGS`
   AC_MSG_NOTICE([setting CXX to ${CXX}])
 fi
