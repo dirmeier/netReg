@@ -2,25 +2,25 @@
 % Please edit documentation in R/edgenet.R
 \name{edgenet}
 \alias{edgenet}
-\title{Fit a graph-regularized linear regression model using 
+\title{Fit a graph-regularized linear regression model using
  edge-based regularization.}
 \usage{
 edgenet(X, Y, G.X = NULL, G.Y = NULL, lambda = 1, psigx = 1,
   psigy = 1, thresh = 1e-05, maxit = 1e+05, family = c("gaussian"), ...)
 }
 \arguments{
-\item{X}{input matrix, of dimension (\code{n} x \code{p}) 
-where \code{n} is the number of observations and \code{p} is the number 
+\item{X}{input matrix, of dimension (\code{n} x \code{p})
+where \code{n} is the number of observations and \code{p} is the number
 of covariables. Each row is an observation vector.}
 
-\item{Y}{output matrix, of dimension (\code{n} x \code{q}) 
-where \code{n} is the number of observations and \code{q} is the number 
+\item{Y}{output matrix, of dimension (\code{n} x \code{q})
+where \code{n} is the number of observations and \code{q} is the number
 of response variables Each row is an observation vector.}
 
-\item{G.X}{non-negativ affinity matrix for \code{n}, of dimensions 
+\item{G.X}{non-negativ affinity matrix for \code{n}, of dimensions
 (\code{p} x \code{p}) where \code{p} is the number of covariables \code{X}}
 
-\item{G.Y}{non-negativ affinity matrix for \code{n}, of dimensions 
+\item{G.Y}{non-negativ affinity matrix for \code{n}, of dimensions
 (\code{q} x \code{q}) where \code{q} is the number of covariables \code{Y}}
 
 \item{lambda}{shrinkage parameter for LASSO.}
@@ -39,18 +39,18 @@ of response variables Each row is an observation vector.}
 }
 \value{
 An object of class \code{edgenet}
-\item{coefficients }{ the estimated (\code{p} x \code{q})-dimensional 
+\item{coefficients }{ the estimated (\code{p} x \code{q})-dimensional
  coefficient matrix B.hat}
-\item{intercept }{ the estimated (\code{q} x \code{1})-dimensional 
+\item{intercept }{ the estimated (\code{q} x \code{1})-dimensional
  vector of intercepts}
 \item{call }{ the call that produced the object}
 \item{family }{ the family of the response}
 }
 \description{
-Fit a graph-regularized linear regression model using 
-edge-penalization. The coefficients are computed using graph-prior 
+Fit a graph-regularized linear regression model using
+edge-penalization. The coefficients are computed using graph-prior
 knowledge in the form of one/two affinity matrices. Graph-regularization is
-an extension to previously introduced regularization techniques, 
+an extension to previously introduced regularization techniques,
 such as the LASSO.
 }
 \examples{
@@ -65,15 +65,15 @@ Y <- X\%*\%b + rnorm(100)
 fit <- edgenet(X=X, Y=Y, G.X=G.X, family="gaussian")
 }
 \references{
-Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007), 
+Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007),
  Pathwise coordinate optimization.\cr
  \emph{The Annals of Applied Statistics}\cr \cr
  Friedman J., Hastie T. and Tibshirani R. (2010),
- Regularization Paths for Generalized Linear Models via 
+ Regularization Paths for Generalized Linear Models via
  Coordinate Descent.\cr \emph{Journal of Statistical Software}\cr \cr
  Fu W. J. (1998),  Penalized Regression: The Bridge Versus the Lasso.\cr
  \emph{Journal of Computational and Graphical Statistics}\cr \cr
- Cheng W. and Wang W. (2014), Graph-regularized dual Lasso for robust 
+ Cheng W. and Wang W. (2014), Graph-regularized dual Lasso for robust
  eQTL mapping.\cr
  \emph{Bioinformatics}
 }

@@ -9,8 +9,8 @@
 \arguments{
 \item{object}{a fitted object of class \emph{gaussian.edgenet}}
 
-\item{newdata}{a new (\code{m} x \code{p})-dimensional design matrix with a 
-variable number of observations \code{m}, but a constant number 
+\item{newdata}{a new (\code{m} x \code{p})-dimensional design matrix with a
+variable number of observations \code{m}, but a constant number
 of co-variables \code{p}}
 
 \item{...}{further arguments}
@@ -19,8 +19,8 @@ of co-variables \code{p}}
 A (\code{m} x \code{q})-dimensional matrix
 }
 \description{
-Predicts the estimated Y.hat values for a newdata 
- design matrix X similar to the other predict methods, 
+Predicts the estimated Y.hat values for a newdata
+ design matrix X similar to the other predict methods,
  e.g. from glm and glmnet
 }
 \examples{

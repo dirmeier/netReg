@@ -1800,6 +1800,8 @@ else
   { $as_echo "$as_me:${as_lineno-$LINENO}: R home found in ${R_HOME}" >&5
 $as_echo "$as_me: R home found in ${R_HOME}" >&6;}
   CXX=`"${R_HOME}/bin/R" CMD config CXX1X`
+	CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXXFLAGS`
+	CPPFLAGS=`"${R_HOME}/bin/R" CMD config CPPFLAGS`
   { $as_echo "$as_me:${as_lineno-$LINENO}: setting CXX to ${CXX}" >&5
 $as_echo "$as_me: setting CXX to ${CXX}" >&6;}
 fi
@@ -2498,7 +2500,7 @@ if test "x${enable_cxxflags_setting}" = "xyes"; then :
 
 
 
-for flag in -pipe -ffast-math; do
+for flag in -ffast-math; do
   as_CACHEVAR=`$as_echo "ax_cv_check_cxxflags__$flag" | $as_tr_sh`
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C++ compiler accepts $flag" >&5
 $as_echo_n "checking whether C++ compiler accepts $flag... " >&6; }
@@ -4655,10 +4657,12 @@ fi
 
 	CXX:        $CXX
 	CXXFLAGS:   $CXXFLAGS
+	CPPFLAGS:   $CPPFLAGS
 " >&5
 $as_echo "
 	Have fun with: $PACKAGE_NAME
 
 	CXX:        $CXX
 	CXXFLAGS:   $CXXFLAGS
+	CPPFLAGS:   $CPPFLAGS
 " >&6; }

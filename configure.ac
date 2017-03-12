@@ -15,6 +15,8 @@ then
 else
   AC_MSG_NOTICE([R home found in ${R_HOME}])
   CXX=`"${R_HOME}/bin/R" CMD config CXX1X`
+	CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXXFLAGS`
+	CPPFLAGS=`"${R_HOME}/bin/R" CMD config CPPFLAGS`
   AC_MSG_NOTICE([setting CXX to ${CXX}])
 fi
  
@@ -71,4 +73,5 @@ AC_MSG_RESULT([
 
 	CXX:        $CXX
 	CXXFLAGS:   $CXXFLAGS
+	CPPFLAGS:   $CPPFLAGS
 ])
