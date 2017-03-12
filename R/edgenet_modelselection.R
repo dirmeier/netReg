@@ -97,11 +97,11 @@ cv.edgenet <- function (X, Y, G.X=NULL, G.Y=NULL,
 
 #' @export
 #' @method cv.edgenet default
-cv.edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
-                               thresh=1e-5, maxit=1e5,
-                               family=c("gaussian"),
-                               epsilon=1e-3, approx.maxit=1e4,
-                               nfolds=10, ...)
+cv.edgenet.default <- function (X, Y, G.X=NULL, G.Y=NULL,
+                                thresh=1e-5, maxit=1e5,
+                                family=c("gaussian"),
+                                epsilon=1e-3, approx.maxit=1e4,
+                                nfolds=10, ...)
 {
     stopifnot(is.numeric(nfolds), nfolds > 0,
                 is.numeric(epsilon), is.numeric(approx.maxit),
@@ -154,15 +154,15 @@ cv.edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
     if (n >= 1000 && p >= 500) nfolds <- 5
     family                 <- match.arg(family)
     # estimate shrinkage parameters
-    ret <- .cv.edgenet(X=X, Y=Y,
-                       G.X=G.X, G.Y=G.Y,
-                       psigx=psigx, psigy=psigy,
-                       thresh=thresh, maxit=maxit,
-                       family=family,
-                       nfolds=nfolds,
-                       foldid=foldid,
-                       approx.maxit=approx.maxit,
-                       epsilon=epsilon)
+    ret <- .cv.edgenet (X=X, Y=Y,
+                        G.X=G.X, G.Y=G.Y,
+                        psigx=psigx, psigy=psigy,
+                        thresh=thresh, maxit=maxit,
+                        family=family,
+                         nfolds=nfolds,
+                        foldid=foldid,
+                        approx.maxit=approx.maxit,
+                        epsilon=epsilon)
     ret$call   <- match.call()
     class(ret) <- c(class(ret), "cv.edgenet")
     ret
@@ -182,10 +182,10 @@ cv.edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
                 as.character(family),
                 as.integer(approx.maxit),
                 as.double(epsilon))
-    ret        <- list(lambda    =cv$parameters[1],
-                       psigx     =cv$parameters[2],
-                       psigy     =cv$parameters[3],
-                       folds     =cv$folds+1)
+    ret <- list(lambda=cv$parameters[1],
+                psigx =cv$parameters[2],
+                psigy =cv$parameters[3],
+                folds =cv$folds+1)
     ret$family <- family
     class(ret) <- paste0(family, ".cv.edgenet")
     ret

@@ -2,8 +2,8 @@ dnl Initialise Autoconf
 AC_PREREQ([2.69])
 AC_INIT(
 	[netReg],
-	[0.99.0],
-	[simon.dirmeier@gmx.de],
+	[0.99.1],
+	[mail@simon-dirmeier.net],
 	[netReg],
 	[https://github.com/dirmeier/netReg])
 AC_CONFIG_HEADERS([src/config.h])
@@ -19,7 +19,7 @@ else
 	CPPFLAGS=`"${R_HOME}/bin/R" CMD config CPPFLAGS`
   AC_MSG_NOTICE([setting CXX to ${CXX}])
 fi
- 
+
 AC_LANG([C++])
 
 AC_MSG_CHECKING([whether configure should try to set CXXFLAGS])
@@ -36,10 +36,10 @@ AC_PROG_RANLIB
 
 AS_IF(
 	[test "x${enable_cxxflags_setting}" = "xyes"],
-	[	 
+	[
 		AX_APPEND_COMPILE_FLAGS([-ffast-math], [CXXFLAGS])
 		CXXFLAGS=$( echo $CXXFLAGS | $SED -e 's/^ *//' -e 's/ *$//' )
-	]	
+	]
 )
 
 AC_SEARCH_LIBS([cblas_dgemm], [openblas],
