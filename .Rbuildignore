@@ -19,3 +19,4 @@ LICENSE
 codecov.yml
 CMakeLists.txt
 inst/tests
+^appveyor\.yml$
