@@ -6,6 +6,7 @@ cmd_line
 ^\.Rproj\.user$
 .gitignore
 .git
+.gitattributes
 .idea
 test
 netreg.Rcheck
