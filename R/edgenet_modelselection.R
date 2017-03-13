@@ -159,7 +159,7 @@ cv.edgenet.default <- function (X, Y, G.X=NULL, G.Y=NULL,
                         psigx=psigx, psigy=psigy,
                         thresh=thresh, maxit=maxit,
                         family=family,
-                         nfolds=nfolds,
+                        nfolds=nfolds,
                         foldid=foldid,
                         approx.maxit=approx.maxit,
                         epsilon=epsilon)

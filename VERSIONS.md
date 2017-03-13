@@ -1,7 +1,7 @@
 Versions
 ========
 
-For versions and updates see *NEWS* file.
+For versions and updates see `inst/NEWS` file.
 
 ### Author
 

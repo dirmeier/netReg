@@ -144,8 +144,7 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
 
 #' @noRd
 #' @import Rcpp
-.edgenet <- function(X, Y, G.X, G.Y,
-                     lambda, psigx, psigy,
+.edgenet <- function(X, Y, G.X, G.Y, lambda, psigx, psigy,
                      thresh, maxit, family)
 {
     res <- .Call("edgenet_cpp", X, Y, G.X, G.Y,
