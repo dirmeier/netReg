@@ -24,7 +24,7 @@
 
 #include "edgenet_gaussian.hpp"
 
-#ifdef HAVE_OPENMP
+#ifdef _OPENMP
 #include <omp.h>
 #endif
 
@@ -177,4 +177,3 @@ namespace netreg
             iter++ < niter);
     }
 }
-

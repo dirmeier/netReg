@@ -24,7 +24,7 @@
 
 #include "graph_penalized_linear_model_cv_data.hpp"
 
-#ifdef HAVE_OPENMP
+#ifdef _OPENMP
 #include <omp.h>
 #endif
 

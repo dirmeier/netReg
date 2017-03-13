@@ -35,7 +35,7 @@
 #include "armadillo"
 #endif
 
-#ifdef HAVE_OPENMP
+#ifdef _OPENMP
 #include <omp.h>
 #endif
 

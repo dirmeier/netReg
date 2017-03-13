@@ -26,7 +26,6 @@
 #define NETREG_EDGENET_GAUSSIAN_LOSSFUNCTION_HPP
 
 #include <numeric>
-// #include <iostream>
 
 #ifdef USE_RCPPARMADILLO
 // [[Rcpp::depends(RcppArmadillo)]]
