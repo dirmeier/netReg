@@ -4,9 +4,9 @@ author: "Simon Dirmeier"
 date: "`r Sys.Date()`"
 output: rmarkdown::pdf_document
 vignette: >
-  %\VignetteIndexEntry{netReg tutorial}
-  %\VignetteEngine{knitr::rmarkdown}
-  \usepackage[utf8]{inputenc}
+ %\VignetteIndexEntry{netReg}
+ %\VignetteEngine{knitr::rmarkdown}
+ %\usepackage[utf8]{inputenc}
 bibliography: netReg.bib
 ---
 
