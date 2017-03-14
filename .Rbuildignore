@@ -9,7 +9,6 @@ cmd_line
 .git
 .gitattributes
 .idea
-test
 netreg.Rcheck
 netreg.Rproj
 netreg*tar.gz
