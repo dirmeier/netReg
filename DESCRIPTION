@@ -23,19 +23,19 @@ biocViews:
     GraphAndNetwork
 License: GPL-3
 Encoding: UTF-8
-Suggests:
+Suggests: 
+    testthat,
     knitr,
     rmarkdown,
-    testthat,
     lintr,
     lassoshooting
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
 SystemRequirements: C++11
-LinkingTo: 
+LinkingTo:
     Rcpp,
     RcppArmadillo
-Imports: 
+Imports:
     Rcpp,
     stats
 NeedsCompilation: yes
