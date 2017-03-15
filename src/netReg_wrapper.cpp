@@ -161,4 +161,5 @@ static R_CallMethodDef callMethods[] = {
 extern "C" void R_init_netReg(DllInfo *dll)
 {
     R_registerRoutines(dll, NULL, callMethods, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
 }
