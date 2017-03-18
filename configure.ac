@@ -2,7 +2,7 @@ dnl Initialise Autoconf
 AC_PREREQ([2.69])
 AC_INIT(
 	[netReg],
-	[0.99.1],
+	[0.99.4],
 	[mail@simon-dirmeier.net],
 	[netReg],
 	[https://github.com/dirmeier/netReg])

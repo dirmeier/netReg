@@ -36,14 +36,14 @@ library(uuid)
   G.Y <- t(G.Y) + G.Y
 
   if (with) {
-  m <-
-    microbenchmark(
-      Pure=edgenet.pure.R(X, Y, G.X, G.Y, lambda, psigx, psigy, thresh, maxit),
-      Cpp=.Call("edgenet_cpp", X, Y, G.X, G.Y,
-                as.double(lambda), as.double(psigx),  as.double(psigy),
-                as.integer(maxit), as.double(thresh),
-                as.character("gaussian"))$coefficients,
-      times=times)
+      m <-
+        microbenchmark(
+          Pure=edgenet.pure.R(X, Y, G.X, G.Y, lambda, psigx, psigy, thresh, maxit),
+          Cpp=.Call("edgenet_cpp", X, Y, G.X, G.Y,
+                    as.double(lambda), as.double(psigx),  as.double(psigy),
+                    as.integer(maxit), as.double(thresh),
+                    as.character("gaussian"))$coefficients,
+          times=times)
   }
   else
   {
@@ -61,19 +61,19 @@ library(uuid)
 
 m1 <- .bench(100, 100, 10, 10)
 m1
-saveRDS(m1, "~/Desktop/m1.rds" )
+saveRDS(m1, "~/Desktop/m100.rds" )
 
 m2 <- .bench(10, 10, 10, 10)
 m2
-saveRDS(m2, "~/Desktop/m2.rds" )
+saveRDS(m2, "~/Desktop/m10.rds" )
 
 m3 <- .bench(1000, 1000, 10, 10)
 m3
-saveRDS(m3, "~/Desktop/m3.rds" )
+saveRDS(m3, "~/Desktop/m1000.rds" )
 
-m4 <- .bench(10010, 10000, 10, 10, T)
+m4 <- .bench(10010, 10000, 10, 1, F)
 m4
-saveRDS(m4, "~/Desktop/m4.rds" )
+saveRDS(m4, "~/Desktop/m10000.rds" )
 
 m5 <- .bench(10010, 10000, 10, 10)
 m5
