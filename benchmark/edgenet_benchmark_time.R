@@ -71,9 +71,9 @@ m3 <- .bench(1000, 1000, 10, 10)
 m3
 saveRDS(m3, "~/Desktop/m1000.rds" )
 
-m4 <- .bench(10010, 10000, 10, 1, F)
+m4 <- .bench(10010, 10000, 10, 5, F)
 m4
-saveRDS(m4, "~/Desktop/m10000.rds" )
+saveRDS(m4, "~/Desktop/m10000_2.rds" )
 
 m5 <- .bench(10010, 10000, 10, 10)
 m5

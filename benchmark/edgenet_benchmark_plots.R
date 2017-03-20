@@ -57,7 +57,7 @@ do.time <- function()
         sanitize.subheadings.function = bold,
         include.rownames = FALSE)
 
-}
+df}
 
 do.rss <- function()
 {
