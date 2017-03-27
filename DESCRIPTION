@@ -1,0 +1,28 @@
+Package: netReg
+Type: Package
+Title: Network-Regularized Regression Models
+Version: 0.99.4
+Date: 2017-03-11
+Authors@R: person("Simon", "Dirmeier", email =
+        "mail@simon-dirmeier.net", role = c("aut", "cre"))
+Maintainer: Simon Dirmeier <mail@simon-dirmeier.net>
+Description: netReg fits linear regression models using
+        network-penalization. Graph prior knowledge, in the form of
+        biological networks, is being incorporated into the likelihood
+        of the linear model. The networks describe biological
+        relationships such as co-regulation or dependency of the same
+        transcription factors/metabolites/etc. yielding a part sparse
+        and part smooth solution for coefficient profiles.
+URL: https://github.com/dirmeier/netReg
+BugReports: https://github.com/dirmeier/netReg/issues
+biocViews: Software, StatisticalMethod, Regression, FeatureExtraction,
+        Network, GraphAndNetwork
+License: GPL-3
+Encoding: UTF-8
+Suggests: testthat, knitr, rmarkdown, lintr, lassoshooting
+VignetteBuilder: knitr
+RoxygenNote: 6.0.1
+SystemRequirements: C++11
+LinkingTo: Rcpp, RcppArmadillo
+Imports: Rcpp, stats
+NeedsCompilation: yes
