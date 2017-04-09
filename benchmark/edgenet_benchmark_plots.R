@@ -78,7 +78,7 @@ do.rss <- function()
   df <- as_tibble(bench.df) %>%
     tidyr::gather(Model, RSS, Lasso, Edgenet) %>%
     dplyr::mutate(Model=as.factor(Model),
-                  MSE=log(RSS/N),
+                  MS=(RSS/N),
                   NPQ=as.factor(paste(paste0("n=", N), paste0("p=", P), paste0("q=", Q), sep=", ")),
                   n=as.factor(paste0("N=", N)),
                   p=as.factor(paste0("P=", P)),
@@ -87,12 +87,18 @@ do.rss <- function()
   df$Noise <- "Low"
   df$Noise[df$SD == 2] <- "Medium"
   df$Noise[df$SD == 5] <- "High"
+  df$Model <- as.character(df$Model)
+  df$Model[df$Model == "Edgenet"] <- "NetReg"
   df$Noise <- factor(df$Noise, levels=c("Low", "Medium", "High"))
-  ggplot2::ggplot(df) +
+  g <- ggplot2::ggplot(df) +
     ggplot2::geom_boxplot(aes(x=Noise, y=MSE, fill=Model), width=0.5) +
     ggplot2::facet_grid(. ~ NPQ,  scales="free_y") +
     ggplot2::theme_bw() +
     ggplot2::theme(strip.background=element_rect(fill="black")) +
-    ggplot2::theme(strip.text=element_text(color="white", face="bold")) +
-    ylab("MSE")
+    ggplot2::theme(strip.text=element_text(color="white", face="bold", size=15)) +
+    ggplot2::theme(text=element_text(size=16),
+                   axis.text.x = element_text(size=16, angle=25),
+                   legend.text=element_text(size=15)) +
+    ylab("Mean Residual Sum of Squares")
+  ggsave(g, filename="~/Desktop/plot.pdf", width=8, height=5)
 }
