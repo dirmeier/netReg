@@ -9,11 +9,7 @@ Network-penalized generalized linear models in R.
 
 ## Introduction
 
-`netReg` is a generalization of the LASSO and as such suited to estimate high-dimensional linear dependencies of two sets of variables. We use graph prior knowledge, as for example given in co-expression or gene-regulatory networks in order to specifically shrink coefficient profiles as suggested by a graph-defined similarity measure. The main routines for estimation of coefficients and shrinkage parameters are implemented in C++11. 
-
-Depending on your installed libraries `netReg` uses `OpenBLAS` or `BLAS`, and `Lapack` for fast computation of matrix operations in an `RcppArmadillo` framework.
-
-We use `Dlib` in order to calculate the most optimal set of shrinkage parameters using k-fold cross-validation.
+`netReg` is an R/C++ implementation of a network-regularized linear regression model. It incorporates prior knowledge in the form of graphs into the model's likelihood and by that allows better estimation of regression coefficients. The main routines for estimation of coefficients and shrinkage parameters are implemented in C++11. Depending on your installed libraries `netReg` uses `OpenBLAS` or `BLAS`, and `Lapack` for fast computation of matrix operations in an `RcppArmadillo` framework. We use `Dlib` in order to calculate the most optimal set of shrinkage parameters using k-fold cross-validation.
 
 ## Installation
  
