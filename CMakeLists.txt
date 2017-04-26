@@ -2,11 +2,20 @@ cmake_minimum_required(VERSION 3.6)
 
 project(netReg LANGUAGES CXX)
 
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "RelWithDebInfo")
+endif()
+
+set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -g -pipe -ffast-math -flto -march=core2")
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
+    message("setting intel cxx flags")
+    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -qopt-report=5 -vec -simd -qopenmp")
+endif()
+
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_VERBOSE_MAKEFILE OFF)
-
 
 include(FeatureSummary)
 
@@ -16,20 +25,12 @@ find_package(Boost REQUIRED)
 find_package(BLAS REQUIRED)
 find_package(LAPACK REQUIRED)
 
-include_directories(${ARMADILLO_INCLUDE_DIRS})
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g -O2 -pipe -ffast-math -fomit-frame-pointer -flto -fPIC -Wall -mtune=core2 -DARMA_DONT_USE_WRAPPER")
-
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
-  message("setting intel cxx flags")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -qopt-report=5 -vec -simd -qopenmp")
-endif()
-
 if (OPENMP_FOUND)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 endif()
 
-set(SOURCE_FILES
+add_executable(
+    netReg
         src/config.h
         src/cv_fold.hpp
         src/cv_set.cpp
@@ -58,9 +59,26 @@ set(SOURCE_FILES
         src/vector_functions.hpp
         cmd_line/main.cpp)
 
-include_directories(${Boost_INCLUDE_DIRS} ${ARMADILLO_INCLUDE_DIRS})
-link_libraries(${ARMADILLO_LIBRARIES} ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES})
+target_compile_definitions(
+    netReg PRIVATE
+        -DARMA_DONT_USE_WRAPPER)
 
-add_executable(netReg ${SOURCE_FILES} ${ARMADILLO_LIBRARIES} ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES})
+target_compile_options(
+    netReg PRIVATE
+        -Wall)
+
+target_include_directories(
+    netReg PRIVATE
+        ${ARMADILLO_INCLUDE_DIRS}
+#        ${Boost_INCLUDE_DIRS}
+        ${BLAS_INCLUDE_DIRS}
+        ${LAPACK_INCLUDE_DIRS})
+
+target_link_libraries(
+    netReg PRIVATE
+        ${ARMADILLO_LIBRARIES}
+#        ${Boost_LIBRARIES}
+        ${BLAS_LIBRARIES}
+        ${LAPACK_LIBRARIES})
 
 feature_summary(WHAT ALL)
