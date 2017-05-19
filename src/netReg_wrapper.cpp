@@ -58,8 +58,8 @@ SEXP edgenet_cpp
     BEGIN_RCPP
     std::string fam = Rcpp::as<std::string>(fs);
     netreg::family f = //fam == "binomial" ? netreg::family::BINOMIAL :
-                       fam == "gaussian" ? netreg::family::GAUSSIAN
-                                         : netreg::family::NONE;
+        fam == "gaussian" ? netreg::family::GAUSSIAN
+                          : netreg::family::NONE;
     if (f == netreg::family::NONE)
     {
         Rprintf("Wrong family given\n");
@@ -123,7 +123,6 @@ SEXP cv_edgenet_cpp
     const int *xdim = INTEGER(Rf_getAttrib(X, R_DimSymbol));
     const int *ydim = INTEGER(Rf_getAttrib(Y, R_DimSymbol));
     const int lenfoldid = Rcpp::as<int>(lenfs);
-    netreg::edgenet_wrapper e;
     if (lenfoldid == xdim[0])
     {
         netreg::graph_penalized_linear_model_cv_data data(
@@ -131,32 +130,30 @@ SEXP cv_edgenet_cpp
             -1, 1.0, Rcpp::as<double>(psigx), Rcpp::as<double>(psigy),
             Rcpp::as<int>(niter), Rcpp::as<double>(thresh),
             INTEGER(foldids), f);
-        return e.regularization_path(data,
-                                     Rcpp::as<int>(optim_niter),
-                                     Rcpp::as<double>(epsilon));
+        return regularization_path(data,
+                                   Rcpp::as<int>(optim_niter),
+                                   Rcpp::as<double>(epsilon));
     }
     netreg::graph_penalized_linear_model_cv_data data(
         REAL(X), REAL(Y), REAL(GX), REAL(GY), xdim[0], xdim[1], ydim[1],
         -1, 1.0, Rcpp::as<double>(psigx), Rcpp::as<double>(psigy),
         Rcpp::as<int>(niter), Rcpp::as<double>(thresh),
         Rcpp::as<int>(nfolds), f);
-    return e.regularization_path(data,
-                                 Rcpp::as<int>(optim_niter),
-                                 Rcpp::as<double>(epsilon));
+    return regularization_path(data,
+                               Rcpp::as<int>(optim_niter),
+                               Rcpp::as<double>(epsilon));
     END_RCPP
     return R_NilValue;
 }
 };
 
-
 #include <R_ext/Rdynload.h>
 
 static R_CallMethodDef callMethods[] = {
-    {"edgenet_cpp", (DL_FUNC) &edgenet_cpp, 10},
-    {"cv_edgenet_cpp", (DL_FUNC) &cv_edgenet_cpp, 14},
-    {NULL, NULL, 0}
+    {"edgenet_cpp",    (DL_FUNC) & edgenet_cpp,    10},
+    {"cv_edgenet_cpp", (DL_FUNC) & cv_edgenet_cpp, 14},
+    {NULL, NULL,                                   0}
 };
-
 
 extern "C" void R_init_netReg(DllInfo *dll)
 {

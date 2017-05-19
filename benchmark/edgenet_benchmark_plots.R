@@ -78,7 +78,7 @@ do.rss <- function()
   df <- as_tibble(bench.df) %>%
     tidyr::gather(Model, RSS, Lasso, Edgenet) %>%
     dplyr::mutate(Model=as.factor(Model),
-                  MS=(RSS/N),
+                  MSE=(RSS/N),
                   NPQ=as.factor(paste(paste0("n=", N), paste0("p=", P), paste0("q=", Q), sep=", ")),
                   n=as.factor(paste0("N=", N)),
                   p=as.factor(paste0("P=", P)),
@@ -100,5 +100,5 @@ do.rss <- function()
                    axis.text.x = element_text(size=16, angle=25),
                    legend.text=element_text(size=15)) +
     ylab("Mean Residual Sum of Squares")
-  ggsave(g, filename="~/Desktop/plot.pdf", width=8, height=5)
+  ggsave(g, filename="~/Desktop/plot.pdf", width=8, height=5, device="eps")
 }

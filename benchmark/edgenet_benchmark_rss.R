@@ -16,15 +16,15 @@ for (i in seq(1, length(args), by=2))
 
 cat(paste0("Measuring rss with n=", n, ", p=", p, ", q=", q, ", sig=", sig, "\n"))
 
-thresh <- 1e-10
-maxit  <- 10000000
+thresh <- 1e-12
+maxit  <- 100000000
 
-G.X <- matrix(0, p, p) 
+G.X <- matrix(0, p, p)
 G.X[1:floor(p/3), 1:floor(p/3)]                       <- 1
 G.X[(1+floor(p/3)):floor(2*p/3), (1+floor(p/3)):floor(2*p/3)] <- 1
 G.X[(1+floor(2*p/3)):p,(1+floor(2*p/3)):p]                   <- 1
 
-G.Y <- matrix(0, q, q) 
+G.Y <- matrix(0, q, q)
 G.Y[1:floor(q/3), 1:floor(q/3)]                       <- 1
 G.Y[(1+floor(q/3)):floor(2*q/3), (1+floor(q/3)):floor(2*q/3)] <- 1
 G.Y[(1+floor(2*q/3)):q, (1+floor(2*q/3)):q]                   <- 1
@@ -56,7 +56,7 @@ for (cv in 1:n.folds)
   Y.train  <- Y[folds != cv, ]
   X.test  <-  X[folds == cv, ]
   Y.test  <-  Y[folds == cv, ]
-  
+
   cv.lasso <- cv.edgenet(X.train, Y.train,
                          thresh=thresh, maxit=maxit, family="gaussian", nfolds=5)
   las     <-  edgenet(X.train, Y.train,

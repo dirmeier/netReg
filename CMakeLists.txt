@@ -18,7 +18,7 @@ find_package(LAPACK REQUIRED)
 
 include_directories(${ARMADILLO_INCLUDE_DIRS})
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g -O2 -pipe -ffast-math -fomit-frame-pointer -flto -fPIC -Wall -mtune=core2 -DARMA_DONT_USE_WRAPPER")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O2 -Wall -DARMA_DONT_USE_WRAPPER")
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
   message("setting intel cxx flags")

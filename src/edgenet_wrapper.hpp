@@ -34,29 +34,25 @@
 
 namespace netreg
 {
-    class edgenet_wrapper
-    {
-    public:
 
-        /**
-         * Calulates the coefficients of a graph-regularized regression model.
-         *
-         * @param data an object that holds all required data for the model
-         */
-        SEXP run(graph_penalized_linear_model_data &data) const;
+    /**
+     * Calulates the coefficients of a graph-regularized regression model.
+     *
+     * @param data an object that holds all required data for the model
+     */
+    SEXP run(graph_penalized_linear_model_data& data) const;
 
-        /**
-         * Calulates the optimal set of shrinkage parameters of a
-         * graph-regularized regression model.
-         *
-         * @param data an object that holds all required data for the model
-         *
-         * @return returns the estimated parameters and foldids
-         */
-        SEXP regularization_path(
-          graph_penalized_linear_model_cv_data &data,
-          int niter,
-          double epsilon) const;
-    };
+    /**
+     * Calulates the optimal set of shrinkage parameters of a
+     * graph-regularized regression model.
+     *
+     * @param data an object that holds all required data for the model
+     *
+     * @return returns the estimated parameters and foldids
+     */
+    SEXP regularization_path(
+        graph_penalized_linear_model_cv_data& data,
+        int niter,
+        double epsilon) const;
 }
 #endif //NETREG_EDGENET_HPP
