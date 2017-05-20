@@ -74,8 +74,7 @@ SEXP edgenet_cpp
          Rcpp::as<double>(psigx), Rcpp::as<double>(psigy),
          Rcpp::as<int>(niter), Rcpp::as<double>(thresh), f);
     // TODO change that back and include family in data
-    netreg::edgenet_wrapper edge;
-    return edge.run(data);
+    return fit(data);
     END_RCPP
     return R_NilValue;
 }

@@ -34,7 +34,7 @@
 
 namespace netreg
 {
-    SEXP run(graph_penalized_linear_model_data &data) const
+    SEXP fit(graph_penalized_linear_model_data &data) const
     {
         BEGIN_RCPP
         edgenet_gaussian edge;

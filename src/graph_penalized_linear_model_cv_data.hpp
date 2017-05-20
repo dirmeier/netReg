@@ -64,10 +64,10 @@ namespace netreg
          * @param n the number of samples (nrows X/Y)
          * @param p the number of covariables (ncols X)
          * @param q the number of responses (ncol Y)
-         * @param lambda a vector of length q of penalisation values for q univariate models
-         * @param alpha a vector of length q of weightings for lasso/ridge
-         * @param psi_gx a vector of length q of how much influence GX should have on the penalization
-         * @param psi_gy a vector of length q of how much influence GY should have on the penalization
+         * @param lambda deprecated and not used: has to be 0
+         * @param alpha deprecated and not used: has to be 1.0
+         * @param psi_gx 0 if no penalization is used, -1 if psi_gx should be estimated
+         * @param psi_gy 0 if no penalization is used, -1 if psi_gy should be estimated
          * @param niter max number of iterations in case estimation of the coefficients does not converge
          * @param thresh convergence threshold
          * @param nfolds the number of folds

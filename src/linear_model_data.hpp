@@ -46,6 +46,8 @@ namespace netreg
     {
     protected:
 
+        linear_model_data(){}
+
         /**
          * Protected constructor in order to avoid instantiation.
          *
@@ -155,7 +157,7 @@ namespace netreg
          *
          * @return a reference to X'Y matrix.
          */
-        arma::Mat<double> &txy() 
+        arma::Mat<double> &txy()
         {
             return TXY;
         }
@@ -165,7 +167,7 @@ namespace netreg
          *
          * @return the max number of iterations
          */
-        const int max_iter() 
+        const int max_iter()
         {
             return N_ITER;
         }
@@ -181,16 +183,16 @@ namespace netreg
         }
 
     protected:
-        const int N;             // number of samples: n
-        const int P;             // number of covariables: p
-        const int Q;             // number of responses: q
+         int N;             // number of samples: n
+         int P;             // number of covariables: p
+         int Q;             // number of responses: q
         arma::Mat<double> X;        // (n x p)-dimensional design matrix
         arma::Mat<double> Y;        // (n x q)-dimensional response matrix
-        const double THRESH;     // convergence threshold
-        const int N_ITER;        // max number iterations if CCD does not converge
+         double THRESH;     // convergence threshold
+         int N_ITER;        // max number iterations if CCD does not converge
         arma::Mat<double> TXY;      // (p x q)-dimensional matrix: X'Y
         std::vector< arma::Row<double> > txx_rows_;
-        const enum family family_;      // family of distribution of y
+         enum family family_;      // family of distribution of y
     };
 }
 #endif //NETREG_LINEARMODELDATA_HPP
