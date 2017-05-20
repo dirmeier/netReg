@@ -335,7 +335,7 @@ std::map<std::string, double> modelselection(
         lambda, psi, phi, threshold, maxit, nfolds
     );
 
-    std::map<std::string, double> m = regularization_path(
+    std::map<std::string, double> m = model_selection(
         dat, bobit, epsilon);
 
     std::string paramfile = outfile.substr(0, outfile.find_last_of('.')) +

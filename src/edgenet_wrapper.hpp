@@ -40,7 +40,7 @@ namespace netreg
      *
      * @param data an object that holds all required data for the model
      */
-    SEXP fit(graph_penalized_linear_model_data& data) const;
+    SEXP fit(graph_penalized_linear_model_data& data);
 
     /**
      * Calulates the optimal set of shrinkage parameters of a
@@ -53,6 +53,6 @@ namespace netreg
     SEXP regularization_path(
         graph_penalized_linear_model_cv_data& data,
         int niter,
-        double epsilon) const;
+        double epsilon);
 }
 #endif //NETREG_EDGENET_HPP

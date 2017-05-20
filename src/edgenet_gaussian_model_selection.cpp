@@ -31,7 +31,7 @@
 namespace netreg
 {
 
-    std::map<std::string, double> regularization_path(
+    std::map<std::string, double> model_selection(
         graph_penalized_linear_model_cv_data &data,
         const int niter,
         const double epsilon)

@@ -43,7 +43,7 @@ namespace netreg
     /**
      * Class for estimating the coeffiecients of a edge-regularized linear regression model.
      */
-    class edgenet_binomial :public edgenet_wrapper
+    class edgenet_binomial
     {
     public:
         /**
@@ -51,7 +51,7 @@ namespace netreg
          *
          * @param data an object that holds all required data for the model
          */
-        virtual SEXP run(graph_penalized_linear_model_data &data) const;
+        SEXP run(graph_penalized_linear_model_data &data) const;
 
         /**
          * Calulates the coefficients of a graph-regularized regression model.
@@ -62,7 +62,7 @@ namespace netreg
          * @param psigx penalization of laplacian for X
          * @param psigy penalization of laplacian for Y
          */
-        virtual arma::Mat<double> run_cv
+        arma::Mat<double> run_cv
             (graph_penalized_linear_model_cv_data &data,
              const double lambda,
              const double alpha,
