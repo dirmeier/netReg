@@ -83,6 +83,7 @@ target_link_libraries(
         ${BLAS_LIBRARIES}
         ${LAPACK_LIBRARIES})
 
+INSTALL(TARGETS netReg RUNTIME DESTINATION bin)
 
 feature_summary(WHAT ALL)
 MESSAGE( STATUS "Using CMAKE_CXX_COMPILER: " ${CMAKE_CXX_COMPILER} )
