@@ -6,6 +6,7 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "RelWithDebInfo")
 endif()
 
+set( CMAKE_VERBOSE_MAKEFILE on )
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -g -pipe -ffast-math -flto -march=core2")
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
     message("setting intel cxx flags")
@@ -21,7 +22,7 @@ include(FeatureSummary)
 
 find_package(OpenMP)
 find_package(Armadillo REQUIRED)
-find_package(Boost REQUIRED)
+find_package(Boost COMPONENTS program_options filesystem iostreams system REQUIRED)
 find_package(BLAS REQUIRED)
 find_package(LAPACK REQUIRED)
 
@@ -71,15 +72,19 @@ target_compile_options(
 target_include_directories(
     netReg PRIVATE
         ${ARMADILLO_INCLUDE_DIRS}
-#        ${Boost_INCLUDE_DIRS}
+        ${Boost_INCLUDE_DIRS}
         ${BLAS_INCLUDE_DIRS}
         ${LAPACK_INCLUDE_DIRS})
 
 target_link_libraries(
     netReg PRIVATE
         ${ARMADILLO_LIBRARIES}
-#        ${Boost_LIBRARIES}
+        ${Boost_LIBRARIES}
         ${BLAS_LIBRARIES}
         ${LAPACK_LIBRARIES})
 
+
 feature_summary(WHAT ALL)
+MESSAGE( STATUS "Using CMAKE_CXX_COMPILER: " ${CMAKE_CXX_COMPILER} )
+MESSAGE( STATUS "Using CMAKE_CXX_FLAGS: " ${CMAKE_CXX_FLAGS} )
+MESSAGE( STATUS "Using CMAKE_CXX_FLAGS_RELWITHDEBINFO: " ${CMAKE_CXX_FLAGS_RELWITHDEBINFO} )
