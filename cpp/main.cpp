@@ -8,7 +8,6 @@
 #include <map>
 #include <iterator>
 
-#include <boost/iostreams/filtering_stream.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
 #include <boost/algorithm/string.hpp>
