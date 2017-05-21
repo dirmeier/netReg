@@ -85,8 +85,8 @@ target_link_libraries(
         ${LAPACK_LIBRARIES})
 
 install(
-        TARGETS netReg
-        DESTINATION ${CMAKE_INSTALL_BINDIR})
+    TARGETS netReg
+    DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 feature_summary(WHAT ALL)
 MESSAGE( STATUS "Using CMAKE_CXX_COMPILER: " ${CMAKE_CXX_COMPILER} )

@@ -208,7 +208,7 @@ int main(int argc, char *argv[])
         {
             std::cout << netReg << "\n";;
             std::cout << cmdline_options << std::endl;
-            exit(EXIT_FAILURE);
+            exit(EXIT_SUCCESS);
         }
         boost::program_options::notify(vm);
     }
@@ -217,7 +217,7 @@ int main(int argc, char *argv[])
         std::cout << netReg << "\n";
         std::cout << cmdline_options << std::endl;
         std::cout << e.what() << std::endl;
-        exit(EXIT_FAILURE);
+        exit(EXIT_SUCCESS);
     }
 
     struct data_set X = read_tsv(design_filename);
