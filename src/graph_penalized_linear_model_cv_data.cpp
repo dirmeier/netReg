@@ -37,8 +37,9 @@ namespace netreg
         #pragma omp parallel for
         for (int i = 0; i < cvset_.fold_count(); i++)
         {
-            cv_fold &fold = cvset_.get_fold(i);
-            for (arma::uvec::iterator j = fold.test_set().begin(); j != fold.test_set().end(); ++j)
+            cv_fold& fold = cvset_.get_fold(i);
+            for (arma::uvec::iterator j = fold.test_set().begin();
+                 j != fold.test_set().end(); ++j)
             {
                 fold_ids_[*j] = i;
             }

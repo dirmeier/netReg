@@ -74,7 +74,7 @@ namespace netreg
          * @param fold_ids fold id mappings
          */
         graph_penalized_linear_model_cv_data
-            (double *const  x,  double *const y,
+            (double *const x, double *const y,
              double *const gx, double *const gy,
              const int n, const int p, const int q,
              const double lambda, const double alpha,
@@ -178,7 +178,7 @@ namespace netreg
          *
          * @return returns the fold ids
          */
-        std::vector<int> &fold_ids()
+        std::vector<int>& fold_ids()
         {
             return fold_ids_;
         }
@@ -186,7 +186,7 @@ namespace netreg
         /**
          * Getter
          */
-        cv_set &cvset()
+        cv_set& cvset()
         {
             return cvset_;
         }

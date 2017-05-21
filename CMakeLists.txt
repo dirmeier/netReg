@@ -7,10 +7,10 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 set( CMAKE_VERBOSE_MAKEFILE on )
-set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -g -pipe -ffast-math -flto -march=core2")
+set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -g")
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
     message("setting intel cxx flags")
-    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -qopt-report=5 -vec -simd -qopenmp")
+    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -vec -simd -qopenmp")
 endif()
 
 set(CMAKE_CXX_STANDARD 11)
@@ -18,6 +18,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 
+include(GNUInstallDirs)
 include(FeatureSummary)
 
 find_package(OpenMP)
@@ -59,7 +60,7 @@ add_executable(
         src/stat_functions.hpp
         src/vector_functions.cpp
         src/vector_functions.hpp
-        cmd_line/main.cpp)
+        cpp/main.cpp)
 
 target_compile_definitions(
     netReg PRIVATE
@@ -83,7 +84,9 @@ target_link_libraries(
         ${BLAS_LIBRARIES}
         ${LAPACK_LIBRARIES})
 
-INSTALL(TARGETS netReg RUNTIME DESTINATION bin)
+install(
+        TARGETS netReg
+        DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 feature_summary(WHAT ALL)
 MESSAGE( STATUS "Using CMAKE_CXX_COMPILER: " ${CMAKE_CXX_COMPILER} )
