@@ -148,7 +148,7 @@ int main(int argc, char *argv[])
            boost::program_options::value<decltype(psi)>(
              &psi)->default_value(0, "0"),
            "Penalization parameter for affinity matrix GX.")
-          ("phi,h",
+          ("xi,x",
            boost::program_options::value<decltype(phi)>(
              &phi)->default_value(0, "0"),
            "Penalization parameter for affinity matrix GY.")
