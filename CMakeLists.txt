@@ -23,7 +23,7 @@ include(FeatureSummary)
 
 find_package(OpenMP)
 find_package(Armadillo REQUIRED)
-find_package(Boost COMPONENTS program_options filesystem iostreams system REQUIRED)
+find_package(Boost COMPONENTS program_options system REQUIRED)
 find_package(BLAS REQUIRED)
 find_package(LAPACK REQUIRED)
 
