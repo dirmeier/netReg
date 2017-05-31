@@ -1,4 +1,4 @@
-# netReg <img src="https://cdn.rawgit.com/dirmeier/netReg/_fig/netReg_hexsticker.svg" align="right" width="160px"/>
+# netReg <img src="https://cdn.rawgit.com/dirmeier/netReg/7b8e31e0/_fig/sticker.svg" align="right" width="160px"/>
 
 [![Project Status](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![Build Status](https://travis-ci.org/dirmeier/netReg.svg?branch=master)](https://travis-ci.org/dirmeier/netReg)
