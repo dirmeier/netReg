@@ -99,8 +99,6 @@ static void check_params(double lambda,
 
 int main(int argc, char *argv[])
 {
-    std::cout.imbue(std::locale("en_US.UTF-8"));
-
     std::string design_filename = "";
     std::string response_filename = "";
     std::string gx_filename = "";
