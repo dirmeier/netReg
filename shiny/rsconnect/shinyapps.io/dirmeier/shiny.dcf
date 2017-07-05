@@ -1,0 +1,10 @@
+name: shiny
+title: shiny
+account: dirmeier
+server: shinyapps.io
+appId: 194005
+bundleId: 890468
+url: https://dirmeier.shinyapps.io/shiny/
+when: 1499107457.31882
+asMultiple: FALSE
+asStatic: FALSE
