@@ -23,7 +23,7 @@ biocViews:
     GraphAndNetwork
 License: GPL-3
 Encoding: UTF-8
-Suggests: 
+Suggests:
     testthat,
     knitr,
     rmarkdown,
@@ -37,5 +37,6 @@ LinkingTo:
     RcppArmadillo
 Imports:
     Rcpp,
-    stats
+    stats,
+    igraph
 NeedsCompilation: yes

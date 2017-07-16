@@ -1,3 +1,7 @@
+data/X.tsv
+data/Y.tsv
+data/GY.tsv
+data/README.md
 ^src/main.cpp$
 ^cleanup$
 ^benchmark$
