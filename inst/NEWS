@@ -1,6 +1,23 @@
-0.99.0
-======
+\name{NEWS}
+\title{News for \pkg{netReg}}
 
-* Devel version 0.99.0
-* `edgenet` penalization using CCD
-* Implementation of model selection using Dlib
+\section{Version 1.1.0}{
+  \itemize{
+    \item Implementation as standalone \code{C++} tool
+    \item Addition of biological dummy data set
+  }
+}
+
+\section{Version 1.0.0}{
+  \itemize{
+    \item Version bump after \code{Bioconductor} acceptance
+  }
+}
+
+\section{Version 0.99.x}{
+  \itemize{
+    \item \code{edgenet} penalization using CCD
+    \item Implementation of model selection using \code{Dlib}
+    \item Minor fixes
+  }
+}
