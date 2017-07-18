@@ -8,6 +8,7 @@
 #include <map>
 #include <iterator>
 
+#include <boost/algorithm/string/predicate.hpp>
 #include <boost/program_options.hpp>
 #include <boost/algorithm/string.hpp>
 
@@ -274,6 +275,7 @@ data_set read_tsv(const std::string& file)
     std::vector<std::string> strs;
     while (getline(in, line))
     {
+        if(boost::starts_with(line, "#") continue;
         boost::split(strs, line, boost::is_any_of("\t"));
         data.ncol = strs.size();
         for (std::vector<std::string>::size_type i = 0; i < strs.size(); ++i)

@@ -36,8 +36,6 @@ missing
 test-driver
 Makefile.in
 glmnet
-*.rda
-.RData
 src/*.o
 src/*.so
 .Rproj.user/*
