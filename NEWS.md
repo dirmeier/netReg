@@ -15,4 +15,3 @@
   
 * `edgenet` penalization using CCD
 * Implementation of model selection using `Dlib`
-* Minor fixes
