@@ -35,3 +35,4 @@ data/README.md
 ^r-travis$
 ^docs$
 ^_pkgdown\.yml$
+^pkgdown$

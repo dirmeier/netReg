@@ -1,0 +1,110 @@
+t {
+    font-family: "Lucida Console", Monaco, monospace;
+}
+
+.container {
+    max-width: 800px;
+}
+
+.header {
+    margin-top: 20rem;
+    text-align: center;
+}
+
+.value-prop {
+    margin-top: 1rem;
+}
+
+.value-props {
+    margin-top: 4rem;
+    margin-bottom: 4rem;
+}
+
+nav ul a {
+    font-size: 15px;
+    color: black;
+}
+
+a, code, p {
+    font-size: 1.3rem;
+}
+
+.title {
+    font-family: "Lucida Console", Monaco, monospace;
+    font-size: 2.5em;
+    text-align: center;
+}
+
+.well {
+    white-space: pre;
+    word-wrap: break-word;
+    margin-top: 1.5rem;
+    margin-bottom: 0;
+}
+
+nav {
+    background-color: ghostwhite;
+    color: black;
+}
+
+nav:hover {
+    background-color: whitesmoke;
+}
+
+.docs-header {
+    font-size: 1.4rem;
+    letter-spacing: .2rem;
+    font-weight: 600;
+}
+
+.section {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.docs-section {
+    margin-top: 50px;
+    border-top: 1px solid #eee;
+    padding: 4rem 0;
+    margin-bottom: 0;
+}
+
+text {
+    font-family: "Lucida Console", Monaco, monospace;
+    font-size: 36px;
+}
+
+.blink {
+    animation:
+            pulse 3s ease infinite alternate,
+            blinker 5s linear infinite,
+            nudge 5s linear infinite alternate;
+}
+
+
+@keyframes blinker {
+    0% {
+        opacity: 1.0;
+    }
+    50% {
+        opacity: 0.0;
+    }
+    100% {
+        opacity: 1.0;
+    }
+}
+
+@keyframes nudge {
+    0%, 100% {
+        transform: translate(0, 0);
+    }
+
+    50% {
+        transform: translate(400px, 0);
+    }
+
+    80% {
+        transform: translate(-50px, 0);
+    }
+}
+
