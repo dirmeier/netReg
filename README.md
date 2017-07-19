@@ -16,38 +16,64 @@ It incorporates prior knowledge in the form of graphs into the model's likelihoo
 The main routines for estimation of coefficients and shrinkage parameters are implemented in `C++11`. 
 Depending on your installed libraries `netReg` uses `OpenBLAS` or `BLAS`, and `Lapack` for fast computation of matrix operations in an `Armadillo\RcppArmadillo` framework. We use `Dlib` in order to calculate the most optimal set of shrinkage parameters using k-fold cross-validation.
 
-`netReg` comes as a standalone `C++` tool shipped with [`bioconda`](https://anaconda.org/bioconda/netreg) as well as as [`Bioconductor`](https://bioconductor.org/packages/release/bioc/html/netReg.html) package. Check out the [landing page](https://dirmeier.github.io/netReg) for more information.
+`netReg` comes as a standalone `C++` tool shipped with [`bioconda`](https://anaconda.org/bioconda/netreg) as well as a [`Bioconductor`](https://bioconductor.org/packages/release/bioc/html/netReg.html) package. Check out the [landing page](https://dirmeier.github.io/netReg) for more information.
 
 ## Installation
  
-1) If you want to use the `R` version of `netReg` call this:
+You can install and use `netReg` either
 
-```{R}
+* as an `R` library from [`Bioconductor`](https://bioconductor.org/packages/release/bioc/html/netReg.html),
+* or as a `C++` commandline tool from [`bioconda`](https://anaconda.org/bioconda/netreg),
+* or by downloading the `tarball` and doing either of the previous options manually.
+
+### Installation for R with Bioconductor
+
+If you want to use the `R` version of `netReg` call:
+
+```r
   source("https://bioconductor.org/biocLite.R")
   biocLite("netReg")
+  
+  library(netReg)
 ```
  
 from the `R`-console. 
 
-2) If you want to use the `C++` commandline tool you can do this using `conda`. For that you should download [Anaconda](https://www.continuum.io/downloads) and create a [virtual environment](https://conda.io/docs/using/envs.html).
+### Installation for command line with bioconda
+
+If you want to use the `C++` command line tool you can do this using `conda`. For that you should download [Anaconda](https://www.continuum.io/downloads) and create a [virtual environment](https://conda.io/docs/using/envs.html).
 Then install the tool using:
 
-```{bash}
+```sh
   conda install -c bioconda netreg
+  
+  netReg -h
 ```
 
-3) Alternatively you can download the `tarball` from the latest [release](https://github.com/dirmeier/netReg/releases/tag/v1.0.0) and install both.
+### Manual installation
 
-**For the commandline tool you need *recent* `CMake`, `Armadillo`, `Boost`, `OpenBLAS\BLAS` and `Lapack` versions installed**. Optionally `OpenMP` is also supported.
+If you don't like package managers you can download the `tarball` of the latest [release](https://github.com/dirmeier/netReg/releases/tag/v1.0.0) and install both or either from the two.
 
-```{bash}
+The **command line tool** has the following dependencies:
+
+* `CMake >= 3.6`,
+* `Boost >= 1.6.x`,
+* `Armadillo >= 7.800.3`,
+* `OpenBLAS/BLAS` and `Lapack` (older versions should work),
+* *optional*: `OpenMP` (older versions should work).
+
+To install the command line tool manually:
+
+```sh
   mkdir build && cd build
   cmake .. && make
+  
+  ./netReg -h
 ```
 
 If you want the tool to be installed at some place you would add:
 
-```{bash}
+```sh
   make install --prefix=/some/path
 ```
 
@@ -57,7 +83,7 @@ Installing the `R` using the downloaded `tarball` works like this:
   R CMD install <netReg-x.y.z.tar.gz>
 ```
 
-### Installation on Mac
+#### Installation on Mac
 
 In some cases it is required to install `gfortan` for Mac first (which is needed by `Armadillo/RcppArmadillo`). I that case run:
 
@@ -70,13 +96,16 @@ Afterwards just install the package as described above.
 
 ## Documentation
 
+There are two tutorials for either `R` or the command line tool available.
+For questions on how to use the library we are always gladly taking questions. :)
+
 ### R
 
 Load the package using `library(netReg)`. We provide a vignette for the package that can be called using: `vignette("netReg")`. Basically that is all you have to know.
 
-### C++
+### Command line
 
-See the [tutorial](https://dirmeier.github.io/netReg/tutorial).
+Have a look at the command line [tutorial](https://dirmeier.github.io/netReg) on the [landing page](https://dirmeier.github.io).
 
 
 ## Author
