@@ -1,12 +1,15 @@
 ---
 title: "netReg commandline tutorial"
-author: "Simon Dirmeier"
-date: "`r Sys.Date()`"
-output: rmarkdown::pdf_document
+output:
+    BiocStyle::html_document2:
+        toc: true
+        toc_depth: 2
+        toc_float: true
+        theme: lumen
 vignette: >
- %\VignetteIndexEntry{netReg commandline tutorial}
- %\VignetteEngine{knitr::rmarkdown}
- %\usepackage[utf8]{inputenc}
+  %\VignetteIndexEntry{netReg commandline tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\usepackage[utf8]{inputenc}
 bibliography: netReg.bib
 ---
 

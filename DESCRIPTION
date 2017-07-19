@@ -27,6 +27,7 @@ Suggests:
     testthat,
     knitr,
     rmarkdown,
+    BiocStyle,
     lintr,
     lassoshooting
 VignetteBuilder: knitr
