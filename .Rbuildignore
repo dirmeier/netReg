@@ -29,7 +29,6 @@ data/README.md
 ^sample\.appveyor\.yml$
 ^scripts$
 ^Makefile$
-^.*\.Rproj$
-^\.Rproj\.user$
 ^\.travis\.yml$
 ^r-travis$
+^docs$

@@ -16,14 +16,14 @@ It incorporates prior knowledge in the form of graphs into the model's likelihoo
 The main routines for estimation of coefficients and shrinkage parameters are implemented in `C++11`. 
 Depending on your installed libraries `netReg` uses `OpenBLAS` or `BLAS`, and `Lapack` for fast computation of matrix operations in an `Armadillo\RcppArmadillo` framework. We use `Dlib` in order to calculate the most optimal set of shrinkage parameters using k-fold cross-validation.
 
-`netReg` comes as a standalone `C++` tool shipped with [`bioconda`](https://anaconda.org/bioconda/netreg) as well as a [`Bioconductor`](https://bioconductor.org/packages/release/bioc/html/netReg.html) package. Check out the [landing page](https://dirmeier.github.io/netReg) for more information.
+`netReg` comes as a `C++` command line tool shipped with [`bioconda`](https://anaconda.org/bioconda/netreg) as well as a [`Bioconductor`](https://bioconductor.org/packages/release/bioc/html/netReg.html) package. Check out the [landing page](https://dirmeier.github.io/netReg) for more information.
 
 ## Installation
  
 You can install and use `netReg` either
 
 * as an `R` library from [`Bioconductor`](https://bioconductor.org/packages/release/bioc/html/netReg.html),
-* or as a `C++` commandline tool from [`bioconda`](https://anaconda.org/bioconda/netreg),
+* or as a `C++` command line tool from [`bioconda`](https://anaconda.org/bioconda/netreg),
 * or by downloading the `tarball` and doing either of the previous options manually.
 
 ### Installation for R with Bioconductor
@@ -54,6 +54,9 @@ Then install the tool using:
 
 If you don't like package managers you can download the `tarball` of the latest [release](https://github.com/dirmeier/netReg/releases/tag/v1.0.0) and install both or either from the two.
 
+
+#### Command line tool
+
 The **command line tool** has the following dependencies:
 
 * `CMake >= 3.6`,
@@ -71,7 +74,9 @@ To install the command line tool manually:
   ./netReg -h
 ```
 
-If you want the tool to be installed at some place you would add:
+#### R
+
+If you want the tool to be installed in some specific folder you would also call:
 
 ```sh
   make install --prefix=/some/path
@@ -83,7 +88,7 @@ Installing the `R` using the downloaded `tarball` works like this:
   R CMD install <netReg-x.y.z.tar.gz>
 ```
 
-#### Installation on Mac
+### Installation on Mac
 
 In some cases it is required to install `gfortan` for Mac first (which is needed by `Armadillo/RcppArmadillo`). I that case run:
 
@@ -103,10 +108,9 @@ For questions on how to use the library we are always gladly taking questions. :
 
 Load the package using `library(netReg)`. We provide a vignette for the package that can be called using: `vignette("netReg")`. Basically that is all you have to know.
 
-### Command line
+### Command line tool
 
 Have a look at the command line [tutorial](https://dirmeier.github.io/netReg) on the [landing page](https://dirmeier.github.io).
-
 
 ## Author
 
