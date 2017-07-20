@@ -7,16 +7,17 @@
 [![bioc](https://bioconductor.org/shields/years-in-bioc/netReg.svg)](https://bioconductor.org/packages/release/bioc/html/netReg.html)
 [![conda](https://anaconda.org/bioconda/netreg/badges/installer/conda.svg)](https://anaconda.org/bioconda/netreg)
 
-Network-penalized generalized linear models in R and C++.
+Network-penalized generalized linear models in `R` and `C++`.
 
 ## Introduction
 
 `netReg` is an R/C++ implementation of a network-regularized linear regression model.
 It incorporates prior knowledge in the form of graphs into the model's likelihood and by that allows better estimation of regression coefficients.
 The main routines for estimation of coefficients and shrinkage parameters are implemented in `C++11`. 
+
 Depending on your installed libraries `netReg` uses `OpenBLAS` or `BLAS`, and `Lapack` for fast computation of matrix operations in an `Armadillo\RcppArmadillo` framework. We use `Dlib` in order to calculate the most optimal set of shrinkage parameters using k-fold cross-validation.
 
-`netReg` comes as a `C++` command line tool shipped with [`bioconda`](https://anaconda.org/bioconda/netreg) as well as a [`Bioconductor`](https://bioconductor.org/packages/release/bioc/html/netReg.html) package. Check out the [landing page](https://dirmeier.github.io/netReg) for more information.
+`netReg` comes as a stand alone `C++` command line tool shipped with [`bioconda`](https://anaconda.org/bioconda/netreg) as well as a [`Bioconductor`](https://bioconductor.org/packages/release/bioc/html/netReg.html) package.
 
 ## Installation
  
@@ -41,7 +42,8 @@ from the `R`-console.
 
 ### Installation for command line with bioconda
 
-If you want to use the `C++` command line tool you can do this using `conda`. For that you should download [Anaconda](https://www.continuum.io/downloads) and create a [virtual environment](https://conda.io/docs/using/envs.html).
+If you want to use the `C++` command line tool you can do this using `conda`. 
+For that you should download [Anaconda](https://www.continuum.io/downloads) and create a [virtual environment](https://conda.io/docs/using/envs.html).
 Then install the tool using:
 
 ```sh
@@ -53,7 +55,6 @@ Then install the tool using:
 ### Manual installation
 
 If you don't like package managers you can download the `tarball` of the latest [release](https://github.com/dirmeier/netReg/releases/tag/v1.0.0) and install both or either from the two.
-
 
 #### Command line tool
 
@@ -74,17 +75,17 @@ To install the command line tool manually:
   ./netReg -h
 ```
 
-#### R
-
 If you want the tool to be installed in some specific folder you would also call:
 
 ```sh
   make install --prefix=/some/path
 ```
 
+#### R
+
 Installing the `R` using the downloaded `tarball` works like this:
 
-```{bash}
+```bash
   R CMD install <netReg-x.y.z.tar.gz>
 ```
 
@@ -101,16 +102,17 @@ Afterwards just install the package as described above.
 
 ## Documentation
 
-There are two tutorials for either `R` or the command line tool available.
+There are two tutorials for either `R` or the `C++` command line tool available.
 For questions on how to use the library we are always gladly taking questions. :)
 
 ### R
 
-Load the package using `library(netReg)`. We provide a vignette for the package that can be called using: `vignette("netReg")`. Basically that is all you have to know.
+Load the package using `library(netReg)`. 
+We provide a vignette for the package that can be called using: `vignette("netReg")`. Basically that is all you have to know. You cal also use the online [tutorial](https://dirmeier.github.io/netReg/articles/netReg_R.html).
 
 ### Command line tool
 
-Have a look at the command line [tutorial](https://dirmeier.github.io/netReg) on the [landing page](https://dirmeier.github.io).
+Have a look at the command line [tutorial](https://dirmeier.github.io/netReg/articles/netReg_commandline.html)
 
 ## Author
 

@@ -3,132 +3,125 @@ title: "netReg commandline tutorial"
 bibliography: netReg.bib
 ---
 
-## Introduction
+This document explains how to install and use the `netReg` command line tool.
 
-Modelling biological associations or dependencies using linear regression 
-models is often complicated when the analysed data-sets are high-dimensional 
-and less observations than variables are available ($n \ll p$). 
-For these scenarios methods utilizing a priori knowledge, e.g. in the form of 
-biological networks, have been proposed, arguing that this information might 
-provide better estimates for regression coefficients. Recently several 
-network-based regularization techniques have been proposed 
-[@li2008network, @kim2013network, @cheng2014graph].
+## Installation
 
-`netReg` provides a highly-efficient implementation of these graph-penalized 
-regression model. The models introduce a priori generated biological graph 
-information into generalized linear models yielding sparse or smooth solutions 
-for regression coefficients.  
+You have two options for installing the command line tool. You can either
 
-`netReg` computes coefficients using \textit{cyclic coordinate descent} as 
-previously introduced [@fu1998penalized, @friedman2007pathwise], 
-[@friedman2010regularization]. The package is an R-wrapper to an external C++ 
-library that uses \texttt{RcppArmadillo} [@eddelbuettel2014rcpparmadillo] for 
-fast matrix calculations and \texttt{dlib} [@king2009dlib] for gradient-free 
-convex optimization for model selection.
+* use [bioconda](https://anaconda.org/bioconda/netreg),
+* or install the tool manually.
 
-## Edgenet tutorial
+### Installation with bioconda
 
-This section explains how to fit a linear model and do parameter estimation 
-using `edgenet`-regularization. The model is a truncated version from 
-[@cheng2014graph] that is able to introduce prior graphs for the design and 
-response matrices for penalization.
+The best way to install `netReg` is using *conda*. 
+For that you should download [Anaconda](https://www.continuum.io/downloads) and create a [virtual environment](https://conda.io/docs/using/envs.html).
+Then install the tool using:
 
-At first we generate some toy data randomly:
-
-```{r}
-    set.seed(23)
-    X <- matrix(rnorm(1000*5), 1000)
-    Y <- matrix(rnorm(1000*5), 1000)
+```sh
+  conda install -c bioconda netreg
+  
+  netReg -h
 ```
 
-Then we load the `netReg` library:
+This would install the package from the *bioconda* channel (a highly recommented platform) and then test if the tool is installed.
 
-```{r}
-    library(netReg)
+### Manual installation
+
+Alternatively you can of course install `netReg` manually. The **command line tool has the following dependencies**:
+
+* `CMake >= 3.6`,
+* `Boost >= 1.6.x`,
+* `Armadillo >= 7.800.3`,
+* `OpenBLAS/BLAS` and `Lapack` (older versions should work),
+* *optional*: `OpenMP` (older versions should work).
+
+Then download the tarball of the latest [release](https://github.com/dirmeier/netReg/releases/). We use `CMake` for building the package. You can use it like this:
+
+```sh
+  mkdir build && cd build
+  cmake .. && make
+  
+  ./netReg -h
 ```
 
-For `edgenet` we need to create an affinity matrix for the co-variables first. 
-We also can create a graph for the responses, but this is not necessary to
-demonstrate the method. We could create a random graph like this:
+This builds the package in folder `build` and then tests if the package is installed. 
+In case you want to install it properly subsequently use:
 
-```{r}
-    aff.mat <- matrix(rbeta(25, 1, 5),  5)
-    aff.mat <- (t(aff.mat) + aff.mat) / 2
-    diag(aff.mat) <- 0
+```sh
+  (sudo) make install --prefix=/some/path
 ```
 
-We created the affinity matrix absolutely random, although in practice a *real*
-(biological) observed affinity matrix should be used, because in the end the 
-affinity matrix decides the shrinkage of the coefficients.
+## Usage
 
-### Model fitting
+This section explains how to fit a linear model and do parameter estimation. 
+Using the command line tool is rather straightforward. First let's call `netReg` without parameters to 
+see how it is used:
 
-Fitting a model using edge-based regularization with `netReg` is easy:
+```sh
+  netReg -h
+  
+  netReg - a network-regularized generalized regression model
 
-```{r}
-    fit <- edgenet(X=X, Y=Y, G.X=aff.mat, lambda=1, psigx=1, family="gaussian")
-    print(fit)
+  Arguments:
+    -h [ --help ]                        Print this help.
+    -d [ --design ] arg                  Filename of the design matrix X.
+    -u [ --gx ] arg                      Filename of the affinity matrix GX for X.
+    -r [ --reponse ] arg                 Filename of the reponse matrix Y.
+    -v [ --gy ] arg                      Filename of the affinity matrix GY for Y.
+    -l [ --lambda ] arg (=1)             LASSO penalization parameter.
+    -s [ --psi ] arg (=0)                Penalization parameter for affinity
+                                         matrix GX.
+    -x [ --xi ] arg (=0)                 Penalization parameter for affinity
+                                         matrix GY.
+    -m [ --maxit ] arg (=100000)         Maximum number of iterations of
+                                         coordinate descent. You should choose a
+                                         sufficiently large number.
+    -t [ --threshold ] arg (=0.0000001)  Convergence threshold for coordinate
+                                         descent. Anything below 0.0001 should
+                                         suffice.
+    -o [ --outfile ] arg                 Filename of the output file.
+    
+    Model selection:
+    --modelselection                     Use modelselection, i.e. estimation of
+                                         optimal shrinkage parameters using
+                                         crossvalition, before doing the
+                                         estimation of coefficients.
+    -n [ --nfolds ] arg (=10)            The number of cross-validation folds.
+                                         This can be maximal the number of rows
+                                         of X/Y and minimal 3.
+    -e [ --epsilon ] arg (=0.001)        Convergence threshold for the BOBYQA
+                                         algorithm, i.e. the stop criterion for
+                                         the model selection.
+    -b [ --bobit ] arg (=1000)           Maximal number of iterations for the
+                                         BOBYQA algorithm.
 ```
 
-In this case we used a single affinity matrix `G.X` which represents the
-relationship of the covariables $\mathit{X}$. If the design matrix has $p$ 
-variables, `G.X` has to be an $(p \times p)$-dimensional symmetric matrix. 
-We can also include a matrix for the response matrix `Y` with $q$ dependent 
-variables. In that case the affinity matrix `G.Y` has to be 
-$(q \times q)$-dimensional (and also symmetric).
+This gives a list of required arguments. We have provided some example data files in the GitHub
+repository [here](https://github.com/dirmeier/netReg/tree/master/data) to test the package.
 
-The `fit` object contains information about coefficients, intercepts, 
-residuals, etc. Having the coefficients estimated we are able to
-predict novel data-sets:
+### Examples
 
-```{r}
-    X.new <- matrix(rnorm(10*5),10)
-    pred  <- predict(fit, X.new)
+An exemplary call could look like this:
+
+```sh
+  netReg -d X.tsv -r Y.tsv -v GY.tsv 
+         -l 10 -x 1 --maxit 1000 --threshold 0.0001 
+         -o outfile.tsv
 ```
 
-The `pred` objects contains the predicted values for the responses.
+In this example we use a design matrix given in `X.tsv` and response matrix `Y.tsv`. For the response variables we use an affinity matrix that represents *biological relationships* with `GY.tsv`. We promote sparsity by setting $\lambda = 10$ and put a week penalty on similar coefficients by setting $\xi = 1 $. We stop the algorithm after maximal $1000$ iterations or if a convergence threshold of $0.0001$ is reached. The coefficients are written to `outfile.tsv`.
 
-### Model selection
+Usually we don't know these parameters, but need to estimate them such that the correct parameterization gives us the *best* model. In that case we would call
 
-In most cases we do not have the optimal shrinkage parameters $\lambda$, 
-$\psi_{gx}$ and $\psi_{gy}$. For these settings you can use `netReg`'s 
-included model selection. We use Powell's BOBYQA algorithm 
-([@powell2009bobyqa]) for gradient-free optimization that is included in the
-`C++` library `Dlib`. Doing the model selection only requires calling 
-`cv.edgnet`:
-
-```{r}
-    cv <- cv.edgenet(X=X, Y=Y, G.X=aff.mat, family="gaussian", maxit=1000)
-    print(cv)
+```sh
+  netReg --modelselection 
+         -d X.tsv -r Y.tsv -v GY.tsv 
+         -b 100 
+         -o outfile.tsv
 ```
 
-You can use the fitted parameters for the normal `edgenet` function. 
-In this scenario $\lambda$, $\psi_{gx}$ and $\psi_{gy}$ should be 
-roughly $0$ for three reasons:
-
-* we had enough data and a small number of covariables ($n > p$), so we can 
-find the *BLUE* estimator,
-* we created `X` and `Y` independent of each other,
-* our prior graph `aff.mat` had little weight.
-
-Let's do a scenario where we need to shrink some coefficients, i.e. $n \ll p$.
-We choose a small $p$, such that the computation does not take too long.
-
-```{r}
-    p <- 25
-    X <- matrix(rnorm(10*p), 10)
-    Y <- matrix(rnorm(10*p), 10)
-    aff.mat <- matrix(rgamma(p * p, 5, 1), p)
-    aff.mat <- (t(aff.mat) + aff.mat)
-    diag(aff.mat) <- 0
-    cv <- cv.edgenet(X=X, Y=Y, G.X=aff.mat, family="gaussian", maxit=1000)
-    print(cv)
-```
-
-In the above example $\lambda$ should have changed quite a bit, while
-$\psi_{gy}$ should still be $0$. Since we generated `aff.mat` randomly 
-$\psi_{gx}$ should be roughly (or exact) zero as well. This makes sense 
-intuitively since we did not put any biological relationships into the 
-affinity matrices.
+This estimates $\lambda$ and $\xi$ and writes them to `outfile.tsv`. 
+Since we did not provide an affinity matrix for the design matrix we do not estimate $\psi$. The optimization uses the `BOBYQA` algorithm by Powell [@powell2009bobyqa]. Since for such a complex likelihood as we use it this takes time, we only iterate `BOBYQA` $100$ times here. Other than that we use default parameters here.
 
 ## References

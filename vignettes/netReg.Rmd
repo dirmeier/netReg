@@ -27,16 +27,16 @@ provide better estimates for regression coefficients. Recently several
 network-based regularization techniques have been proposed 
 [@li2008network, @kim2013network, @cheng2014graph].
 
-`netReg` provides a highly-efficient implementation of these graph-penalized 
+`netReg` provides an efficient implementation of these graph-penalized 
 regression model. The models introduce a priori generated biological graph 
 information into generalized linear models yielding sparse or smooth solutions 
 for regression coefficients.  
 
 `netReg` computes coefficients using \textit{cyclic coordinate descent} as 
 previously introduced [@fu1998penalized, @friedman2007pathwise], 
-[@friedman2010regularization]. The package is an R-wrapper to an external C++ 
-library that uses \texttt{RcppArmadillo} [@eddelbuettel2014rcpparmadillo] for 
-fast matrix calculations and \texttt{dlib} [@king2009dlib] for gradient-free 
+[@friedman2010regularization]. The package is an `R`-wrapper to an external `C++` 
+library that uses `RcppArmadillo` [@eddelbuettel2014rcpparmadillo] for 
+fast matrix calculations and `Dlib` [@king2009dlib] for gradient-free 
 convex optimization for model selection.
 
 ## Edgenet tutorial

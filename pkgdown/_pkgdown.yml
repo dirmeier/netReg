@@ -2,8 +2,6 @@ navbar:
   title: "netReg"
   type: inverse
   left:
-    - text: "Home"
-      href: index.html
     - text: "R"
       href: articles/netReg_R.html
     - text: "C++"

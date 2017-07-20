@@ -4,7 +4,7 @@ This file explains the available data sets.
 
 * `X.tsv` is a `(n x p)` matrix of genetic markers where `n` is the number of samples (112) and `p` is the number of markers. The data has been taken from Brem <i>et al.</i>, Nature (2005).
 * `Y.tsv` is a `(n x q)` matrix of expression values for `q` yeast genes. `n` is again the numer of samples (112).
-* `GY.tsv is a `(q x q)` adjacency matrix representing protein-protein interactions for the `q` response variables.
+* `GY.tsv` is a `(q x q)` adjacency matrix representing protein-protein interactions for the `q` response variables.
 
 
 ## References

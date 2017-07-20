@@ -30,9 +30,6 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../index.html">Home</a>
-</li>
-<li>
   <a href="../articles/netReg_R.html">R</a>
 </li>
 <li>
@@ -68,133 +65,110 @@
     
     
 <div class="contents">
-<div id="introduction" class="section level2">
+<p>This document explains how to install and use the <code>netReg</code> command line tool.</p>
+<div id="installation" class="section level2">
 <h2 class="hasAnchor">
-<a href="#introduction" class="anchor"></a>Introduction</h2>
-<p>Modelling biological associations or dependencies using linear regression models is often complicated when the analysed data-sets are high-dimensional and less observations than variables are available (<span class="math inline">\(n \ll p\)</span>). For these scenarios methods utilizing a priori knowledge, e.g. in the form of biological networks, have been proposed, arguing that this information might provide better estimates for regression coefficients. Recently several network-based regularization techniques have been proposed <span class="citation">(C. Li and Li 2008, <span class="citation">Kim, Pan, and Shen (2013)</span>, <span class="citation">Cheng et al. (2014)</span>)</span>.</p>
-<p><code>netReg</code> provides a highly-efficient implementation of these graph-penalized regression model. The models introduce a priori generated biological graph information into generalized linear models yielding sparse or smooth solutions for regression coefficients.</p>
-<p><code>netReg</code> computes coefficients using  as previously introduced <span class="citation">(Fu 1998, <span class="citation">Friedman et al. (2007)</span>)</span>, <span class="citation">(Friedman, Hastie, and Tibshirani 2010)</span>. The package is an R-wrapper to an external C++ library that uses  <span class="citation">(Eddelbuettel and Sanderson 2014)</span> for fast matrix calculations and  <span class="citation">(King 2009)</span> for gradient-free convex optimization for model selection.</p>
-</div>
-<div id="edgenet-tutorial" class="section level2">
-<h2 class="hasAnchor">
-<a href="#edgenet-tutorial" class="anchor"></a>Edgenet tutorial</h2>
-<p>This section explains how to fit a linear model and do parameter estimation using <code>edgenet</code>-regularization. The model is a truncated version from <span class="citation">(Cheng et al. 2014)</span> that is able to introduce prior graphs for the design and response matrices for penalization.</p>
-<p>At first we generate some toy data randomly:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">    <span class="kw">set.seed</span>(<span class="dv">23</span>)
-    X &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="dv">1000</span>*<span class="dv">5</span>), <span class="dv">1000</span>)
-    Y &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="dv">1000</span>*<span class="dv">5</span>), <span class="dv">1000</span>)</code></pre></div>
-<p>Then we load the <code>netReg</code> library:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">    <span class="kw">library</span>(netReg)</code></pre></div>
-<p>For <code>edgenet</code> we need to create an affinity matrix for the co-variables first. We also can create a graph for the responses, but this is not necessary to demonstrate the method. We could create a random graph like this:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">    aff.mat &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rbeta</span>(<span class="dv">25</span>, <span class="dv">1</span>, <span class="dv">5</span>),  <span class="dv">5</span>)
-    aff.mat &lt;-<span class="st"> </span>(<span class="kw">t</span>(aff.mat) +<span class="st"> </span>aff.mat) /<span class="st"> </span><span class="dv">2</span>
-    <span class="kw">diag</span>(aff.mat) &lt;-<span class="st"> </span><span class="dv">0</span></code></pre></div>
-<p>We created the affinity matrix absolutely random, although in practice a <em>real</em> (biological) observed affinity matrix should be used, because in the end the affinity matrix decides the shrinkage of the coefficients.</p>
-<div id="model-fitting" class="section level3">
-<h3 class="hasAnchor">
-<a href="#model-fitting" class="anchor"></a>Model fitting</h3>
-<p>Fitting a model using edge-based regularization with <code>netReg</code> is easy:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">    fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/edgenet.html">edgenet</a></span>(<span class="dt">X=</span>X, <span class="dt">Y=</span>Y, <span class="dt">G.X=</span>aff.mat, <span class="dt">lambda=</span><span class="dv">1</span>, <span class="dt">psigx=</span><span class="dv">1</span>, <span class="dt">family=</span><span class="st">"gaussian"</span>)
-    <span class="kw">print</span>(fit)</code></pre></div>
-<pre><code>## 
-## Call: edgenet.default(X = X, Y = Y, G.X = aff.mat, lambda = 1, psigx = 1, 
-##     family = "gaussian")
-## 
-## Coefficients:
-##             [,1]         [,2]          [,3]        [,4]         [,5]
-## [1,]  0.01497323  0.015657011  0.0006453391  0.04699207 -0.009302215
-## [2,] -0.01076841  0.069246936 -0.0876302568 -0.00405287 -0.007441449
-## [3,] -0.02396619 -0.006507272  0.0244506149  0.02685324 -0.014316626
-## [4,]  0.00000000 -0.039063322 -0.0301731092 -0.02050031  0.001355670
-## [5,]  0.04213578  0.021257125  0.0242694757 -0.02222326 -0.008547463
-## Intercept:
-##              [,1]
-## [1,]  0.019672657
-## [2,] -0.047832210
-## [3,] -0.004606925
-## [4,] -0.025844237
-## [5,]  0.032155794
-## Parameters:
-## lambda psi_gx psi_gy 
-##      1      1      0 
-## Family:
-## [1] "gaussian"</code></pre>
-<p>In this case we used a single affinity matrix <code>G.X</code> which represents the relationship of the covariables <span class="math inline">\(\mathit{X}\)</span>. If the design matrix has <span class="math inline">\(p\)</span> variables, <code>G.X</code> has to be an <span class="math inline">\((p \times p)\)</span>-dimensional symmetric matrix. We can also include a matrix for the response matrix <code>Y</code> with <span class="math inline">\(q\)</span> dependent variables. In that case the affinity matrix <code>G.Y</code> has to be <span class="math inline">\((q \times q)\)</span>-dimensional (and also symmetric).</p>
-<p>The <code>fit</code> object contains information about coefficients, intercepts, residuals, etc. Having the coefficients estimated we are able to predict novel data-sets:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">    X.new &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="dv">10</span>*<span class="dv">5</span>),<span class="dv">10</span>)
-    pred  &lt;-<span class="st"> </span><span class="kw">predict</span>(fit, X.new)</code></pre></div>
-<p>The <code>pred</code> objects contains the predicted values for the responses.</p>
-</div>
-<div id="model-selection" class="section level3">
-<h3 class="hasAnchor">
-<a href="#model-selection" class="anchor"></a>Model selection</h3>
-<p>In most cases we do not have the optimal shrinkage parameters <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(\psi_{gx}\)</span> and <span class="math inline">\(\psi_{gy}\)</span>. For these settings you can use <code>netReg</code>’s included model selection. We use Powell’s BOBYQA algorithm (<span class="citation">(Powell 2009)</span>) for gradient-free optimization that is included in the <code>C++</code> library <code>Dlib</code>. Doing the model selection only requires calling <code>cv.edgnet</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">    cv &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cv.edgenet.html">cv.edgenet</a></span>(<span class="dt">X=</span>X, <span class="dt">Y=</span>Y, <span class="dt">G.X=</span>aff.mat, <span class="dt">family=</span><span class="st">"gaussian"</span>, <span class="dt">maxit=</span><span class="dv">1000</span>)
-    <span class="kw">print</span>(cv)</code></pre></div>
-<pre><code>## 
-## Call: cv.edgenet.default(X = X, Y = Y, G.X = aff.mat, maxit = 1000, 
-##     family = "gaussian")
-## 
-## Parameters:
-## lambda  psigx  psigy 
-##      0      0      0 
-## Family:
-## [1] "gaussian"</code></pre>
-<p>You can use the fitted parameters for the normal <code>edgenet</code> function. In this scenario <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(\psi_{gx}\)</span> and <span class="math inline">\(\psi_{gy}\)</span> should be roughly <span class="math inline">\(0\)</span> for three reasons:</p>
+<a href="#installation" class="anchor"></a>Installation</h2>
+<p>You have two options for installing the command line tool. You can either</p>
 <ul>
-<li>we had enough data and a small number of covariables (<span class="math inline">\(n &gt; p\)</span>), so we can find the <em>BLUE</em> estimator,</li>
-<li>we created <code>X</code> and <code>Y</code> independent of each other,</li>
-<li>our prior graph <code>aff.mat</code> had little weight.</li>
+<li>use <a href="https://anaconda.org/bioconda/netreg">bioconda</a>,</li>
+<li>or install the tool manually.</li>
 </ul>
-<p>Let’s do a scenario where we need to shrink some coefficients, i.e. <span class="math inline">\(n \ll p\)</span>. We choose a small <span class="math inline">\(p\)</span>, such that the computation does not take too long.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">    p &lt;-<span class="st"> </span><span class="dv">25</span>
-    X &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="dv">10</span>*p), <span class="dv">10</span>)
-    Y &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="dv">10</span>*p), <span class="dv">10</span>)
-    aff.mat &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rgamma</span>(p *<span class="st"> </span>p, <span class="dv">5</span>, <span class="dv">1</span>), p)
-    aff.mat &lt;-<span class="st"> </span>(<span class="kw">t</span>(aff.mat) +<span class="st"> </span>aff.mat)
-    <span class="kw">diag</span>(aff.mat) &lt;-<span class="st"> </span><span class="dv">0</span>
-    cv &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cv.edgenet.html">cv.edgenet</a></span>(<span class="dt">X=</span>X, <span class="dt">Y=</span>Y, <span class="dt">G.X=</span>aff.mat, <span class="dt">family=</span><span class="st">"gaussian"</span>, <span class="dt">maxit=</span><span class="dv">1000</span>)
-    <span class="kw">print</span>(cv)</code></pre></div>
-<pre><code>## 
-## Call: cv.edgenet.default(X = X, Y = Y, G.X = aff.mat, maxit = 1000, 
-##     family = "gaussian")
-## 
-## Parameters:
-##   lambda    psigx    psigy 
-## 6.882653 0.000000 0.000000 
-## Family:
-## [1] "gaussian"</code></pre>
-<p>In the above example <span class="math inline">\(\lambda\)</span> should have changed quite a bit, while <span class="math inline">\(\psi_{gy}\)</span> should still be <span class="math inline">\(0\)</span>. Since we generated <code>aff.mat</code> randomly <span class="math inline">\(\psi_{gx}\)</span> should be roughly (or exact) zero as well. This makes sense intuitively since we did not put any biological relationships into the affinity matrices.</p>
+<div id="installation-with-bioconda" class="section level3">
+<h3 class="hasAnchor">
+<a href="#installation-with-bioconda" class="anchor"></a>Installation with bioconda</h3>
+<p>The best way to install <code>netReg</code> is using <em>conda</em>. For that you should download <a href="https://www.continuum.io/downloads">Anaconda</a> and create a <a href="https://conda.io/docs/using/envs.html">virtual environment</a>. Then install the tool using:</p>
+<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash">  <span class="kw">conda</span> install -c bioconda netreg
+  
+  <span class="kw">netReg</span> -h</code></pre></div>
+<p>This would install the package from the <em>bioconda</em> channel (a highly recommented platform) and then test if the tool is installed.</p>
+</div>
+<div id="manual-installation" class="section level3">
+<h3 class="hasAnchor">
+<a href="#manual-installation" class="anchor"></a>Manual installation</h3>
+<p>Alternatively you can of course install <code>netReg</code> manually. The <strong>command line tool has the following dependencies</strong>:</p>
+<ul>
+<li>
+<code>CMake &gt;= 3.6</code>,</li>
+<li>
+<code>Boost &gt;= 1.6.x</code>,</li>
+<li>
+<code>Armadillo &gt;= 7.800.3</code>,</li>
+<li>
+<code>OpenBLAS/BLAS</code> and <code>Lapack</code> (older versions should work),</li>
+<li>
+<em>optional</em>: <code>OpenMP</code> (older versions should work).</li>
+</ul>
+<p>Then download the tarball of the latest <a href="https://github.com/dirmeier/netReg/releases/">release</a>. We use <code>CMake</code> for building the package. You can use it like this:</p>
+<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash">  <span class="kw">mkdir</span> build <span class="kw">&amp;&amp;</span> <span class="kw">cd</span> build
+  <span class="kw">cmake</span> .. <span class="kw">&amp;&amp;</span> <span class="kw">make</span>
+  
+  <span class="kw">./netReg</span> -h</code></pre></div>
+<p>This builds the package in folder <code>build</code> and then tests if the package is installed. In case you want to install it properly subsequently use:</p>
+<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash">  <span class="kw">(sudo)</span> <span class="kw">make</span> install --prefix=/some/path</code></pre></div>
+</div>
+</div>
+<div id="usage" class="section level2">
+<h2 class="hasAnchor">
+<a href="#usage" class="anchor"></a>Usage</h2>
+<p>This section explains how to fit a linear model and do parameter estimation. Using the command line tool is rather straightforward. First let’s call <code>netReg</code> without parameters to see how it is used:</p>
+<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash">  <span class="kw">netReg</span> -h
+  
+  <span class="kw">netReg</span> - a network-regularized generalized regression model
+
+  <span class="kw">Arguments</span>:
+    <span class="kw">-h</span> [ --help ]                        Print this help.
+    <span class="kw">-d</span> [ --design ] arg                  Filename of the design matrix X.
+    <span class="kw">-u</span> [ --gx ] arg                      Filename of the affinity matrix GX for X.
+    <span class="kw">-r</span> [ --reponse ] arg                 Filename of the reponse matrix Y.
+    <span class="kw">-v</span> [ --gy ] arg                      Filename of the affinity matrix GY for Y.
+    <span class="kw">-l</span> [ --lambda ] arg (=1)             <span class="kw">LASSO</span> penalization parameter.
+    <span class="kw">-s</span> [ --psi ] arg (=0)                <span class="kw">Penalization</span> parameter for affinity
+                                         <span class="kw">matrix</span> GX.
+    <span class="kw">-x</span> [ --xi ] arg (=0)                 <span class="kw">Penalization</span> parameter for affinity
+                                         <span class="kw">matrix</span> GY.
+    <span class="kw">-m</span> [ --maxit ] arg (=100000)         <span class="kw">Maximum</span> number of iterations of
+                                         <span class="kw">coordinate</span> descent. You should choose a
+                                         <span class="kw">sufficiently</span> large number.
+    <span class="kw">-t</span> [ --threshold ] arg (=0.0000001)  <span class="kw">Convergence</span> threshold for coordinate
+                                         <span class="kw">descent.</span> Anything below 0.0001 should
+                                         <span class="kw">suffice.</span>
+    <span class="kw">-o</span> [ --outfile ] arg                 Filename of the output file.
+    
+    <span class="kw">Model</span> selection:
+    <span class="kw">--modelselection</span>                     Use modelselection, i.e. estimation of
+                                         <span class="kw">optimal</span> shrinkage parameters using
+                                         <span class="kw">crossvalition</span>, before doing the
+                                         <span class="kw">estimation</span> of coefficients.
+    <span class="kw">-n</span> [ --nfolds ] arg (=10)            <span class="kw">The</span> number of cross-validation folds.
+                                         <span class="kw">This</span> can be maximal the number of rows
+                                         <span class="kw">of</span> X/Y and minimal 3.
+    <span class="kw">-e</span> [ --epsilon ] arg (=0.001)        <span class="kw">Convergence</span> threshold for the BOBYQA
+                                         <span class="kw">algorithm</span>, i.e. the stop criterion for
+                                         <span class="kw">the</span> model selection.
+    <span class="kw">-b</span> [ --bobit ] arg (=1000)           <span class="kw">Maximal</span> number of iterations for the
+                                         <span class="kw">BOBYQA</span> algorithm.</code></pre></div>
+<p>This gives a list of required arguments. We have provided some example data files in the GitHub repository <a href="https://github.com/dirmeier/netReg/tree/master/data">here</a> to test the package.</p>
+<div id="examples" class="section level3">
+<h3 class="hasAnchor">
+<a href="#examples" class="anchor"></a>Examples</h3>
+<p>An exemplary call could look like this:</p>
+<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash">  <span class="kw">netReg</span> -d X.tsv -r Y.tsv -v GY.tsv 
+         <span class="kw">-l</span> 10 -x 1 --maxit 1000 --threshold 0.0001 
+         <span class="kw">-o</span> outfile.tsv</code></pre></div>
+<p>In this example we use a design matrix given in <code>X.tsv</code> and response matrix <code>Y.tsv</code>. For the response variables we use an affinity matrix that represents <em>biological relationships</em> with <code>GY.tsv</code>. We promote sparsity by setting <span class="math inline">\(\lambda = 10\)</span> and put a week penalty on similar coefficients by setting $= 1 $. We stop the algorithm after maximal <span class="math inline">\(1000\)</span> iterations or if a convergence threshold of <span class="math inline">\(0.0001\)</span> is reached. The coefficients are written to <code>outfile.tsv</code>.</p>
+<p>Usually we don’t know these parameters, but need to estimate them such that the correct parameterization gives us the <em>best</em> model. In that case we would call</p>
+<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash">  <span class="kw">netReg</span> --modelselection 
+         <span class="kw">-d</span> X.tsv -r Y.tsv -v GY.tsv 
+         <span class="kw">-b</span> 100 
+         <span class="kw">-o</span> outfile.tsv</code></pre></div>
+<p>This estimates <span class="math inline">\(\lambda\)</span> and <span class="math inline">\(\xi\)</span> and writes them to <code>outfile.tsv</code>. Since we did not provide an affinity matrix for the design matrix we do not estimate <span class="math inline">\(\psi\)</span>. The optimization uses the <code>BOBYQA</code> algorithm by Powell <span class="citation">(Powell 2009)</span>. Since for such a complex likelihood as we use it this takes time, we only iterate <code>BOBYQA</code> <span class="math inline">\(100\)</span> times here. Other than that we use default parameters here.</p>
 </div>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h2>
 <div id="refs" class="references">
-<div id="ref-cheng2014graph">
-<p>Cheng, Wei, Xiang Zhang, Zhishan Guo, Yu Shi, and Wei Wang. 2014. “Graph-Regularized Dual Lasso for Robust EQTL Mapping.” <em>Bioinformatics</em> 30 (12). Oxford Univ Press: i139–i148.</p>
-</div>
-<div id="ref-eddelbuettel2014rcpparmadillo">
-<p>Eddelbuettel, Dirk, and Conrad Sanderson. 2014. “RcppArmadillo: Accelerating R with High-Performance C++ Linear Algebra.” <em>Computational Statistics &amp; Data Analysis</em> 71. Elsevier: 1054–63.</p>
-</div>
-<div id="ref-friedman2010regularization">
-<p>Friedman, Jerome, Trevor Hastie, and Rob Tibshirani. 2010. “Regularization Paths for Generalized Linear Models via Coordinate Descent.” <em>Journal of Statistical Software</em> 33 (1). NIH Public Access: 1.</p>
-</div>
-<div id="ref-friedman2007pathwise">
-<p>Friedman, Jerome, Trevor Hastie, Holger Höfling, Robert Tibshirani, and others. 2007. “Pathwise Coordinate Optimization.” <em>The Annals of Applied Statistics</em> 1 (2). Institute of Mathematical Statistics: 302–32.</p>
-</div>
-<div id="ref-fu1998penalized">
-<p>Fu, Wenjiang J. 1998. “Penalized Regressions: The Bridge Versus the Lasso.” <em>Journal of Computational and Graphical Statistics</em> 7 (3). Taylor &amp; Francis: 397–416.</p>
-</div>
-<div id="ref-kim2013network">
-<p>Kim, Sunkyung, Wei Pan, and Xiaotong Shen. 2013. “Network-Based Penalized Regression with Application to Genomic Data.” <em>Biometrics</em> 69 (3). Wiley Online Library: 582–93.</p>
-</div>
-<div id="ref-king2009dlib">
-<p>King, Davis E. 2009. “Dlib-Ml: A Machine Learning Toolkit.” <em>Journal of Machine Learning Research</em> 10 (Jul): 1755–8.</p>
-</div>
-<div id="ref-li2008network">
-<p>Li, Caiyan, and Hongzhe Li. 2008. “Network-Constrained Regularization and Variable Selection for Analysis of Genomic Data.” <em>Bioinformatics</em> 24 (9). Oxford Univ Press: 1175–82.</p>
-</div>
 <div id="ref-powell2009bobyqa">
 <p>Powell, Michael JD. 2009. “The Bobyqa Algorithm for Bound Constrained Optimization Without Derivatives.” <em>Cambridge NA Report NA2009/06, University of Cambridge, Cambridge</em>. Citeseer.</p>
 </div>
@@ -208,8 +182,8 @@
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-<li><a href="#introduction">Introduction</a></li>
-      <li><a href="#edgenet-tutorial">Edgenet tutorial</a></li>
+<li><a href="#installation">Installation</a></li>
+      <li><a href="#usage">Usage</a></li>
       <li><a href="#references">References</a></li>
       </ul>
 </div>

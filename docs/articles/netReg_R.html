@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>netReg • netReg</title>
+<title>netReg R tutorial • netReg</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
@@ -29,9 +29,6 @@
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">Home</a>
-</li>
 <li>
   <a href="../articles/netReg_R.html">R</a>
 </li>
@@ -61,64 +58,58 @@
       </header><div class="row">
   <div class="col-md-9">
     <div class="page-header toc-ignore">
-      <h1>netReg</h1>
+      <h1>netReg R tutorial</h1>
             
           </div>
 
     
     
 <div class="contents">
-<div id="introduction" class="section level2">
+<p>This document explains how to install and use the <code>R</code> package.</p>
+<div id="installation" class="section level2">
 <h2 class="hasAnchor">
-<a href="#introduction" class="anchor"></a>Introduction</h2>
-<p>Modelling biological associations or dependencies using linear regression models is often complicated when the analysed data-sets are high-dimensional and less observations than variables are available (<span class="math inline">\(n \ll p\)</span>). For these scenarios methods utilizing a priori knowledge, e.g. in the form of biological networks, have been proposed, arguing that this information might provide better estimates for regression coefficients. Recently several network-based regularization techniques have been proposed <span class="citation">(C. Li and Li 2008, <span class="citation">Kim, Pan, and Shen (2013)</span>, <span class="citation">Cheng et al. (2014)</span>)</span>.</p>
-<p><code>netReg</code> provides a highly-efficient implementation of these graph-penalized regression model. The models introduce a priori generated biological graph information into generalized linear models yielding sparse or smooth solutions for regression coefficients.</p>
-<p><code>netReg</code> computes coefficients using  as previously introduced <span class="citation">(Fu 1998, <span class="citation">Friedman et al. (2007)</span>)</span>, <span class="citation">(Friedman, Hastie, and Tibshirani 2010)</span>. The package is an R-wrapper to an external C++ library that uses  <span class="citation">(Eddelbuettel and Sanderson 2014)</span> for fast matrix calculations and  <span class="citation">(King 2009)</span> for gradient-free convex optimization for model selection.</p>
+<a href="#installation" class="anchor"></a>Installation</h2>
+<p>You can install and use <code>netReg</code> either</p>
+<ul>
+<li>as an <code>R</code> library from <a href="https://bioconductor.org/packages/release/bioc/html/netReg.html">Bioconductor</a>,</li>
+<li>or by downloading the <code>tarball</code>.</li>
+</ul>
+<div id="installation-with-bioconductor" class="section level3">
+<h3 class="hasAnchor">
+<a href="#installation-with-bioconductor" class="anchor"></a>Installation with Bioconductor</h3>
+<p>The easiest way to install <code>netReg</code> is using the <code>R</code>-console:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  <span class="kw">source</span>(<span class="st">"https://bioconductor.org/biocLite.R"</span>)
+  <span class="kw">biocLite</span>(<span class="st">"netReg"</span>)
+  
+  <span class="kw">library</span>(netReg)</code></pre></div>
 </div>
-<div id="edgenet-tutorial" class="section level2">
+<div id="manual-installation" class="section level3">
+<h3 class="hasAnchor">
+<a href="#manual-installation" class="anchor"></a>Manual installation</h3>
+<p>If you want to build the package yourself first download the <code>tarball</code> of the latest <a href="https://github.com/dirmeier/netReg/releases/">release</a> and then call:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">  <span class="kw">R</span> CMD install <span class="kw">&lt;</span>netReg-x.y.z.tar.gz<span class="kw">&gt;</span></code></pre></div>
+<p>That’s it.</p>
+</div>
+</div>
+<div id="usage" class="section level2">
 <h2 class="hasAnchor">
-<a href="#edgenet-tutorial" class="anchor"></a>Edgenet tutorial</h2>
-<p>This section explains how to fit a linear model and do parameter estimation using <code>edgenet</code>-regularization. The model is a truncated version from <span class="citation">(Cheng et al. 2014)</span> that is able to introduce prior graphs for the design and response matrices for penalization.</p>
-<p>At first we generate some toy data randomly:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">    <span class="kw">set.seed</span>(<span class="dv">23</span>)
-    X &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="dv">1000</span>*<span class="dv">5</span>), <span class="dv">1000</span>)
-    Y &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="dv">1000</span>*<span class="dv">5</span>), <span class="dv">1000</span>)</code></pre></div>
-<p>Then we load the <code>netReg</code> library:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">    <span class="kw">library</span>(netReg)</code></pre></div>
-<p>For <code>edgenet</code> we need to create an affinity matrix for the co-variables first. We also can create a graph for the responses, but this is not necessary to demonstrate the method. We could create a random graph like this:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">    aff.mat &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rbeta</span>(<span class="dv">25</span>, <span class="dv">1</span>, <span class="dv">5</span>),  <span class="dv">5</span>)
-    aff.mat &lt;-<span class="st"> </span>(<span class="kw">t</span>(aff.mat) +<span class="st"> </span>aff.mat) /<span class="st"> </span><span class="dv">2</span>
-    <span class="kw">diag</span>(aff.mat) &lt;-<span class="st"> </span><span class="dv">0</span></code></pre></div>
-<p>We created the affinity matrix absolutely random, although in practice a <em>real</em> (biological) observed affinity matrix should be used, because in the end the affinity matrix decides the shrinkage of the coefficients.</p>
+<a href="#usage" class="anchor"></a>Usage</h2>
+<p>This section explains how to fit a linear model and do parameter estimation.</p>
+<p>At first we load the library and some data:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  &gt;<span class="st"> </span><span class="kw">library</span>(netReg)
+  &gt;<span class="st"> </span><span class="kw">data</span>(<span class="st">"yeast"</span>)
+  
+  &gt;<span class="st"> </span><span class="kw">ls</span>(yeast)
+  &gt;<span class="st"> </span>[<span class="dv">1</span>] <span class="st">"GY"</span> <span class="st">"X"</span>  <span class="st">"Y"</span> </code></pre></div>
+<p>The <code>yeast</code> data <code>X</code> and <code>Y</code> set is taken and adopted from <span class="citation">(Brem et al. 2005)</span>, <span class="citation">(Storey, Akey, and Kruglyak 2005)</span>, and <span class="citation">(Cheng et al. 2014)</span>. <span class="math inline">\(\mathbf{GY}\)</span> is taken from <a href="https://thebiogrid.org/downloads/archives/Release%20Archive/BIOGRID-3.4.150/BIOGRID-ORGANISM-3.4.150.tab.zip">BioGRID</a>. <code>X</code> is a <code>(n x p)</code> matrix of genetic markers where <code>n</code> is the number of samples (112) and <code>p</code> is the number of markers. The data has been taken from Brem <i>et al.</i>, Nature (2005). * <code>Y</code> is a <code>(n x q)</code> matrix of expression values for <code>q</code> yeast genes. <code>n</code> is again the numer of samples (112). * <code>GY</code> is a <code>(q x q)</code> adjacency matrix representing protein-protein interactions for the <code>q</code> response variables.</p>
 <div id="model-fitting" class="section level3">
 <h3 class="hasAnchor">
 <a href="#model-fitting" class="anchor"></a>Model fitting</h3>
 <p>Fitting a model using edge-based regularization with <code>netReg</code> is easy:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">    fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/edgenet.html">edgenet</a></span>(<span class="dt">X=</span>X, <span class="dt">Y=</span>Y, <span class="dt">G.X=</span>aff.mat, <span class="dt">lambda=</span><span class="dv">1</span>, <span class="dt">psigx=</span><span class="dv">1</span>, <span class="dt">family=</span><span class="st">"gaussian"</span>)
-    <span class="kw">print</span>(fit)</code></pre></div>
-<pre><code>## 
-## Call: edgenet.default(X = X, Y = Y, G.X = aff.mat, lambda = 1, psigx = 1, 
-##     family = "gaussian")
-## 
-## Coefficients:
-##             [,1]         [,2]          [,3]        [,4]         [,5]
-## [1,]  0.01497323  0.015657011  0.0006453391  0.04699207 -0.009302215
-## [2,] -0.01076841  0.069246936 -0.0876302568 -0.00405287 -0.007441449
-## [3,] -0.02396619 -0.006507272  0.0244506149  0.02685324 -0.014316626
-## [4,]  0.00000000 -0.039063322 -0.0301731092 -0.02050031  0.001355670
-## [5,]  0.04213578  0.021257125  0.0242694757 -0.02222326 -0.008547463
-## Intercept:
-##              [,1]
-## [1,]  0.019672657
-## [2,] -0.047832210
-## [3,] -0.004606925
-## [4,] -0.025844237
-## [5,]  0.032155794
-## Parameters:
-## lambda psi_gx psi_gy 
-##      1      1      0 
-## Family:
-## [1] "gaussian"</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/edgenet.html">edgenet</a></span>(<span class="dt">X=</span>yeast$X, <span class="dt">Y=</span>yeast$Y, <span class="dt">G.Y=</span>yeast$GY,
+                 <span class="dt">lambda=</span><span class="dv">10</span>, <span class="dt">psigy=</span><span class="dv">1</span>, <span class="dt">family=</span><span class="st">"gaussian"</span>)
+  <span class="kw">print</span>(fit)</code></pre></div>
+<p>For the response variables we use an affinity matrix that represents <em>biological relationships</em> with <code>GY</code>.</p>
 <p>In this case we used a single affinity matrix <code>G.X</code> which represents the relationship of the covariables <span class="math inline">\(\mathit{X}\)</span>. If the design matrix has <span class="math inline">\(p\)</span> variables, <code>G.X</code> has to be an <span class="math inline">\((p \times p)\)</span>-dimensional symmetric matrix. We can also include a matrix for the response matrix <code>Y</code> with <span class="math inline">\(q\)</span> dependent variables. In that case the affinity matrix <code>G.Y</code> has to be <span class="math inline">\((q \times q)\)</span>-dimensional (and also symmetric).</p>
 <p>The <code>fit</code> object contains information about coefficients, intercepts, residuals, etc. Having the coefficients estimated we are able to predict novel data-sets:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">    X.new &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="dv">10</span>*<span class="dv">5</span>),<span class="dv">10</span>)
@@ -131,15 +122,6 @@
 <p>In most cases we do not have the optimal shrinkage parameters <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(\psi_{gx}\)</span> and <span class="math inline">\(\psi_{gy}\)</span>. For these settings you can use <code>netReg</code>’s included model selection. We use Powell’s BOBYQA algorithm (<span class="citation">(Powell 2009)</span>) for gradient-free optimization that is included in the <code>C++</code> library <code>Dlib</code>. Doing the model selection only requires calling <code>cv.edgnet</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">    cv &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cv.edgenet.html">cv.edgenet</a></span>(<span class="dt">X=</span>X, <span class="dt">Y=</span>Y, <span class="dt">G.X=</span>aff.mat, <span class="dt">family=</span><span class="st">"gaussian"</span>, <span class="dt">maxit=</span><span class="dv">1000</span>)
     <span class="kw">print</span>(cv)</code></pre></div>
-<pre><code>## 
-## Call: cv.edgenet.default(X = X, Y = Y, G.X = aff.mat, maxit = 1000, 
-##     family = "gaussian")
-## 
-## Parameters:
-## lambda  psigx  psigy 
-##      0      0      0 
-## Family:
-## [1] "gaussian"</code></pre>
 <p>You can use the fitted parameters for the normal <code>edgenet</code> function. In this scenario <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(\psi_{gx}\)</span> and <span class="math inline">\(\psi_{gy}\)</span> should be roughly <span class="math inline">\(0\)</span> for three reasons:</p>
 <ul>
 <li>we had enough data and a small number of covariables (<span class="math inline">\(n &gt; p\)</span>), so we can find the <em>BLUE</em> estimator,</li>
@@ -155,15 +137,6 @@
     <span class="kw">diag</span>(aff.mat) &lt;-<span class="st"> </span><span class="dv">0</span>
     cv &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cv.edgenet.html">cv.edgenet</a></span>(<span class="dt">X=</span>X, <span class="dt">Y=</span>Y, <span class="dt">G.X=</span>aff.mat, <span class="dt">family=</span><span class="st">"gaussian"</span>, <span class="dt">maxit=</span><span class="dv">1000</span>)
     <span class="kw">print</span>(cv)</code></pre></div>
-<pre><code>## 
-## Call: cv.edgenet.default(X = X, Y = Y, G.X = aff.mat, maxit = 1000, 
-##     family = "gaussian")
-## 
-## Parameters:
-##   lambda    psigx    psigy 
-## 6.882653 0.000000 0.000000 
-## Family:
-## [1] "gaussian"</code></pre>
 <p>In the above example <span class="math inline">\(\lambda\)</span> should have changed quite a bit, while <span class="math inline">\(\psi_{gy}\)</span> should still be <span class="math inline">\(0\)</span>. Since we generated <code>aff.mat</code> randomly <span class="math inline">\(\psi_{gx}\)</span> should be roughly (or exact) zero as well. This makes sense intuitively since we did not put any biological relationships into the affinity matrices.</p>
 </div>
 </div>
@@ -171,32 +144,17 @@
 <h2 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h2>
 <div id="refs" class="references">
+<div id="ref-brem2005genetic">
+<p>Brem, Rachel B, John D Storey, Jacqueline Whittle, and Leonid Kruglyak. 2005. “Genetic Interactions Between Polymorphisms That Affect Gene Expression in Yeast.” <em>Nature</em> 436 (7051). NIH Public Access: 701.</p>
+</div>
 <div id="ref-cheng2014graph">
 <p>Cheng, Wei, Xiang Zhang, Zhishan Guo, Yu Shi, and Wei Wang. 2014. “Graph-Regularized Dual Lasso for Robust EQTL Mapping.” <em>Bioinformatics</em> 30 (12). Oxford Univ Press: i139–i148.</p>
 </div>
-<div id="ref-eddelbuettel2014rcpparmadillo">
-<p>Eddelbuettel, Dirk, and Conrad Sanderson. 2014. “RcppArmadillo: Accelerating R with High-Performance C++ Linear Algebra.” <em>Computational Statistics &amp; Data Analysis</em> 71. Elsevier: 1054–63.</p>
-</div>
-<div id="ref-friedman2010regularization">
-<p>Friedman, Jerome, Trevor Hastie, and Rob Tibshirani. 2010. “Regularization Paths for Generalized Linear Models via Coordinate Descent.” <em>Journal of Statistical Software</em> 33 (1). NIH Public Access: 1.</p>
-</div>
-<div id="ref-friedman2007pathwise">
-<p>Friedman, Jerome, Trevor Hastie, Holger Höfling, Robert Tibshirani, and others. 2007. “Pathwise Coordinate Optimization.” <em>The Annals of Applied Statistics</em> 1 (2). Institute of Mathematical Statistics: 302–32.</p>
-</div>
-<div id="ref-fu1998penalized">
-<p>Fu, Wenjiang J. 1998. “Penalized Regressions: The Bridge Versus the Lasso.” <em>Journal of Computational and Graphical Statistics</em> 7 (3). Taylor &amp; Francis: 397–416.</p>
-</div>
-<div id="ref-kim2013network">
-<p>Kim, Sunkyung, Wei Pan, and Xiaotong Shen. 2013. “Network-Based Penalized Regression with Application to Genomic Data.” <em>Biometrics</em> 69 (3). Wiley Online Library: 582–93.</p>
-</div>
-<div id="ref-king2009dlib">
-<p>King, Davis E. 2009. “Dlib-Ml: A Machine Learning Toolkit.” <em>Journal of Machine Learning Research</em> 10 (Jul): 1755–8.</p>
-</div>
-<div id="ref-li2008network">
-<p>Li, Caiyan, and Hongzhe Li. 2008. “Network-Constrained Regularization and Variable Selection for Analysis of Genomic Data.” <em>Bioinformatics</em> 24 (9). Oxford Univ Press: 1175–82.</p>
-</div>
 <div id="ref-powell2009bobyqa">
 <p>Powell, Michael JD. 2009. “The Bobyqa Algorithm for Bound Constrained Optimization Without Derivatives.” <em>Cambridge NA Report NA2009/06, University of Cambridge, Cambridge</em>. Citeseer.</p>
+</div>
+<div id="ref-storey2005multiple">
+<p>Storey, John D, Joshua M Akey, and Leonid Kruglyak. 2005. “Multiple Locus Linkage Analysis of Genomewide Expression in Yeast.” <em>PLoS Biology</em> 3 (8). Public Library of Science: e267.</p>
 </div>
 </div>
 </div>
@@ -208,8 +166,8 @@
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-<li><a href="#introduction">Introduction</a></li>
-      <li><a href="#edgenet-tutorial">Edgenet tutorial</a></li>
+<li><a href="#installation">Installation</a></li>
+      <li><a href="#usage">Usage</a></li>
       <li><a href="#references">References</a></li>
       </ul>
 </div>

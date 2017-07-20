@@ -30,9 +30,6 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../index.html">Home</a>
-</li>
-<li>
   <a href="../articles/netReg_R.html">R</a>
 </li>
 <li>
@@ -74,8 +71,8 @@
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
 <p>Modelling biological associations or dependencies using linear regression models is often complicated when the analysed data-sets are high-dimensional and less observations than variables are available (<span class="math inline">\(n \ll p\)</span>). For these scenarios methods utilizing a priori knowledge, e.g. in the form of biological networks, have been proposed, arguing that this information might provide better estimates for regression coefficients. Recently several network-based regularization techniques have been proposed <span class="citation">(C. Li and Li 2008, <span class="citation">Kim, Pan, and Shen (2013)</span>, <span class="citation">Cheng et al. (2014)</span>)</span>.</p>
-<p><code>netReg</code> provides a highly-efficient implementation of these graph-penalized regression model. The models introduce a priori generated biological graph information into generalized linear models yielding sparse or smooth solutions for regression coefficients.</p>
-<p><code>netReg</code> computes coefficients using  as previously introduced <span class="citation">(Fu 1998, <span class="citation">Friedman et al. (2007)</span>)</span>, <span class="citation">(Friedman, Hastie, and Tibshirani 2010)</span>. The package is an R-wrapper to an external C++ library that uses  <span class="citation">(Eddelbuettel and Sanderson 2014)</span> for fast matrix calculations and  <span class="citation">(King 2009)</span> for gradient-free convex optimization for model selection.</p>
+<p><code>netReg</code> provides an efficient implementation of these graph-penalized regression model. The models introduce a priori generated biological graph information into generalized linear models yielding sparse or smooth solutions for regression coefficients.</p>
+<p><code>netReg</code> computes coefficients using  as previously introduced <span class="citation">(Fu 1998, <span class="citation">Friedman et al. (2007)</span>)</span>, <span class="citation">(Friedman, Hastie, and Tibshirani 2010)</span>. The package is an <code>R</code>-wrapper to an external <code>C++</code> library that uses <code>RcppArmadillo</code> <span class="citation">(Eddelbuettel and Sanderson 2014)</span> for fast matrix calculations and <code>Dlib</code> <span class="citation">(King 2009)</span> for gradient-free convex optimization for model selection.</p>
 </div>
 <div id="edgenet-tutorial" class="section level2">
 <h2 class="hasAnchor">

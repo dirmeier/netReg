@@ -30,9 +30,6 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="index.html">Home</a>
-</li>
-<li>
   <a href="articles/netReg_R.html">R</a>
 </li>
 <li>
@@ -65,12 +62,13 @@
 <a href="#netreg" class="anchor"></a>netReg <img src="https://cdn.rawgit.com/dirmeier/netReg/7b8e31e0/_fig/sticker.svg" align="right" width="160px">
 </h1></div>
 
-<p>Network-penalized generalized linear models in R and C++.</p>
+<p>Network-penalized generalized linear models in <code>R</code> and <code>C++</code>.</p>
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
-<p><code>netReg</code> is an R/C++ implementation of a network-regularized linear regression model. It incorporates prior knowledge in the form of graphs into the model’s likelihood and by that allows better estimation of regression coefficients. The main routines for estimation of coefficients and shrinkage parameters are implemented in <code>C++11</code>. Depending on your installed libraries <code>netReg</code> uses <code>OpenBLAS</code> or <code>BLAS</code>, and <code>Lapack</code> for fast computation of matrix operations in an <code>Armadillo\RcppArmadillo</code> framework. We use <code>Dlib</code> in order to calculate the most optimal set of shrinkage parameters using k-fold cross-validation.</p>
-<p><code>netReg</code> comes as a <code>C++</code> command line tool shipped with <a href="https://anaconda.org/bioconda/netreg"><code>bioconda</code></a> as well as a <a href="https://bioconductor.org/packages/release/bioc/html/netReg.html"><code>Bioconductor</code></a> package. Check out the <a href="https://dirmeier.github.io/netReg">landing page</a> for more information.</p>
+<p><code>netReg</code> is an R/C++ implementation of a network-regularized linear regression model. It incorporates prior knowledge in the form of graphs into the model’s likelihood and by that allows better estimation of regression coefficients. The main routines for estimation of coefficients and shrinkage parameters are implemented in <code>C++11</code>.</p>
+<p>Depending on your installed libraries <code>netReg</code> uses <code>OpenBLAS</code> or <code>BLAS</code>, and <code>Lapack</code> for fast computation of matrix operations in an <code>Armadillo\RcppArmadillo</code> framework. We use <code>Dlib</code> in order to calculate the most optimal set of shrinkage parameters using k-fold cross-validation.</p>
+<p><code>netReg</code> comes as a stand alone <code>C++</code> command line tool shipped with <a href="https://anaconda.org/bioconda/netreg"><code>bioconda</code></a> as well as a <a href="https://bioconductor.org/packages/release/bioc/html/netReg.html"><code>Bioconductor</code></a> package.</p>
 </div>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
@@ -124,14 +122,14 @@
   <span class="kw">cmake</span> .. <span class="kw">&amp;&amp;</span> <span class="kw">make</span>
   
   <span class="kw">./netReg</span> -h</code></pre></div>
+<p>If you want the tool to be installed in some specific folder you would also call:</p>
+<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash">  <span class="kw">make</span> install --prefix=/some/path</code></pre></div>
 </div>
 <div id="r" class="section level4">
 <h4 class="hasAnchor">
 <a href="#r" class="anchor"></a>R</h4>
-<p>If you want the tool to be installed in some specific folder you would also call:</p>
-<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash">  <span class="kw">make</span> install --prefix=/some/path</code></pre></div>
 <p>Installing the <code>R</code> using the downloaded <code>tarball</code> works like this:</p>
-<pre class="{bash}"><code>  R CMD install &lt;netReg-x.y.z.tar.gz&gt;</code></pre>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">  <span class="kw">R</span> CMD install <span class="kw">&lt;</span>netReg-x.y.z.tar.gz<span class="kw">&gt;</span></code></pre></div>
 </div>
 </div>
 <div id="installation-on-mac" class="section level3">
@@ -146,16 +144,16 @@
 <div id="documentation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#documentation" class="anchor"></a>Documentation</h2>
-<p>There are two tutorials for either <code>R</code> or the command line tool available. For questions on how to use the library we are always gladly taking questions. :)</p>
+<p>There are two tutorials for either <code>R</code> or the <code>C++</code> command line tool available. For questions on how to use the library we are always gladly taking questions. :)</p>
 <div id="r-1" class="section level3">
 <h3 class="hasAnchor">
 <a href="#r-1" class="anchor"></a>R</h3>
-<p>Load the package using <code>library(netReg)</code>. We provide a vignette for the package that can be called using: <code><a href="articles/netReg.html">vignette("netReg")</a></code>. Basically that is all you have to know.</p>
+<p>Load the package using <code>library(netReg)</code>. We provide a vignette for the package that can be called using: <code><a href="articles/netReg.html">vignette("netReg")</a></code>. Basically that is all you have to know. You cal also use the online <a href="https://dirmeier.github.io/netReg/articles/netReg_R.html">tutorial</a>.</p>
 </div>
 <div id="command-line-tool-1" class="section level3">
 <h3 class="hasAnchor">
 <a href="#command-line-tool-1" class="anchor"></a>Command line tool</h3>
-<p>Have a look at the command line <a href="https://dirmeier.github.io/netReg">tutorial</a> on the <a href="https://dirmeier.github.io">landing page</a>.</p>
+<p>Have a look at the command line <a href="https://dirmeier.github.io/netReg/articles/netReg_commandline.html">tutorial</a></p>
 </div>
 </div>
 <div id="author" class="section level2">
