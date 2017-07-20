@@ -75,27 +75,27 @@
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>You can install and use <code>netReg</code> either</p>
 <ul>
-<li>as an <code>R</code> library from <a href="https://bioconductor.org/packages/release/bioc/html/netReg.html"><code>Bioconductor</code></a>,</li>
-<li>or as a <code>C++</code> command line tool from <a href="https://anaconda.org/bioconda/netreg"><code>bioconda</code></a>,</li>
-<li>or by downloading the <code>tarball</code> and doing either of the previous options manually.</li>
+<li>as an <code>R</code> library from <a href="https://bioconductor.org/packages/release/bioc/html/netReg.html">Bioconductor</a>,</li>
+<li>or as a <code>C++</code> command line tool from <a href="https://anaconda.org/bioconda/netreg">bioconda</a>,</li>
+<li>or by downloading the <a href="https://github.com/dirmeier/netReg/releases">tarball</a> and doing either of the previous options manually.</li>
 </ul>
 <div id="installation-for-r-with-bioconductor" class="section level3">
 <h3 class="hasAnchor">
 <a href="#installation-for-r-with-bioconductor" class="anchor"></a>Installation for R with Bioconductor</h3>
 <p>If you want to use the <code>R</code> version of <code>netReg</code> call:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  <span class="kw">source</span>(<span class="st">"https://bioconductor.org/biocLite.R"</span>)
-  <span class="kw">biocLite</span>(<span class="st">"netReg"</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">&gt;<span class="st"> </span><span class="kw">source</span>(<span class="st">"https://bioconductor.org/biocLite.R"</span>)
+&gt;<span class="st"> </span><span class="kw">biocLite</span>(<span class="st">"netReg"</span>)
   
-  <span class="kw">library</span>(netReg)</code></pre></div>
+&gt;<span class="st"> </span><span class="kw">library</span>(netReg)</code></pre></div>
 <p>from the <code>R</code>-console.</p>
 </div>
 <div id="installation-for-command-line-with-bioconda" class="section level3">
 <h3 class="hasAnchor">
 <a href="#installation-for-command-line-with-bioconda" class="anchor"></a>Installation for command line with bioconda</h3>
 <p>If you want to use the <code>C++</code> command line tool you can do this using <code>conda</code>. For that you should download <a href="https://www.continuum.io/downloads">Anaconda</a> and create a <a href="https://conda.io/docs/using/envs.html">virtual environment</a>. Then install the tool using:</p>
-<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash">  <span class="kw">conda</span> install -c bioconda netreg
+<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash">$ <span class="kw">conda</span> install -c bioconda netreg
   
-  <span class="kw">netReg</span> -h</code></pre></div>
+$ <span class="kw">netReg</span> -h</code></pre></div>
 </div>
 <div id="manual-installation" class="section level3">
 <h3 class="hasAnchor">
@@ -118,26 +118,26 @@
 <em>optional</em>: <code>OpenMP</code> (older versions should work).</li>
 </ul>
 <p>To install the command line tool manually:</p>
-<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash">  <span class="kw">mkdir</span> build <span class="kw">&amp;&amp;</span> <span class="kw">cd</span> build
-  <span class="kw">cmake</span> .. <span class="kw">&amp;&amp;</span> <span class="kw">make</span>
+<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash">$ <span class="kw">mkdir</span> build <span class="kw">&amp;&amp;</span> <span class="kw">cd</span> build
+$ <span class="kw">cmake</span> .. <span class="kw">&amp;&amp;</span> <span class="kw">make</span>
   
-  <span class="kw">./netReg</span> -h</code></pre></div>
+$ <span class="kw">./netReg</span> -h</code></pre></div>
 <p>If you want the tool to be installed in some specific folder you would also call:</p>
-<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash">  <span class="kw">make</span> install --prefix=/some/path</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash">$ <span class="kw">make</span> install --prefix=/some/path</code></pre></div>
 </div>
-<div id="r" class="section level4">
+<div id="r-package" class="section level4">
 <h4 class="hasAnchor">
-<a href="#r" class="anchor"></a>R</h4>
+<a href="#r-package" class="anchor"></a>R package</h4>
 <p>Installing the <code>R</code> using the downloaded <code>tarball</code> works like this:</p>
-<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">  <span class="kw">R</span> CMD install <span class="kw">&lt;</span>netReg-x.y.z.tar.gz<span class="kw">&gt;</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">R</span> CMD install <span class="kw">&lt;</span>netReg-x.y.z.tar.gz<span class="kw">&gt;</span></code></pre></div>
 </div>
 </div>
 <div id="installation-on-mac" class="section level3">
 <h3 class="hasAnchor">
 <a href="#installation-on-mac" class="anchor"></a>Installation on Mac</h3>
 <p>In some cases it is required to install <code>gfortan</code> for Mac first (which is needed by <code>Armadillo/RcppArmadillo</code>). I that case run:</p>
-<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash">  <span class="kw">curl</span> -O http://r.research.att.com/libs/gfortran-4.8.2-darwin13.tar.bz2
-  <span class="kw">sudo</span> tar fvxz gfortran-4.8.2-darwin13.tar.bz2 -C /</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash">$ <span class="kw">curl</span> -O http://r.research.att.com/libs/gfortran-4.8.2-darwin13.tar.bz2
+$ <span class="kw">sudo</span> tar fvxz gfortran-4.8.2-darwin13.tar.bz2 -C /</code></pre></div>
 <p>Afterwards just install the package as described above.</p>
 </div>
 </div>
@@ -145,15 +145,15 @@
 <h2 class="hasAnchor">
 <a href="#documentation" class="anchor"></a>Documentation</h2>
 <p>There are two tutorials for either <code>R</code> or the <code>C++</code> command line tool available. For questions on how to use the library we are always gladly taking questions. :)</p>
-<div id="r-1" class="section level3">
+<div id="r" class="section level3">
 <h3 class="hasAnchor">
-<a href="#r-1" class="anchor"></a>R</h3>
+<a href="#r" class="anchor"></a>R</h3>
 <p>Load the package using <code>library(netReg)</code>. We provide a vignette for the package that can be called using: <code><a href="articles/netReg.html">vignette("netReg")</a></code>. Basically that is all you have to know. You cal also use the online <a href="https://dirmeier.github.io/netReg/articles/netReg_R.html">tutorial</a>.</p>
 </div>
 <div id="command-line-tool-1" class="section level3">
 <h3 class="hasAnchor">
 <a href="#command-line-tool-1" class="anchor"></a>Command line tool</h3>
-<p>Have a look at the command line <a href="https://dirmeier.github.io/netReg/articles/netReg_commandline.html">tutorial</a></p>
+<p>Have a look at the command line <a href="https://dirmeier.github.io/netReg/articles/netReg_commandline.html">tutorial</a>.</p>
 </div>
 </div>
 <div id="author" class="section level2">

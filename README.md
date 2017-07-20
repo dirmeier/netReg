@@ -23,19 +23,19 @@ Depending on your installed libraries `netReg` uses `OpenBLAS` or `BLAS`, and `L
  
 You can install and use `netReg` either
 
-* as an `R` library from [`Bioconductor`](https://bioconductor.org/packages/release/bioc/html/netReg.html),
-* or as a `C++` command line tool from [`bioconda`](https://anaconda.org/bioconda/netreg),
-* or by downloading the `tarball` and doing either of the previous options manually.
+* as an `R` library from [Bioconductor](https://bioconductor.org/packages/release/bioc/html/netReg.html),
+* or as a `C++` command line tool from [bioconda](https://anaconda.org/bioconda/netreg),
+* or by downloading the [tarball](https://github.com/dirmeier/netReg/releases) and doing either of the previous options manually.
 
 ### Installation for R with Bioconductor
 
 If you want to use the `R` version of `netReg` call:
 
 ```r
-  source("https://bioconductor.org/biocLite.R")
-  biocLite("netReg")
+> source("https://bioconductor.org/biocLite.R")
+> biocLite("netReg")
   
-  library(netReg)
+> library(netReg)
 ```
  
 from the `R`-console. 
@@ -47,9 +47,9 @@ For that you should download [Anaconda](https://www.continuum.io/downloads) and 
 Then install the tool using:
 
 ```sh
-  conda install -c bioconda netreg
+$ conda install -c bioconda netreg
   
-  netReg -h
+$ netReg -h
 ```
 
 ### Manual installation
@@ -69,24 +69,24 @@ The **command line tool** has the following dependencies:
 To install the command line tool manually:
 
 ```sh
-  mkdir build && cd build
-  cmake .. && make
+$ mkdir build && cd build
+$ cmake .. && make
   
-  ./netReg -h
+$ ./netReg -h
 ```
 
 If you want the tool to be installed in some specific folder you would also call:
 
 ```sh
-  make install --prefix=/some/path
+$ make install --prefix=/some/path
 ```
 
-#### R
+#### R package
 
 Installing the `R` using the downloaded `tarball` works like this:
 
 ```bash
-  R CMD install <netReg-x.y.z.tar.gz>
+$ R CMD install <netReg-x.y.z.tar.gz>
 ```
 
 ### Installation on Mac
@@ -94,8 +94,8 @@ Installing the `R` using the downloaded `tarball` works like this:
 In some cases it is required to install `gfortan` for Mac first (which is needed by `Armadillo/RcppArmadillo`). I that case run:
 
 ```sh
-  curl -O http://r.research.att.com/libs/gfortran-4.8.2-darwin13.tar.bz2
-  sudo tar fvxz gfortran-4.8.2-darwin13.tar.bz2 -C /
+$ curl -O http://r.research.att.com/libs/gfortran-4.8.2-darwin13.tar.bz2
+$ sudo tar fvxz gfortran-4.8.2-darwin13.tar.bz2 -C /
 ```
 
 Afterwards just install the package as described above.
@@ -112,7 +112,7 @@ We provide a vignette for the package that can be called using: `vignette("netRe
 
 ### Command line tool
 
-Have a look at the command line [tutorial](https://dirmeier.github.io/netReg/articles/netReg_commandline.html)
+Have a look at the command line [tutorial](https://dirmeier.github.io/netReg/articles/netReg_commandline.html).
 
 ## Author
 

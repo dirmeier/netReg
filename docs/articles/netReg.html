@@ -61,7 +61,7 @@
       <h1>netReg</h1>
                         <h4 class="author">Simon Dirmeier</h4>
             
-            <h4 class="date">2017-07-20</h4>
+            <h4 class="date">2017-07-21</h4>
           </div>
 
     
@@ -127,7 +127,7 @@
 <div id="model-selection" class="section level3">
 <h3 class="hasAnchor">
 <a href="#model-selection" class="anchor"></a>Model selection</h3>
-<p>In most cases we do not have the optimal shrinkage parameters <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(\psi_{gx}\)</span> and <span class="math inline">\(\psi_{gy}\)</span>. For these settings you can use <code>netReg</code>’s included model selection. We use Powell’s BOBYQA algorithm (<span class="citation">(Powell 2009)</span>) for gradient-free optimization that is included in the <code>C++</code> library <code>Dlib</code>. Doing the model selection only requires calling <code>cv.edgnet</code>:</p>
+<p>In most cases we do not have the optimal shrinkage parameters <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(\psi_{gx}\)</span> and <span class="math inline">\(\psi_{gy}\)</span>. For these settings you can use <code>netReg</code>’s included model selection. We use Powell’s BOBYQA algorithm (<span class="citation">(Powell 2009)</span>) for gradient-free optimization that is included in the <code>C++</code> library <code>Dlib</code>. Doing the model selection only requires calling <code>cv.edgenet</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">    cv &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cv.edgenet.html">cv.edgenet</a></span>(<span class="dt">X=</span>X, <span class="dt">Y=</span>Y, <span class="dt">G.X=</span>aff.mat, <span class="dt">family=</span><span class="st">"gaussian"</span>, <span class="dt">maxit=</span><span class="dv">1000</span>)
     <span class="kw">print</span>(cv)</code></pre></div>
 <pre><code>## 

@@ -65,29 +65,29 @@
     
     
 <div class="contents">
-<p>This document explains how to install and use the <code>R</code> package.</p>
+<p>This document explains how to install and use the <code>R</code> package. If something is unclear/buggy/not working I am glad to take any questions.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>You can install and use <code>netReg</code> either</p>
 <ul>
 <li>as an <code>R</code> library from <a href="https://bioconductor.org/packages/release/bioc/html/netReg.html">Bioconductor</a>,</li>
-<li>or by downloading the <code>tarball</code>.</li>
+<li>or by downloading the latest <a href="https://github.com/dirmeier/netReg/releases/">tarball</a>.</li>
 </ul>
 <div id="installation-with-bioconductor" class="section level3">
 <h3 class="hasAnchor">
 <a href="#installation-with-bioconductor" class="anchor"></a>Installation with Bioconductor</h3>
 <p>The easiest way to install <code>netReg</code> is using the <code>R</code>-console:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  <span class="kw">source</span>(<span class="st">"https://bioconductor.org/biocLite.R"</span>)
-  <span class="kw">biocLite</span>(<span class="st">"netReg"</span>)
-  
-  <span class="kw">library</span>(netReg)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">&gt;<span class="st"> </span><span class="kw">source</span>(<span class="st">"https://bioconductor.org/biocLite.R"</span>)
+&gt;<span class="st"> </span><span class="kw">biocLite</span>(<span class="st">"netReg"</span>)
+
+&gt;<span class="st"> </span><span class="kw">library</span>(netReg)</code></pre></div>
 </div>
 <div id="manual-installation" class="section level3">
 <h3 class="hasAnchor">
 <a href="#manual-installation" class="anchor"></a>Manual installation</h3>
-<p>If you want to build the package yourself first download the <code>tarball</code> of the latest <a href="https://github.com/dirmeier/netReg/releases/">release</a> and then call:</p>
-<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">  <span class="kw">R</span> CMD install <span class="kw">&lt;</span>netReg-x.y.z.tar.gz<span class="kw">&gt;</span></code></pre></div>
+<p>If you want to build the package yourself first download the tarball of the latest <a href="https://github.com/dirmeier/netReg/releases/">release</a> and then call:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">R</span> CMD install <span class="kw">&lt;</span>netReg-x.y.z.tar.gz<span class="kw">&gt;</span></code></pre></div>
 <p>That’s it.</p>
 </div>
 </div>
@@ -96,48 +96,90 @@
 <a href="#usage" class="anchor"></a>Usage</h2>
 <p>This section explains how to fit a linear model and do parameter estimation.</p>
 <p>At first we load the library and some data:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  &gt;<span class="st"> </span><span class="kw">library</span>(netReg)
-  &gt;<span class="st"> </span><span class="kw">data</span>(<span class="st">"yeast"</span>)
-  
-  &gt;<span class="st"> </span><span class="kw">ls</span>(yeast)
-  &gt;<span class="st"> </span>[<span class="dv">1</span>] <span class="st">"GY"</span> <span class="st">"X"</span>  <span class="st">"Y"</span> </code></pre></div>
-<p>The <code>yeast</code> data <code>X</code> and <code>Y</code> set is taken and adopted from <span class="citation">(Brem et al. 2005)</span>, <span class="citation">(Storey, Akey, and Kruglyak 2005)</span>, and <span class="citation">(Cheng et al. 2014)</span>. <span class="math inline">\(\mathbf{GY}\)</span> is taken from <a href="https://thebiogrid.org/downloads/archives/Release%20Archive/BIOGRID-3.4.150/BIOGRID-ORGANISM-3.4.150.tab.zip">BioGRID</a>. <code>X</code> is a <code>(n x p)</code> matrix of genetic markers where <code>n</code> is the number of samples (112) and <code>p</code> is the number of markers. The data has been taken from Brem <i>et al.</i>, Nature (2005). * <code>Y</code> is a <code>(n x q)</code> matrix of expression values for <code>q</code> yeast genes. <code>n</code> is again the numer of samples (112). * <code>GY</code> is a <code>(q x q)</code> adjacency matrix representing protein-protein interactions for the <code>q</code> response variables.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">&gt;<span class="st"> </span><span class="kw">library</span>(netReg)
+&gt;<span class="st"> </span><span class="kw">data</span>(<span class="st">"yeast"</span>)
+
+&gt;<span class="st"> </span><span class="kw">ls</span>(yeast)
+[<span class="dv">1</span>] <span class="st">"GX"</span> <span class="st">"X"</span> <span class="st">"Y"</span>
+
+&gt;<span class="st"> </span>X &lt;-<span class="st"> </span>yeast$X[, <span class="dv">1</span>:<span class="dv">5</span>]
+&gt;<span class="st"> </span>Y &lt;-<span class="st"> </span>yeast$Y[, <span class="dv">40</span>:<span class="dv">45</span>]
+&gt;<span class="st"> </span>GY &lt;-<span class="st"> </span>yeast$GY[<span class="dv">40</span>:<span class="dv">45</span>, <span class="dv">40</span>:<span class="dv">45</span>]</code></pre></div>
+<p>The <em>yeast</em> data <span class="math inline">\(\mathbf{X}\)</span> and <span class="math inline">\(\mathbf{Y}\)</span> set is taken and adopted from <span class="citation">(Brem et al. 2005)</span>, <span class="citation">(Storey, Akey, and Kruglyak 2005)</span>, and <span class="citation">(Cheng et al. 2014)</span>. <span class="math inline">\(\mathbf{GY}\)</span> is taken from <a href="https://thebiogrid.org/downloads/archives/Release%20Archive/BIOGRID-3.4.150/BIOGRID-ORGANISM-3.4.150.tab.zip">BioGRID</a>. <span class="math inline">\(\mathbf{X}\)</span> is a <span class="math inline">\((n \times p)\)</span> matrix of genetic markers where <span class="math inline">\(n\)</span> is the number of samples (112) and <span class="math inline">\(p\)</span> is the number of markers. <span class="math inline">\(\mathbf{Y}\)</span> is a <span class="math inline">\((n \times q)\)</span> matrix of expression values for <span class="math inline">\(q\)</span> yeast genes. <span class="math inline">\(n\)</span> is again the numer of samples (112). <span class="math inline">\(\mathbf{GY}\)</span> is a <span class="math inline">\((q \times q)\)</span> adjacency matrix representing protein-protein interactions for the <span class="math inline">\(q\)</span> response variables.</p>
+<p>We only use a smaller network in order to be able to print the results here.</p>
 <div id="model-fitting" class="section level3">
 <h3 class="hasAnchor">
 <a href="#model-fitting" class="anchor"></a>Model fitting</h3>
-<p>Fitting a model using edge-based regularization with <code>netReg</code> is easy:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/edgenet.html">edgenet</a></span>(<span class="dt">X=</span>yeast$X, <span class="dt">Y=</span>yeast$Y, <span class="dt">G.Y=</span>yeast$GY,
+<p>Fitting a model using edge-based regularization with <code>netReg</code> can be done like that:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">&gt;<span class="st"> </span>fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/edgenet.html">edgenet</a></span>(<span class="dt">X=</span>X,
+                 <span class="dt">Y=</span>Y, 
+                 <span class="dt">G.Y=</span>GY,
                  <span class="dt">lambda=</span><span class="dv">10</span>, <span class="dt">psigy=</span><span class="dv">1</span>, <span class="dt">family=</span><span class="st">"gaussian"</span>)
-  <span class="kw">print</span>(fit)</code></pre></div>
-<p>For the response variables we use an affinity matrix that represents <em>biological relationships</em> with <code>GY</code>.</p>
-<p>In this case we used a single affinity matrix <code>G.X</code> which represents the relationship of the covariables <span class="math inline">\(\mathit{X}\)</span>. If the design matrix has <span class="math inline">\(p\)</span> variables, <code>G.X</code> has to be an <span class="math inline">\((p \times p)\)</span>-dimensional symmetric matrix. We can also include a matrix for the response matrix <code>Y</code> with <span class="math inline">\(q\)</span> dependent variables. In that case the affinity matrix <code>G.Y</code> has to be <span class="math inline">\((q \times q)\)</span>-dimensional (and also symmetric).</p>
-<p>The <code>fit</code> object contains information about coefficients, intercepts, residuals, etc. Having the coefficients estimated we are able to predict novel data-sets:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">    X.new &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="dv">10</span>*<span class="dv">5</span>),<span class="dv">10</span>)
-    pred  &lt;-<span class="st"> </span><span class="kw">predict</span>(fit, X.new)</code></pre></div>
+&gt;<span class="st"> </span>fit
+
+Call:<span class="st"> </span><span class="kw">edgenet.default</span>(<span class="dt">X =</span> X, <span class="dt">Y =</span> Y, <span class="dt">G.Y =</span> GY, <span class="dt">lambda =</span> <span class="dv">10</span>, <span class="dt">psigy =</span> <span class="dv">1</span>, 
+    <span class="dt">family =</span> <span class="st">"gaussian"</span>)
+
+Coefficients:
+<span class="st">               </span>YBL113C   YBR013C YBR014C YBR016W YBR025C YBR028C
+marker_2036 <span class="fl">0.18880586</span> <span class="fl">0.0000000</span>       <span class="dv">0</span>       <span class="dv">0</span>       <span class="dv">0</span>       <span class="dv">0</span>
+marker_349  <span class="fl">0.32480670</span> <span class="fl">0.1267092</span>       <span class="dv">0</span>       <span class="dv">0</span>       <span class="dv">0</span>       <span class="dv">0</span>
+marker_2596 <span class="fl">0.00000000</span> <span class="fl">0.0000000</span>       <span class="dv">0</span>       <span class="dv">0</span>       <span class="dv">0</span>       <span class="dv">0</span>
+marker_2987 <span class="fl">0.07526014</span> <span class="fl">0.0000000</span>       <span class="dv">0</span>       <span class="dv">0</span>       <span class="dv">0</span>       <span class="dv">0</span>
+marker_994  <span class="fl">0.16888058</span> <span class="fl">0.0000000</span>       <span class="dv">0</span>       <span class="dv">0</span>       <span class="dv">0</span>       <span class="dv">0</span>
+
+Intercept:
+<span class="st">            </span>[,<span class="dv">1</span>]
+[<span class="dv">1</span>,]  <span class="fl">0.22068539</span>
+[<span class="dv">2</span>,]  <span class="fl">0.17820179</span>
+[<span class="dv">3</span>,] -<span class="fl">0.08242679</span>
+[<span class="dv">4</span>,] -<span class="fl">0.13699107</span>
+[<span class="dv">5</span>,]  <span class="fl">0.09521875</span>
+[<span class="dv">6</span>,]  <span class="fl">0.09709554</span>
+
+Parameters:
+lambda psi_gx psi_gy 
+    <span class="dv">10</span>      <span class="dv">0</span>      <span class="dv">1</span> 
+
+Family:
+[<span class="dv">1</span>] <span class="st">"gaussian"</span></code></pre></div>
+<p>For the response variables we use an affinity matrix that represents <em>biological relationships</em> with <span class="math inline">\(\mathbf{GY}\)</span>. We promote sparsity by setting <span class="math inline">\(\lambda = 10\)</span> and put a week penalty on similar coefficients by setting <span class="math inline">\(\psi_{gy} = 1\)</span>. Other than that we used standard parameters in this case.</p>
+<p>The <code>fit</code> object contains information about coefficients and intercepts. Having the coefficients estimated we are able to predict novel data-sets:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">&gt;<span class="st"> </span>X.new &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="dv">10</span>*<span class="kw">ncol</span>(X)), <span class="dt">nrow=</span><span class="dv">10</span>)
+&gt;<span class="st"> </span>pred  &lt;-<span class="st"> </span><span class="kw">predict</span>(fit, X.new)
+&gt;<span class="st"> </span>pred
+         YBL113C     YBR013C     YBR014C    YBR016W    YBR025C    YBR028C
+ [<span class="dv">1</span>,]  <span class="fl">0.34896146</span>  <span class="fl">0.18351965</span> -<span class="fl">0.08242679</span> -<span class="fl">0.1369911</span> <span class="fl">0.09521875</span> <span class="fl">0.09709554</span>
+ [<span class="dv">2</span>,]  <span class="fl">0.34846254</span>  <span class="fl">0.30982988</span> -<span class="fl">0.08242679</span> -<span class="fl">0.1369911</span> <span class="fl">0.09521875</span> <span class="fl">0.09709554</span>
+ [<span class="dv">3</span>,]  <span class="fl">0.49168654</span>  <span class="fl">0.24786801</span> -<span class="fl">0.08242679</span> -<span class="fl">0.1369911</span> <span class="fl">0.09521875</span> <span class="fl">0.09709554</span>
+ [<span class="dv">4</span>,]  <span class="fl">0.29359257</span>  <span class="fl">0.13512114</span> -<span class="fl">0.08242679</span> -<span class="fl">0.1369911</span> <span class="fl">0.09521875</span> <span class="fl">0.09709554</span>
+ [<span class="dv">5</span>,] -<span class="fl">0.33368500</span> -<span class="fl">0.09395486</span> -<span class="fl">0.08242679</span> -<span class="fl">0.1369911</span> <span class="fl">0.09521875</span> <span class="fl">0.09709554</span>
+ [<span class="dv">6</span>,]  <span class="fl">0.37459188</span>  <span class="fl">0.24592816</span> -<span class="fl">0.08242679</span> -<span class="fl">0.1369911</span> <span class="fl">0.09521875</span> <span class="fl">0.09709554</span>
+ [<span class="dv">7</span>,]  <span class="fl">0.02020576</span>  <span class="fl">0.06307481</span> -<span class="fl">0.08242679</span> -<span class="fl">0.1369911</span> <span class="fl">0.09521875</span> <span class="fl">0.09709554</span>
+ [<span class="dv">8</span>,]  <span class="fl">0.08688461</span>  <span class="fl">0.23227053</span> -<span class="fl">0.08242679</span> -<span class="fl">0.1369911</span> <span class="fl">0.09521875</span> <span class="fl">0.09709554</span>
+ [<span class="dv">9</span>,] -<span class="fl">0.06616525</span> -<span class="fl">0.06917618</span> -<span class="fl">0.08242679</span> -<span class="fl">0.1369911</span> <span class="fl">0.09521875</span> <span class="fl">0.09709554</span>
+[<span class="dv">10</span>,] -<span class="fl">0.44448282</span>  <span class="fl">0.09864389</span> -<span class="fl">0.08242679</span> -<span class="fl">0.1369911</span> <span class="fl">0.09521875</span> <span class="fl">0.09709554</span></code></pre></div>
 <p>The <code>pred</code> objects contains the predicted values for the responses.</p>
 </div>
 <div id="model-selection" class="section level3">
 <h3 class="hasAnchor">
 <a href="#model-selection" class="anchor"></a>Model selection</h3>
-<p>In most cases we do not have the optimal shrinkage parameters <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(\psi_{gx}\)</span> and <span class="math inline">\(\psi_{gy}\)</span>. For these settings you can use <code>netReg</code>’s included model selection. We use Powell’s BOBYQA algorithm (<span class="citation">(Powell 2009)</span>) for gradient-free optimization that is included in the <code>C++</code> library <code>Dlib</code>. Doing the model selection only requires calling <code>cv.edgnet</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">    cv &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cv.edgenet.html">cv.edgenet</a></span>(<span class="dt">X=</span>X, <span class="dt">Y=</span>Y, <span class="dt">G.X=</span>aff.mat, <span class="dt">family=</span><span class="st">"gaussian"</span>, <span class="dt">maxit=</span><span class="dv">1000</span>)
-    <span class="kw">print</span>(cv)</code></pre></div>
-<p>You can use the fitted parameters for the normal <code>edgenet</code> function. In this scenario <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(\psi_{gx}\)</span> and <span class="math inline">\(\psi_{gy}\)</span> should be roughly <span class="math inline">\(0\)</span> for three reasons:</p>
+<p>In most cases we do not have the optimal shrinkage parameters <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(\psi_{gx}\)</span> and <span class="math inline">\(\psi_{gy}\)</span>. For these settings you can use <code>netReg</code>’s included model selection. We use Powell’s <em>BOBYQA</em> algorithm <span class="citation">(Powell 2009)</span> for gradient-free optimization that is included in the <code>C++</code> library <code>Dlib</code>. Doing the model selection only requires calling <code>cv.edgenet</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">&gt;<span class="st"> </span>cv &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cv.edgenet.html">cv.edgenet</a></span>(<span class="dt">X=</span>X, <span class="dt">Y=</span>Y, <span class="dt">G.Y=</span>GY, <span class="dt">family=</span><span class="st">"gaussian"</span>, <span class="dt">maxit=</span><span class="dv">1000</span>)
+&gt;<span class="st"> </span>cv
+
+Call:<span class="st"> </span><span class="kw">cv.edgenet.default</span>(<span class="dt">X =</span> X, <span class="dt">Y =</span> Y, <span class="dt">G.Y =</span> GY, <span class="dt">maxit =</span> <span class="dv">1000</span>, <span class="dt">family =</span> <span class="st">"gaussian"</span>)
+
+Parameters:
+lambda  psigx  psigy 
+     <span class="dv">0</span>      <span class="dv">0</span>      <span class="dv">0</span> 
+Family:
+[<span class="dv">1</span>] <span class="st">"gaussian"</span></code></pre></div>
+<p>You can use the fitted parameters for the normal <code>edgenet</code> function. In this scenario <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(\psi_{gx}\)</span> and <span class="math inline">\(\psi_{gy}\)</span> should be roughly <span class="math inline">\(0\)</span> for two reasons:</p>
 <ul>
 <li>we had enough data and a small number of covariables (<span class="math inline">\(n &gt; p\)</span>), so we can find the <em>BLUE</em> estimator,</li>
-<li>we created <code>X</code> and <code>Y</code> independent of each other,</li>
-<li>our prior graph <code>aff.mat</code> had little weight.</li>
+<li>in this toy example our prior graph <span class="math inline">\(\mathbf{GY}\)</span> had little impact.</li>
 </ul>
-<p>Let’s do a scenario where we need to shrink some coefficients, i.e. <span class="math inline">\(n \ll p\)</span>. We choose a small <span class="math inline">\(p\)</span>, such that the computation does not take too long.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">    p &lt;-<span class="st"> </span><span class="dv">25</span>
-    X &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="dv">10</span>*p), <span class="dv">10</span>)
-    Y &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="dv">10</span>*p), <span class="dv">10</span>)
-    aff.mat &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rgamma</span>(p *<span class="st"> </span>p, <span class="dv">5</span>, <span class="dv">1</span>), p)
-    aff.mat &lt;-<span class="st"> </span>(<span class="kw">t</span>(aff.mat) +<span class="st"> </span>aff.mat)
-    <span class="kw">diag</span>(aff.mat) &lt;-<span class="st"> </span><span class="dv">0</span>
-    cv &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cv.edgenet.html">cv.edgenet</a></span>(<span class="dt">X=</span>X, <span class="dt">Y=</span>Y, <span class="dt">G.X=</span>aff.mat, <span class="dt">family=</span><span class="st">"gaussian"</span>, <span class="dt">maxit=</span><span class="dv">1000</span>)
-    <span class="kw">print</span>(cv)</code></pre></div>
-<p>In the above example <span class="math inline">\(\lambda\)</span> should have changed quite a bit, while <span class="math inline">\(\psi_{gy}\)</span> should still be <span class="math inline">\(0\)</span>. Since we generated <code>aff.mat</code> randomly <span class="math inline">\(\psi_{gx}\)</span> should be roughly (or exact) zero as well. This makes sense intuitively since we did not put any biological relationships into the affinity matrices.</p>
 </div>
 </div>
 <div id="references" class="section level2 unnumbered">

@@ -108,7 +108,7 @@ $\psi_{gx}$ and $\psi_{gy}$. For these settings you can use `netReg`'s
 included model selection. We use Powell's BOBYQA algorithm 
 ([@powell2009bobyqa]) for gradient-free optimization that is included in the
 `C++` library `Dlib`. Doing the model selection only requires calling 
-`cv.edgnet`:
+`cv.edgenet`:
 
 ```{r}
     cv <- cv.edgenet(X=X, Y=Y, G.X=aff.mat, family="gaussian", maxit=1000)

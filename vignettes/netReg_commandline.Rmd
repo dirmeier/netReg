@@ -4,6 +4,7 @@ bibliography: netReg.bib
 ---
 
 This document explains how to install and use the `netReg` command line tool.
+If something is unclear/buggy/not working I am glad to take any questions.
 
 ## Installation
 
@@ -19,9 +20,9 @@ For that you should download [Anaconda](https://www.continuum.io/downloads) and 
 Then install the tool using:
 
 ```sh
-  conda install -c bioconda netreg
+$ conda install -c bioconda netreg
   
-  netReg -h
+$ netReg -h
 ```
 
 This would install the package from the *bioconda* channel (a highly recommented platform) and then test if the tool is installed.
@@ -36,20 +37,20 @@ Alternatively you can of course install `netReg` manually. The **command line to
 * `OpenBLAS/BLAS` and `Lapack` (older versions should work),
 * *optional*: `OpenMP` (older versions should work).
 
-Then download the tarball of the latest [release](https://github.com/dirmeier/netReg/releases/). We use `CMake` for building the package. You can use it like this:
+Then download the tarball of the latest [release](https://github.com/dirmeier/netReg/releases/). We use `CMake` for building the package. You build the package like this:
 
 ```sh
-  mkdir build && cd build
-  cmake .. && make
+$ mkdir build && cd build
+$ cmake .. && make
   
-  ./netReg -h
+$ ./netReg -h
 ```
 
 This builds the package in folder `build` and then tests if the package is installed. 
 In case you want to install it properly subsequently use:
 
 ```sh
-  (sudo) make install --prefix=/some/path
+$ (sudo) make install --prefix=/some/path
 ```
 
 ## Usage
@@ -59,27 +60,29 @@ Using the command line tool is rather straightforward. First let's call `netReg`
 see how it is used:
 
 ```sh
-  netReg -h
+$ netReg -h
   
   netReg - a network-regularized generalized regression model
 
   Arguments:
     -h [ --help ]                        Print this help.
     -d [ --design ] arg                  Filename of the design matrix X.
-    -u [ --gx ] arg                      Filename of the affinity matrix GX for X.
+    -u [ --gx ] arg                      Filename of the affinity matrix GX
+                                         for X.
     -r [ --reponse ] arg                 Filename of the reponse matrix Y.
-    -v [ --gy ] arg                      Filename of the affinity matrix GY for Y.
+    -v [ --gy ] arg                      Filename of the affinity matrix GY 
+                                         for Y.
     -l [ --lambda ] arg (=1)             LASSO penalization parameter.
     -s [ --psi ] arg (=0)                Penalization parameter for affinity
                                          matrix GX.
     -x [ --xi ] arg (=0)                 Penalization parameter for affinity
                                          matrix GY.
     -m [ --maxit ] arg (=100000)         Maximum number of iterations of
-                                         coordinate descent. You should choose a
-                                         sufficiently large number.
+                                         coordinate descent. You should 
+                                         choose a sufficiently large number.
     -t [ --threshold ] arg (=0.0000001)  Convergence threshold for coordinate
-                                         descent. Anything below 0.0001 should
-                                         suffice.
+                                         descent. Anything below 0.0001 
+                                         should suffice.
     -o [ --outfile ] arg                 Filename of the output file.
     
     Model selection:
@@ -87,9 +90,9 @@ see how it is used:
                                          optimal shrinkage parameters using
                                          crossvalition, before doing the
                                          estimation of coefficients.
-    -n [ --nfolds ] arg (=10)            The number of cross-validation folds.
-                                         This can be maximal the number of rows
-                                         of X/Y and minimal 3.
+    -n [ --nfolds ] arg (=10)            The number of cross-validation 
+                                         folds. This can be maximal the number
+                                         of rows of X/Y and minimal 3.
     -e [ --epsilon ] arg (=0.001)        Convergence threshold for the BOBYQA
                                          algorithm, i.e. the stop criterion for
                                          the model selection.
@@ -97,25 +100,33 @@ see how it is used:
                                          BOBYQA algorithm.
 ```
 
-This gives a list of required arguments. We have provided some example data files in the GitHub
-repository [here](https://github.com/dirmeier/netReg/tree/master/data) to test the package.
+This gives a list of required arguments which I think are rather self explanatory, but we will look at some examples later.
 
-### Examples
+We have provided some example data files in the GitHub
+repository [here](https://github.com/dirmeier/netReg/tree/master/data) to test the package.
+Files `X.tsv` and `Y.tsv` are taken from and adopted from a yeast eQTL study by [@brem2005genetic], [@storey2005multiple], and [@cheng2014graph]. 
+`GY.tsv` is taken from [BioGRID](https://thebiogrid.org/downloads/archives/Release%20Archive/BIOGRID-3.4.150/BIOGRID-ORGANISM-3.4.150.tab.zip). `X.tsv` is a $(n \times p)$ matrix of genetic markers where $n$ is the number of samples (112) and $p$ is the number of markers. `Y.tsv` is a $(n \times q)$ matrix of expression values for $q$ yeast genes. $n$ is again the numer of samples (112).
+`GY.tsv` is a $(q \times q)$ adjacency matrix representing protein-protein interactions for the $q$ response variables.
+
+
+### Model fitting
 
 An exemplary call could look like this:
 
 ```sh
-  netReg -d X.tsv -r Y.tsv -v GY.tsv 
+$ netReg -d X.tsv -r Y.tsv -v GY.tsv 
          -l 10 -x 1 --maxit 1000 --threshold 0.0001 
          -o outfile.tsv
 ```
 
-In this example we use a design matrix given in `X.tsv` and response matrix `Y.tsv`. For the response variables we use an affinity matrix that represents *biological relationships* with `GY.tsv`. We promote sparsity by setting $\lambda = 10$ and put a week penalty on similar coefficients by setting $\xi = 1 $. We stop the algorithm after maximal $1000$ iterations or if a convergence threshold of $0.0001$ is reached. The coefficients are written to `outfile.tsv`.
+In this example we use a design matrix given in `X.tsv` and response matrix `Y.tsv`. For the response variables we use an affinity matrix that represents *biological relationships* with `GY.tsv`. We promote sparsity by setting $\lambda = 10$ and put a week penalty on similar coefficients by setting $\xi = 1$. We stop the algorithm after maximal $1000$ iterations or if a convergence threshold of $0.0001$ is reached. The coefficients are written to `outfile.tsv`.
+
+### Model selection
 
 Usually we don't know these parameters, but need to estimate them such that the correct parameterization gives us the *best* model. In that case we would call
 
 ```sh
-  netReg --modelselection 
+$ netReg --modelselection 
          -d X.tsv -r Y.tsv -v GY.tsv 
          -b 100 
          -o outfile.tsv

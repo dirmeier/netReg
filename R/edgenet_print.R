@@ -8,12 +8,12 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # netReg is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with netReg. If not, see <http://www.gnu.org/licenses/>.
 
@@ -26,11 +26,11 @@ print.edgenet <- function(x,...)
     print(x$call)
     cat("\nCoefficients:\n")
     print(x$coefficients)
-    cat("Intercept:\n")
+    cat("\nIntercept:\n")
     print(x$intercept)
-    cat("Parameters:\n")
+    cat("\nParameters:\n")
     print(c(lambda=x$lambda, psi_gx=x$psigx, psi_gy=x$psigy))
-    cat("Family:\n")
+    cat("\nFamily:\n")
     print(x$family)
 }
 
