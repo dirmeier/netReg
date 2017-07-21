@@ -43,8 +43,8 @@ fi
 
 for k in $(seq 1 1 10);
 do
-    X="$datafold/X_${k}.tsv"
-    Y="$datafold/Y_${k}.tsv"
+    X="$datafold/X_train_${k}.tsv"
+    Y="$datafold/Y_train_${k}.tsv"
     GY="$datafold/GY.tsv"
     for i in $(seq 1 .5 10);
     do
