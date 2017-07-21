@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Network-Regularized Regression Models • netReg</title>
-<!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/yeti/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="jquery.sticky-kit.min.js"></script><script src="pkgdown.js"></script><link href="extra.css" rel="stylesheet">
@@ -42,7 +42,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/dirmeier/netReg">
-    <span class="fa fa-github"></span>
+    <span class="fa fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -100,7 +100,7 @@ $ <span class="kw">netReg</span> -h</code></pre></div>
 <div id="manual-installation" class="section level3">
 <h3 class="hasAnchor">
 <a href="#manual-installation" class="anchor"></a>Manual installation</h3>
-<p>If you don’t like package managers you can download the <code>tarball</code> of the latest <a href="https://github.com/dirmeier/netReg/releases/tag/v1.0.0">release</a> and install both or either from the two.</p>
+<p>If you don’t like package managers you can download the tarball of the latest <a href="https://github.com/dirmeier/netReg/releases/tag/v1.0.0">release</a> and install both or either from the two.</p>
 <div id="command-line-tool" class="section level4">
 <h4 class="hasAnchor">
 <a href="#command-line-tool" class="anchor"></a>Command line tool</h4>
@@ -128,14 +128,14 @@ $ <span class="kw">./netReg</span> -h</code></pre></div>
 <div id="r-package" class="section level4">
 <h4 class="hasAnchor">
 <a href="#r-package" class="anchor"></a>R package</h4>
-<p>Installing the <code>R</code> using the downloaded <code>tarball</code> works like this:</p>
+<p>Installing the <code>R</code> using the downloaded tarball works like this:</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">R</span> CMD install <span class="kw">&lt;</span>netReg-x.y.z.tar.gz<span class="kw">&gt;</span></code></pre></div>
 </div>
 </div>
 <div id="installation-on-mac" class="section level3">
 <h3 class="hasAnchor">
 <a href="#installation-on-mac" class="anchor"></a>Installation on Mac</h3>
-<p>In some cases it is required to install <code>gfortan</code> for Mac first (which is needed by <code>Armadillo/RcppArmadillo</code>). I that case run:</p>
+<p>In some cases it is required to install <code>gfortan</code> for Mac first (which is needed by <code>Armadillo/RcppArmadillo</code>). In that case run:</p>
 <div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash">$ <span class="kw">curl</span> -O http://r.research.att.com/libs/gfortran-4.8.2-darwin13.tar.bz2
 $ <span class="kw">sudo</span> tar fvxz gfortran-4.8.2-darwin13.tar.bz2 -C /</code></pre></div>
 <p>Afterwards just install the package as described above.</p>

@@ -54,7 +54,7 @@ $ netReg -h
 
 ### Manual installation
 
-If you don't like package managers you can download the `tarball` of the latest [release](https://github.com/dirmeier/netReg/releases/tag/v1.0.0) and install both or either from the two.
+If you don't like package managers you can download the tarball of the latest [release](https://github.com/dirmeier/netReg/releases/tag/v1.0.0) and install both or either from the two.
 
 #### Command line tool
 
@@ -83,7 +83,7 @@ $ make install --prefix=/some/path
 
 #### R package
 
-Installing the `R` using the downloaded `tarball` works like this:
+Installing the `R` using the downloaded tarball works like this:
 
 ```bash
 $ R CMD install <netReg-x.y.z.tar.gz>
@@ -91,7 +91,7 @@ $ R CMD install <netReg-x.y.z.tar.gz>
 
 ### Installation on Mac
 
-In some cases it is required to install `gfortan` for Mac first (which is needed by `Armadillo/RcppArmadillo`). I that case run:
+In some cases it is required to install `gfortan` for Mac first (which is needed by `Armadillo/RcppArmadillo`). In that case run:
 
 ```sh
 $ curl -O http://r.research.att.com/libs/gfortran-4.8.2-darwin13.tar.bz2

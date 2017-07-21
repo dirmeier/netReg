@@ -55,7 +55,8 @@ library(uuid)
                     as.character("gaussian"))$coefficients,
           times=times)
   }
-  m
+
+   m
 }
 
 

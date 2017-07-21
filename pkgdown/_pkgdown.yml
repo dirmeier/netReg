@@ -9,5 +9,8 @@ navbar:
     - text: "News"
       href: news/index.html
   right:
-    - icon: fa-github
+    - icon: fa-github fa-lg
       href: https://github.com/dirmeier/netReg
+template:
+  params:
+    bootswatch: lumen
