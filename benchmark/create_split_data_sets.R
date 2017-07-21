@@ -16,6 +16,6 @@ for (i in 1:10)
     out.train <- paste0(sub(".tsv", "", fl.name), "_train_", i, ".tsv")
     out.test <- paste0(sub(".tsv", "", fl.name), "_test_", i, ".tsv")
 
-    write.table(X.train, out.train, quote=F, row.names=F, col.names=F)
-    write.table(X.test, out.test, quote=F, row.names=F, col.names=F)
+    write.table(X.train, out.train, quote=F, row.names=F, col.names=F, sep="\t")
+    write.table(X.test, out.test, quote=F, row.names=F, col.names=F, sep="\t")
 }
