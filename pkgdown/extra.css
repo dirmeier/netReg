@@ -1252,3 +1252,28 @@ h1, t {
     font-family: "Lucida Console", Monaco, monospace;
 }
 
+.navbar {
+    font-family: "Raleway", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    border-width: 0 1px 2px 1px;
+}
+
+.navbar .navbar-nav > li > a {
+    font-size: 0.9;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-family: "Raleway", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 11px;
+    letter-spacing: .2rem;
+    margin-right: 5px;
+    color: #222;
+}
+
+.navbar .navbar-brand {
+    color: #222;
+    margin-right: 10px;
+    font-family: "Lucida Console", Monaco, monospace;
+}
+
+.navbar .navbar-nav > li > a:hover, .navbar .navbar-brand  > a:hover {
+  color: #1EAEDB;
+}

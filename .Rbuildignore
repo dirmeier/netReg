@@ -1,8 +1,10 @@
+^benchmark/
 vignettes/netReg_R.Rmd
 vignettes/netReg_commandline.Rmd
 data/X.tsv
 data/Y.tsv
 data/GY.tsv
+^cpp/
 data/README.md
 ^src/main.cpp$
 ^cleanup$

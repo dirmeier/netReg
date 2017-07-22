@@ -42,7 +42,7 @@ from the `R`-console.
 
 ### Installation for command line with bioconda
 
-If you want to use the `C++` command line tool you can do this using `conda`. 
+If you want to use the `C++` command line tool you can do this using conda. 
 For that you should download [Anaconda](https://www.continuum.io/downloads) and create a [virtual environment](https://conda.io/docs/using/envs.html).
 Then install the tool using:
 
@@ -58,7 +58,7 @@ If you don't like package managers you can download the tarball of the latest [r
 
 #### Command line tool
 
-The **command line tool** has the following dependencies:
+The command line tool has the **following dependencies** which need to be installed:
 
 * `CMake >= 3.6`,
 * `Boost >= 1.6.x`,
@@ -105,10 +105,10 @@ Afterwards just install the package as described above.
 There are two tutorials for either `R` or the `C++` command line tool available.
 For questions on how to use the library we are always gladly taking questions. :)
 
-### R
+### R package
 
 Load the package using `library(netReg)`. 
-We provide a vignette for the package that can be called using: `vignette("netReg")`. Basically that is all you have to know. You cal also use the online [tutorial](https://dirmeier.github.io/netReg/articles/netReg_R.html).
+We provide a vignette for the package that can be called using: `vignette("netReg")`. You can also use the online [tutorial](https://dirmeier.github.io/netReg/articles/netReg_R.html).
 
 ### Command line tool
 
