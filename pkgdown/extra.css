@@ -1277,3 +1277,7 @@ h1, t {
 .navbar .navbar-nav > li > a:hover, .navbar .navbar-brand  > a:hover {
   color: #1EAEDB;
 }
+
+div .row {
+    margin-top: 50px;
+}

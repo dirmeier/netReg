@@ -1,4 +1,8 @@
-@import url(http://fonts.googleapis.com/css?family=Raleway);
+
+@font-face {
+    font-family: "My Custom Font";
+    src: "Raleway/Raleway-Regular.ttf" format("truetype");
+}
 
 .header {
     margin-top: 20rem;
@@ -1258,13 +1262,11 @@ h1, t {
 }
 
 .navbar .navbar-nav > li > a {
-
     font-size: 0.9;
     font-weight: bold;
     text-transform: uppercase;
-    font-family: "Raleway", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: "My Custom Font", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 11px;
-
     letter-spacing: .2rem;
     margin-right: 5px;
     color: #222;
@@ -1278,4 +1280,8 @@ h1, t {
 
 .navbar .navbar-nav > li > a:hover, .navbar .navbar-brand  > a:hover {
   color: #1EAEDB;
+}
+
+div .row {
+    margin-top: 50px;
 }

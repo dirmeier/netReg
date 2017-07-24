@@ -1,3 +1,6 @@
+benchmark/mse*
+data/*train*.tsv
+data/*test*.tsv
 cmake-build-debug/
 inst/doc/*
 build/
