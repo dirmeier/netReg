@@ -1,5 +1,5 @@
 
-# netReg <img src="https://cdn.rawgit.com/dirmeier/netReg/7b8e31e0/_fig/sticker.svg" align="right" width="160px"/>
+# netReg <img src="https://cdn.rawgit.com/dirmeier/netReg/7b8e31e0/inst/sticker/sticker.png" align="right" width="160px"/>
 
 [![Project Status](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![Build Status](https://travis-ci.org/dirmeier/netReg.svg?branch=master)](https://travis-ci.org/dirmeier/netReg)
@@ -104,7 +104,7 @@ Afterwards just install the package as described above.
 ## Documentation
 
 There are two tutorials for either `R` or the `C++` command line tool available.
-For questions on how to use the library we are always gladly taking questions. :)
+We are always glad to take questions, so feel free to write or open up an issue.
 
 ### R package
 

@@ -30,9 +30,6 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../index.html">Home</a>
-</li>
-<li>
   <a href="../articles/netReg_R.html">R</a>
 </li>
 <li>
@@ -46,6 +43,12 @@
 <li>
   <a href="https://github.com/dirmeier/netReg">
     <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="http://twitter.com/simon_dirmeier/">
+    <span class="fa fa fa fa-twitter-square fa-lg"></span>
      
   </a>
 </li>
@@ -64,7 +67,7 @@
       <h1>netReg</h1>
                         <h4 class="author">Simon Dirmeier</h4>
             
-            <h4 class="date">2017-07-22</h4>
+            <h4 class="date">2017-10-21</h4>
           </div>
 
     
@@ -83,13 +86,13 @@
 <p>This section explains how to fit a linear model and do parameter estimation using <code>edgenet</code>-regularization. The model is a truncated version from <span class="citation">(Cheng et al. 2014)</span> that is able to introduce prior graphs for the design and response matrices for penalization.</p>
 <p>At first we generate some toy data randomly:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">    <span class="kw">set.seed</span>(<span class="dv">23</span>)
-    X &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="dv">1000</span>*<span class="dv">5</span>), <span class="dv">1000</span>)
-    Y &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="dv">1000</span>*<span class="dv">5</span>), <span class="dv">1000</span>)</code></pre></div>
+    X &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="dv">1000</span><span class="op">*</span><span class="dv">5</span>), <span class="dv">1000</span>)
+    Y &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="dv">1000</span><span class="op">*</span><span class="dv">5</span>), <span class="dv">1000</span>)</code></pre></div>
 <p>Then we load the <code>netReg</code> library:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">    <span class="kw">library</span>(netReg)</code></pre></div>
 <p>For <code>edgenet</code> we need to create an affinity matrix for the co-variables first. We also can create a graph for the responses, but this is not necessary to demonstrate the method. We could create a random graph like this:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">    aff.mat &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rbeta</span>(<span class="dv">25</span>, <span class="dv">1</span>, <span class="dv">5</span>),  <span class="dv">5</span>)
-    aff.mat &lt;-<span class="st"> </span>(<span class="kw">t</span>(aff.mat) +<span class="st"> </span>aff.mat) /<span class="st"> </span><span class="dv">2</span>
+    aff.mat &lt;-<span class="st"> </span>(<span class="kw">t</span>(aff.mat) <span class="op">+</span><span class="st"> </span>aff.mat) <span class="op">/</span><span class="st"> </span><span class="dv">2</span>
     <span class="kw">diag</span>(aff.mat) &lt;-<span class="st"> </span><span class="dv">0</span></code></pre></div>
 <p>We created the affinity matrix absolutely random, although in practice a <em>real</em> (biological) observed affinity matrix should be used, because in the end the affinity matrix decides the shrinkage of the coefficients.</p>
 <div id="model-fitting" class="section level3">
@@ -109,6 +112,7 @@
 ## [3,] -0.02396619 -0.006507272  0.0244506149  0.02685324 -0.014316626
 ## [4,]  0.00000000 -0.039063322 -0.0301731092 -0.02050031  0.001355670
 ## [5,]  0.04213578  0.021257125  0.0242694757 -0.02222326 -0.008547463
+## 
 ## Intercept:
 ##              [,1]
 ## [1,]  0.019672657
@@ -116,14 +120,16 @@
 ## [3,] -0.004606925
 ## [4,] -0.025844237
 ## [5,]  0.032155794
+## 
 ## Parameters:
 ## lambda psi_gx psi_gy 
 ##      1      1      0 
+## 
 ## Family:
 ## [1] "gaussian"</code></pre>
 <p>In this case we used a single affinity matrix <code>G.X</code> which represents the relationship of the covariables <span class="math inline">\(\mathit{X}\)</span>. If the design matrix has <span class="math inline">\(p\)</span> variables, <code>G.X</code> has to be an <span class="math inline">\((p \times p)\)</span>-dimensional symmetric matrix. We can also include a matrix for the response matrix <code>Y</code> with <span class="math inline">\(q\)</span> dependent variables. In that case the affinity matrix <code>G.Y</code> has to be <span class="math inline">\((q \times q)\)</span>-dimensional (and also symmetric).</p>
 <p>The <code>fit</code> object contains information about coefficients, intercepts, residuals, etc. Having the coefficients estimated we are able to predict novel data-sets:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">    X.new &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="dv">10</span>*<span class="dv">5</span>),<span class="dv">10</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">    X.new &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="dv">10</span><span class="op">*</span><span class="dv">5</span>),<span class="dv">10</span>)
     pred  &lt;-<span class="st"> </span><span class="kw">predict</span>(fit, X.new)</code></pre></div>
 <p>The <code>pred</code> objects contains the predicted values for the responses.</p>
 </div>
@@ -150,10 +156,10 @@
 </ul>
 <p>Let’s do a scenario where we need to shrink some coefficients, i.e. <span class="math inline">\(n \ll p\)</span>. We choose a small <span class="math inline">\(p\)</span>, such that the computation does not take too long.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">    p &lt;-<span class="st"> </span><span class="dv">25</span>
-    X &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="dv">10</span>*p), <span class="dv">10</span>)
-    Y &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="dv">10</span>*p), <span class="dv">10</span>)
-    aff.mat &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rgamma</span>(p *<span class="st"> </span>p, <span class="dv">5</span>, <span class="dv">1</span>), p)
-    aff.mat &lt;-<span class="st"> </span>(<span class="kw">t</span>(aff.mat) +<span class="st"> </span>aff.mat)
+    X &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="dv">10</span><span class="op">*</span>p), <span class="dv">10</span>)
+    Y &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="dv">10</span><span class="op">*</span>p), <span class="dv">10</span>)
+    aff.mat &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rgamma</span>(p <span class="op">*</span><span class="st"> </span>p, <span class="dv">5</span>, <span class="dv">1</span>), p)
+    aff.mat &lt;-<span class="st"> </span>(<span class="kw">t</span>(aff.mat) <span class="op">+</span><span class="st"> </span>aff.mat)
     <span class="kw">diag</span>(aff.mat) &lt;-<span class="st"> </span><span class="dv">0</span>
     cv &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cv.edgenet.html">cv.edgenet</a></span>(<span class="dt">X=</span>X, <span class="dt">Y=</span>Y, <span class="dt">G.X=</span>aff.mat, <span class="dt">family=</span><span class="st">"gaussian"</span>, <span class="dt">maxit=</span><span class="dv">1000</span>)
     <span class="kw">print</span>(cv)</code></pre></div>
@@ -174,7 +180,7 @@
 <a href="#references" class="anchor"></a>References</h2>
 <div id="refs" class="references">
 <div id="ref-cheng2014graph">
-<p>Cheng, Wei, Xiang Zhang, Zhishan Guo, Yu Shi, and Wei Wang. 2014. “Graph-Regularized Dual Lasso for Robust EQTL Mapping.” <em>Bioinformatics</em> 30 (12). Oxford Univ Press: i139–i148.</p>
+<p>Cheng, Wei, Xiang Zhang, Zhishan Guo, Yu Shi, and Wei Wang. 2014. “Graph-Regularized Dual Lasso for Robust eQTL Mapping.” <em>Bioinformatics</em> 30 (12). Oxford Univ Press: i139–i148.</p>
 </div>
 <div id="ref-eddelbuettel2014rcpparmadillo">
 <p>Eddelbuettel, Dirk, and Conrad Sanderson. 2014. “RcppArmadillo: Accelerating R with High-Performance C++ Linear Algebra.” <em>Computational Statistics &amp; Data Analysis</em> 71. Elsevier: 1054–63.</p>
@@ -198,7 +204,7 @@
 <p>Li, Caiyan, and Hongzhe Li. 2008. “Network-Constrained Regularization and Variable Selection for Analysis of Genomic Data.” <em>Bioinformatics</em> 24 (9). Oxford Univ Press: 1175–82.</p>
 </div>
 <div id="ref-powell2009bobyqa">
-<p>Powell, Michael JD. 2009. “The Bobyqa Algorithm for Bound Constrained Optimization Without Derivatives.” <em>Cambridge NA Report NA2009/06, University of Cambridge, Cambridge</em>. Citeseer.</p>
+<p>Powell, Michael JD. 2009. “The Bobyqa Algorithm for Bound Constrained Optimization Without Derivatives.” <em>Cambridge NA Report Na2009/06, University of Cambridge, Cambridge</em>. Citeseer.</p>
 </div>
 </div>
 </div>

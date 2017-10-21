@@ -7,7 +7,7 @@
   }
 }
 
-\section{Version 1.1.0}{
+\section{Version 1.1.x}{
   \itemize{
     \item Implementation as standalone \code{C++} tool
     \item Addition of biological dummy data set

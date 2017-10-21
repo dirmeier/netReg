@@ -30,9 +30,6 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="index.html">Home</a>
-</li>
-<li>
   <a href="articles/netReg_R.html">R</a>
 </li>
 <li>
@@ -46,6 +43,12 @@
 <li>
   <a href="https://github.com/dirmeier/netReg">
     <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="http://twitter.com/simon_dirmeier/">
+    <span class="fa fa fa fa-twitter-square fa-lg"></span>
      
   </a>
 </li>
@@ -86,19 +89,19 @@
 <h3 class="hasAnchor">
 <a href="#installation-for-r-with-bioconductor" class="anchor"></a>Installation for R with Bioconductor</h3>
 <p>If you want to use the <code>R</code> version of <code>netReg</code> call:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">&gt;<span class="st"> </span><span class="kw">source</span>(<span class="st">"https://bioconductor.org/biocLite.R"</span>)
-&gt;<span class="st"> </span><span class="kw">biocLite</span>(<span class="st">"netReg"</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="op">&gt;</span><span class="st"> </span><span class="kw">source</span>(<span class="st">"https://bioconductor.org/biocLite.R"</span>)
+<span class="op">&gt;</span><span class="st"> </span><span class="kw">biocLite</span>(<span class="st">"netReg"</span>)
   
-&gt;<span class="st"> </span><span class="kw">library</span>(netReg)</code></pre></div>
+<span class="op">&gt;</span><span class="st"> </span><span class="kw">library</span>(netReg)</code></pre></div>
 <p>from the <code>R</code>-console.</p>
 </div>
 <div id="installation-for-command-line-with-bioconda" class="section level3">
 <h3 class="hasAnchor">
 <a href="#installation-for-command-line-with-bioconda" class="anchor"></a>Installation for command line with bioconda</h3>
 <p>If you want to use the <code>C++</code> command line tool you can do this using conda. For that you should download <a href="https://www.continuum.io/downloads">Anaconda</a> and create a <a href="https://conda.io/docs/using/envs.html">virtual environment</a>. Then install the tool using:</p>
-<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash">$ <span class="kw">conda</span> install -c bioconda netreg
+<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash">$ <span class="ex">conda</span> install -c bioconda netreg
   
-$ <span class="kw">netReg</span> -h</code></pre></div>
+$ <span class="ex">netReg</span> -h</code></pre></div>
 </div>
 <div id="manual-installation" class="section level3">
 <h3 class="hasAnchor">
@@ -121,33 +124,33 @@ $ <span class="kw">netReg</span> -h</code></pre></div>
 <em>optional</em>: <code>OpenMP</code> (older versions should work).</li>
 </ul>
 <p>To install the command line tool manually:</p>
-<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash">$ <span class="kw">mkdir</span> build <span class="kw">&amp;&amp;</span> <span class="kw">cd</span> build
-$ <span class="kw">cmake</span> .. <span class="kw">&amp;&amp;</span> <span class="kw">make</span>
+<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash">$ <span class="fu">mkdir</span> build <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> build
+$ <span class="fu">cmake</span> .. <span class="kw">&amp;&amp;</span> <span class="fu">make</span>
   
-$ <span class="kw">./netReg</span> -h</code></pre></div>
+$ <span class="ex">./netReg</span> -h</code></pre></div>
 <p>If you want the tool to be installed in some specific folder you would also call:</p>
-<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash">$ <span class="kw">make</span> install --prefix=/some/path</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash">$ <span class="fu">make</span> install --prefix=/some/path</code></pre></div>
 </div>
 <div id="r-package" class="section level4">
 <h4 class="hasAnchor">
 <a href="#r-package" class="anchor"></a>R package</h4>
 <p>Installing the <code>R</code> using the downloaded tarball works like this:</p>
-<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">R</span> CMD install <span class="kw">&lt;</span>netReg-x.y.z.tar.gz<span class="kw">&gt;</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="ex">R</span> CMD install <span class="op">&lt;</span>netReg-x.y.z.tar.gz<span class="op">&gt;</span></code></pre></div>
 </div>
 </div>
 <div id="installation-on-mac" class="section level3">
 <h3 class="hasAnchor">
 <a href="#installation-on-mac" class="anchor"></a>Installation on Mac</h3>
 <p>In some cases it is required to install <code>gfortan</code> for Mac first (which is needed by <code>Armadillo/RcppArmadillo</code>). In that case run:</p>
-<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash">$ <span class="kw">curl</span> -O http://r.research.att.com/libs/gfortran-4.8.2-darwin13.tar.bz2
-$ <span class="kw">sudo</span> tar fvxz gfortran-4.8.2-darwin13.tar.bz2 -C /</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash">$ <span class="ex">curl</span> -O http://r.research.att.com/libs/gfortran-4.8.2-darwin13.tar.bz2
+$ <span class="fu">sudo</span> tar fvxz gfortran-4.8.2-darwin13.tar.bz2 -C /</code></pre></div>
 <p>Afterwards just install the package as described above.</p>
 </div>
 </div>
 <div id="documentation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#documentation" class="anchor"></a>Documentation</h2>
-<p>There are two tutorials for either <code>R</code> or the <code>C++</code> command line tool available. For questions on how to use the library we are always gladly taking questions. :)</p>
+<p>There are two tutorials for either <code>R</code> or the <code>C++</code> command line tool available. We are always glad to take questions, so feel free to write or open up an issue.</p>
 <div id="r-package-1" class="section level3">
 <h3 class="hasAnchor">
 <a href="#r-package-1" class="anchor"></a>R package</h3>

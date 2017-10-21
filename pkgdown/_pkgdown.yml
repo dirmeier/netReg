@@ -2,8 +2,6 @@ navbar:
   title: "netReg"
   type: inverse
   left:
-    - text: "Home"
-      href: index.html
     - text: "R"
       href: articles/netReg_R.html
     - text: "C++"
@@ -13,6 +11,8 @@ navbar:
   right:
     - icon: fa-github fa-lg
       href: https://github.com/dirmeier/netReg
+    - icon: fa fa-twitter-square fa-lg
+      href: http://twitter.com/simon_dirmeier/
 template:
   params:
     bootswatch: lumen
