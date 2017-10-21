@@ -53,21 +53,13 @@ before_install:
   - sudo apt-get install --only-upgrade automake
   - sudo apt-get install --only-upgrade autotools-dev
   - sudo apt-get install autoconf-archive
-  - wget https://sourceforge.net/projects/arma/files/armadillo-8.200.1.tar.xz
-  - |
-      CMAKE_URL="https://cmake.org/files/v3.8/cmake-3.8.0-Linux-x86_64.tar.gz"
-      sudo mkdir cmake && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | sudo tar --strip-components=1 -xz -C /usr
-      export PATH=${DEPS_DIR}/cmake/bin:${PATH}
-  - tar xvf armadillo-8.200.1.tar.xz &&  mkdir build && cd build && cmake .. && make && make install
 
 before_script:
   - autoreconf -vif
-  - mkdir -p build && cd build && cmake .. && make && cd ..
 
 script:
   - R CMD build .
   - R CMD check $PKG_TARBALL
-  - ./build/netReg -h
 
 after_success:
   - tar -C .. -xf $PKG_TARBALL
