@@ -7,6 +7,7 @@ cmake-build-debug/
 inst/doc/*
 build/
 config.*
+cpp/tests/
 inst/doc/*
 src/tests/build/.*
 src/tests/a.out
