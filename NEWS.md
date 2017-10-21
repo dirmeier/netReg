@@ -1,3 +1,6 @@
+## Version 1.2.0
+  - Version bump after `Bioconductor` release 3.6
+
 ## Version 1.1.0
   - Implementation as standalone `C++` tool
   - Addition of biological dummy data set
