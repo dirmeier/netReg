@@ -57,10 +57,6 @@ before_install:
 before_script:
   - autoreconf -vif
 
-script:
-  - R CMD build .
-  - R CMD check $PKG_TARBALL
-
 after_success:
   - tar -C .. -xf $PKG_TARBALL
   - Rscript -e 'covr::codecov()'
