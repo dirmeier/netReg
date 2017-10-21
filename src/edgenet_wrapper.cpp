@@ -27,7 +27,7 @@
 #include "edgenet_gaussian_model_selection.hpp"
 #include "stat_functions.hpp"
 
-<<<<<<< HEAD
+
 #include <map>
 #include <numeric>
 #include <string>
@@ -36,40 +36,19 @@
 namespace netreg
 {
     SEXP fit(graph_penalized_linear_model_data &data)
-=======
-#include <numeric>
-#include <vector>
-#include <string>
-#include <map>
-
-namespace netreg
-{
-    SEXP edgenet_wrapper::run(graph_penalized_linear_model_data &data) const
->>>>>>> upstream/master
     {
         BEGIN_RCPP
         edgenet_gaussian edge;
         arma::Mat<double> coef = edge.run(data);
-<<<<<<< HEAD
         arma::Col<double> intr =
             intercept(data.design(), data.response(), coef);
         return Rcpp::List::create(
             Rcpp::Named("coefficients") = coef,
             Rcpp::Named("intercept")    = intr);
-=======
-        arma::Col<double> intr = intercept(data.design(),
-                                           data.response(),
-                                           coef);
-        return Rcpp::List::create(
-            Rcpp::Named("coefficients") = coef,
-            Rcpp::Named("intercept")    = intr
-        );
->>>>>>> upstream/master
         END_RCPP
         return R_NilValue;
     }
 
-<<<<<<< HEAD
     SEXP regularization_path(
         graph_penalized_linear_model_cv_data &data,
         const int niter,
@@ -81,21 +60,6 @@ namespace netreg
         return Rcpp::List::create(
             Rcpp::Named("parameters") = Rcpp::wrap(res),
             Rcpp::Named("folds")      = data.fold_ids());
-=======
-    SEXP edgenet_wrapper::regularization_path
-        (graph_penalized_linear_model_cv_data &data,
-         const int niter,
-         const double epsilon) const
-    {
-        BEGIN_RCPP
-        edgenet_gaussian_model_selection edge;
-        std::map<std::string, double> res =
-            edge.regularization_path(data, niter, epsilon);
-        return Rcpp::List::create(
-            Rcpp::Named("parameters") = Rcpp::wrap(res),
-            Rcpp::Named("folds")      = data.fold_ids()
-        );
->>>>>>> upstream/master
         END_RCPP
         return R_NilValue;
     }
