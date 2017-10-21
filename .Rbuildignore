@@ -8,7 +8,6 @@ data/GY.tsv
 data/README.md
 ^src/main.cpp$
 ^cleanup$
-^benchmark$
 ^cmd_line
 ^.*\.Rproj$
 ^\.Rproj\.user$

@@ -40,8 +40,11 @@ namespace netreg
 
     public:
 
+<<<<<<< HEAD
         penalized_linear_model_data(){}
 
+=======
+>>>>>>> upstream/master
         /**
          * Constructor.
          *
@@ -86,8 +89,13 @@ namespace netreg
         }
 
     protected:
+<<<<<<< HEAD
          double ALPHA;   // mixing weights for elastic-net
          double LAMBDA;  // penalization term for LASSO
+=======
+        const double ALPHA;   // mixing weights for elastic-net
+        const double LAMBDA;  // penalization term for LASSO
+>>>>>>> upstream/master
     };
 }
 #endif //NETREG_PENALIZEDLINEARMODELDATA_HPP

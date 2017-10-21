@@ -36,9 +36,12 @@ namespace netreg
 
     public:
 
+<<<<<<< HEAD
         graph_penalized_linear_model_data()
         {}
 
+=======
+>>>>>>> upstream/master
         /**
          * Constructor.
          *
@@ -126,8 +129,13 @@ namespace netreg
         }
 
     protected:
+<<<<<<< HEAD
         double psi_gx;  // Penalization vector for GX
         double psi_gy;  // Penalization vector for GY
+=======
+        const double psi_gx;  // Penalization vector for GX
+        const double psi_gy;  // Penalization vector for GY
+>>>>>>> upstream/master
         arma::Mat<double> GX;    // prior graph for the design matrix
         arma::Mat<double> GY;    // prior graph for response matrix
         arma::Mat<double> LX;    // Normalized Laplacian of GX

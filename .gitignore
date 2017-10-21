@@ -1,7 +1,9 @@
+
 benchmark/mse*
 data/*train*.tsv
 data/*test*.tsv
 cmake-build-debug/
+
 inst/doc/*
 build/
 config.*
@@ -39,6 +41,7 @@ missing
 test-driver
 Makefile.in
 glmnet
+
 src/*.o
 src/*.so
 .Rproj.user/*

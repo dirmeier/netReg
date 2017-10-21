@@ -58,8 +58,13 @@ SEXP edgenet_cpp
     BEGIN_RCPP
     std::string fam = Rcpp::as<std::string>(fs);
     netreg::family f = //fam == "binomial" ? netreg::family::BINOMIAL :
+<<<<<<< HEAD
         fam == "gaussian" ? netreg::family::GAUSSIAN
                           : netreg::family::NONE;
+=======
+                       fam == "gaussian" ? netreg::family::GAUSSIAN
+                                         : netreg::family::NONE;
+>>>>>>> upstream/master
     if (f == netreg::family::NONE)
     {
         Rprintf("Wrong family given\n");
@@ -74,7 +79,12 @@ SEXP edgenet_cpp
          Rcpp::as<double>(psigx), Rcpp::as<double>(psigy),
          Rcpp::as<int>(niter), Rcpp::as<double>(thresh), f);
     // TODO change that back and include family in data
+<<<<<<< HEAD
     return fit(data);
+=======
+    netreg::edgenet_wrapper edge;
+    return edge.run(data);
+>>>>>>> upstream/master
     END_RCPP
     return R_NilValue;
 }
@@ -122,6 +132,10 @@ SEXP cv_edgenet_cpp
     const int *xdim = INTEGER(Rf_getAttrib(X, R_DimSymbol));
     const int *ydim = INTEGER(Rf_getAttrib(Y, R_DimSymbol));
     const int lenfoldid = Rcpp::as<int>(lenfs);
+<<<<<<< HEAD
+=======
+    netreg::edgenet_wrapper e;
+>>>>>>> upstream/master
     if (lenfoldid == xdim[0])
     {
         netreg::graph_penalized_linear_model_cv_data data(
@@ -129,23 +143,36 @@ SEXP cv_edgenet_cpp
             -1, 1.0, Rcpp::as<double>(psigx), Rcpp::as<double>(psigy),
             Rcpp::as<int>(niter), Rcpp::as<double>(thresh),
             INTEGER(foldids), f);
+<<<<<<< HEAD
         return regularization_path(data,
                                    Rcpp::as<int>(optim_niter),
                                    Rcpp::as<double>(epsilon));
+=======
+        return e.regularization_path(data,
+                                     Rcpp::as<int>(optim_niter),
+                                     Rcpp::as<double>(epsilon));
+>>>>>>> upstream/master
     }
     netreg::graph_penalized_linear_model_cv_data data(
         REAL(X), REAL(Y), REAL(GX), REAL(GY), xdim[0], xdim[1], ydim[1],
         -1, 1.0, Rcpp::as<double>(psigx), Rcpp::as<double>(psigy),
         Rcpp::as<int>(niter), Rcpp::as<double>(thresh),
         Rcpp::as<int>(nfolds), f);
+<<<<<<< HEAD
     return regularization_path(data,
                                Rcpp::as<int>(optim_niter),
                                Rcpp::as<double>(epsilon));
+=======
+    return e.regularization_path(data,
+                                 Rcpp::as<int>(optim_niter),
+                                 Rcpp::as<double>(epsilon));
+>>>>>>> upstream/master
     END_RCPP
     return R_NilValue;
 }
 };
 
+<<<<<<< HEAD
 #include <R_ext/Rdynload.h>
 
 static R_CallMethodDef callMethods[] = {
@@ -154,6 +181,18 @@ static R_CallMethodDef callMethods[] = {
     {NULL, NULL,                                   0}
 };
 
+=======
+
+#include <R_ext/Rdynload.h>
+
+static R_CallMethodDef callMethods[] = {
+    {"edgenet_cpp", (DL_FUNC) &edgenet_cpp, 10},
+    {"cv_edgenet_cpp", (DL_FUNC) &cv_edgenet_cpp, 14},
+    {NULL, NULL, 0}
+};
+
+
+>>>>>>> upstream/master
 extern "C" void R_init_netReg(DllInfo *dll)
 {
     R_registerRoutines(dll, NULL, callMethods, NULL, NULL);

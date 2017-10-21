@@ -46,9 +46,12 @@ namespace netreg
     {
     protected:
 
+<<<<<<< HEAD
         linear_model_data()
         {}
 
+=======
+>>>>>>> upstream/master
         /**
          * Protected constructor in order to avoid instantiation.
          *
@@ -66,7 +69,11 @@ namespace netreg
                           const int niter, const double thresh,
                           const family fam)
             : N(n), P(p), Q(q),
+<<<<<<< HEAD
               X(x, n, p, false, true),
+=======
+              X(x, n, p , false, true),
+>>>>>>> upstream/master
               Y(y, n, q, false, true),
               THRESH(thresh), N_ITER(niter),
               TXY(p, q), txx_rows_(p),
@@ -75,8 +82,12 @@ namespace netreg
             arma::Mat<double> TX = X.t();
             arma::Mat<double> TXX = TX * X;
             TXY = TX * Y;
+<<<<<<< HEAD
             for (std::vector<arma::Row<double> >::size_type i = 0;
                  i < TXX.n_rows; ++i)
+=======
+            for(std::vector< arma::Row<double> >::size_type i = 0; i < TXX.n_rows;  ++i)
+>>>>>>> upstream/master
             {
                 txx_rows_[i] = TXX.row(i);
             }
@@ -129,7 +140,11 @@ namespace netreg
             return txx_rows_[i];
         }
 
+<<<<<<< HEAD
         std::vector<arma::rowvec>& txx_rows()
+=======
+        std::vector< arma::rowvec >& txx_rows()
+>>>>>>> upstream/master
         {
             return txx_rows_;
         }
@@ -139,7 +154,11 @@ namespace netreg
          *
          * @return a reference to the design matrix
          */
+<<<<<<< HEAD
         arma::Mat<double>& design()
+=======
+         arma::Mat<double> &design()
+>>>>>>> upstream/master
         {
             return X;
         }
@@ -149,7 +168,11 @@ namespace netreg
          *
          * @return a reference to the response matrix
          */
+<<<<<<< HEAD
         arma::Mat<double>& response()
+=======
+         arma::Mat<double> &response()
+>>>>>>> upstream/master
         {
             return Y;
         }
@@ -159,7 +182,11 @@ namespace netreg
          *
          * @return a reference to X'Y matrix.
          */
+<<<<<<< HEAD
         arma::Mat<double>& txy()
+=======
+        arma::Mat<double> &txy() 
+>>>>>>> upstream/master
         {
             return TXY;
         }
@@ -169,7 +196,11 @@ namespace netreg
          *
          * @return the max number of iterations
          */
+<<<<<<< HEAD
         const int max_iter()
+=======
+        const int max_iter() 
+>>>>>>> upstream/master
         {
             return N_ITER;
         }
@@ -185,6 +216,7 @@ namespace netreg
         }
 
     protected:
+<<<<<<< HEAD
         int N;             // number of samples: n
         int P;             // number of covariables: p
         int Q;             // number of responses: q
@@ -195,6 +227,18 @@ namespace netreg
         arma::Mat<double> TXY;      // (p x q)-dimensional matrix: X'Y
         std::vector<arma::Row<double> > txx_rows_;
         enum family family_;      // family of distribution of y
+=======
+        const int N;             // number of samples: n
+        const int P;             // number of covariables: p
+        const int Q;             // number of responses: q
+        arma::Mat<double> X;        // (n x p)-dimensional design matrix
+        arma::Mat<double> Y;        // (n x q)-dimensional response matrix
+        const double THRESH;     // convergence threshold
+        const int N_ITER;        // max number iterations if CCD does not converge
+        arma::Mat<double> TXY;      // (p x q)-dimensional matrix: X'Y
+        std::vector< arma::Row<double> > txx_rows_;
+        const enum family family_;      // family of distribution of y
+>>>>>>> upstream/master
     };
 }
 #endif //NETREG_LINEARMODELDATA_HPP
