@@ -1,5 +1,4 @@
 /**
-<<<<<<< HEAD
  * netReg: graph-regularized linear regression models.
  * <p>
  * Copyright (C) 2015 - 2016 Simon Dirmeier
@@ -21,11 +20,6 @@
  *
  * @author: Simon Dirmeier
  * @email: simon.dirmeier@gmx.de
-=======
- * Author: Simon Dirmeier
- * Date: 24/02/17
- * Email: simon.dirmeier@bsse.ethz.ch
->>>>>>> upstream/master
  */
 
 #include "edgenet_gaussian_model_selection.hpp"
@@ -37,17 +31,10 @@
 namespace netreg
 {
 
-<<<<<<< HEAD
     std::map<std::string, double> model_selection(
         graph_penalized_linear_model_cv_data &data,
         const int niter,
         const double epsilon)
-=======
-    std::map<std::string, double> edgenet_gaussian_model_selection::regularization_path(
-        graph_penalized_linear_model_cv_data &data,
-        const int niter,
-        const double epsilon) const
->>>>>>> upstream/master
     {
         optim opt;
 

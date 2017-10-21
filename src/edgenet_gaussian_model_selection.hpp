@@ -1,5 +1,4 @@
 /**
-<<<<<<< HEAD
  * netReg: graph-regularized linear regression models.
  * <p>
  * Copyright (C) 2015 - 2016 Simon Dirmeier
@@ -21,11 +20,6 @@
  *
  * @author: Simon Dirmeier
  * @email: simon.dirmeier@gmx.de
-=======
- * Author: Simon Dirmeier
- * Date: 24/02/17
- * Email: simon.dirmeier@bsse.ethz.ch
->>>>>>> upstream/master
  */
 
 #ifndef NETREG_EDGENET_GAUSSIAN_MODEL_SELECTION_HPP
@@ -38,7 +32,6 @@
 namespace netreg
 {
 
-<<<<<<< HEAD
     /**
      * Find the set of optimal shrinkage parameters for a edge-penalized regression
      * model. Set is calculated using cross-validation.
@@ -53,23 +46,3 @@ namespace netreg
         double epsilon);
 }
 #endif // NETREG_EDGENET_GAUSSIAN_MODEL_SELECTION_HPP
-=======
-    class edgenet_gaussian_model_selection
-    {
-    public:
-        /**
-         * Find the set of optimal shrinkage parameters for a edge-penalized regression model.
-         * Set is calculated using cross-validation.
-         *
-         * @param data
-         *
-         * @returns returns a map of shrinkage parameters
-         */
-        std::map<std::string, double> regularization_path
-          (graph_penalized_linear_model_cv_data &data,           
-           int niter,
-           double epsilon) const;
-    };
-}
-#endif //NETREG_EDGENET_GAUSSIAN_MODEL_SELECTION_HPP
->>>>>>> upstream/master
