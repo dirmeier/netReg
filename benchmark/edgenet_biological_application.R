@@ -98,7 +98,7 @@ g <-
     ggplot2::scale_x_discrete(limits=c("NetReg", "Lasso")) +
     ggplot2::theme(text=element_text(size=16),
                    axis.text.x = element_text(size=16),
-                   axis.text.y = element_text(size=16),
+                   axis.text.y = element_blank(),
                    legend.text=element_text(size=17)) +
     xlab("") +
     ylab("Mean Residual Sum of Squares")
