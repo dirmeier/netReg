@@ -44,5 +44,6 @@ data/Y_test*
 data/Y_train*
 docs/*
 pkgdown/*
+tests/c++/
 vignettes/netReg_R.Rmd
 vignettes/netReg_commandline.Rmd
