@@ -31,34 +31,37 @@ if (OPENMP_FOUND)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 endif()
 
+set(SOURCES
+    ../../src/config.h
+    ../../src/cv_fold.hpp
+    ../../src/cv_set.cpp
+    ../../src/edgenet_gaussian.cpp
+    ../../src/edgenet_gaussian.hpp
+    ../../src/edgenet_gaussian_loss_function.hpp
+    ../../src/edgenet_gaussian_model_selection.cpp
+    ../../src/edgenet_gaussian_model_selection.hpp
+    ../../src/family.hpp
+    ../../src/error_functions.hpp
+    ../../src/graph_functions.cpp
+    ../../src/graph_functions.hpp
+    ../../src/graph_penalized_linear_model_data.hpp
+    ../../src/graph_penalized_linear_model_cv_data.cpp
+    ../../src/graph_penalized_linear_model_cv_data.hpp
+    ../../src/illegal_argument_exception.hpp
+    ../../src/io_exception.hpp
+    ../../src/linear_model_data.hpp
+    ../../src/math_functions.cpp
+    ../../src/not_implemented_exception.hpp
+    ../../src/optim.hpp
+    ../../src/penalized_linear_model_data.hpp
+    ../../src/stat_functions.cpp
+    ../../src/stat_functions.hpp
+    ../../src/vector_functions.cpp
+    ../../src/vector_functions.hpp)
+
 add_executable(
     test_netReg
-        ../../src/config.h
-        ../../src/cv_fold.hpp
-        ../../src/cv_set.cpp
-        ../../src/edgenet_gaussian.cpp
-        ../../src/edgenet_gaussian.hpp
-        ../../src/edgenet_gaussian_loss_function.hpp
-        ../../src/edgenet_gaussian_model_selection.cpp
-        ../../src/edgenet_gaussian_model_selection.hpp
-        ../../src/family.hpp
-        ../../src/error_functions.hpp
-        ../../src/graph_functions.cpp
-        ../../src/graph_functions.hpp
-        ../../src/graph_penalized_linear_model_data.hpp
-        ../../src/graph_penalized_linear_model_cv_data.cpp
-        ../../src/graph_penalized_linear_model_cv_data.hpp
-        ../../src/illegal_argument_exception.hpp
-        ../../src/io_exception.hpp
-        ../../src/linear_model_data.hpp
-        ../../src/math_functions.cpp
-        ../../src/not_implemented_exception.hpp
-        ../../src/optim.hpp
-        ../../src/penalized_linear_model_data.hpp
-        ../../src/stat_functions.cpp
-        ../../src/stat_functions.hpp
-        ../../src/vector_functions.cpp
-        ../../src/vector_functions.hpp
+        ${SOURCES}
         test.cpp
         test_data.cpp
         test_model.cpp

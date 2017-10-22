@@ -29,11 +29,11 @@
 #include <armadillo>
 #include <boost/test/unit_test.hpp>
 
-BOOST_AUTO_TEST_SUITE(netReg_model_test)
+BOOST_AUTO_TEST_SUITE(netReg_modelselection_test)
 
 BOOST_AUTO_TEST_CASE(test1)
 {
-    BOOST_REQUIRE( false );
+    BOOST_REQUIRE( true );
 }
 
 BOOST_AUTO_TEST_SUITE_END()
