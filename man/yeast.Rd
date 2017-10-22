@@ -9,14 +9,17 @@
 data(yeast)
 }
 \description{
-The yeast data set is a \code{list} containing three matrices that can be used as
-an example for using \code{netReg}.
+The yeast data set is a \code{list} containing three matrices that
+can be used as an example for using \code{netReg}.
 }
 \details{
 \itemize{
-    \item \code{X}  (112 x 500)-dimensional binary matrix of 500 genetic markers for 112 yeast samples
-    \item \code{Y}  (112 x 231)-dimensional double matrix of 231 gene expression values for 112 yeast samples
-    \item \code{GY} (231 x 231)-dimensional adjaceny matrix representing protein-protein interactions for 231 yeast genes
+    \item \code{X}  (112 x 500)-dimensional binary matrix of 500
+      genetic markers for 112 yeast samples
+    \item \code{Y}  (112 x 231)-dimensional double matrix of 231
+      gene expression values for 112 yeast samples
+    \item \code{GY} (231 x 231)-dimensional adjaceny matrix representing
+      protein-protein interactions for 231 yeast genes
  }
 }
 \keyword{data}

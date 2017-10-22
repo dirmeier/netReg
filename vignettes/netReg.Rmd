@@ -33,8 +33,8 @@ for regression coefficients.
 
 `netReg` computes coefficients using \textit{cyclic coordinate descent} as 
 previously introduced [@fu1998penalized, @friedman2007pathwise], 
-[@friedman2010regularization]. The package is an `R`-wrapper to an external `C++` 
-library that uses `RcppArmadillo` [@eddelbuettel2014rcpparmadillo] for 
+[@friedman2010regularization]. The package is an `R`-wrapper to an external 
+`C++` library that uses `RcppArmadillo` [@eddelbuettel2014rcpparmadillo] for 
 fast matrix calculations and `Dlib` [@king2009dlib] for gradient-free 
 convex optimization for model selection.
 
