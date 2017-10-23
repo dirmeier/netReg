@@ -16,10 +16,12 @@
 ^\.travis\.yml$
 ^_pkgdown\.yml$
 ^appveyor\.yml$
+^benchmark
 ^benchmark/
 ^cleanup$
 ^cmd_line
 ^codecov.yml$
+^cpp
 ^cpp/
 ^docs$
 ^inst/cpp_tests
@@ -43,6 +45,7 @@ data/Y.tsv
 data/Y_test*
 data/Y_train*
 docs/*
+^NEWS.md
 pkgdown/*
 tests/c++/
 vignettes/netReg_R.Rmd
