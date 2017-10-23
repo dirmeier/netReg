@@ -38,12 +38,12 @@
 #include "../../src/graph_penalized_linear_model_cv_data.hpp"
 #include "../../src/edgenet_gaussian_model_selection.hpp"
 
-static double threshold = .0000001;
-static uint32_t maxit = 100000;
+static double   threshold = .0000001;
+static uint32_t maxit     = 100000;
 
 static double lambda = .1;
-static double psi = .0;
-static double phi = .0;
+static double psi    = .05;
+static double phi    = .06;
 
 static uint32_t nfolds = 10;
 
@@ -56,28 +56,51 @@ static std::unique_ptr<double[]> y(new double[n * q]);
 static std::unique_ptr<double[]> gx(new double[p * p]);
 static std::unique_ptr<double[]> gy(new double[q * q]);
 
+bool is_identical(arma::Mat<double>& matrix,
+                  double* const      ptr,
+                  uint32_t           nrow,
+                  uint32_t           ncol)
+{
+    if (matrix.n_rows != nrow || matrix.n_cols != ncol)
+    {
+        return false;
+    }
+
+    for (unsigned int i = 0; i < matrix.n_rows; ++i)
+    {
+        for (unsigned int j = 0; j < matrix.n_cols; ++j)
+        {
+            if (matrix(i, j) != ptr[i + ncol * j])
+              return false;
+        }
+    }
+
+    return true;
+}
+
 void init_ptrs()
 {
-  for (uint32_t i = 0; i < n * p; ++i)
-    x[i] = 1;
-  for (uint32_t i = 0; i < n * q; ++i)
-    y[i] = 1;
-  for (uint32_t i = 0; i < p * p; ++i)
-    gx[i] = 1;
-  for (uint32_t i = 0; i < q * q; ++i)
-    gy[i] = 1;
+    for (uint32_t i = 0; i < n * p; ++i)
+        x[i]        = i * 2.0;
+    for (uint32_t i = 0; i < n * q; ++i)
+        y[i]        = i * 2.0;
+    for (uint32_t i = 0; i < p * p; ++i)
+        gx[i]       = i * 2.0;
+    for (uint32_t i = 0; i < q * q; ++i)
+        gy[i]       = i * 2.0;
 }
 
 std::map<int, int> count_folds(std::vector<int>& vec)
 {
-  std::map<int, int> folds;
-  for (std::vector<int>::size_type i = 0; i < vec.size(); ++i)
-  {
-    if (folds.find(vec[i]) == folds.end()) folds[vec[i]] = 0;
-    folds[vec[i]]++;
-  }
+    std::map<int, int> folds;
+    for (std::vector<int>::size_type i = 0; i < vec.size(); ++i)
+    {
+        if (folds.find(vec[i]) == folds.end())
+            folds[vec[i]] = 0;
+        folds[vec[i]]++;
+    }
 
-  return folds;
+    return folds;
 }
 
 /*
@@ -88,14 +111,26 @@ BOOST_AUTO_TEST_SUITE(netReg_cv_data_test)
 BOOST_AUTO_TEST_CASE(test_folds)
 {
     init_ptrs();
-    netreg::graph_penalized_linear_model_cv_data dat = netreg::graph_penalized_linear_model_cv_data(
-      x.get(), y.get(), gx.get(), gy.get(),
-      n, p, q, lambda, 0, psi, phi, maxit, threshold, nfolds,
-      netreg::family::GAUSSIAN);
+    netreg::graph_penalized_linear_model_cv_data dat =
+      netreg::graph_penalized_linear_model_cv_data(x.get(),
+                                                   y.get(),
+                                                   gx.get(),
+                                                   gy.get(),
+                                                   n,
+                                                   p,
+                                                   q,
+                                                   lambda,
+                                                   0,
+                                                   psi,
+                                                   phi,
+                                                   maxit,
+                                                   threshold,
+                                                   nfolds,
+                                                   netreg::family::GAUSSIAN);
 
     std::map<int, int> folds = count_folds(dat.fold_ids());
     BOOST_REQUIRE(static_cast<uint32_t>(dat.fold_ids().size()) == n);
-    for (auto& entry: folds)
+    for (auto& entry : folds)
     {
         BOOST_REQUIRE(entry.second == static_cast<int>(n / nfolds));
     }
@@ -104,12 +139,24 @@ BOOST_AUTO_TEST_CASE(test_folds)
 BOOST_AUTO_TEST_CASE(test_cv_set)
 {
     init_ptrs();
-    netreg::graph_penalized_linear_model_cv_data dat = netreg::graph_penalized_linear_model_cv_data(
-      x.get(), y.get(), gx.get(), gy.get(),
-      n, p, q, lambda, 0, psi, phi, maxit, threshold, nfolds,
-      netreg::family::GAUSSIAN);
+    netreg::graph_penalized_linear_model_cv_data dat =
+      netreg::graph_penalized_linear_model_cv_data(x.get(),
+                                                   y.get(),
+                                                   gx.get(),
+                                                   gy.get(),
+                                                   n,
+                                                   p,
+                                                   q,
+                                                   lambda,
+                                                   0,
+                                                   psi,
+                                                   phi,
+                                                   maxit,
+                                                   threshold,
+                                                   nfolds,
+                                                   netreg::family::GAUSSIAN);
 
-    netreg::cv_set& set = dat.cvset();
+    netreg::cv_set&  set   = dat.cvset();
     std::vector<int> folds = dat.fold_ids();
 
     BOOST_REQUIRE(static_cast<uint32_t>(set.folds().size()) == nfolds);
@@ -117,12 +164,14 @@ BOOST_AUTO_TEST_CASE(test_cv_set)
     {
         netreg::cv_fold& fold = set.get_fold(i);
         for (arma::uvec::iterator j = fold.test_set().begin();
-             j != fold.test_set().end(); ++j)
+             j != fold.test_set().end();
+             ++j)
         {
             BOOST_REQUIRE(folds[*j] == i);
         }
         for (arma::uvec::iterator j = fold.train_set().begin();
-             j != fold.train_set().end(); ++j)
+             j != fold.train_set().end();
+             ++j)
         {
             BOOST_REQUIRE(folds[*j] != i);
         }
@@ -135,5 +184,31 @@ BOOST_AUTO_TEST_SUITE_END()
 * Testing suite for the graph_penalized_linear_model_data class
 */
 BOOST_AUTO_TEST_SUITE(netReg_data_test)
+
+BOOST_AUTO_TEST_CASE(test_folds)
+{
+    init_ptrs();
+    netreg::graph_penalized_linear_model_data dat =
+      netreg::graph_penalized_linear_model_data(x.get(),
+                                                y.get(),
+                                                gx.get(),
+                                                gy.get(),
+                                                n,
+                                                p,
+                                                q,
+                                                lambda,
+                                                0,
+                                                psi,
+                                                phi,
+                                                maxit,
+                                                threshold,
+                                                netreg::family::GAUSSIAN);
+
+    BOOST_REQUIRE(dat.psigx() == psi);
+    BOOST_REQUIRE(dat.psigy() == phi);
+
+    BOOST_REQUIRE(is_identical(dat.gx(), gx.get(), p, p));
+    BOOST_REQUIRE(is_identical(dat.gy(), gy.get(), q, q));
+}
 
 BOOST_AUTO_TEST_SUITE_END()

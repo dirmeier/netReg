@@ -121,6 +121,26 @@ namespace netreg
         }
 
         /**
+         * Getter for affinity matrix of X
+         *
+         * @return reference to affinity matrix
+         */
+        arma::Mat<double>& gx()
+        {
+            return GX;
+        }
+
+        /**
+         * Getter for affinity matrix of X
+         *
+         * @return reference to affinity matrix
+         */
+        arma::Mat<double>& gy()
+        {
+            return GY;
+        }
+
+        /**
          * Getter for laplacian matrix of X
          *
          * @return reference to laplacian matrix
