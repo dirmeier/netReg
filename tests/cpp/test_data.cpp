@@ -80,7 +80,10 @@ std::map<int, int> count_folds(std::vector<int>& vec)
   return folds;
 }
 
-BOOST_AUTO_TEST_SUITE(netReg_data_test)
+/*
+* Testing suite for the graph_penalized_linear_model_cv_data class
+*/
+BOOST_AUTO_TEST_SUITE(netReg_cv_data_test)
 
 BOOST_AUTO_TEST_CASE(test_folds)
 {
@@ -91,13 +94,14 @@ BOOST_AUTO_TEST_CASE(test_folds)
       netreg::family::GAUSSIAN);
 
     std::map<int, int> folds = count_folds(dat.fold_ids());
+    BOOST_REQUIRE(static_cast<uint32_t>(dat.fold_ids().size()) == n);
     for (auto& entry: folds)
     {
         BOOST_REQUIRE(entry.second == static_cast<int>(n / nfolds));
     }
 }
 
-BOOST_AUTO_TEST_CASE(test_folds)
+BOOST_AUTO_TEST_CASE(test_cv_set)
 {
     init_ptrs();
     netreg::graph_penalized_linear_model_cv_data dat = netreg::graph_penalized_linear_model_cv_data(
@@ -105,8 +109,31 @@ BOOST_AUTO_TEST_CASE(test_folds)
       n, p, q, lambda, 0, psi, phi, maxit, threshold, nfolds,
       netreg::family::GAUSSIAN);
 
-    std::cout << x.get()[0] << std::endl;
+    netreg::cv_set& set = dat.cvset();
+    std::vector<int> folds = dat.fold_ids();
+
+    BOOST_REQUIRE(static_cast<uint32_t>(set.folds().size()) == nfolds);
+    for (int i = 0; i < set.fold_count(); ++i)
+    {
+        netreg::cv_fold& fold = set.get_fold(i);
+        for (arma::uvec::iterator j = fold.test_set().begin();
+             j != fold.test_set().end(); ++j)
+        {
+            BOOST_REQUIRE(folds[*j] == i);
+        }
+        for (arma::uvec::iterator j = fold.train_set().begin();
+             j != fold.train_set().end(); ++j)
+        {
+            BOOST_REQUIRE(folds[*j] != i);
+        }
+    }
 }
 
+BOOST_AUTO_TEST_SUITE_END()
+
+/*
+* Testing suite for the graph_penalized_linear_model_data class
+*/
+BOOST_AUTO_TEST_SUITE(netReg_data_test)
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -77,6 +77,11 @@ namespace netreg
             init(foldids, X, Y);
         }
 
+        std::vector<cv_fold>& folds()
+        {
+            return folds_;
+        }
+
         /**
          * Getter for the i-th fold.
          *

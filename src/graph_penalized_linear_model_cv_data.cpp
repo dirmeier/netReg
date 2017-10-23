@@ -35,7 +35,7 @@ namespace netreg
         if (static_cast<int>(fold_ids_.size()) != N)
             fold_ids_.resize(static_cast<std::vector<int>::size_type>(N));
         #pragma omp parallel for
-        for (int i = 0; i < cvset_.fold_count(); i++)
+        for (int i = 0; i < cvset_.fold_count(); ++i)
         {
             cv_fold& fold = cvset_.get_fold(i);
             for (arma::uvec::iterator j = fold.test_set().begin();

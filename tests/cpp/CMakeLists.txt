@@ -17,6 +17,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_VERBOSE_MAKEFILE OFF)
+enable_testing()
 
 include(GNUInstallDirs)
 include(FeatureSummary)
@@ -61,6 +62,7 @@ set(SOURCES
 
 add_executable(
     test_netReg
+    EXCLUDE_FROM_ALL
         ${SOURCES}
         test.cpp
         test_data.cpp
@@ -88,6 +90,9 @@ target_link_libraries(
         ${Boost_LIBRARIES}
         ${BLAS_LIBRARIES}
         ${LAPACK_LIBRARIES})
+
+add_test(tests test_netReg)
+add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} DEPENDS test_netReg)
 
 feature_summary(WHAT ALL)
 MESSAGE( STATUS "Using CMAKE_CXX_COMPILER: " ${CMAKE_CXX_COMPILER} )

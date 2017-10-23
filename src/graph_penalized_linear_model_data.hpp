@@ -99,6 +99,7 @@ namespace netreg
                 lx_rows_[i] = LX.row(i);
             }
         }
+
         /**
          * Getter for penalization term for laplacian of X
          *
