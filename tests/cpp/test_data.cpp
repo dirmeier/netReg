@@ -32,16 +32,17 @@
 #include <armadillo>
 #include <boost/test/unit_test.hpp>
 
+#include "../../src/graph_functions.hpp"
 #include "../../src/stat_functions.hpp"
 #include "../../src/family.hpp"
 #include "../../src/edgenet_gaussian.hpp"
 #include "../../src/graph_penalized_linear_model_cv_data.hpp"
-#include "../../src/edgenet_gaussian_model_selection.hpp"
 
 static double   threshold = .0000001;
 static uint32_t maxit     = 100000;
 
 static double lambda = .1;
+static double alpha  = 43;
 static double psi    = .05;
 static double phi    = .06;
 
@@ -71,11 +72,27 @@ bool is_identical(arma::Mat<double>& matrix,
         for (unsigned int j = 0; j < matrix.n_cols; ++j)
         {
             if (matrix(i, j) != ptr[i + ncol * j])
-              return false;
+                return false;
         }
     }
 
     return true;
+}
+
+bool is_identical(arma::Mat<double>& m1, arma::Mat<double>& m2)
+{
+    if (m1.n_rows != m2.n_rows)
+        return false;
+    if (m2.n_rows != m2.n_cols)
+        return false;
+    return arma::accu(abs(m1 - m2)) < 0.000001;
+}
+
+bool is_identical(arma::rowvec& v1, arma::rowvec& v2)
+{
+    if (v1.n_elem != v2.n_elem)
+        return false;
+    return arma::accu(abs(v1 - v2)) < 0.000001;
 }
 
 void init_ptrs()
@@ -106,7 +123,7 @@ std::map<int, int> count_folds(std::vector<int>& vec)
 /*
 * Testing suite for the graph_penalized_linear_model_cv_data class
 */
-BOOST_AUTO_TEST_SUITE(netReg_cv_data_test)
+BOOST_AUTO_TEST_SUITE(netReg_graph_cv_data_test)
 
 BOOST_AUTO_TEST_CASE(test_folds)
 {
@@ -183,9 +200,9 @@ BOOST_AUTO_TEST_SUITE_END()
 /*
 * Testing suite for the graph_penalized_linear_model_data class
 */
-BOOST_AUTO_TEST_SUITE(netReg_data_test)
+BOOST_AUTO_TEST_SUITE(netReg_graph_data_test)
 
-BOOST_AUTO_TEST_CASE(test_folds)
+BOOST_AUTO_TEST_CASE(test_penalties)
 {
     init_ptrs();
     netreg::graph_penalized_linear_model_data dat =
@@ -206,9 +223,148 @@ BOOST_AUTO_TEST_CASE(test_folds)
 
     BOOST_REQUIRE(dat.psigx() == psi);
     BOOST_REQUIRE(dat.psigy() == phi);
+}
 
-    BOOST_REQUIRE(is_identical(dat.gx(), gx.get(), p, p));
-    BOOST_REQUIRE(is_identical(dat.gy(), gy.get(), q, q));
+BOOST_AUTO_TEST_CASE(test_affinity_matrices)
+{
+    init_ptrs();
+    netreg::graph_penalized_linear_model_data dat =
+      netreg::graph_penalized_linear_model_data(x.get(),
+                                                y.get(),
+                                                gx.get(),
+                                                gy.get(),
+                                                n,
+                                                p,
+                                                q,
+                                                lambda,
+                                                alpha,
+                                                psi,
+                                                phi,
+                                                maxit,
+                                                threshold,
+                                                netreg::family::GAUSSIAN);
+
+    BOOST_REQUIRE(dat.psigx() == psi);
+    BOOST_REQUIRE(dat.psigy() == phi);
+}
+
+BOOST_AUTO_TEST_CASE(test_laplacian_matrices)
+{
+    init_ptrs();
+    netreg::graph_penalized_linear_model_data dat =
+      netreg::graph_penalized_linear_model_data(x.get(),
+                                                y.get(),
+                                                gx.get(),
+                                                gy.get(),
+                                                n,
+                                                p,
+                                                q,
+                                                lambda,
+                                                alpha,
+                                                psi,
+                                                phi,
+                                                maxit,
+                                                threshold,
+                                                netreg::family::GAUSSIAN);
+
+    arma::Mat<double> gxx =  netreg::laplacian(gx.get(), p, p, 1.0);
+    arma::Mat<double> gyy =  netreg::laplacian(gy.get(), q, q, 1.0);
+    BOOST_REQUIRE(is_identical(dat.lx(), gxx));
+    BOOST_REQUIRE(is_identical(dat.ly(), gyy));
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+/*
+* Testing suite for the penalized_linear_model_data class
+*/
+BOOST_AUTO_TEST_SUITE(netReg_penalized_data_test)
+
+BOOST_AUTO_TEST_CASE(test_penalties)
+{
+    init_ptrs();
+    netreg::penalized_linear_model_data dat =
+      netreg::penalized_linear_model_data(x.get(),
+                                          y.get(),
+                                          n,
+                                          p,
+                                          q,
+                                          lambda,
+                                          alpha,
+                                          maxit,
+                                          threshold,
+                                          netreg::family::GAUSSIAN);
+
+    BOOST_REQUIRE(dat.lambda() == lambda);
+    BOOST_REQUIRE(dat.alpha() == alpha);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+/*
+* Testing suite for the linear_model_data class
+*/
+BOOST_AUTO_TEST_SUITE(netReg_data_test)
+
+BOOST_AUTO_TEST_CASE(test_dimensions)
+{
+    init_ptrs();
+    netreg::linear_model_data dat =
+      netreg::linear_model_data(x.get(),
+                                y.get(),
+                                n,
+                                p,
+                                q,
+                                maxit,
+                                threshold,
+                                netreg::family::GAUSSIAN);
+
+    BOOST_REQUIRE(static_cast<uint32_t>(dat.sample_count()) == n);
+    BOOST_REQUIRE(static_cast<uint32_t>(dat.response_count()) == q);
+    BOOST_REQUIRE(static_cast<uint32_t>(dat.covariable_count()) == p);
+}
+
+BOOST_AUTO_TEST_CASE(test_family)
+{
+    init_ptrs();
+    netreg::linear_model_data dat =
+      netreg::linear_model_data(x.get(),
+                                y.get(),
+                                n,
+                                p,
+                                q,
+                                maxit,
+                                threshold,
+                                netreg::family::GAUSSIAN);
+
+    BOOST_REQUIRE(dat.distribution_family() == netreg::family::GAUSSIAN);
+}
+
+BOOST_AUTO_TEST_CASE(test_txx)
+{
+    init_ptrs();
+    netreg::linear_model_data dat =
+      netreg::linear_model_data(x.get(),
+                                y.get(),
+                                n,
+                                p,
+                                q,
+                                maxit,
+                                threshold,
+                                netreg::family::GAUSSIAN);
+
+    arma::Mat<double>          X(x.get(), n, p, false, true);
+    arma::Mat<double>          txx      = X.t() *  X;
+    std::vector<arma::rowvec>& txx_rows = dat.txx_rows();
+
+    BOOST_REQUIRE(static_cast<uint32_t>(txx.n_rows) ==
+                  static_cast<uint32_t>(txx_rows.size()));
+    for (std::vector<arma::Row<double> >::size_type i = 0; i < txx.n_rows; ++i)
+    {
+      arma::rowvec v1 = txx.row(i);
+      arma::rowvec v2 = txx_rows[i];
+      BOOST_REQUIRE(is_identical(v1, v2));
+    }
 }
 
 BOOST_AUTO_TEST_SUITE_END()

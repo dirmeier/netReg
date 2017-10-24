@@ -44,7 +44,7 @@ namespace netreg
      */
     class linear_model_data
     {
-    protected:
+    public:
 
         linear_model_data()
         {}
@@ -81,8 +81,6 @@ namespace netreg
                 txx_rows_[i] = TXX.row(i);
             }
         }
-
-    public:
 
         /**
          * Getter for the family of the distribution of the response.
