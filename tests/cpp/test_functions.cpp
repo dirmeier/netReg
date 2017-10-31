@@ -22,6 +22,7 @@
  * @email: simon.dirmeier@gmx.de
  */
 
+
 #include <cstdlib>
 #include <map>
 #include <iostream>
@@ -32,6 +33,8 @@
 #include <armadillo>
 #include <boost/test/unit_test.hpp>
 
+#include "../../src/stat_functions.hpp"
+#include "../../src/math_functions.hpp"
 #include "../../src/vector_functions.hpp"
 
 
@@ -40,9 +43,9 @@
 */
 BOOST_AUTO_TEST_SUITE(vector_function_tests)
 
-BOOST_AUTO_TEST_CASE()
+BOOST_AUTO_TEST_CASE(test_iota)
 {
-    std::vector<int> v = iota(10, 0);
+    std::vector<int> v = netreg::iota(10, 0);
     int run = 0;
     for(int i : v)
     {
@@ -50,10 +53,10 @@ BOOST_AUTO_TEST_CASE()
     }
 }
 
-BOOST_AUTO_TEST_CASE()
+BOOST_AUTO_TEST_CASE(test_shuffle)
 {
-    std::vector<int> v = iota(10, 0);
-    shuffle(v);
+    std::vector<int> v = netreg::iota(10, 0);
+    netreg::shuffle(v);
     int has_shuffle = 0;
     for (std::vector<int>::size_type i = 0;
          i < v.size() - 1;
@@ -62,6 +65,89 @@ BOOST_AUTO_TEST_CASE()
       has_shuffle += v[i] > v[i + 1] ? 1 : 0;
     }
     BOOST_REQUIRE(has_shuffle > 0);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+/*
+* Testing suite for vector functions
+*/
+BOOST_AUTO_TEST_SUITE(math_function_tests)
+
+BOOST_AUTO_TEST_CASE(test_abs_dprod)
+{
+    uint32_t n = 100;
+    double afill = 1;
+    double bfill = 2;
+      arma::Col<double> a(n);
+     a.fill(afill);
+     arma::Col<double> b(n);
+     b.fill(bfill);
+     double pd = netreg::abs_dprod(a, b);
+     BOOST_REQUIRE(pd == afill * bfill * n);
+}
+
+BOOST_AUTO_TEST_CASE(test_abs_dprod_negative)
+{
+    uint32_t n = 100;
+    double afill = 1;
+    double bfill = -2;
+      arma::Col<double> a(n);
+     a.fill(afill);
+     arma::Col<double> b(n);
+     b.fill(bfill);
+     double pd = netreg::abs_dprod(a, b);
+     BOOST_REQUIRE(pd == (-1) * afill * bfill * n);
+}
+
+BOOST_AUTO_TEST_CASE(test_max_element_int)
+{
+   int n = 10;
+   int * ptr = new int[n];
+     for (int i = 0; i < n; ++i) ptr[i] = i;
+     BOOST_REQUIRE(netreg::max_element(ptr, n) == n - 1);
+  delete [] ptr;
+}
+
+BOOST_AUTO_TEST_CASE(test_max_element_double)
+{
+   int n = 10;
+   double * ptr = new double[n];
+     for (int i = 0; i < n; ++i) ptr[i] = i;
+     BOOST_REQUIRE(netreg::max_element(ptr, n) == n - 1);
+   delete [] ptr;
+}
+
+BOOST_AUTO_TEST_CASE(test_softnorm_full_penalty)
+{
+   double s = 1.0;
+   double lalph = 1.0;
+   double norm = 1.0;
+   BOOST_REQUIRE(netreg::softnorm(s, lalph, norm) == 0);
+}
+
+BOOST_AUTO_TEST_CASE(test_softnorm_lasso_pos_penalty)
+{
+   double s = 2.0;
+   double lalph = 1.0;
+   double norm = 1.0;
+   BOOST_REQUIRE(netreg::softnorm(s, lalph, norm) == 1.0);
+}
+
+BOOST_AUTO_TEST_CASE(test_softnorm_lasso_neg_penalty)
+{
+   double s = -2.0;
+   double lalph = 1.0;
+   double norm = 1.0;
+   BOOST_REQUIRE(netreg::softnorm(s, lalph, norm) == -1.0);
+}
+
+BOOST_AUTO_TEST_CASE(test_softnorm_lasso_pos_penalty_twice)
+{
+   double s = 3.0;
+   double lalph = 2.0;
+   double norm = 2.0;
+   BOOST_REQUIRE(netreg::softnorm(s, lalph, norm) == .5);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

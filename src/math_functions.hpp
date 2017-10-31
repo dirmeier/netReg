@@ -45,7 +45,11 @@ namespace netreg
      * @param qi the column of matrix<double> source2
      */
     inline double abs_dprod(const arma::Col<double> &lhs,
-                     const arma::Col<double> &rhs);
+                     const arma::Col<double> &rhs)
+    {
+return std::abs(arma::dot(lhs, rhs));
+
+    }
 
     /**
      * Calculate a soft-thresholded normalized coefficient.
@@ -77,8 +81,13 @@ namespace netreg
      *
      * @return return the maximal element
      */
-    template <typename T> T max_element(T *const ptr, int len);
-
+    template <typename T> T max_element(T *const ptr, int len)
+    {
+        T maximum = ptr[len - 1];
+        for (int i = 0; i < len - 1; ++i)
+            if (ptr[i] > maximum) maximum = ptr[i];
+        return maximum;
+    }
 
     /**
      * Calculates the sigmoid function value of a double.
@@ -87,7 +96,10 @@ namespace netreg
      *
      * @return returns the sigmoid function value
      */
-    inline double sigmoid(double d);
+    inline double sigmoid(double d)
+    {
+        return 1 / (1 + exp(d));
+    }
 
 }
 #endif //NETREG_MATH_HPP

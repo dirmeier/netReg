@@ -52,7 +52,7 @@ add_executable(
         src/illegal_argument_exception.hpp
         src/io_exception.hpp
         src/linear_model_data.hpp
-        src/math_functions.cpp
+        src/math_functions.hpp
         src/not_implemented_exception.hpp
         src/optim.hpp
         src/penalized_linear_model_data.hpp
