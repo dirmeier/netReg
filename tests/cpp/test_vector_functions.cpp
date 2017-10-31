@@ -23,17 +23,42 @@
  */
 
 #include <cstdlib>
+#include <map>
+#include <iostream>
+
 #ifndef ARMA_DONT_USE_WRAPPER
 #define ARMA_DONT_USE_WRAPPER
 #endif
 #include <armadillo>
 #include <boost/test/unit_test.hpp>
 
-BOOST_AUTO_TEST_SUITE(netReg_modelselection_test)
+#include "../../src/vector_functions.hpp"
 
-BOOST_AUTO_TEST_CASE(test1)
+/*
+ * Testing suite for vector functions
+ */
+BOOST_AUTO_TEST_SUITE(vector_function_tests)
+
+BOOST_AUTO_TEST_CASE(test_iota)
 {
-    BOOST_REQUIRE(true);
+    std::vector<int> v   = netreg::iota(10, 0);
+    int              run = 0;
+    for (int i : v)
+    {
+        BOOST_REQUIRE(i == run++);
+    }
+}
+
+BOOST_AUTO_TEST_CASE(test_shuffle)
+{
+    std::vector<int> v = netreg::iota(10, 0);
+    netreg::shuffle(v);
+    int has_shuffle = 0;
+    for (std::vector<int>::size_type i = 0; i < v.size() - 1; ++i)
+    {
+        has_shuffle += v[i] > v[i + 1] ? 1 : 0;
+    }
+    BOOST_REQUIRE(has_shuffle > 0);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -21,6 +21,8 @@
  * @author: Simon Dirmeier
  * @email: simon.dirmeier@gmx.de
  */
+
+
 #ifndef NETREG_STAT_FUNCTIONS_HPP
 #define NETREG_STAT_FUNCTIONS_HPP
 

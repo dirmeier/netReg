@@ -267,8 +267,8 @@ BOOST_AUTO_TEST_CASE(test_laplacian_matrices)
                                                 threshold,
                                                 netreg::family::GAUSSIAN);
 
-    arma::Mat<double> gxx =  netreg::laplacian(gx.get(), p, p, 1.0);
-    arma::Mat<double> gyy =  netreg::laplacian(gy.get(), q, q, 1.0);
+    arma::Mat<double> gxx = netreg::laplacian(gx.get(), p, p, 1.0);
+    arma::Mat<double> gyy = netreg::laplacian(gy.get(), q, q, 1.0);
     BOOST_REQUIRE(is_identical(dat.lx(), gxx));
     BOOST_REQUIRE(is_identical(dat.ly(), gyy));
 }
@@ -309,15 +309,8 @@ BOOST_AUTO_TEST_SUITE(netReg_data_test)
 BOOST_AUTO_TEST_CASE(test_dimensions)
 {
     init_ptrs();
-    netreg::linear_model_data dat =
-      netreg::linear_model_data(x.get(),
-                                y.get(),
-                                n,
-                                p,
-                                q,
-                                maxit,
-                                threshold,
-                                netreg::family::GAUSSIAN);
+    netreg::linear_model_data dat = netreg::linear_model_data(
+      x.get(), y.get(), n, p, q, maxit, threshold, netreg::family::GAUSSIAN);
 
     BOOST_REQUIRE(static_cast<uint32_t>(dat.sample_count()) == n);
     BOOST_REQUIRE(static_cast<uint32_t>(dat.response_count()) == q);
@@ -327,15 +320,8 @@ BOOST_AUTO_TEST_CASE(test_dimensions)
 BOOST_AUTO_TEST_CASE(test_family)
 {
     init_ptrs();
-    netreg::linear_model_data dat =
-      netreg::linear_model_data(x.get(),
-                                y.get(),
-                                n,
-                                p,
-                                q,
-                                maxit,
-                                threshold,
-                                netreg::family::GAUSSIAN);
+    netreg::linear_model_data dat = netreg::linear_model_data(
+      x.get(), y.get(), n, p, q, maxit, threshold, netreg::family::GAUSSIAN);
 
     BOOST_REQUIRE(dat.distribution_family() == netreg::family::GAUSSIAN);
 }
@@ -343,27 +329,20 @@ BOOST_AUTO_TEST_CASE(test_family)
 BOOST_AUTO_TEST_CASE(test_txx)
 {
     init_ptrs();
-    netreg::linear_model_data dat =
-      netreg::linear_model_data(x.get(),
-                                y.get(),
-                                n,
-                                p,
-                                q,
-                                maxit,
-                                threshold,
-                                netreg::family::GAUSSIAN);
+    netreg::linear_model_data dat = netreg::linear_model_data(
+      x.get(), y.get(), n, p, q, maxit, threshold, netreg::family::GAUSSIAN);
 
     arma::Mat<double>          X(x.get(), n, p, false, true);
-    arma::Mat<double>          txx      = X.t() *  X;
+    arma::Mat<double>          txx      = X.t() * X;
     std::vector<arma::rowvec>& txx_rows = dat.txx_rows();
 
     BOOST_REQUIRE(static_cast<uint32_t>(txx.n_rows) ==
                   static_cast<uint32_t>(txx_rows.size()));
     for (std::vector<arma::Row<double> >::size_type i = 0; i < txx.n_rows; ++i)
     {
-      arma::rowvec v1 = txx.row(i);
-      arma::rowvec v2 = txx_rows[i];
-      BOOST_REQUIRE(is_identical(v1, v2));
+        arma::rowvec v1 = txx.row(i);
+        arma::rowvec v2 = txx_rows[i];
+        BOOST_REQUIRE(is_identical(v1, v2));
     }
 }
 

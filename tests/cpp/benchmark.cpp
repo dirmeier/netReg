@@ -39,25 +39,24 @@
 #include "../gaussian_edgenet.hpp"
 #include "../edgenet_model_selection.hpp"
 
-
 // Version that fills a vector
 template<class T>
-void generate(T &generator, double * res, int sz)
+void generate(T& generator, double* res, int sz)
 {
-    for(size_t i = 0; i < sz; ++i)
-        res[i] = generator();
+    for (size_t i = 0; i < sz; ++i)
+        res[i]    = generator();
 }
 
-void generate( double * res,unsigned int sz)
+void generate(double* res, unsigned int sz)
 {
-    for(size_t i = 0; i < sz; ++i)
-        res[i] = 1.0;
+    for (size_t i = 0; i < sz; ++i)
+        res[i]    = 1.0;
 }
 
-void norm(double * X, unsigned int n, unsigned int m)
+void norm(double* X, unsigned int n, unsigned int m)
 {
-    for(size_t i = 0; i < n; ++i)
-        for(size_t j = 0; j < m; ++j)
+    for (size_t i = 0; i < n; ++i)
+        for (size_t j = 0; j < m; ++j)
             if (i == j)
                 X[i * m + j] = 0.0;
             else
@@ -66,39 +65,35 @@ void norm(double * X, unsigned int n, unsigned int m)
 
 int main(int argc, char** argv)
 {
-
-    boost::mt19937 rng(23);
-    boost::normal_distribution<> snd(0.0, 1.0);
+    boost::mt19937                    rng(23);
+    boost::normal_distribution<>      snd(0.0, 1.0);
     boost::exponential_distribution<> ed(1.0);
+    boost::variate_generator<boost::mt19937&, boost::normal_distribution<> >
+      var_nor(rng, snd);
     boost::variate_generator<boost::mt19937&,
-        boost::normal_distribution<> > var_nor(rng, snd);
-    boost::variate_generator<boost::mt19937&,
-        boost::exponential_distribution<> > var_exp(rng, ed);
+                             boost::exponential_distribution<> >
+      var_exp(rng, ed);
 
-    const unsigned int n = atoi(argv[1]);
-    const unsigned int p = atoi(argv[2]);
-    const unsigned int q = atoi(argv[3]);
-    double * X = new double[n * p];
-    double * Y = new double[n * q];
-    double * GX = new double[p * p];
-    double * GY = new double[q * q];
-    generate(var_nor, X, n*p);
-    generate(var_nor, Y, n*q);
-    generate(var_exp, GX, p*p);
-    generate(var_exp, GY, q*q);
+    const unsigned int n  = atoi(argv[1]);
+    const unsigned int p  = atoi(argv[2]);
+    const unsigned int q  = atoi(argv[3]);
+    double*            X  = new double[n * p];
+    double*            Y  = new double[n * q];
+    double*            GX = new double[p * p];
+    double*            GY = new double[q * q];
+    generate(var_nor, X, n * p);
+    generate(var_nor, Y, n * q);
+    generate(var_exp, GX, p * p);
+    generate(var_exp, GY, q * q);
     norm(GX, p, p);
     norm(GY, q, q);
-    netreg::graph_penalized_linear_model_data data(X, Y,
-                                                   GX, GY,
-                                                   n, p, q,
-                                                   100, 1.0,
-                                                   0.0, 0.0,
-                                                   10000, 0.00001);
+    netreg::graph_penalized_linear_model_data data(
+      X, Y, GX, GY, n, p, q, 100, 1.0, 0.0, 0.0, 10000, 0.00001);
     netreg::gaussian_edgenet e;
     e.run(data);
-    delete [] X;
-    delete [] GX;
-    delete [] Y;
-    delete [] GY;
+    delete[] X;
+    delete[] GX;
+    delete[] Y;
+    delete[] GY;
     return 0;
 }
