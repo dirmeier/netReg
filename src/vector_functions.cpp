@@ -42,7 +42,7 @@ namespace netreg
         return vec;
     }
 
-    void shuffle(std::vector<int> &vec)
+    void shuffle(std::vector<int>& vec)
     {
         const int size = (int) vec.size();
         #ifdef USE_RCPPARMADILLO

@@ -66,6 +66,7 @@ add_executable(
         ${SOURCES}
         test.cpp
         test_data.cpp
+        test_functions.cpp
         test_model.cpp
         test_modelselection.cpp)
 
