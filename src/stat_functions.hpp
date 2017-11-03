@@ -52,19 +52,19 @@ namespace netreg
     /**
      * Calculates the partial residual of the current coefficient that is estimated.
      *
-     * @param TXX the square of the design matrix
-     * @param TXY the design times the response matrix
+     * @param txx_row the square of the design matrix
+     * @param txy the design times the response matrix
      * @param cfs the current estimate of the coefficients
      * @param pi the current index of the column of X
      * @param qi the current index of the column of Y
      */
-    inline double partial_least_squares(arma::rowvec& txx_rows,
+    inline double partial_least_squares(arma::rowvec& txx_row,
                                         arma::Mat<double>& txy,
                                         arma::Mat<double>& cfs,
                                         const int pi, const int qi)
     {
-        return txy(pi, qi) + (txx_rows(pi) * cfs(pi, qi))
-               - arma::accu(txx_rows * cfs.col(qi));
+        return txy(pi, qi) + (txx_row(pi) * cfs(pi, qi))
+               - arma::accu(txx_row * cfs.col(qi));
     }
 }
 #endif //NETREG_STAT_FUNCTIONS_HPP

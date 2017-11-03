@@ -92,9 +92,46 @@ BOOST_AUTO_TEST_CASE(test_intercept_non_zero_matrix)
     BOOST_REQUIRE(intercept(1) == intr);
 }
 
-BOOST_AUTO_TEST_CASE(test_pls)
+BOOST_AUTO_TEST_CASE(test_pls_zero_indices)
 {
-  
+    unsigned int p    = 2;
+    unsigned int q    = 2;
+    double       fill = 1.0;
+    arma::rowvec txx(p);
+    for (unsigned int i = 0; i < p; ++i)
+    { 
+      txx(i) = i;
+    }
+    arma::Mat<double> txy(p, q);
+    txy.fill(fill);
+    arma::Mat<double> B(p, q);
+    B.fill(fill);
+    int    pi     = 0;
+    int    qi     = 0;
+    double expect = txy(pi, qi) - txx(1) * B(1, qi);
+    BOOST_REQUIRE(netreg::partial_least_squares(txx, txy, B, pi, qi) == expect);
+}
+
+BOOST_AUTO_TEST_CASE(test_pls_one_indices)
+{
+    unsigned int p    = 2;
+    unsigned int q    = 2;
+    arma::rowvec txx(p);
+    arma::Mat<double> txy(p, q);
+    arma::Mat<double> B(p, q);
+    for (unsigned int i = 0; i < p; ++i)
+    { 
+      txx(i) = i + 2;
+      for (unsigned int j = 0; j < q ; ++j)
+      {
+          txy(i, j) = j * i + 1;
+          B(i, j) = -j * i + 3;
+      }
+    }
+    int    pi = 1;
+    int    qi = 1;
+    double expect = txy(pi, qi) - txx(0) * B(0, qi);
+    BOOST_REQUIRE(netreg::partial_least_squares(txx, txy, B, pi, qi) == expect);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
