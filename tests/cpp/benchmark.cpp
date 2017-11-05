@@ -41,19 +41,19 @@
 
 // Version that fills a vector
 template<class T>
-void generate(T& generator, double* res, int sz)
+void generate(T &generator, double *res, int sz)
 {
     for (size_t i = 0; i < sz; ++i)
         res[i]    = generator();
 }
 
-void generate(double* res, unsigned int sz)
+void generate(double *res, unsigned int sz)
 {
     for (size_t i = 0; i < sz; ++i)
         res[i]    = 1.0;
 }
 
-void norm(double* X, unsigned int n, unsigned int m)
+void norm(double *X, unsigned int n, unsigned int m)
 {
     for (size_t i = 0; i < n; ++i)
         for (size_t j = 0; j < m; ++j)
@@ -63,24 +63,24 @@ void norm(double* X, unsigned int n, unsigned int m)
                 X[i * m + j] = X[j * m + i];
 }
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
-    boost::mt19937                    rng(23);
-    boost::normal_distribution<>      snd(0.0, 1.0);
+    boost::mt19937 rng(23);
+    boost::normal_distribution<> snd(0.0, 1.0);
     boost::exponential_distribution<> ed(1.0);
-    boost::variate_generator<boost::mt19937&, boost::normal_distribution<> >
+    boost::variate_generator<boost::mt19937 &, boost::normal_distribution<>>
       var_nor(rng, snd);
-    boost::variate_generator<boost::mt19937&,
-                             boost::exponential_distribution<> >
+    boost::variate_generator<boost::mt19937 &,
+                             boost::exponential_distribution<>>
       var_exp(rng, ed);
 
-    const unsigned int n  = atoi(argv[1]);
-    const unsigned int p  = atoi(argv[2]);
-    const unsigned int q  = atoi(argv[3]);
-    double*            X  = new double[n * p];
-    double*            Y  = new double[n * q];
-    double*            GX = new double[p * p];
-    double*            GY = new double[q * q];
+    const unsigned int n = atoi(argv[1]);
+    const unsigned int p = atoi(argv[2]);
+    const unsigned int q = atoi(argv[3]);
+    double *X            = new double[n * p];
+    double *Y            = new double[n * q];
+    double *GX           = new double[p * p];
+    double *GY           = new double[q * q];
     generate(var_nor, X, n * p);
     generate(var_nor, Y, n * q);
     generate(var_exp, GX, p * p);

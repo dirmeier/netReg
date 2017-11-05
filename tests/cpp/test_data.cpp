@@ -38,8 +38,8 @@
 #include "../../src/edgenet_gaussian.hpp"
 #include "../../src/graph_penalized_linear_model_cv_data.hpp"
 
-static double   threshold = .0000001;
-static uint32_t maxit     = 100000;
+static double threshold = .0000001;
+static uint32_t maxit   = 100000;
 
 static double lambda = .1;
 static double alpha  = 43;
@@ -57,10 +57,10 @@ static std::unique_ptr<double[]> y(new double[n * q]);
 static std::unique_ptr<double[]> gx(new double[p * p]);
 static std::unique_ptr<double[]> gy(new double[q * q]);
 
-bool is_identical(arma::Mat<double>& matrix,
-                  double* const      ptr,
-                  uint32_t           nrow,
-                  uint32_t           ncol)
+bool is_identical(arma::Mat<double> &matrix,
+                  double *const ptr,
+                  uint32_t nrow,
+                  uint32_t ncol)
 {
     if (matrix.n_rows != nrow || matrix.n_cols != ncol)
     {
@@ -79,7 +79,7 @@ bool is_identical(arma::Mat<double>& matrix,
     return true;
 }
 
-bool is_identical(arma::Mat<double>& m1, arma::Mat<double>& m2)
+bool is_identical(arma::Mat<double> &m1, arma::Mat<double> &m2)
 {
     if (m1.n_rows != m2.n_rows)
         return false;
@@ -88,7 +88,7 @@ bool is_identical(arma::Mat<double>& m1, arma::Mat<double>& m2)
     return arma::accu(abs(m1 - m2)) < 0.000001;
 }
 
-bool is_identical(arma::rowvec& v1, arma::rowvec& v2)
+bool is_identical(arma::rowvec &v1, arma::rowvec &v2)
 {
     if (v1.n_elem != v2.n_elem)
         return false;
@@ -107,7 +107,7 @@ void init_ptrs()
         gy[i]       = i * 2.0;
 }
 
-std::map<int, int> count_folds(std::vector<int>& vec)
+std::map<int, int> count_folds(std::vector<int> &vec)
 {
     std::map<int, int> folds;
     for (std::vector<int>::size_type i = 0; i < vec.size(); ++i)
@@ -147,7 +147,7 @@ BOOST_AUTO_TEST_CASE(test_folds)
 
     std::map<int, int> folds = count_folds(dat.fold_ids());
     BOOST_REQUIRE(static_cast<uint32_t>(dat.fold_ids().size()) == n);
-    for (auto& entry : folds)
+    for (auto &entry : folds)
     {
         BOOST_REQUIRE(entry.second == static_cast<int>(n / nfolds));
     }
@@ -173,13 +173,13 @@ BOOST_AUTO_TEST_CASE(test_cv_set)
                                                    nfolds,
                                                    netreg::family::GAUSSIAN);
 
-    netreg::cv_set&  set   = dat.cvset();
+    netreg::cv_set &set    = dat.cvset();
     std::vector<int> folds = dat.fold_ids();
 
     BOOST_REQUIRE(static_cast<uint32_t>(set.folds().size()) == nfolds);
     for (int i = 0; i < set.fold_count(); ++i)
     {
-        netreg::cv_fold& fold = set.get_fold(i);
+        netreg::cv_fold &fold = set.get_fold(i);
         for (arma::uvec::iterator j = fold.test_set().begin();
              j != fold.test_set().end();
              ++j)
@@ -332,13 +332,13 @@ BOOST_AUTO_TEST_CASE(test_txx)
     netreg::linear_model_data dat = netreg::linear_model_data(
       x.get(), y.get(), n, p, q, maxit, threshold, netreg::family::GAUSSIAN);
 
-    arma::Mat<double>          X(x.get(), n, p, false, true);
-    arma::Mat<double>          txx      = X.t() * X;
-    std::vector<arma::rowvec>& txx_rows = dat.txx_rows();
+    arma::Mat<double> X(x.get(), n, p, false, true);
+    arma::Mat<double> txx               = X.t() * X;
+    std::vector<arma::rowvec> &txx_rows = dat.txx_rows();
 
     BOOST_REQUIRE(static_cast<uint32_t>(txx.n_rows) ==
                   static_cast<uint32_t>(txx_rows.size()));
-    for (std::vector<arma::Row<double> >::size_type i = 0; i < txx.n_rows; ++i)
+    for (std::vector<arma::Row<double>>::size_type i = 0; i < txx.n_rows; ++i)
     {
         arma::rowvec v1 = txx.row(i);
         arma::rowvec v2 = txx_rows[i];

@@ -41,9 +41,9 @@ BOOST_AUTO_TEST_SUITE(math_function_tests)
 
 BOOST_AUTO_TEST_CASE(test_abs_dprod)
 {
-    uint32_t          n     = 100;
-    double            afill = 1;
-    double            bfill = 2;
+    uint32_t n   = 100;
+    double afill = 1;
+    double bfill = 2;
     arma::Col<double> a(n);
     a.fill(afill);
     arma::Col<double> b(n);
@@ -54,9 +54,9 @@ BOOST_AUTO_TEST_CASE(test_abs_dprod)
 
 BOOST_AUTO_TEST_CASE(test_abs_dprod_negative)
 {
-    uint32_t          n     = 100;
-    double            afill = 1;
-    double            bfill = -2;
+    uint32_t n   = 100;
+    double afill = 1;
+    double bfill = -2;
     arma::Col<double> a(n);
     a.fill(afill);
     arma::Col<double> b(n);
@@ -67,8 +67,8 @@ BOOST_AUTO_TEST_CASE(test_abs_dprod_negative)
 
 BOOST_AUTO_TEST_CASE(test_max_element_int)
 {
-    int  n   = 10;
-    int* ptr = new int[n];
+    int n    = 10;
+    int *ptr = new int[n];
     for (int i = 0; i < n; ++i)
         ptr[i] = i;
     BOOST_REQUIRE(netreg::max_element(ptr, n) == n - 1);
@@ -77,8 +77,8 @@ BOOST_AUTO_TEST_CASE(test_max_element_int)
 
 BOOST_AUTO_TEST_CASE(test_max_element_double)
 {
-    int     n   = 10;
-    double* ptr = new double[n];
+    int n       = 10;
+    double *ptr = new double[n];
     for (int i = 0; i < n; ++i)
         ptr[i] = i;
     BOOST_REQUIRE(netreg::max_element(ptr, n) == n - 1);

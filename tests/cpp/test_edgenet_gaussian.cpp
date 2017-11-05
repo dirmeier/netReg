@@ -22,18 +22,26 @@
  * @email: simon.dirmeier@gmx.de
  */
 
-#include "stat_functions.hpp"
+#include <cstdlib>
+#include <map>
+#include <iostream>
 
-namespace netreg
+#ifndef ARMA_DONT_USE_WRAPPER
+#define ARMA_DONT_USE_WRAPPER
+#endif
+#include <armadillo>
+#include <boost/test/unit_test.hpp>
+
+#include "../../src/edgenet_gaussian.hpp"
+
+/*
+* Testing suite for edgenet function for Gaussian variables
+*/
+BOOST_AUTO_TEST_SUITE(edgenet_gaussian_test)
+
+BOOST_AUTO_TEST_CASE(test)
 {
-    arma::Col<double> intercept(arma::Mat<double>& X,
-                                arma::Mat<double>& Y,
-                                arma::Mat<double>& B)
-    {
-        arma::Mat<double> terr = (Y - (X * B)).t();
-        arma::Col<double> rep(Y.n_rows, arma::fill::ones);
-        arma::Col<double> intr = (terr * rep) / Y.n_rows;
-        return intr;
-    }
 
 }
+
+BOOST_AUTO_TEST_SUITE_END()

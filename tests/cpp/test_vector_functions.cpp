@@ -41,8 +41,8 @@ BOOST_AUTO_TEST_SUITE(vector_function_tests)
 
 BOOST_AUTO_TEST_CASE(test_iota)
 {
-    std::vector<int> v   = netreg::iota(10, 0);
-    int              run = 0;
+    std::vector<int> v = netreg::iota(10, 0);
+    int run            = 0;
     for (int i : v)
     {
         BOOST_REQUIRE(i == run++);

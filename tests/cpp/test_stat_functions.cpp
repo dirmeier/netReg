@@ -41,10 +41,10 @@ BOOST_AUTO_TEST_SUITE(stat_function_tests)
 
 BOOST_AUTO_TEST_CASE(test_intercept)
 {
-    int               m  = 10;
-    double            f1 = 2.0;
-    double            f2 = 1.5;
-    double            f3 = 3;
+    int m     = 10;
+    double f1 = 2.0;
+    double f2 = 1.5;
+    double f3 = 3;
     arma::Mat<double> X(m, 1), Y(m, 1), B(1, 1);
     X.fill(f1);
     B.fill(f2);
@@ -55,9 +55,9 @@ BOOST_AUTO_TEST_CASE(test_intercept)
 
 BOOST_AUTO_TEST_CASE(test_intercept_non_zero)
 {
-    int               m     = 10;
-    double            intr  = 3;
-    double            slope = 2.0;
+    int m        = 10;
+    double intr  = 3;
+    double slope = 2.0;
     arma::Mat<double> X(m, 1), Y(m, 1), B(1, 1);
     B.fill(slope);
     for (int i = 0; i < m; ++i)
@@ -71,10 +71,10 @@ BOOST_AUTO_TEST_CASE(test_intercept_non_zero)
 
 BOOST_AUTO_TEST_CASE(test_intercept_non_zero_matrix)
 {
-    int               m     = 10;
-    int               n     = 5;
-    double            intr  = 3;
-    double            slope = 2.0;
+    int m        = 10;
+    int n        = 5;
+    double intr  = 3;
+    double slope = 2.0;
     arma::Mat<double> X(m, n), Y(m, n), B(n, n);
     B.fill(0.0);
     B.diag() += slope;
@@ -94,42 +94,42 @@ BOOST_AUTO_TEST_CASE(test_intercept_non_zero_matrix)
 
 BOOST_AUTO_TEST_CASE(test_pls_zero_indices)
 {
-    unsigned int p    = 2;
-    unsigned int q    = 2;
-    double       fill = 1.0;
+    unsigned int p = 2;
+    unsigned int q = 2;
+    double fill    = 1.0;
     arma::rowvec txx(p);
     for (unsigned int i = 0; i < p; ++i)
-    { 
-      txx(i) = i;
+    {
+        txx(i) = i;
     }
     arma::Mat<double> txy(p, q);
     txy.fill(fill);
     arma::Mat<double> B(p, q);
     B.fill(fill);
-    int    pi     = 0;
-    int    qi     = 0;
+    int pi        = 0;
+    int qi        = 0;
     double expect = txy(pi, qi) - txx(1) * B(1, qi);
     BOOST_REQUIRE(netreg::partial_least_squares(txx, txy, B, pi, qi) == expect);
 }
 
 BOOST_AUTO_TEST_CASE(test_pls_one_indices)
 {
-    unsigned int p    = 2;
-    unsigned int q    = 2;
+    unsigned int p = 2;
+    unsigned int q = 2;
     arma::rowvec txx(p);
     arma::Mat<double> txy(p, q);
     arma::Mat<double> B(p, q);
     for (unsigned int i = 0; i < p; ++i)
-    { 
-      txx(i) = i + 2;
-      for (unsigned int j = 0; j < q ; ++j)
-      {
-          txy(i, j) = j * i + 1;
-          B(i, j) = -j * i + 3;
-      }
+    {
+        txx(i) = i + 2;
+        for (unsigned int j = 0; j < q; ++j)
+        {
+            txy(i, j) = j * i + 1;
+            B(i, j)   = -j * i + 3;
+        }
     }
-    int    pi = 1;
-    int    qi = 1;
+    int pi        = 1;
+    int qi        = 1;
     double expect = txy(pi, qi) - txx(0) * B(0, qi);
     BOOST_REQUIRE(netreg::partial_least_squares(txx, txy, B, pi, qi) == expect);
 }

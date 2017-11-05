@@ -66,11 +66,13 @@ add_executable(
         ${SOURCES}
         test.cpp
         test_data.cpp
+        test_edgenet_gaussian.cpp
+        test_graph_functions.cpp
         test_math_functions.cpp
-        test_stat_functions.cpp
-        test_vector_functions.cpp
         test_model.cpp
-        test_modelselection.cpp)
+        test_modelselection.cpp
+        test_stat_functions.cpp
+        test_vector_functions.cpp)
 
 target_compile_definitions(
     test_netReg PRIVATE

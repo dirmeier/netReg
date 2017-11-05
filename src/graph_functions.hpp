@@ -43,7 +43,7 @@ namespace netreg
      * @param n the number of rows of x
      * @return the degrees of every node
      */
-    std::vector<double> degree_distributions(const double* x,  const int n);
+    std::vector<double> degree_distribution(const double* x, const int n, const int m);
 
    /*
     * Calculate the normalized laplacian of a matrix.

@@ -22,8 +22,8 @@
  * @email: simon.dirmeier@gmx.de
  */
 
+#include <cmath>
 #include <cstdlib>
-#include <map>
 #include <iostream>
 
 #ifndef ARMA_DONT_USE_WRAPPER
@@ -32,106 +32,79 @@
 #include <armadillo>
 #include <boost/test/unit_test.hpp>
 
-#include "../../src/stat_functions.hpp"
+#include "../../src/graph_functions.hpp"
 
-/*
-* Testing suite for stats functions
-*/
-BOOST_AUTO_TEST_SUITE(stat_function_tests)
-
-BOOST_AUTO_TEST_CASE(test_intercept)
+bool degrees_are_correct(std::vector<double>& degrees, arma::Mat<double>& x)
 {
-    int               m  = 10;
-    double            f1 = 2.0;
-    double            f2 = 1.5;
-    double            f3 = 3;
-    arma::Mat<double> X(m, 1), Y(m, 1), B(1, 1);
-    X.fill(f1);
-    B.fill(f2);
-    Y.fill(f3);
-    double expect = f3 - (f2 * f1);
-    BOOST_REQUIRE(netreg::intercept(X, Y, B)(0) == expect);
-}
-
-BOOST_AUTO_TEST_CASE(test_intercept_non_zero)
-{
-    int               m     = 10;
-    double            intr  = 3;
-    double            slope = 2.0;
-    arma::Mat<double> X(m, 1), Y(m, 1), B(1, 1);
-    B.fill(slope);
-    for (int i = 0; i < m; ++i)
+    for (std::vector<double>::size_type i = 0; i < degrees.size(); ++i)
     {
-        X(i, 0) = i;
-        Y(i, 0) = X(i, 0) * B(0, 0) + intr;
+        double rowsum = 0;
+        for (uint32_t j = 0; j < x.n_cols; ++j)
+            rowsum += x(i, j);
+        if (degrees[i] != rowsum)
+            return false;
     }
-    arma::Col<double> intercept = netreg::intercept(X, Y, B);
-    BOOST_REQUIRE(intercept(0) == intr);
+
+    return true;
 }
 
-BOOST_AUTO_TEST_CASE(test_intercept_non_zero_matrix)
+bool laplacian_is_correct(arma::Mat<double>& lapl, arma::Mat<double>& x)
 {
-    int               m     = 10;
-    int               n     = 5;
-    double            intr  = 3;
-    double            slope = 2.0;
-    arma::Mat<double> X(m, n), Y(m, n), B(n, n);
-    B.fill(0.0);
-    B.diag() += slope;
-    for (int i = 0; i < m; ++i)
+    std::vector<double> degrees =
+      netreg::degree_distribution(x.memptr(), x.n_rows, x.n_cols);
+    for (uint32_t i = 0; i < lapl.n_rows; ++i)
     {
-        for (int j = 0; j < n; ++j)
+        for (uint32_t j = 0; j < lapl.n_cols; ++j)
         {
-            X(i, j) = i;
-            Y(i, j) = X(i, j) * B(j, j) + intr;
+            if (lapl(i, j) != 1 - (x(i, j) / degrees[i]) &&
+                lapl(i, j) != -x(i, j) / std::sqrt(degrees[i] * degrees[j]) &&
+                lapl(i, j) != 0)
+            {
+                return false;
+            }
         }
     }
-    arma::Col<double> intercept = netreg::intercept(X, Y, B);
-    BOOST_REQUIRE(static_cast<int>(intercept.n_rows) == n);
-    BOOST_REQUIRE(intercept(0) == intr);
-    BOOST_REQUIRE(intercept(1) == intr);
+    return true;
 }
 
-BOOST_AUTO_TEST_CASE(test_pls_zero_indices)
+/*
+* Testing suite for graph functions
+*/
+BOOST_AUTO_TEST_SUITE(graph_function_tests)
+
+BOOST_AUTO_TEST_CASE(test_degree_distribution)
 {
-    unsigned int p    = 2;
-    unsigned int q    = 2;
-    double       fill = 1.0;
-    arma::rowvec txx(p);
-    for (unsigned int i = 0; i < p; ++i)
-    { 
-      txx(i) = i;
+    int m = 3;
+    arma::Mat<double> x(m, m);
+    for (int i = 0; i < m; ++i)
+    {
+        for (int j = 0; j < m; ++j)
+        {
+            if (i == j)
+                continue;
+            x(i, j) = i + j;
+        }
     }
-    arma::Mat<double> txy(p, q);
-    txy.fill(fill);
-    arma::Mat<double> B(p, q);
-    B.fill(fill);
-    int    pi     = 0;
-    int    qi     = 0;
-    double expect = txy(pi, qi) - txx(1) * B(1, qi);
-    BOOST_REQUIRE(netreg::partial_least_squares(txx, txy, B, pi, qi) == expect);
+    std::vector<double> degrees = netreg::degree_distribution(x.memptr(), m, m);
+    BOOST_REQUIRE(degrees_are_correct(degrees, x));
 }
 
-BOOST_AUTO_TEST_CASE(test_pls_one_indices)
+BOOST_AUTO_TEST_CASE(test_laplacian)
 {
-    unsigned int p    = 2;
-    unsigned int q    = 2;
-    arma::rowvec txx(p);
-    arma::Mat<double> txy(p, q);
-    arma::Mat<double> B(p, q);
-    for (unsigned int i = 0; i < p; ++i)
-    { 
-      txx(i) = i + 2;
-      for (unsigned int j = 0; j < q ; ++j)
-      {
-          txy(i, j) = j * i + 1;
-          B(i, j) = -j * i + 3;
-      }
+    int m = 3;
+    arma::Mat<double> x(m, m);
+    for (int i = 0; i < m; ++i)
+    {
+        for (int j = 0; j < m; ++j)
+        {
+            if (i == j)
+                x(i, j) = 0;
+            else
+                x(i, j) = i + j;
+        }
     }
-    int    pi = 1;
-    int    qi = 1;
-    double expect = txy(pi, qi) - txx(0) * B(0, qi);
-    BOOST_REQUIRE(netreg::partial_least_squares(txx, txy, B, pi, qi) == expect);
+    arma::Mat<double> lapl = netreg::laplacian(x.memptr(), m, m, 1);
+    BOOST_REQUIRE(laplacian_is_correct(lapl, x));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
