@@ -22,7 +22,6 @@
  * @email: simon.dirmeier@gmx.de
  */
 
-
 #ifndef NETREG_STAT_FUNCTIONS_HPP
 #define NETREG_STAT_FUNCTIONS_HPP
 
@@ -50,7 +49,8 @@ namespace netreg
                                 arma::Mat<double>& B);
 
     /**
-     * Calculates the partial residual of the current coefficient that is estimated.
+     * Calculates the partial residual of the current coefficient that is
+     * estimated.
      *
      * @param txx_row the square of the design matrix
      * @param txy the design times the response matrix
@@ -61,10 +61,11 @@ namespace netreg
     inline double partial_least_squares(arma::rowvec& txx_row,
                                         arma::Mat<double>& txy,
                                         arma::Mat<double>& cfs,
-                                        const int pi, const int qi)
+                                        const int pi,
+                                        const int qi)
     {
-        return txy(pi, qi) + (txx_row(pi) * cfs(pi, qi))
-               - arma::accu(txx_row * cfs.col(qi));
+        return txy(pi, qi) + (txx_row(pi) * cfs(pi, qi)) -
+          arma::accu(txx_row * cfs.col(qi));
     }
 }
-#endif //NETREG_STAT_FUNCTIONS_HPP
+#endif  // NETREG_STAT_FUNCTIONS_HPP

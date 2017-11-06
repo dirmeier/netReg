@@ -35,10 +35,9 @@ namespace netreg
      */
     class not_implemented_exception : public std::exception
     {
-
-    public:
-        not_implemented_exception
-            (const char *error = "Functionality not yet implemented!")
+       public:
+        not_implemented_exception(
+          const char *error = "Functionality not yet implemented!")
         {
             errorMessage = error;
         }
@@ -48,9 +47,8 @@ namespace netreg
             return errorMessage.c_str();
         }
 
-    private:
-
+       private:
         std::string errorMessage;
     };
 }
-#endif //NETREG_NOTIMPLEMENTEDEXCEPTION_HPP
+#endif  // NETREG_NOTIMPLEMENTEDEXCEPTION_HPP

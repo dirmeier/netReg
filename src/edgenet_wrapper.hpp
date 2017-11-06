@@ -22,7 +22,6 @@
  * @email: simon.dirmeier@gmx.de
  */
 
-
 #ifndef NETREG_EDGENET_HPP
 #define NETREG_EDGENET_HPP
 
@@ -34,7 +33,6 @@
 
 namespace netreg
 {
-
     /**
      * Calulates the coefficients of a graph-regularized regression model.
      *
@@ -50,9 +48,8 @@ namespace netreg
      *
      * @return returns the estimated parameters and foldids
      */
-    SEXP regularization_path(
-        graph_penalized_linear_model_cv_data& data,
-        int niter,
-        double epsilon);
+    SEXP regularization_path(graph_penalized_linear_model_cv_data& data,
+                             int niter,
+                             double epsilon);
 }
-#endif //NETREG_EDGENET_HPP
+#endif  // NETREG_EDGENET_HPP

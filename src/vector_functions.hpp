@@ -30,7 +30,8 @@
 namespace netreg
 {
     /**
-     * Generate a vector of length le with increasing values starting from start.
+     * Generate a vector of length le with increasing values starting from
+     * start.
      *
      * @param le length of vector
      * @param start starting value at index 0
@@ -55,4 +56,4 @@ namespace netreg
      */
     std::vector<int> shuffle(const int le, int start);
 }
-#endif //NETREG_VECTOR_FUNCTIONS_HPP
+#endif  // NETREG_VECTOR_FUNCTIONS_HPP

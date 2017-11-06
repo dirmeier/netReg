@@ -44,27 +44,27 @@ namespace netreg
 
     void shuffle(std::vector<int>& vec)
     {
-        const int size = (int) vec.size();
-        #ifdef USE_RCPPARMADILLO
+        const int size = (int)vec.size();
+#ifdef USE_RCPPARMADILLO
         GetRNGstate();
         Rcpp::Environment base_env("package:base");
         Rcpp::Function set_seed_r = base_env["set.seed"];
         set_seed_r(23);
-        #endif
+#endif
         for (std::vector<int>::size_type i = 0; i < vec.size(); ++i)
         {
-            #ifdef USE_RCPPARMADILLO
+#ifdef USE_RCPPARMADILLO
             int idx = unif_rand() * size;
-            #else
+#else
             int idx = std::rand() % size;
-            #endif
-            int a = vec[idx];
+#endif
+            int a    = vec[idx];
             vec[idx] = vec[i];
-            vec[i] = a;
+            vec[i]   = a;
         }
-        #ifdef USE_RCPPARMADILLO
+#ifdef USE_RCPPARMADILLO
         PutRNGstate();
-        #endif
+#endif
     }
 
     std::vector<int> shuffle(const int le, int start)
@@ -73,5 +73,4 @@ namespace netreg
         shuffle(vec);
         return vec;
     }
-
 }

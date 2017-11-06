@@ -34,10 +34,8 @@ namespace netreg
      */
     class illegal_argument_exception : public std::exception
     {
-    public:
-
-        illegal_argument_exception
-            (const char *error = "Wrong arguments given")
+       public:
+        illegal_argument_exception(const char *error = "Wrong arguments given")
         {
             errorMessage = error;
         }
@@ -47,8 +45,8 @@ namespace netreg
             return errorMessage.c_str();
         }
 
-    private:
+       private:
         std::string errorMessage;
     };
 }
-#endif //NETREG_ILLEGALARGUMENTEXCEPTION_HPP
+#endif  // NETREG_ILLEGALARGUMENTEXCEPTION_HPP

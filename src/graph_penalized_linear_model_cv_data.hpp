@@ -22,7 +22,6 @@
  * @email: simon.dirmeier@gmx.de
  */
 
-
 #ifndef NETREG_GRAPH_PENALIZED_LINEAR_MODEL_CV_DATA_HPP
 #define NETREG_GRAPH_PENALIZED_LINEAR_MODEL_CV_DATA_HPP
 
@@ -49,11 +48,9 @@ namespace netreg
      * Data-structure for all required data for graph-penalized regression.
      */
     class graph_penalized_linear_model_cv_data
-        : public graph_penalized_linear_model_data
+      : public graph_penalized_linear_model_data
     {
-
-    public:
-
+       public:
         /**
          * Constructor.
          *
@@ -66,24 +63,45 @@ namespace netreg
          * @param q the number of responses (ncol Y)
          * @param lambda deprecated and not used: has to be 0
          * @param alpha deprecated and not used: has to be 1.0
-         * @param psi_gx 0 if no penalization is used, -1 if psi_gx should be estimated
-         * @param psi_gy 0 if no penalization is used, -1 if psi_gy should be estimated
-         * @param niter max number of iterations in case estimation of the coefficients does not converge
+         * @param psi_gx 0 if no penalization is used, -1 if psi_gx should be
+         * estimated
+         * @param psi_gy 0 if no penalization is used, -1 if psi_gy should be
+         * estimated
+         * @param niter max number of iterations in case estimation of the
+         * coefficients does not converge
          * @param thresh convergence threshold
          * @param nfolds the number of folds
          * @param fold_ids fold id mappings
          */
-        graph_penalized_linear_model_cv_data
-            (double *const x, double *const y,
-             double *const gx, double *const gy,
-             const int n, const int p, const int q,
-             const double lambda, const double alpha,
-             const double psi_gx, const double psi_gy,
-             const int niter, const double thresh,
-             const int nfolds, const enum family fam)
-            : graph_penalized_linear_model_data
-                  (x, y, gx, gy, n, p, q, lambda, alpha, psi_gx, psi_gy,
-                   niter, thresh, fam),
+        graph_penalized_linear_model_cv_data(double *const x,
+                                             double *const y,
+                                             double *const gx,
+                                             double *const gy,
+                                             int n,
+                                             int p,
+                                             int q,
+                                             const double lambda,
+                                             const double alpha,
+                                             const double psi_gx,
+                                             const double psi_gy,
+                                             const int niter,
+                                             const double thresh,
+                                             const int nfolds,
+                                             const enum family fam)
+            : graph_penalized_linear_model_data(x,
+                                                y,
+                                                gx,
+                                                gy,
+                                                n,
+                                                p,
+                                                q,
+                                                lambda,
+                                                alpha,
+                                                psi_gx,
+                                                psi_gy,
+                                                niter,
+                                                thresh,
+                                                fam),
               fold_ids_(design().n_rows), cvset_(n, nfolds, X, Y)
         {
             set_fold_ids();
@@ -99,25 +117,47 @@ namespace netreg
          * @param n the number of samples (nrows X/Y)
          * @param p the number of covariables (ncols X)
          * @param q the number of responses (ncol Y)
-         * @param lambda a vector of length q of penalisation values for q univariate models
+         * @param lambda a vector of length q of penalisation values for q
+         * univariate models
          * @param alpha a vector of length q of weightings for lasso/ridge
-         * @param psi_gx a vector of length q of how much influence GX should have on the penalization
-         * @param psi_gy a vector of length q of how much influence GY should have on the penalization
-         * @param niter max number of iterations in case estimation of the coefficients does not converge
+         * @param psi_gx a vector of length q of how much influence GX should
+         * have on the penalization
+         * @param psi_gy a vector of length q of how much influence GY should
+         * have on the penalization
+         * @param niter max number of iterations in case estimation of the
+         * coefficients does not converge
          * @param thresh convergence threshold
          * @param fold_ids fold id mappings
          */
-        graph_penalized_linear_model_cv_data
-            (double *const x, double *const y,
-             double *const gx, double *const gy,
-             const int n, const int p, const int q,
-             double const lambda, const double alpha,
-             const double psi_gx, const double psi_gy,
-             const int niter, const double thresh,
-             int *const fold_ids, const enum family fam)
-            : graph_penalized_linear_model_data
-                  (x, y, gx, gy, n, p, q, lambda, alpha, psi_gx, psi_gy,
-                   niter, thresh, fam),
+        graph_penalized_linear_model_cv_data(double *const x,
+                                             double *const y,
+                                             double *const gx,
+                                             double *const gy,
+                                             const int n,
+                                             const int p,
+                                             const int q,
+                                             double const lambda,
+                                             const double alpha,
+                                             const double psi_gx,
+                                             const double psi_gy,
+                                             const int niter,
+                                             const double thresh,
+                                             int *const fold_ids,
+                                             const enum family fam)
+            : graph_penalized_linear_model_data(x,
+                                                y,
+                                                gx,
+                                                gy,
+                                                n,
+                                                p,
+                                                q,
+                                                lambda,
+                                                alpha,
+                                                psi_gx,
+                                                psi_gy,
+                                                niter,
+                                                thresh,
+                                                fam),
               fold_ids_(design().n_rows), cvset_(n, fold_ids, X, Y)
         {
             throw not_implemented_exception();
@@ -129,7 +169,7 @@ namespace netreg
          *
          * @return returns the fold ids
          */
-        std::vector<int>& fold_ids()
+        std::vector<int> &fold_ids()
         {
             return fold_ids_;
         }
@@ -137,12 +177,12 @@ namespace netreg
         /**
          * Getter
          */
-        cv_set& cvset()
+        cv_set &cvset()
         {
             return cvset_;
         }
 
-    protected:
+       protected:
         /**
          * Function to set the fold id mappings to sample indexes.
          */
@@ -154,4 +194,4 @@ namespace netreg
     };
 }
 
-#endif //NETREG_GRAPH_PENALIZED_LINEAR_MODEL_CV_DATA_HPP
+#endif  // NETREG_GRAPH_PENALIZED_LINEAR_MODEL_CV_DATA_HPP

@@ -70,35 +70,36 @@ namespace netreg
                 test_idx++;
             }
         }
-    //    #pragma omp parallel for
+        //    #pragma omp parallel for
         for (size_t i = 0; i < folds_.size(); ++i)
         {
             folds_[i] = cv_fold(trains[i], tests[i], X, Y);
         }
     }
 
-/*
- * TODO: this might need debugging ... looks correct though
- */
-    void cv_set::init(int *const foldids, arma::Mat<double> &X,
+    /*
+     * TODO: this might need debugging ... looks correct though
+     */
+    void cv_set::init(int *const foldids,
+                      arma::Mat<double> &X,
                       arma::Mat<double> &Y)
     {
         throw not_implemented_exception();
     }
-//        for (int i = 0; i < N_FOLDS_; ++i)
-//            folds_.push_back(cv_fold());
-//        // iterate over all sample indeces
-//        for (int i = 0; i < N_; ++i)
-//        {
-//            // get fold id of sample at index i
-//            int fold = foldids[i];
-//            // add the index i to the test set of fold fold
-//            folds_[fold].add_to_test_set(i);
-//            // add index i to all trainings set folds except fold fold
-//            for (int j = 0; j < N_FOLDS_; ++j)
-//            {
-//                if (j != fold) folds_[j].add_to_train_set(i);
-//            }
-//        }
-//    }
+    //        for (int i = 0; i < N_FOLDS_; ++i)
+    //            folds_.push_back(cv_fold());
+    //        // iterate over all sample indeces
+    //        for (int i = 0; i < N_; ++i)
+    //        {
+    //            // get fold id of sample at index i
+    //            int fold = foldids[i];
+    //            // add the index i to the test set of fold fold
+    //            folds_[fold].add_to_test_set(i);
+    //            // add index i to all trainings set folds except fold fold
+    //            for (int j = 0; j < N_FOLDS_; ++j)
+    //            {
+    //                if (j != fold) folds_[j].add_to_train_set(i);
+    //            }
+    //        }
+    //    }
 }

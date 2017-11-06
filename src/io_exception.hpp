@@ -31,10 +31,8 @@ namespace netreg
      */
     class io_exception : public std::exception
     {
-    public:
-
-        io_exception
-            (const char *error = "IO-error!")
+       public:
+        io_exception(const char *error = "IO-error!")
         {
             errorMessage = error;
         }
@@ -44,9 +42,8 @@ namespace netreg
             return errorMessage.c_str();
         }
 
-    private:
-
+       private:
         std::string errorMessage;
     };
 }
-#endif //NETREG_IOEXCEPTION_HPP
+#endif  // NETREG_IOEXCEPTION_HPP

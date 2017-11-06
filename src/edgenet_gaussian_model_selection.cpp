@@ -30,11 +30,10 @@
 
 namespace netreg
 {
-
     std::map<std::string, double> model_selection(
-        graph_penalized_linear_model_cv_data &data,
-        const int niter,
-        const double epsilon)
+      graph_penalized_linear_model_cv_data &data,
+      const int niter,
+      const double epsilon)
     {
         optim opt;
 
@@ -49,9 +48,13 @@ namespace netreg
             case family::GAUSSIAN:
             default:
             {
-                return opt.bobyqa<edgenet_gaussian_loss_function>
-                        (data, start, lower_bound, upper_bound,
-                         rad_start, rad_end, niter);
+                return opt.bobyqa<edgenet_gaussian_loss_function>(data,
+                                                                  start,
+                                                                  lower_bound,
+                                                                  upper_bound,
+                                                                  rad_start,
+                                                                  rad_end,
+                                                                  niter);
             }
         }
         return res;

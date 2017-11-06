@@ -30,36 +30,36 @@ namespace netreg
 {
     SEXP edgenet_binomial::run(graph_penalized_linear_model_data &data) const
     {
-//        const int P = data.covariable_count();
-//        const int Q = data.response_count();
-//        matrix<double> &coef = data.coefficients();
-//        matrix<double> old_coef(P, Q);
-//        cvector<double> &intr = data.intercept();
-//        const double thresh = data.threshold();
-//        const int niter = data.max_iter();
-//        const double lambda = data.lambda();
-//        const double alpha = data.alpha();
-//        const double psigx=data.psigx();
-//        const double psigy=data.psigy();
-//        matrix<double> &TXX= data.txx();
-//        matrix<double> &TXY = data.txy();
-//        matrix<double> &LX = data.lx();
-//        matrix<double> &LY = data.ly();
-//        // calculate intercepts of the linear model
-//        intr = intercept(data.design(), data.response(), coef);
+        //        const int P = data.covariable_count();
+        //        const int Q = data.response_count();
+        //        matrix<double> &coef = data.coefficients();
+        //        matrix<double> old_coef(P, Q);
+        //        cvector<double> &intr = data.intercept();
+        //        const double thresh = data.threshold();
+        //        const int niter = data.max_iter();
+        //        const double lambda = data.lambda();
+        //        const double alpha = data.alpha();
+        //        const double psigx=data.psigx();
+        //        const double psigy=data.psigy();
+        //        matrix<double> &TXX= data.txx();
+        //        matrix<double> &TXY = data.txy();
+        //        matrix<double> &LX = data.lx();
+        //        matrix<double> &LY = data.ly();
+        //        // calculate intercepts of the linear model
+        //        intr = intercept(data.design(), data.response(), coef);
         return R_NilValue;
     }
 
-    arma::Mat<double> edgenet_binomial::run_cv
-        (graph_penalized_linear_model_cv_data &data,
-         const double lambda, const double alpha,
-         const double psigx, const double psigy,
-         cv_fold &fold) const
+    arma::Mat<double> edgenet_binomial::run_cv(
+      graph_penalized_linear_model_cv_data &data,
+      const double lambda,
+      const double alpha,
+      const double psigx,
+      const double psigy,
+      cv_fold &fold) const
     {
-
-      arma::Mat<double> coef(10, 10, arma::fill::ones);
-        //TODO
+        arma::Mat<double> coef(10, 10, arma::fill::ones);
+        // TODO
         return coef;
     }
 }
-

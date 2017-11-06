@@ -44,38 +44,37 @@
 namespace netreg
 {
     /**
-     * Functor class representing the objective function of a edge-regularized regression model.
+     * Functor class representing the objective function of a edge-regularized
+     * regression model.
      */
     class edgenet_binomial_likelihood_function
     {
-    public:
+       public:
         /**
-         * Creates an objective function object that can be used for minimization using dlib.
+         * Creates an objective function object that can be used for
+         * minimization using dlib.
          *
-         * @param data the complete dataset required for edge-regularized regression
+         * @param data the complete dataset required for edge-regularized
+         * regression
          * @param cvset a cross-validation set
          */
-        edgenet_binomial_likelihood_function
-            (graph_penalized_linear_model_data &data) :
-            data_(data),
-            X_(data.design()),
-            Y_(data.response()),
-            nfolds_(static_cast<int>(cvset.fold_count())),
-            edgenet_(),
-            do_psigx_(data.psigx() == -1),
-            do_psigy_(data.psigy() == -1),
-            P_(X_.n_cols),
-            Q_(Y_.n_cols)
-        {}
+        edgenet_binomial_likelihood_function(
+          graph_penalized_linear_model_data &data)
+            : data_(data), X_(data.design()), Y_(data.response()),
+              nfolds_(static_cast<int>(cvset.fold_count())), edgenet_(),
+              do_psigx_(data.psigx() == -1), do_psigy_(data.psigy() == -1),
+              P_(X_.n_cols), Q_(Y_.n_cols)
+        {
+        }
 
         /**
-         * Over-write operator () in order to get functor functionality (object behaves like a function)
+         * Over-write operator () in order to get functor functionality (object
+         * behaves like a function)
          *
          * @param params the free parameters on the objective function
          */
         double operator()(const dlib::matrix<double> &b) const
         {
-
             arma::Mat<double> B(P, Q);
             // TODO: efficient cast b to B
             for (unsigned int i = 0; i < P; ++i)
@@ -84,17 +83,17 @@ namespace netreg
             arma::Mat<double> sigm = (X_ * B);
             sigm.transform([](double val) { return log(1 / (1 + exp(val))); });
             // TODO: from here on
-            arma::Mat<double> loglik = Y .* log(sigm)  + (1 - Y) .* log(1-sigm);
-            double nll = 0.0;
+            arma::Mat<double> loglik = Y.*log(sigm) + (1 - Y).*log(1 - sigm);
+            double nll               = 0.0;
 
             return nll;
         }
 
-    private:
+       private:
         // data required for a edge-regularized regression model
         graph_penalized_linear_model_data &data_;
-        matrix<double> &X_;      // design matrix
-        matrix<double> &Y_;      // response matrix
+        matrix<double> &X_;  // design matrix
+        matrix<double> &Y_;  // response matrix
         const bool do_psigx_;
         const bool do_psigy_;
         const int P_;
@@ -102,4 +101,4 @@ namespace netreg
     };
 }
 
-#endif //NETREG_BINOMIAL_EDGENET_LIKELIHOOD_FUNCTION_HPP
+#endif  // NETREG_BINOMIAL_EDGENET_LIKELIHOOD_FUNCTION_HPP

@@ -41,11 +41,12 @@
 namespace netreg
 {
     /**
-     * Class for estimating the coeffiecients of a edge-regularized linear regression model.
+     * Class for estimating the coeffiecients of a edge-regularized linear
+     * regression model.
      */
     class edgenet_binomial
     {
-    public:
+       public:
         /**
          * Calulates the coefficients of a graph-regularized regression model.
          *
@@ -62,14 +63,13 @@ namespace netreg
          * @param psigx penalization of laplacian for X
          * @param psigy penalization of laplacian for Y
          */
-        arma::Mat<double> run_cv
-            (graph_penalized_linear_model_cv_data &data,
-             const double lambda,
-             const double alpha,
-             const double psigx,
-             const double psigy,
-             cv_fold &fold) const;
+        arma::Mat<double> run_cv(graph_penalized_linear_model_cv_data &data,
+                                 const double lambda,
+                                 const double alpha,
+                                 const double psigx,
+                                 const double psigy,
+                                 cv_fold &fold) const;
     };
 }
 
-#endif //NETREG_BINOMIAL_EDGENET_HPP
+#endif  // NETREG_BINOMIAL_EDGENET_HPP

@@ -11,10 +11,12 @@
 
 namespace netreg
 {
-    enum class family: std::int8_t
+    enum class family : std::int8_t
     {
-        BINOMIAL = 0, GAUSSIAN = 1, NONE = -1
+        BINOMIAL = 0,
+        GAUSSIAN = 1,
+        NONE     = -1
     };
 }
 
-#endif //NETREG_FAMILY_HPP
+#endif  // NETREG_FAMILY_HPP

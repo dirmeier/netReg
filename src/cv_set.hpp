@@ -48,17 +48,18 @@ namespace netreg
 {
     class cv_set
     {
-    public:
-
+       public:
         /**
          * Creates a cross-validation set.
          *
          * @param n the number of samples provided (e.g. 100)
          * @param n_folds the number of folds to be created (e.g. 10)
          */
-        cv_set(const int n, const int n_folds,
-               arma::Mat<double> &X, arma::Mat<double> &Y):
-            N_FOLDS_(n_folds), N_(n), folds_(N_FOLDS_)
+        cv_set(const int n,
+               const int n_folds,
+               arma::Mat<double> &X,
+               arma::Mat<double> &Y)
+            : N_FOLDS_(n_folds), N_(n), folds_(N_FOLDS_)
         {
             init(X, Y);
         }
@@ -69,15 +70,17 @@ namespace netreg
          * @param size the number of samples provided (e.g. 100)
          * @param foldids fold assignments for all samples
          */
-        cv_set(const int n, int *const foldids,
-               arma::Mat<double> &X, arma::Mat<double> &Y):
-            N_FOLDS_(n), N_(n)
+        cv_set(const int n,
+               int *const foldids,
+               arma::Mat<double> &X,
+               arma::Mat<double> &Y)
+            : N_FOLDS_(n), N_(n)
         {
             throw not_implemented_exception();
             init(foldids, X, Y);
         }
 
-        std::vector<cv_fold>& folds()
+        std::vector<cv_fold> &folds()
         {
             return folds_;
         }
@@ -113,7 +116,7 @@ namespace netreg
             return N_;
         }
 
-    private:
+       private:
         // init folds from scratch
         void init(arma::Mat<double> &X, arma::Mat<double> &Y);
         // init folds using predefined fold ids
@@ -122,8 +125,8 @@ namespace netreg
                   arma::Mat<double> &Y);
 
         const int N_FOLDS_;           // the number of folds
-        const int N_;              // the sample size
-        std::vector<cv_fold> folds_; // the fold objects
+        const int N_;                 // the sample size
+        std::vector<cv_fold> folds_;  // the fold objects
     };
 }
-#endif //NETREG_CVSET_HPP
+#endif  // NETREG_CVSET_HPP

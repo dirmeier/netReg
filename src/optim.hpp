@@ -22,7 +22,6 @@
  * @email: simon.dirmeier@gmx.de
  */
 
-
 #ifndef NETREG_OPTIM_HPP
 #define NETREG_OPTIM_HPP
 
@@ -52,20 +51,25 @@ namespace netreg
      */
     class optim
     {
-    public:
+       public:
         /**
-         * Calculate the pareto optimal points for a given loss function using the BOBYQA algorithm by Powell
-         * (MJD Powell, The BOBYQA algorithm for bound constrained optimization without derivatives, 2009)
+         * Calculate the pareto optimal points for a given loss function using
+         * the BOBYQA algorithm by Powell
+         * (MJD Powell, The BOBYQA algorithm for bound constrained optimization
+         * without derivatives, 2009)
          *
          * BOBYQA allows for box constraints and does not need derivates.
-         * It finds a local optimum for non-convex loss functions defined by a specified radius.
+         * It finds a local optimum for non-convex loss functions defined by a
+         * specified radius.
          *
          * We use it to minimize functions from the loss_functions package
          *
-         * @template loss_function the class-name of an objective function that should be minimized
+         * @template loss_function the class-name of an objective function that
+         * should be minimized
          * @param point an intial parameter setting for bobyqa
          * @param data the model data for the loss function
-         * @param cvset the cv-set on which the estimated predictor is tested against
+         * @param cvset the cv-set on which the estimated predictor is tested
+         * against
          * @param lower_bound lower bound box constraint
          * @param upper_bound upper bound box constraint
          * @param radius_start initial value of trust region
@@ -73,55 +77,55 @@ namespace netreg
          * @param niter maximum calls to the loss function
          */
         template<typename loss_function>
-        std::map<std::string, double> bobyqa
-            (graph_penalized_linear_model_cv_data &data,
-             std::vector<double> &start,
-             std::vector<double> &lower_bound,
-             std::vector<double> &upper_bound,
-             const double radius_start,
-             const double radius_stop,
-             const int niter) const
-             {
-                 const int sz = static_cast<int>(start.size());
-                 // convert to dlib objects
-                 dlib::matrix<double> par(sz, 1), lb(sz, 1), ub(sz, 1);
-                 for (int i = 0; i < sz; ++i)
-                 {
-                     par(i, 0) = start[i];
-                     lb(i, 0) = lower_bound[i];
-                     ub(i, 0) = upper_bound[i];
-                 }
-                 // minimize the loss_function
-                 try
-                 {
-                     #ifdef USE_RCPPARMADILLO
-                     GetRNGstate();
-                     #endif
-                     dlib::find_min_bobyqa(
-                         loss_function(data),
-                         par,
-                         par.size() * 2 + 1,
-                         lb,
-                         ub,
-                         radius_start,
-                         radius_stop,
-                         niter);
-                     #ifdef USE_RCPPARMADILLO
-                     PutRNGstate();
-                     #endif
-                 }
-                 catch (const std::exception &e)
-                 {
-                     #ifdef USE_RCPPARMADILLO
-                     Rprintf("Error estimating optim shrinkage parameters.");
-                     #else
-                     std::cerr << "Error estimating optim shrinkage parameters." << std::endl;
-                     #endif
-                 }
-                 return {{"lambda", par(0, 0)},
-                         {"psigx",  data.psigx() == -1 ? par(1, 0) : 0.0},
-                         {"psigy",  data.psigy() == -1 ? par(2, 0) : 0.0}};
-             }
+        std::map<std::string, double> bobyqa(
+          graph_penalized_linear_model_cv_data &data,
+          std::vector<double> &start,
+          std::vector<double> &lower_bound,
+          std::vector<double> &upper_bound,
+          const double radius_start,
+          const double radius_stop,
+          const int niter) const
+        {
+            const int sz = static_cast<int>(start.size());
+            // convert to dlib objects
+            dlib::matrix<double> par(sz, 1), lb(sz, 1), ub(sz, 1);
+            for (int i = 0; i < sz; ++i)
+            {
+                par(i, 0) = start[i];
+                lb(i, 0)  = lower_bound[i];
+                ub(i, 0)  = upper_bound[i];
+            }
+            // minimize the loss_function
+            try
+            {
+#ifdef USE_RCPPARMADILLO
+                GetRNGstate();
+#endif
+                dlib::find_min_bobyqa(loss_function(data),
+                                      par,
+                                      par.size() * 2 + 1,
+                                      lb,
+                                      ub,
+                                      radius_start,
+                                      radius_stop,
+                                      niter);
+#ifdef USE_RCPPARMADILLO
+                PutRNGstate();
+#endif
+            }
+            catch (const std::exception &e)
+            {
+#ifdef USE_RCPPARMADILLO
+                Rprintf("Error estimating optim shrinkage parameters.");
+#else
+                std::cerr << "Error estimating optim shrinkage parameters."
+                          << std::endl;
+#endif
+            }
+            return {{"lambda", par(0, 0)},
+                    {"psigx", data.psigx() == -1 ? par(1, 0) : 0.0},
+                    {"psigy", data.psigy() == -1 ? par(2, 0) : 0.0}};
+        }
     };
 }
-#endif //NETREG_OPTIM_HPP
+#endif  // NETREG_OPTIM_HPP

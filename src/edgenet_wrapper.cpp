@@ -27,7 +27,6 @@
 #include "edgenet_gaussian_model_selection.hpp"
 #include "stat_functions.hpp"
 
-
 #include <map>
 #include <numeric>
 #include <string>
@@ -41,25 +40,22 @@ namespace netreg
         edgenet_gaussian edge;
         arma::Mat<double> coef = edge.run(data);
         arma::Col<double> intr =
-            intercept(data.design(), data.response(), coef);
-        return Rcpp::List::create(
-            Rcpp::Named("coefficients") = coef,
-            Rcpp::Named("intercept")    = intr);
+          intercept(data.design(), data.response(), coef);
+        return Rcpp::List::create(Rcpp::Named("coefficients") = coef,
+                                  Rcpp::Named("intercept")    = intr);
         END_RCPP
         return R_NilValue;
     }
 
-    SEXP regularization_path(
-        graph_penalized_linear_model_cv_data &data,
-        const int niter,
-        const double epsilon)
+    SEXP regularization_path(graph_penalized_linear_model_cv_data &data,
+                             const int niter,
+                             const double epsilon)
     {
         BEGIN_RCPP
         std::map<std::string, double> res =
-            model_selection(data, niter, epsilon);
-        return Rcpp::List::create(
-            Rcpp::Named("parameters") = Rcpp::wrap(res),
-            Rcpp::Named("folds")      = data.fold_ids());
+          model_selection(data, niter, epsilon);
+        return Rcpp::List::create(Rcpp::Named("parameters") = Rcpp::wrap(res),
+                                  Rcpp::Named("folds")      = data.fold_ids());
         END_RCPP
         return R_NilValue;
     }

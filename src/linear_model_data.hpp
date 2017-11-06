@@ -44,10 +44,10 @@ namespace netreg
      */
     class linear_model_data
     {
-    public:
-
+       public:
         linear_model_data()
-        {}
+        {
+        }
 
         /**
          * Protected constructor in order to avoid instantiation.
@@ -61,22 +61,24 @@ namespace netreg
          * @param thresh the convergence threshold
          * @param fam of distribution of y
          */
-        linear_model_data(double *x, double *y,
-                          const int n, const int p, const int q,
-                          const int niter, const double thresh,
+        linear_model_data(double* x,
+                          double* y,
+                          const int n,
+                          const int p,
+                          const int q,
+                          const int niter,
+                          const double thresh,
                           const family fam)
-            : N(n), P(p), Q(q),
-              X(x, n, p, false, true),
-              Y(y, n, q, false, true),
-              THRESH(thresh), N_ITER(niter),
-              TXY(p, q), txx_rows_(p),
-              family_(fam)
+            : N(n), P(p), Q(q), X(x, n, p, false, true),
+              Y(y, n, q, false, true), THRESH(thresh), N_ITER(niter), TXY(p, q),
+              txx_rows_(p), family_(fam)
         {
-            arma::Mat<double> TX = X.t();
+            arma::Mat<double> TX  = X.t();
             arma::Mat<double> TXX = TX * X;
-            TXY = TX * Y;
+            TXY                   = TX * Y;
             for (std::vector<arma::Row<double> >::size_type i = 0;
-                 i < TXX.n_rows; ++i)
+                 i < TXX.n_rows;
+                 ++i)
             {
                 txx_rows_[i] = TXX.row(i);
             }
@@ -182,17 +184,17 @@ namespace netreg
             return THRESH;
         }
 
-    protected:
-        int N;             // number of samples: n
-        int P;             // number of covariables: p
-        int Q;             // number of responses: q
-        arma::Mat<double> X;        // (n x p)-dimensional design matrix
-        arma::Mat<double> Y;        // (n x q)-dimensional response matrix
-        double THRESH;     // convergence threshold
-        int N_ITER;        // max number iterations if CCD does not converge
-        arma::Mat<double> TXY;      // (p x q)-dimensional matrix: X'Y
+       protected:
+        int N;                // number of samples: n
+        int P;                // number of covariables: p
+        int Q;                // number of responses: q
+        arma::Mat<double> X;  // (n x p)-dimensional design matrix
+        arma::Mat<double> Y;  // (n x q)-dimensional response matrix
+        double THRESH;        // convergence threshold
+        int N_ITER;           // max number iterations if CCD does not converge
+        arma::Mat<double> TXY;  // (p x q)-dimensional matrix: X'Y
         std::vector<arma::Row<double> > txx_rows_;
-        enum family family_;      // family of distribution of y
+        enum family family_;  // family of distribution of y
     };
 }
-#endif //NETREG_LINEARMODELDATA_HPP
+#endif  // NETREG_LINEARMODELDATA_HPP

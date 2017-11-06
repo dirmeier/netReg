@@ -37,10 +37,10 @@ namespace netreg
      */
     class penalized_linear_model_data : public linear_model_data
     {
-
-    public:
-
-        penalized_linear_model_data(){}
+       public:
+        penalized_linear_model_data()
+        {
+        }
 
         /**
          * Constructor.
@@ -50,18 +50,24 @@ namespace netreg
          * @param n the number of samples (nrows X/Y)
          * @param p the number of covariables (ncols X)
          * @param q the number of responses (ncol Y)
-         * @param niter max number of iterations in case estimation of the coefficients does not converge
+         * @param niter max number of iterations in case estimation of the
+         * coefficients does not converge
          * @param thresh convergence threshold
-         * @param is_column_first boolean if given matrices are column-first or not
+         * @param is_column_first boolean if given matrices are column-first or
+         * not
          */
-        penalized_linear_model_data(double *x, double *y,
-                                    const int n, const int p, const int q,
-                                    double const lambda, double const alpha,
-                                    const int niter, const double thresh,
+        penalized_linear_model_data(double *x,
+                                    double *y,
+                                    const int n,
+                                    const int p,
+                                    const int q,
+                                    double const lambda,
+                                    double const alpha,
+                                    const int niter,
+                                    const double thresh,
                                     const enum family fam)
             : linear_model_data(x, y, n, p, q, niter, thresh, fam),
-              ALPHA(alpha),
-              LAMBDA(lambda)
+              ALPHA(alpha), LAMBDA(lambda)
         {
         }
 
@@ -85,9 +91,9 @@ namespace netreg
             return ALPHA;
         }
 
-    protected:
-         double ALPHA;   // mixing weights for elastic-net
-         double LAMBDA;  // penalization term for LASSO
+       protected:
+        double ALPHA;   // mixing weights for elastic-net
+        double LAMBDA;  // penalization term for LASSO
     };
 }
-#endif //NETREG_PENALIZEDLINEARMODELDATA_HPP
+#endif  // NETREG_PENALIZEDLINEARMODELDATA_HPP

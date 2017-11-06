@@ -37,7 +37,8 @@
 namespace netreg
 {
     /**
-     * Calculate the dot product between two columns of two matrices and takes the absolute.
+     * Calculate the dot product between two columns of two matrices and takes
+     * the absolute.
      *
      * @param source1 a random (n x p)-dimensional matrix
      * @param source2 a random (n x q)-dimensional matrix
@@ -45,10 +46,9 @@ namespace netreg
      * @param qi the column of matrix<double> source2
      */
     inline double abs_dprod(const arma::Col<double> &lhs,
-                     const arma::Col<double> &rhs)
+                            const arma::Col<double> &rhs)
     {
-return std::abs(arma::dot(lhs, rhs));
-
+        return std::abs(arma::dot(lhs, rhs));
     }
 
     /**
@@ -57,11 +57,12 @@ return std::abs(arma::dot(lhs, rhs));
      * @param s the estimate of the coefficient that should be estimated
      * @param lalph the Elastic-net regularization parameter
      * @param norm normalization constant
-     * @return returns soft-thresholded normalized version of current coefficient
+     * @return returns soft-thresholded normalized version of current
+     * coefficient
      */
-     inline double softnorm(const double s,
-                    const double lalph,
-                    const double norm)
+    inline double softnorm(const double s,
+                           const double lalph,
+                           const double norm)
     {
         const double sabs = std::abs(s);
         if (lalph < sabs)
@@ -81,11 +82,13 @@ return std::abs(arma::dot(lhs, rhs));
      *
      * @return return the maximal element
      */
-    template <typename T> T max_element(T *const ptr, int len)
+    template<typename T>
+    T max_element(T *const ptr, int len)
     {
         T maximum = ptr[len - 1];
         for (int i = 0; i < len - 1; ++i)
-            if (ptr[i] > maximum) maximum = ptr[i];
+            if (ptr[i] > maximum)
+                maximum = ptr[i];
         return maximum;
     }
 
@@ -100,6 +103,5 @@ return std::abs(arma::dot(lhs, rhs));
     {
         return 1 / (1 + exp(d));
     }
-
 }
-#endif //NETREG_MATH_HPP
+#endif  // NETREG_MATH_HPP

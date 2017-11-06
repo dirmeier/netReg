@@ -35,5 +35,4 @@ namespace netreg
         arma::Col<double> intr = (terr * rep) / Y.n_rows;
         return intr;
     }
-
 }

@@ -31,9 +31,9 @@
 
 namespace netreg
 {
-
     /**
-     * Find the set of optimal shrinkage parameters for a edge-penalized regression
+     * Find the set of optimal shrinkage parameters for a edge-penalized
+     * regression
      * model. Set is calculated using cross-validation.
      *
      * @param data
@@ -41,8 +41,8 @@ namespace netreg
      * @returns returns a map of shrinkage parameters
      */
     std::map<std::string, double> model_selection(
-        graph_penalized_linear_model_cv_data& data,
-        int niter,
-        double epsilon);
+      graph_penalized_linear_model_cv_data& data,
+      int niter,
+      double epsilon);
 }
-#endif // NETREG_EDGENET_GAUSSIAN_MODEL_SELECTION_HPP
+#endif  // NETREG_EDGENET_GAUSSIAN_MODEL_SELECTION_HPP

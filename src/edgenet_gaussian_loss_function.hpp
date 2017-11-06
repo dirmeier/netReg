@@ -44,29 +44,31 @@
 namespace netreg
 {
     /**
-     * Functor class representing the objective function of a edge-regularized regression model.
+     * Functor class representing the objective function of a edge-regularized
+     * regression model.
      */
     class edgenet_gaussian_loss_function
     {
-    public:
+       public:
         /**
-         * Creates an objective function object that can be used for minimization using dlib.
+         * Creates an objective function object that can be used for
+         * minimization using dlib.
          *
-         * @param data the complete dataset required for edge-regularized regression
+         * @param data the complete dataset required for edge-regularized
+         * regression
          * @param cvset a cross-validation set
          */
-        edgenet_gaussian_loss_function
-            (graph_penalized_linear_model_cv_data& data):
-            data_(data),
-            cvset_(data.cvset()),
-            nfolds_(static_cast<int>(data.cvset().fold_count())),
-            edgenet_(),
-            do_psigx_(data.psigx() == -1),
-            do_psigy_(data.psigy() == -1)
-        { }
+        edgenet_gaussian_loss_function(
+          graph_penalized_linear_model_cv_data& data)
+            : data_(data), cvset_(data.cvset()),
+              nfolds_(static_cast<int>(data.cvset().fold_count())), edgenet_(),
+              do_psigx_(data.psigx() == -1), do_psigy_(data.psigy() == -1)
+        {
+        }
 
         /**
-         * Over-write operator () in order to get functor functionality (object behaves like a function)
+         * Over-write operator () in order to get functor functionality (object
+         * behaves like a function)
          *
          * @param params the free parameters on the objective function
          */
@@ -75,21 +77,24 @@ namespace netreg
             std::vector<double> sses(nfolds_);
             // do n-fold cross-validation
             // DO NOT PARALLELIZE. R can't handle it (great language)
-           for (int fc = 0; fc < nfolds_; ++fc)
+            for (int fc = 0; fc < nfolds_; ++fc)
             {
                 cv_fold& fold = cvset_.get_fold(fc);
                 arma::Mat<double> coef;
                 if (do_psigx_ && do_psigy_)
                 {
-                    coef = edgenet_.run_cv(data_, p(0, 0), 1.0, p(1, 0), p(2, 0), fold);
+                    coef = edgenet_.run_cv(
+                      data_, p(0, 0), 1.0, p(1, 0), p(2, 0), fold);
                 }
                 else if (do_psigy_)
                 {
-                    coef = edgenet_.run_cv(data_, p(0, 0), 1.0, 0, p(2, 0), fold);
+                    coef =
+                      edgenet_.run_cv(data_, p(0, 0), 1.0, 0, p(2, 0), fold);
                 }
                 else if (do_psigx_)
                 {
-                    coef = edgenet_.run_cv(data_, p(0, 0), 1.0, p(1, 0), 0, fold);
+                    coef =
+                      edgenet_.run_cv(data_, p(0, 0), 1.0, p(1, 0), 0, fold);
                 }
                 else
                 {
@@ -101,14 +106,14 @@ namespace netreg
             return err;
         }
 
-    private:
+       private:
         // data required for a edge-regularized regression model
         graph_penalized_linear_model_cv_data& data_;
-        cv_set& cvset_;          // cv-set on which the selected model is evaluated
-        const int nfolds_;             // number of folds
+        cv_set& cvset_;     // cv-set on which the selected model is evaluated
+        const int nfolds_;  // number of folds
         const edgenet_gaussian edgenet_;
         const bool do_psigx_;
         const bool do_psigy_;
     };
 }
-#endif //NETREG_EDGENETLOSSFUNCTION_HPP
+#endif  // NETREG_EDGENETLOSSFUNCTION_HPP

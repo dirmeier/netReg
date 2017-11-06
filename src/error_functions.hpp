@@ -50,4 +50,4 @@ namespace netreg
         return (sum * sum) / static_cast<double>(X.n_rows);
     }
 }
-#endif //SRC_ERROR_FUNCTIONS_HPP
+#endif  // SRC_ERROR_FUNCTIONS_HPP
