@@ -90,8 +90,8 @@ namespace netreg
         arma::Mat<double> coef(P, Q, arma::fill::ones);
         arma::Mat<double> old_coef(P, Q);
         std::vector<arma::rowvec> coef_rows(static_cast<unsigned int>(P));
-// safe an extra set of rowvectors so that access is faster
-#pragma omp parallel for
+        // safe an extra set of rowvectors so that access is faster
+        #pragma omp parallel for
         for (std::vector<arma::Row<double>>::size_type i = 0; i < coef.n_rows;
              ++i)
         {
@@ -123,7 +123,9 @@ namespace netreg
                   coef_rows);
 #ifdef USE_RCPPARMADILLO
             if (qi % 100 == 0)
+            {
                 Rcpp::checkUserInterrupt();
+            }
 #endif
         }
         return coef;
@@ -179,11 +181,13 @@ namespace netreg
                 coef_rows[pi](qi) = d;
 #ifdef USE_RCPPARMADILLO
                 if (iter % 100 == 0)
+                {
                     Rcpp::checkUserInterrupt();
+                }
 #endif
             }
-        } while (arma::accu(arma::abs(coef.col(qi) - old_coef.col(qi))) >
-                   thresh &&
-                 iter++ < niter);
+        }
+        while (arma::accu(arma::abs(coef.col(qi) - old_coef.col(qi))) >
+                   thresh &&          iter++ < niter);
     }
 }

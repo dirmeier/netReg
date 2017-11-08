@@ -76,7 +76,7 @@ namespace netreg
         {
             std::vector<double> sses(nfolds_);
             // do n-fold cross-validation
-            // DO NOT PARALLELIZE. R can't handle it (great language)
+            // DO NOT PARALLELIZE. R can't handle it (great)
             for (int fc = 0; fc < nfolds_; ++fc)
             {
                 cv_fold& fold = cvset_.get_fold(fc);
@@ -103,6 +103,7 @@ namespace netreg
                 sses[fc] = mse(coef, fold.test_x(), fold.test_y());
             }
             double err = std::accumulate(sses.begin(), sses.end(), 0.0);
+
             return err;
         }
 

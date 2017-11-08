@@ -54,6 +54,6 @@ namespace netreg
      * @param start starting value at index 0
      * @return a vector with increasing values in random order
      */
-    std::vector<int> shuffle(const int le, int start);
+    std::vector<int> shuffle(int le, int start);
 }
 #endif  // NETREG_VECTOR_FUNCTIONS_HPP
