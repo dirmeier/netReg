@@ -32,6 +32,7 @@
 #include <armadillo>
 #include <boost/test/unit_test.hpp>
 
+#include "../../src/stat_functions.hpp"
 #include "../../src/graph_functions.hpp"
 #include "../../src/edgenet_gaussian.hpp"
 
@@ -43,6 +44,159 @@ class F: public netreg::edgenet_gaussian
 */
 BOOST_FIXTURE_TEST_SUITE(edgenet_gaussian_test, F);
 
+BOOST_AUTO_TEST_CASE(test_uucd)
+{
+    double s = 0;
+    double norm = 0;
+    const int pi = 0;
+    const int qi = 0;
+    const double psigx = 0;
+    const double psigy = 0;
+    const int n = 5;
+    const double fill = 1.5;
+    const int maxit = 1;
+
+    arma::Mat<double> X(n, n), Y(n, n), B(n, n), GX(n, n), GY(n, n);
+    X.fill(fill);
+    Y.fill(fill);
+    B.fill(fill);
+    GX.fill(fill);
+    GY.fill(fill);
+    for (uint32_t i = 0; i < n; ++i)
+    {
+      GX(i, i) = 0;
+      GY(i, i) = 0;
+    }
+
+    arma::Mat<double> lx   = netreg::laplacian(GX.memptr(), n, n, 1);
+    arma::Mat<double> ly   = netreg::laplacian(GY.memptr(), n, n, 1);
+    arma::rowvec b_row     = B.row(pi);
+    arma::rowvec txx_row   = X.row(pi);
+    arma::Mat<double> txy  = Y;
+    arma::rowvec lx_row    = lx.row(pi);
+
+    set_params(
+      s, norm, n, n, pi, qi, psigx, psigy, txx_row, txy,
+      lx_row, ly, B, b_row);
+
+    BOOST_REQUIRE(s == netreg::partial_least_squares(txx_row, txy, B, pi, qi));
+    BOOST_REQUIRE(norm == txx_row(pi));
+}
+
+BOOST_AUTO_TEST_CASE(test_set_param_with_y_penalty)
+{
+    double s = 1;
+    double norm = 1;
+    const int pi = 0;
+    const int qi = 0;
+    const double psigx = 0;
+    const double psigy = 1;
+    const int n = 5;
+    const double fill = 1.5;
+
+    arma::Mat<double> X(n, n), Y(n, n), B(n, n), GX(n, n), GY(n, n);
+    X.fill(fill);
+    Y.fill(fill);
+    B.fill(fill);
+    GX.fill(fill);
+    GY.fill(fill);
+    for (uint32_t i = 0; i < n; ++i)
+    {
+      GX(i, i) = 0;
+      GY(i, i) = 0;
+    }
+
+    arma::Mat<double> lx   = netreg::laplacian(GX.memptr(), n, n, 1);
+    arma::Mat<double> ly   = netreg::laplacian(GY.memptr(), n, n, 1);
+    arma::rowvec b_row     = B.row(pi);
+    arma::rowvec txx_row   = X.row(pi);
+    arma::Mat<double> txy  = Y;
+    arma::rowvec lx_row    = lx.row(pi);
+
+    set_params(
+      s, norm, n, n, pi, qi, psigx, psigy, txx_row, txy,
+      lx_row, ly, B, b_row);
+
+    BOOST_REQUIRE(s == netreg::partial_least_squares(txx_row, txy, B, pi, qi));
+    BOOST_REQUIRE(norm == txx_row(pi));
+}
+
+BOOST_AUTO_TEST_CASE(test_set_param_with_x_penalty)
+{
+    double s = 1;
+    double norm = 1;
+    const int pi = 0;
+    const int qi = 0;
+    const double psigx = 1;
+    const double psigy = 0;
+    const int n = 5;
+    const double fill = 1.5;
+
+    arma::Mat<double> X(n, n), Y(n, n), B(n, n), GX(n, n), GY(n, n);
+    X.fill(fill);
+    Y.fill(fill);
+    B.fill(fill);
+    GX.fill(fill);
+    GY.fill(fill);
+    for (uint32_t i = 0; i < n; ++i)
+    {
+      GX(i, i) = 0;
+      GY(i, i) = 0;
+    }
+
+    arma::Mat<double> lx   = netreg::laplacian(GX.memptr(), n, n, 1);
+    arma::Mat<double> ly   = netreg::laplacian(GY.memptr(), n, n, 1);
+    arma::rowvec b_row     = B.row(pi);
+    arma::rowvec txx_row   = X.row(pi);
+    arma::Mat<double> txy  = Y;
+    arma::rowvec lx_row    = lx.row(pi);
+
+    set_params(
+      s, norm, n, n, pi, qi, psigx, psigy, txx_row, txy,
+      lx_row, ly, B, b_row);
+
+    BOOST_REQUIRE(s == netreg::partial_least_squares(txx_row, txy, B, pi, qi));
+    BOOST_REQUIRE(norm == txx_row(pi));
+}
+
+
+BOOST_AUTO_TEST_CASE(test_set_param)
+{
+    double s = 1;
+    double norm = 1;
+    const int pi = 0;
+    const int qi = 0;
+    const double psigx = 0;
+    const double psigy = 0;
+    const int n = 5;
+    const double fill = 1.5;
+
+    arma::Mat<double> X(n, n), Y(n, n), B(n, n), GX(n, n), GY(n, n);
+    X.fill(fill);
+    Y.fill(fill);
+    B.fill(fill);
+    GX.fill(fill);
+    GY.fill(fill);
+    for (uint32_t i = 0; i < n; ++i)
+    {
+      GX(i, i) = 0;
+      GY(i, i) = 0;
+    }
+
+    arma::Mat<double> lx   = netreg::laplacian(GX.memptr(), n, n, 1);
+    arma::Mat<double> ly   = netreg::laplacian(GY.memptr(), n, n, 1);
+    arma::rowvec b_row     = B.row(pi);
+    arma::rowvec txx_row   = X.row(pi);
+    arma::Mat<double> txy  = Y;
+    arma::rowvec lx_row    = lx.row(pi);
+
+    set_params(
+      s, norm, n, n, pi, qi, psigx, psigy, txx_row, txy,
+      lx_row, ly, B, b_row);
+
+    BOOST_REQUIRE(s == netreg::partial_least_squares(txx_row, txy, B, pi, qi));
+    BOOST_REQUIRE(norm == txx_row(pi));
+}
 
 BOOST_AUTO_TEST_CASE(test_penalization)
 {
@@ -58,8 +212,8 @@ BOOST_AUTO_TEST_CASE(test_penalization)
 
     arma::Mat<double> x(m, m);
     arma::Mat<double> cfs(m, m);
-    for (uint32_t i = 0; i < m; ++i) x(i, i) = 0;
     x.fill(fill);
+    for (uint32_t i = 0; i < m; ++i) x(i, i) = 0;
     cfs.fill(fill);
     arma::Mat<double> ly = netreg::laplacian(x.memptr(), m, m, 1);
     arma::Mat<double> lx = netreg::laplacian(x.memptr(), m, m, 1);

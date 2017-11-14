@@ -64,8 +64,8 @@ namespace netreg
         std::vector<double> degrees = degree_distribution(x, n, m);
         arma::Mat<double> lap(n, m);
 
-// calculate normalized Laplacian matrix of source
-#pragma omp parallel for
+        // calculate normalized Laplacian matrix of source
+        #pragma omp parallel for
         for (int i = 0; i < n; ++i)
         {
             for (int j = 0; j < m; ++j)

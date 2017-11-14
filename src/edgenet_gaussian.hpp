@@ -127,8 +127,7 @@ namespace netreg
          * @param qi the current index of the column of Y
          * @param psigx the penalty for the Laplacian of X
          * @param psigy the penalty for the Laplacien of Y
-         * @param lower boolean flag whether only the lower triangular matrix of
-         * TXX is initialized
+         * @param lower boolean flag whether only the lower triangular matrix of TXX is initialized
          */
         inline void set_params(double& s,
                                double& norm,

@@ -75,8 +75,8 @@ namespace netreg
       arma::Mat<double>& txy) const
     {
         /*
-          * Load variables from data-set
-          */
+         * Load variables from data-set
+         */
         const int P         = data.covariable_count();
         const int Q         = data.response_count();
         const double thresh = data.threshold();
@@ -90,14 +90,18 @@ namespace netreg
         arma::Mat<double> coef(P, Q, arma::fill::ones);
         arma::Mat<double> old_coef(P, Q);
         std::vector<arma::rowvec> coef_rows(static_cast<unsigned int>(P));
+
+        // TODO: method for this
         // safe an extra set of rowvectors so that access is faster
         #pragma omp parallel for
-        for (std::vector<arma::Row<double>>::size_type i = 0; i < coef.n_rows;
+        for (std::vector<arma::Row<double>>::size_type i = 0;
+             i < coef.n_rows;
              ++i)
         {
             coef_rows[i] = coef.row(i);
         }
 
+        // TODO methods for this
         // weighted penalization param of Elastic-net
         const double lalph = alpha * lambda;
         // normalization for soft-thresholding
@@ -128,6 +132,7 @@ namespace netreg
             }
 #endif
         }
+
         return coef;
     }
 
@@ -177,6 +182,7 @@ namespace netreg
                            coef_rows[pi]);
                 // soft-thresholded version of estimate
                 const double d = softnorm(s, lalph, enorm * norm);
+                // METHOD for this
                 coef(pi, qi) = d;
                 coef_rows[pi](qi) = d;
 #ifdef USE_RCPPARMADILLO
@@ -187,7 +193,8 @@ namespace netreg
 #endif
             }
         }
+        // TODO method for accumulation
         while (arma::accu(arma::abs(coef.col(qi) - old_coef.col(qi))) >
-                   thresh &&          iter++ < niter);
+                   thresh && iter++ < niter);
     }
 }
