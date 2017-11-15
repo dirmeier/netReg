@@ -70,8 +70,8 @@ int main(int argc, char **argv)
     boost::exponential_distribution<> ed(1.0);
     boost::variate_generator<boost::mt19937 &, boost::normal_distribution<>>
       var_nor(rng, snd);
-    boost::variate_generator<boost::mt19937 &,
-                             boost::exponential_distribution<>>
+    boost::variate_generator<
+      boost::mt19937 &, boost::exponential_distribution<>>
       var_exp(rng, ed);
 
     const unsigned int n = atoi(argv[1]);

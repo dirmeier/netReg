@@ -56,9 +56,10 @@ bool laplacian_is_correct(arma::Mat<double>& lapl, arma::Mat<double>& x)
     {
         for (uint32_t j = 0; j < lapl.n_cols; ++j)
         {
-            if (lapl(i, j) != 1 - (x(i, j) / degrees[i]) &&
-                lapl(i, j) != -x(i, j) / std::sqrt(degrees[i] * degrees[j]) &&
-                lapl(i, j) != 0)
+            if (
+              lapl(i, j) != 1 - (x(i, j) / degrees[i]) &&
+              lapl(i, j) != -x(i, j) / std::sqrt(degrees[i] * degrees[j]) &&
+              lapl(i, j) != 0)
             {
                 return false;
             }

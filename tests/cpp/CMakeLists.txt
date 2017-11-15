@@ -67,6 +67,7 @@ add_executable(
         test.cpp
         test_data.cpp
         test_edgenet_gaussian.cpp
+        test_error_functions.cpp
         test_graph_functions.cpp
         test_math_functions.cpp
         test_model.cpp
