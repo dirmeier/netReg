@@ -117,8 +117,13 @@ BOOST_AUTO_TEST_CASE(test_set_param_with_y_penalty)
       s, norm, n, n, pi, qi, psigx, psigy, txx_row, txy,
       lx_row, ly, B, b_row);
 
-    BOOST_REQUIRE(s == netreg::partial_least_squares(txx_row, txy, B, pi, qi));
-    BOOST_REQUIRE(norm == txx_row(pi));
+    double s_l = netreg::partial_least_squares(txx_row, txy, B, pi, qi);
+    double norm_l = txx_row(pi)
+    netreg::graph_penalize(s_l, norm_l, pi, qi, psigx, psigy,
+      n, lx_row, ly, coef, coef_row);
+
+    BOOST_REQUIRE(s == s_l);
+    BOOST_REQUIRE(norm == norm);
 }
 
 BOOST_AUTO_TEST_CASE(test_set_param_with_x_penalty)
@@ -155,8 +160,13 @@ BOOST_AUTO_TEST_CASE(test_set_param_with_x_penalty)
       s, norm, n, n, pi, qi, psigx, psigy, txx_row, txy,
       lx_row, ly, B, b_row);
 
-    BOOST_REQUIRE(s == netreg::partial_least_squares(txx_row, txy, B, pi, qi));
-    BOOST_REQUIRE(norm == txx_row(pi));
+    double s_l = netreg::partial_least_squares(txx_row, txy, B, pi, qi);
+    double norm_l = txx_row(pi)
+    netreg::graph_penalize(s_l, norm_l, pi, qi, psigx, psigy,
+      n, lx_row, ly, coef, coef_row);
+
+    BOOST_REQUIRE(s == s_l);
+    BOOST_REQUIRE(norm == norm);
 }
 
 

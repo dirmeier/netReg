@@ -109,22 +109,14 @@ namespace netreg
 
         for (int qi = 0; qi < Q; ++qi)
         {
-            uccd_(P,
-                  Q,
+            uccd_(P, Q,
                   qi,
-                  thresh,
-                  niter,
-                  lalph,
-                  enorm,
-                  psigx,
-                  psigy,
-                  txx_rows,
-                  txy,
-                  lx_rows,
-                  ly,
-                  coef,
-                  old_coef,
-                  coef_rows);
+                  thresh, niter,
+                  lalph, enorm,
+                  psigx, psigy,
+                  txx_rows, txy,
+                  lx_rows, ly,
+                  coef, old_coef, coef_rows);
 #ifdef USE_RCPPARMADILLO
             if (qi % 100 == 0)
             {
@@ -164,25 +156,20 @@ namespace netreg
             // coefficient on partial residual
             for (int pi = 0; pi < P; ++pi)
             {
+                // TODO methodize
                 // safe current estimate of coefficients
                 old_coef(pi, qi) = coef(pi, qi);
-                set_params(s,
-                           norm,
-                           P,
-                           Q,
-                           pi,
-                           qi,
-                           psigx,
-                           psigy,
-                           txx_rows[pi],
-                           txy,
-                           lx_rows[pi],
-                           ly,
-                           coef,
-                           coef_rows[pi]);
+                // TODO: no void stuff :(
+                set_params(s, norm,
+                           P, Q,
+                           pi, qi,
+                           psigx, psigy,
+                           txx_rows[pi], txy,
+                           lx_rows[pi], ly,
+                           coef, coef_rows[pi]);
                 // soft-thresholded version of estimate
                 const double d = softnorm(s, lalph, enorm * norm);
-                // METHOD for this
+                // TODO: METHOD for this
                 coef(pi, qi) = d;
                 coef_rows[pi](qi) = d;
 #ifdef USE_RCPPARMADILLO
