@@ -37,18 +37,19 @@ add_executable(
         src/config.h
         src/cv_fold.hpp
         src/cv_set.cpp
+        src/cv_set.hpp
         src/edgenet_gaussian.cpp
         src/edgenet_gaussian.hpp
         src/edgenet_gaussian_loss_function.hpp
         src/edgenet_gaussian_model_selection.cpp
-        src/edgenet_gaussian_model_selection.hpp
-        src/family.hpp
+        src/edgenet_gaussian_model_selection.hpp        
         src/error_functions.hpp
+        src/family.hpp
         src/graph_functions.cpp
         src/graph_functions.hpp
-        src/graph_penalized_linear_model_data.hpp
         src/graph_penalized_linear_model_cv_data.cpp
         src/graph_penalized_linear_model_cv_data.hpp
+        src/graph_penalized_linear_model_data.hpp
         src/illegal_argument_exception.hpp
         src/io_exception.hpp
         src/linear_model_data.hpp
