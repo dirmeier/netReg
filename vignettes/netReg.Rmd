@@ -3,7 +3,7 @@ title: "netReg"
 author: "Simon Dirmeier"
 date: "`r Sys.Date()`"
 output: 
-    BiocStyle::html_document2:
+    BiocStyle::html_document:
         toc: true
         toc_depth: 2
         toc_float: true
@@ -15,7 +15,7 @@ vignette: >
 bibliography: netReg.bib
 ---
 
-## Introduction
+# Introduction
 
 Modelling biological associations or dependencies using linear regression 
 models is often complicated when the analysed data-sets are high-dimensional 
@@ -38,7 +38,7 @@ previously introduced [@fu1998penalized, @friedman2007pathwise],
 fast matrix calculations and `Dlib` [@king2009dlib] for gradient-free 
 convex optimization for model selection.
 
-## Edgenet tutorial
+# Edgenet tutorial
 
 This section explains how to fit a linear model and do parameter estimation 
 using `edgenet`-regularization. The model is a truncated version from 
@@ -73,7 +73,7 @@ We created the affinity matrix absolutely random, although in practice a *real*
 (biological) observed affinity matrix should be used, because in the end the 
 affinity matrix decides the shrinkage of the coefficients.
 
-### Model fitting
+## Model fitting
 
 Fitting a model using edge-based regularization with `netReg` is easy:
 
@@ -100,7 +100,7 @@ predict novel data-sets:
 
 The `pred` objects contains the predicted values for the responses.
 
-### Model selection
+## Model selection
 
 In most cases we do not have the optimal shrinkage parameters $\lambda$, 
 $\psi_{gx}$ and $\psi_{gy}$. For these settings you can use `netReg`'s 
@@ -143,4 +143,4 @@ $\psi_{gx}$ should be roughly (or exact) zero as well. This makes sense
 intuitively since we did not put any biological relationships into the 
 affinity matrices.
 
-## References
+# References

@@ -363,6 +363,16 @@ namespace dlib
             ensures
                 - returns !(*this == rect)
         !*/
+
+        bool operator< (
+            const dlib::rectangle& a,
+            const dlib::rectangle& b
+        ) const;
+        /*!
+            ensures
+                - Defines a total ordering over rectangles so they can be used in
+                  associative containers.
+        !*/
     };
 
 // ----------------------------------------------------------------------------------------
@@ -475,6 +485,23 @@ namespace dlib
             - returns centered_rect( (rect.tl_corner() + rect.br_corner())/2, width, height)
               (i.e. returns a rectangle centered on rect but with the given width
               and height)
+    !*/
+
+// ----------------------------------------------------------------------------------------
+
+    inline rectangle set_rect_area (
+        const rectangle& rect,
+        unsigned long area
+    );
+    /*!
+        requires
+            - area > 0
+        ensures
+            - Returns a rectangle R such that:
+                - center(R) == center(rect)
+                - R has the same aspect ratio as rect.  If rect.area() == 0 then the
+                  returned rect has a 1:1 aspect ratio.
+                - R.area() == area
     !*/
 
 // ----------------------------------------------------------------------------------------
@@ -696,6 +723,22 @@ namespace dlib
 
 // ----------------------------------------------------------------------------------------
 
+    inline size_t nearest_rect (
+        const std::vector<rectangle>& rects,
+        const point& p
+    );
+    /*!
+        requires
+            - rects.size() > 0
+        ensures
+            - returns the index of the rectangle that is closest to the point p.  In
+              particular, this function returns an IDX such that:
+                length(nearest_point(rects[IDX],p) - p)
+              is minimized.
+    !*/
+
+// ----------------------------------------------------------------------------------------
+
     inline long distance_to_rect_edge (
         const rectangle& rect,
         const point& p
@@ -787,29 +830,6 @@ namespace dlib
 
 // ----------------------------------------------------------------------------------------
 
-}
-
-namespace std
-{
-    /*!
-        Define std::less<rectangle> so that you can use rectangles in the associative containers.
-    !*/
-    template<>
-    struct less<dlib::rectangle> : public binary_function<dlib::rectangle,dlib::rectangle,bool>
-    {
-        inline bool operator() (const dlib::rectangle& a, const dlib::rectangle& b) const
-        { 
-            if      (a.left() < b.left()) return true;
-            else if (a.left() > b.left()) return false;
-            else if (a.top() < b.top()) return true;
-            else if (a.top() > b.top()) return false;
-            else if (a.right() < b.right()) return true;
-            else if (a.right() > b.right()) return false;
-            else if (a.bottom() < b.bottom()) return true;
-            else if (a.bottom() > b.bottom()) return false;
-            else                    return false;
-        }
-    };
 }
 
 #endif // DLIB_RECTANGLe_ABSTRACT_
