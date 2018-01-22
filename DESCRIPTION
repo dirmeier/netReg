@@ -23,7 +23,7 @@ biocViews:
     FeatureExtraction,
     Network,
     GraphAndNetwork
-License: GPL-3
+License: GPL-3 | BSL-1.0 + file LICENSE
 Encoding: UTF-8
 Suggests:
     testthat,
