@@ -9,6 +9,8 @@ navbar:
     - text: "News"
       href: news/index.html
   right:
+    - icon: fa-home fa-lg
+      href: https://www.simon-dirmeier.net
     - icon: fa-github fa-lg
       href: https://github.com/dirmeier/netReg
     - icon: fa fa-twitter-square fa-lg
