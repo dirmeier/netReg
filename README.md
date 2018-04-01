@@ -16,7 +16,8 @@ Network-penalized generalized linear models in `R` and `C++`.
 It incorporates prior knowledge in the form of graphs into the model's likelihood and by that allows better estimation of regression coefficients.
 The main routines for estimation of coefficients and shrinkage parameters are implemented in `C++11`. 
 
-Depending on your installed libraries `netReg` uses `OpenBLAS` or `BLAS`, and `Lapack` for fast computation of matrix operations in an `Armadillo\RcppArmadillo` framework. We use `Dlib` in order to calculate the most optimal set of shrinkage parameters using k-fold cross-validation.
+Depending on your installed libraries `netReg` uses `OpenBLAS` or `BLAS`, and `Lapack` for fast computation of matrix operations in an `Armadillo\RcppArmadillo` framework. 
+We use `Dlib` in order to calculate the most optimal set of shrinkage parameters using k-fold cross-validation.
 
 `netReg` comes as a stand alone `C++` command line tool shipped with [`bioconda`](https://anaconda.org/bioconda/netreg) as well as a [`Bioconductor`](https://bioconductor.org/packages/release/bioc/html/netReg.html) package.
 
@@ -55,7 +56,7 @@ $ netReg -h
 
 ### Manual installation
 
-If you don't like package managers you can download the tarball of the latest [release](https://github.com/dirmeier/netReg/releases/tag/v1.0.0) and install both or either from the two.
+If you don't like package managers you can download the tarball of the latest [release](https://github.com/dirmeier/netReg/releases) and install both or either from the two.
 
 #### Command line tool
 
@@ -109,11 +110,20 @@ We are always glad to take questions, so feel free to write or open up an issue.
 ### R package
 
 Load the package using `library(netReg)`. 
-We provide a vignette for the package that can be called using: `vignette("netReg")`. You can also use the online [tutorial](https://dirmeier.github.io/netReg/articles/netReg_R.html).
+We provide a vignette for the package that can be called using: `vignette("netReg")`. 
+You can also use the online [tutorial](https://dirmeier.github.io/netReg/articles/netReg_R.html).
 
 ### Command line tool
 
 Have a look at the command line [tutorial](https://dirmeier.github.io/netReg/articles/netReg_commandline.html).
+
+## Citation
+
+It would be great if you cited `netReg` like this:
+
+Simon Dirmeier, Christiane Fuchs, Nikola S Mueller, Fabian J Theis; 
+netReg: network-regularized linear models for biological association studies, 
+Bioinformatics, Volume 34, Issue 5, 1 March 2018, Pages 896–898, https://doi.org/10.1093/bioinformatics/btx677
 
 ## Author
 
