@@ -49,7 +49,7 @@ namespace netreg
      */
     class edgenet_gaussian_loss_function
     {
-       public:
+    public:
         /**
          * Creates an objective function object that can be used for
          * minimization using dlib.
@@ -59,10 +59,10 @@ namespace netreg
          * @param cvset a cross-validation set
          */
         edgenet_gaussian_loss_function(
-          graph_penalized_linear_model_cv_data& data)
-            : data_(data), cvset_(data.cvset()),
-              nfolds_(static_cast<int>(data.cvset().fold_count())), edgenet_(),
-              do_psigx_(data.psigx() == -1), do_psigy_(data.psigy() == -1)
+          graph_penalized_linear_model_cv_data& data):
+          data_(data), cvset_(data.cvset()),
+          nfolds_(static_cast<int>(data.cvset().fold_count())), edgenet_(),
+          do_psigx_(data.psigx() == -1), do_psigy_(data.psigy() == -1)
         {
         }
 
@@ -107,7 +107,7 @@ namespace netreg
             return err;
         }
 
-       private:
+    private:
         // data required for a edge-regularized regression model
         graph_penalized_linear_model_cv_data& data_;
         cv_set& cvset_;     // cv-set on which the selected model is evaluated

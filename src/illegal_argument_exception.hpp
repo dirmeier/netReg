@@ -21,6 +21,8 @@
  * @author: Simon Dirmeier
  * @email: simon.dirmeier@gmx.de
  */
+
+
 #ifndef NETREG_ILLEGAL_ARGUMENT_EXCEPTION_HPP
 #define NETREG_ILLEGAL_ARGUMENT_EXCEPTION_HPP
 

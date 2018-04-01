@@ -70,7 +70,6 @@ namespace netreg
                 test_idx++;
             }
         }
-        //    #pragma omp parallel for
         for (size_t i = 0; i < folds_.size(); ++i)
         {
             folds_[i] = cv_fold(trains[i], tests[i], X, Y);

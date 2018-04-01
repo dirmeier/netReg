@@ -32,7 +32,6 @@
 #include <RcppArmadillo.h>
 #else
 #include "armadillo"
-//#include <iostream>
 #endif
 
 #include "cv_fold.hpp"
@@ -120,7 +119,7 @@ namespace netreg
         // init folds from scratch
         void init(arma::Mat<double> &X, arma::Mat<double> &Y);
         // init folds using predefined fold ids
-        void init(int *const foldids,
+        void init(*const foldids,
                   arma::Mat<double> &X,
                   arma::Mat<double> &Y);
 

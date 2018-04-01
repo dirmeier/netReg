@@ -34,10 +34,11 @@ namespace netreg
      * start.
      *
      * @param le length of vector
-     * @param start starting value at index 0
+     * @param start starting value at index 0 of the newly created vector
+     *
      * @return a vector with increasing values
      */
-    std::vector<int> iota(const int le, int start);
+    std::vector<int> iota(int le, int start);
 
     /**
      * Randomize the values of a vector.

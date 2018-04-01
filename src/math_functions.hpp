@@ -21,6 +21,9 @@
  * @author: Simon Dirmeier
  * @email: simon.dirmeier@gmx.de
  */
+
+
+
 #ifndef NETREG_MATH_FUNCTIONS_HPP
 #define NETREG_MATH_FUNCTIONS_HPP
 
@@ -37,16 +40,14 @@
 namespace netreg
 {
     /**
-     * Calculate the dot product between two columns of two matrices and takes
+     * Calculate the dot product between two matrices and takes
      * the absolute.
      *
-     * @param source1 a random (n x p)-dimensional matrix
-     * @param source2 a random (n x q)-dimensional matrix
-     * @param pi the column of matrix<double> source1
-     * @param qi the column of matrix<double> source2
+     * @param lhs a random (n x p)-dimensional matrix
+     * @param rhs a random (p x m)-dimensional matrix
      */
-    inline double abs_dprod(const arma::Col<double> &lhs,
-                            const arma::Col<double> &rhs)
+    inline double abs_dprod(const arma::Col<double>& lhs,
+                            const arma::Col<double>& rhs)
     {
         return std::abs(arma::dot(lhs, rhs));
     }
@@ -54,11 +55,11 @@ namespace netreg
     /**
      * Calculate a soft-thresholded normalized coefficient.
      *
-     * @param s the estimate of the coefficient that should be estimated
-     * @param lalph the Elastic-net regularization parameter
+     * @param s the value that will be soft-thresholded
+     * @param lalph soft-thresholding parameter
      * @param norm normalization constant
-     * @return returns soft-thresholded normalized version of current
-     * coefficient
+     *
+     * @return returns soft-thresholded value
      */
     inline double softnorm(const double s,
                            const double lalph,
@@ -71,6 +72,7 @@ namespace netreg
                 return (s - lalph) / norm;
             return (s + lalph) / norm;
         }
+
         return 0.0;
     }
 
@@ -82,20 +84,22 @@ namespace netreg
      *
      * @return return the maximal element
      */
-    template<typename T>
-    T max_element(T *const ptr, int len)
+    template<typename T> T max_element(T *const ptr, int len)
     {
         T maximum = ptr[len - 1];
-        for (int i = 0; i < len - 1; ++i)
+        for (unsigned int i = 0; i < len - 1; ++i)
+        {
             if (ptr[i] > maximum)
                 maximum = ptr[i];
+        }
+
         return maximum;
     }
 
     /**
-     * Calculates the sigmoid function value of a double.
+     * Calculates the sigmoid function.
      *
-     * @param d  the value for which the sigmoidal is calculated
+     * @param d some value
      *
      * @return returns the sigmoid function value
      */

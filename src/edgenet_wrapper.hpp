@@ -25,8 +25,10 @@
 #ifndef NETREG_EDGENET_HPP
 #define NETREG_EDGENET_HPP
 
+
 #include "graph_penalized_linear_model_data.hpp"
 #include "graph_penalized_linear_model_cv_data.hpp"
+
 
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>

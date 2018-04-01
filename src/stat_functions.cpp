@@ -33,6 +33,7 @@ namespace netreg
         arma::Mat<double> terr = (Y - (X * B)).t();
         arma::Col<double> rep(Y.n_rows, arma::fill::ones);
         arma::Col<double> intr = (terr * rep) / Y.n_rows;
+
         return intr;
     }
 }

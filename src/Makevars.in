@@ -1,7 +1,5 @@
-# set the c++ standard
 CXX_STD = CXX11
-# set flags, libs, etc. from configure
-# do not modify by hand
+
 PKG_CXXFLAGS = @CXXFLAGS@ @OPENMP_CXXFLAGS@
 PKG_CPPFLAGS = @netReg_CPPFLAGS@
 PKG_LIBS = @OPENMP_CXXFLAGS@ @netReg_LDLIBS@

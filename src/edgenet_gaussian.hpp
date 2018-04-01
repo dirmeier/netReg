@@ -57,7 +57,7 @@ namespace netreg
         arma::Mat<double> run(graph_penalized_linear_model_data& data) const;
 
         /**
-         * Calulates the optimal set of shrinkage parameters of a
+         * Calculates the optimal set of shrinkage parameters of a
          * graph-regularized regression model.
          *
          * @param data an object that holds all required data for the model
@@ -69,17 +69,17 @@ namespace netreg
          * @return returns the estimated coefficients
          */
         arma::Mat<double> run_cv(graph_penalized_linear_model_cv_data& data,
-                                  double lambda,
-                                  double alpha,
-                                  double psigx,
-                                  double psigy,
+                                 double lambda,
+                                 double alpha,
+                                 double psigx,
+                                 double psigy,
                                  cv_fold& fold) const;
 
     protected:
         arma::Mat<double> mccd_(graph_penalized_linear_model_data& data,
-                                 double lambda,
-                                 double alpha,
-                                 double psigx,
+                                double lambda,
+                                double alpha,
+                                double psigx,
                                 double psigy,
                                 std::vector<arma::rowvec>& txx_rows,
                                 arma::Mat<double>& txy) const;
@@ -91,7 +91,7 @@ namespace netreg
          * @param data an object containing all relevant data
          * @param B the current coefficient matrix
          * @param B_old the old coefficient matrix
-         * @param qi the index of a column of the multivariate response amtrox
+         * @param qi the index of a column of the multivariate response matrix
          */
         void uccd_(int P,
                    int Q,
@@ -111,8 +111,8 @@ namespace netreg
                    std::vector<arma::rowvec>& coef_rows) const;
 
         /**
-         * Calculates the softhresholding parameter as well as the normalisation
-         * constant.
+         * Calculates the softhresholding parameter as well as the
+         * normalisation constant.
          *
          * @param s the softthresholding parameter to be set
          * @param norm the normalization constant to be set
@@ -127,7 +127,8 @@ namespace netreg
          * @param qi the current index of the column of Y
          * @param psigx the penalty for the Laplacian of X
          * @param psigy the penalty for the Laplacien of Y
-         * @param lower boolean flag whether only the lower triangular matrix of TXX is initialized
+         * @param lower boolean flag whether only the lower triangular
+         *  matrix of TXX is initialized
          */
         inline void set_params(double& s,
                                double& norm,
@@ -164,7 +165,7 @@ namespace netreg
          * @param pi the current index of the column of X
          * @param qi the current index of the column of Y
          * @param psigx the penalty for the Laplacian of X
-         * @param psigy the penalty for the Laplacien of Y
+         * @param psigy the penalty for the Laplacian of Y
          */
         inline void graph_penalize(double& s,
                                    double& norm,

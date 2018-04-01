@@ -37,19 +37,18 @@ namespace netreg
                                             const int m)
     {
         std::vector<double> degrees(n);
-#pragma omp parallel for
+
+        #pragma omp parallel for
         for (int i = 0; i < n; ++i)
         {
             double rowSum = 0.0;
-            for (int j = 0; j < m; ++j)
-                rowSum += x[i + n * j];
+            for (int j = 0; j < m; ++j) rowSum += x[i + n * j];
             degrees[i] = rowSum;
         }
 
         return degrees;
     }
 
-    // TODO: nicen up things
     arma::Mat<double> laplacian(const double* x,
                                 const int n,
                                 const int m,
@@ -63,12 +62,11 @@ namespace netreg
 
         std::vector<double> degrees = degree_distribution(x, n, m);
         arma::Mat<double> lap(n, m);
-
-        // calculate normalized Laplacian matrix of source
+        // compute the normalized Laplacian
         #pragma omp parallel for
-        for (int i = 0; i < n; ++i)
+        for (unsigned int i = 0; i < n; ++i)
         {
-            for (int j = 0; j < m; ++j)
+            for (unsigned int j = 0; j < m; ++j)
             {
                 if (i == j && degrees[i] != 0)
                     lap(i, j) = 1 - (x[i + n * j] / degrees[i]);

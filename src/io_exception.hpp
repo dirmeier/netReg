@@ -21,8 +21,11 @@
  * @author: Simon Dirmeier
  * @email: simon.dirmeier@gmx.de
  */
+
+
 #ifndef NETREG_IO_EXCEPTION_HPP
 #define NETREG_IO_EXCEPTION_HPP
+
 
 namespace netreg
 {

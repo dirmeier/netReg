@@ -22,6 +22,7 @@
  * @email: simon.dirmeier@gmx.de
  */
 
+
 #ifndef NETREG_PENALIZED_LINEAR_MODEL_DATA_HPP
 #define NETREG_PENALIZED_LINEAR_MODEL_DATA_HPP
 
@@ -35,12 +36,11 @@ namespace netreg
     /**
      * Data-structure for all required data for penalized regression.
      */
-    class penalized_linear_model_data : public linear_model_data
+    class penalized_linear_model_data: public linear_model_data
     {
-       public:
+    public:
         penalized_linear_model_data()
-        {
-        }
+        {}
 
         /**
          * Constructor.
@@ -56,18 +56,12 @@ namespace netreg
          * @param is_column_first boolean if given matrices are column-first or
          * not
          */
-        penalized_linear_model_data(double *x,
-                                    double *y,
-                                    const int n,
-                                    const int p,
-                                    const int q,
-                                    double const lambda,
-                                    double const alpha,
-                                    const int niter,
-                                    const double thresh,
-                                    const enum family fam)
-            : linear_model_data(x, y, n, p, q, niter, thresh, fam),
-              ALPHA(alpha), LAMBDA(lambda)
+        penalized_linear_model_data(
+          double *const x, double *const y, int n, int p, int q,
+          double lambda, double alpha, int niter, double thresh,
+          const enum family fam):
+          linear_model_data(x, y, n, p, q, niter, thresh, fam),
+          ALPHA(alpha), LAMBDA(lambda)
         {
         }
 
@@ -91,7 +85,7 @@ namespace netreg
             return ALPHA;
         }
 
-       protected:
+    protected:
         double ALPHA;   // mixing weights for elastic-net
         double LAMBDA;  // penalization term for LASSO
     };
