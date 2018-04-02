@@ -34,29 +34,33 @@
 
 namespace netreg
 {
-    SEXP fit(graph_penalized_linear_model_data &data)
+    SEXP fit(graph_penalized_linear_model_data& data)
     {
         BEGIN_RCPP
         edgenet_gaussian edge;
+
         arma::Mat<double> coef = edge.run(data);
         arma::Col<double> intr =
           intercept(data.design(), data.response(), coef);
         return Rcpp::List::create(Rcpp::Named("coefficients") = coef,
-                                  Rcpp::Named("intercept")    = intr);
+                                  Rcpp::Named("intercept") = intr);
         END_RCPP
+
         return R_NilValue;
     }
 
-    SEXP regularization_path(graph_penalized_linear_model_cv_data &data,
+    SEXP regularization_path(graph_penalized_linear_model_cv_data& data,
                              const int niter,
                              const double epsilon)
     {
         BEGIN_RCPP
-        std::map<std::string, double> res =
-          model_selection(data, niter, epsilon);
+
+        std::map<std::string, double> res = model_selection(
+          data, niter, epsilon);
         return Rcpp::List::create(Rcpp::Named("parameters") = Rcpp::wrap(res),
-                                  Rcpp::Named("folds")      = data.fold_ids());
+                                  Rcpp::Named("folds") = data.fold_ids());
         END_RCPP
+
         return R_NilValue;
     }
 }

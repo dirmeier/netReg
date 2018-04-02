@@ -94,7 +94,7 @@ namespace netreg
     //            int fold = foldids[i];
     //            // add the index i to the test set of fold fold
     //            folds_[fold].add_to_test_set(i);
-    //            // add index i to all trainings set folds except fold fold
+    //            // add index i to all trainings set folds except fold fold`
     //            for (int j = 0; j < N_FOLDS_; ++j)
     //            {
     //                if (j != fold) folds_[j].add_to_train_set(i);

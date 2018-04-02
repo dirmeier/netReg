@@ -47,9 +47,9 @@ namespace netreg
     std::vector<double> degree_distribution(double* x, int n, int m);
 
     /**
-     * Calculate the normalized laplacian of a matrix.
+     * Calculate the normalized Laplacian of a matrix.
      *
-     * @param x the pointer for which the laplacian is calculated (col first)
+     * @param x the pointer for which the Laplacian is calculated (col first)
      * @param n the number of rows of x
      * @param m the number of columns of y
      * @param px normalisation coefficient for graph penalisation

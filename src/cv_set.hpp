@@ -76,7 +76,7 @@ namespace netreg
             : N_FOLDS_(n), N_(n)
         {
             throw not_implemented_exception();
-            init(foldids, X, Y);
+            //init(foldids, X, Y);
         }
 
         std::vector<cv_fold> &folds()
@@ -119,7 +119,7 @@ namespace netreg
         // init folds from scratch
         void init(arma::Mat<double> &X, arma::Mat<double> &Y);
         // init folds using predefined fold ids
-        void init(*const foldids,
+        void init(int *const foldids,
                   arma::Mat<double> &X,
                   arma::Mat<double> &Y);
 

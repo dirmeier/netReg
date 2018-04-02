@@ -56,6 +56,7 @@ namespace netreg
          *
          * @param data the complete dataset required for edge-regularized
          * regression
+         *
          * @param cvset a cross-validation set
          */
         edgenet_gaussian_loss_function(

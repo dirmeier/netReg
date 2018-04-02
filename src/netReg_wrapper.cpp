@@ -25,15 +25,20 @@
 #include <string>
 #include <memory>
 
+#include "data_factory.hpp"
+#include "edgenet_wrapper.hpp"
 #include "graph_penalized_linear_model_data.hpp"
 #include "graph_penalized_linear_model_cv_data.hpp"
-#include "edgenet_wrapper.hpp"
-#include "family.hpp"
 
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
 
+using data = netreg::graph_penalized_linear_model_data;
+using cv_data = netreg::graph_penalized_linear_model_cv_data;
+
+
 extern "C" {
+
 /**
  * Implementation of Edgenet, a edge-based regularized regression model.
  *
@@ -61,59 +66,60 @@ SEXP edgenet_cpp(SEXP X,
                  SEXP fs)
 {
     BEGIN_RCPP
-    std::string fam  = Rcpp::as<std::string>(fs);
-    netreg::family f =  // fam == "binomial" ? netreg::family::BINOMIAL :
-      fam == "gaussian" ? netreg::family::GAUSSIAN : netreg::family::NONE;
+
+    std::string fam = Rcpp::as<std::string>(fs);
+    netreg::family f =
+      fam == "gaussian" ? netreg::family::GAUSSIAN :
+      fam == "binomial" ? netreg::family::BINOMIAL :
+      netreg::family::NONE;
+
     if (f == netreg::family::NONE)
     {
         Rprintf("Wrong family given\n");
         return R_NilValue;
     }
-    const int *xdim = INTEGER(Rf_getAttrib(X, R_DimSymbol));
-    const int *ydim = INTEGER(Rf_getAttrib(Y, R_DimSymbol));
-    netreg::graph_penalized_linear_model_data data(REAL(X),
-                                                   REAL(Y),
-                                                   REAL(GX),
-                                                   REAL(GY),
-                                                   xdim[0],
-                                                   xdim[1],
-                                                   ydim[1],
-                                                   Rcpp::as<double>(lambda),
-                                                   1.0,
-                                                   Rcpp::as<double>(psigx),
-                                                   Rcpp::as<double>(psigy),
-                                                   Rcpp::as<int>(niter),
-                                                   Rcpp::as<double>(thresh),
-                                                   f);
-    // TODO change that back and include family in data
+
+    const int* xdim = INTEGER(Rf_getAttrib(X, R_DimSymbol));
+    const int* ydim = INTEGER(Rf_getAttrib(Y, R_DimSymbol));
+
+    netreg::graph_penalized_linear_model_data data(
+      REAL(X), REAL(Y), REAL(GX), REAL(GY),
+      xdim[0], xdim[1], ydim[1],
+      Rcpp::as<double>(lambda), 1.0, Rcpp::as<double>(psigx),
+      Rcpp::as<double>(psigy), Rcpp::as<int>(niter), Rcpp::as<double>(thresh),
+      f);
+
     return fit(data);
+
     END_RCPP
     return R_NilValue;
 }
 };
 
 extern "C" {
+
 /**
-* Implementation of cross-validation for Edgenet.
-*
-* Finds and returns the optimal shrinkage values given a specific data-set.
-*
-* @param X a (n x p)-dimensional design matrix
-* @param Y a (n x q)-dimensional response matrix
-* @param GX a (p x p)-prior graph for XS
-* @param GY a (q x q)-prior graph for YS
-* @param lamdba penalization value for LASSO
-* @param psigx weighting value of GX
-* @param psigy weighting value of GY
-* @param niter max number of iterations if parameter estimation
-*        does not converge in time
-* @param thresh convergence threshold
-* @param nfolds the number of cross-validation sets created (as in k-fold cv)
-* @param foldids integer vector of assignments of observations
-*        to folds (i.e. vector of ns elements,  \in {1, ..., nfolds}
-* @param len_foldids length of the vector above
-* @param fs family of distribution the response
-*/
+ * Implementation of cross-validation for Edgenet.
+ *
+ * Finds and returns the optimal shrinkage values given a specific data-set.
+ *
+ * @param X a (n x p)-dimensional design matrix
+ * @param Y a (n x q)-dimensional response matrix
+ * @param GX a (p x p)-prior graph for XS
+ * @param GY a (q x q)-prior graph for YS
+ * @param psigx weighting value of GX
+ * @param psigy weighting value of GY
+ * @param niter max number of iterations if parameter estimation
+ *        does not converge in time
+ * @param thresh convergence threshold
+ * @param nfolds the number of cross-validation sets created (as in k-fold cv)
+ * @param foldids integer vector of assignments of observations
+ *        to folds (i.e. vector of ns elements,  \in {1, ..., nfolds}
+ * @param lenfs length of the vector above
+ * @param fs family of distribution the response
+ * @param optim_niter maximla number of iterations of BOBYQA
+ * @param epsilon threshold for convergence for BOBYQA
+ */
 SEXP cv_edgenet_cpp(SEXP X,
                     SEXP Y,
                     SEXP GX,
@@ -130,56 +136,25 @@ SEXP cv_edgenet_cpp(SEXP X,
                     SEXP epsilon)
 {
     BEGIN_RCPP
-    std::string fam = Rcpp::as<std::string>(fs);
-    netreg::family f =
-      fam == "gaussian" ? netreg::family::GAUSSIAN : netreg::family::NONE;
-    if (f == netreg::family::NONE)
-    {
-        Rprintf("Wrong family given\n");
-        return R_NilValue;
-    }
-    const int *xdim     = INTEGER(Rf_getAttrib(X, R_DimSymbol));
-    const int *ydim     = INTEGER(Rf_getAttrib(Y, R_DimSymbol));
-    const int lenfoldid = Rcpp::as<int>(lenfs);
-    if (lenfoldid == xdim[0])
-    {
-        netreg::graph_penalized_linear_model_cv_data data(
-          REAL(X),
-          REAL(Y),
-          REAL(GX),
-          REAL(GY),
-          xdim[0],
-          xdim[1],
-          ydim[1],
-          -1,
-          1.0,
-          Rcpp::as<double>(psigx),
-          Rcpp::as<double>(psigy),
-          Rcpp::as<int>(niter),
-          Rcpp::as<double>(thresh),
-          INTEGER(foldids),
-          f);
-        return regularization_path(
-          data, Rcpp::as<int>(optim_niter), Rcpp::as<double>(epsilon));
-    }
-    netreg::graph_penalized_linear_model_cv_data data(REAL(X),
-                                                      REAL(Y),
-                                                      REAL(GX),
-                                                      REAL(GY),
-                                                      xdim[0],
-                                                      xdim[1],
-                                                      ydim[1],
-                                                      -1,
-                                                      1.0,
-                                                      Rcpp::as<double>(psigx),
-                                                      Rcpp::as<double>(psigy),
-                                                      Rcpp::as<int>(niter),
-                                                      Rcpp::as<double>(thresh),
-                                                      Rcpp::as<int>(nfolds),
-                                                      f);
+
+    cv_data data = netreg::data_factory::build_cv_data(
+      REAL(X),
+      REAL(Y),
+      REAL(GX),
+      REAL(GY),
+      INTEGER(Rf_getAttrib(X, R_DimSymbol)),
+      INTEGER(Rf_getAttrib(Y, R_DimSymbol)),
+      -1, psigx, psigy, true, true, true,
+      niter, thresh,
+      Rcpp::as<int>(nfolds), Rcpp::as<int>(lenfs),
+      foldids, Rcpp::as<std::string>(fs)
+    );
+
     return regularization_path(
       data, Rcpp::as<int>(optim_niter), Rcpp::as<double>(epsilon));
+
     END_RCPP
+
     return R_NilValue;
 }
 };
@@ -187,11 +162,11 @@ SEXP cv_edgenet_cpp(SEXP X,
 #include <R_ext/Rdynload.h>
 
 static R_CallMethodDef callMethods[] = {
-  {"edgenet_cpp", (DL_FUNC)&edgenet_cpp, 10},
-  {"cv_edgenet_cpp", (DL_FUNC)&cv_edgenet_cpp, 14},
-  {NULL, NULL, 0}};
+  {"edgenet_cpp",    (DL_FUNC) & edgenet_cpp,    10},
+  {"cv_edgenet_cpp", (DL_FUNC) & cv_edgenet_cpp, 14},
+  {NULL, NULL,                                   0}};
 
-extern "C" void R_init_netReg(DllInfo *dll)
+extern "C" void R_init_netReg(DllInfo* dll)
 {
     R_registerRoutines(dll, NULL, callMethods, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);

@@ -74,8 +74,8 @@ namespace netreg
          *
          */
         graph_penalized_linear_model_cv_data(
-          double *const x, double *const y, double *const gx,
-          double *const gy, int n, int p, int q,
+          double* const x, double* const y, double* const gx,
+          double* const gy, int n, int p, int q,
           double lambda, double alpha, double psi_gx, double psi_gy,
           int niter, double thresh, int nfolds,
           const enum family fam):
@@ -111,11 +111,11 @@ namespace netreg
          *
          */
         graph_penalized_linear_model_cv_data(
-          double *const x, double *const y, double *const gx,
-          double *const gy, const int n, const int p, const int q,
+          double* const x, double* const y, double* const gx,
+          double* const gy, const int n, const int p, const int q,
           double const lambda, const double alpha,
           const double psi_gx, const double psi_gy,
-          const int niter, const double thresh, int *const fold_ids,
+          const int niter, const double thresh, int* const fold_ids,
           const enum family fam):
           graph_penalized_linear_model_data(
             x, y, gx, gy,
@@ -145,9 +145,11 @@ namespace netreg
         }
 
     protected:
+
         /**
          * Function to set the fold id mappings to sample indexes.
          */
+
         void set_fold_ids();
         // mapping from fold id to index in samples
         std::vector<int> fold_ids_;
