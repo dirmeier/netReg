@@ -66,28 +66,18 @@ SEXP edgenet_cpp(SEXP X,
                  SEXP fs)
 {
     BEGIN_RCPP
-
-    std::string fam = Rcpp::as<std::string>(fs);
-    netreg::family f =
-      fam == "gaussian" ? netreg::family::GAUSSIAN :
-      fam == "binomial" ? netreg::family::BINOMIAL :
-      netreg::family::NONE;
-
-    if (f == netreg::family::NONE)
-    {
-        Rprintf("Wrong family given\n");
-        return R_NilValue;
-    }
-
-    const int* xdim = INTEGER(Rf_getAttrib(X, R_DimSymbol));
-    const int* ydim = INTEGER(Rf_getAttrib(Y, R_DimSymbol));
-
-    netreg::graph_penalized_linear_model_data data(
+    
+    data dat = netreg::data_factory::build_data(
       REAL(X), REAL(Y), REAL(GX), REAL(GY),
-      xdim[0], xdim[1], ydim[1],
-      Rcpp::as<double>(lambda), 1.0, Rcpp::as<double>(psigx),
-      Rcpp::as<double>(psigy), Rcpp::as<int>(niter), Rcpp::as<double>(thresh),
-      f);
+      INTEGER(Rf_getAttrib(X, R_DimSymbol)),
+      INTEGER(Rf_getAttrib(Y, R_DimSymbol)),
+      Rcpp::as<double>(lambda),
+      Rcpp::as<double>(psigx),
+      Rcpp::as<double>(psigy),
+      Rcpp::as<int>(niter),
+      Rcpp::as<double>(thresh),
+      Rcpp::as<std::string>(fs)
+    );
 
     return fit(data);
 
@@ -144,10 +134,16 @@ SEXP cv_edgenet_cpp(SEXP X,
       REAL(GY),
       INTEGER(Rf_getAttrib(X, R_DimSymbol)),
       INTEGER(Rf_getAttrib(Y, R_DimSymbol)),
-      -1, psigx, psigy, true, true, true,
-      niter, thresh,
-      Rcpp::as<int>(nfolds), Rcpp::as<int>(lenfs),
-      foldids, Rcpp::as<std::string>(fs)
+      -1,
+      Rcpp::as<double>(psigx),
+      Rcpp::as<double>(psigy),
+      true, true, true,
+      Rcpp::as<int>(niter),
+      Rcpp::as<double>(thresh),
+      Rcpp::as<int>(nfolds),
+      Rcpp::as<int>(lenfs),
+      INTEGER(foldids),
+      Rcpp::as<std::string>(fs)
     );
 
     return regularization_path(
