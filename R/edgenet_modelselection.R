@@ -22,32 +22,36 @@
 #'
 #' @export
 #'
-#' @author Simon Dirmeier, \email{mail@@simon-dirmeier.net}
-#'
 #' @description Finds the optimal shrinkage parameters
 #'  using cross-validation for edgenet. We use the BOBYQA algorithm to
-#'  minimize the sum of squared residuals objective function.
+#'  find the optimial regularization parameters and coordinate
+#'  descent in order to minimize the objective function of the linear model.
 #'
 #' @param X  input matrix, of dimension (\code{n} x \code{p})
-#' where \code{n} is the number of observations and \code{p} is the number
-#' of covariables. Each row is an observation vector.
+#'  where \code{n} is the number of observations and \code{p} is the number
+#'  of covariables. Each row is an observation vector.
 #' @param Y  output matrix, of dimension (\code{n} x \code{q})
-#' where \code{n} is the number of observations and \code{q} is the number
-#' of response variables Each row is an observation vector.
+#'  where \code{n} is the number of observations and \code{q} is the number
+#'  of response variables Each row is an observation vector.
 #' @param G.X  non-negativ affinity matrix for \code{n}, of dimensions
-#' (\code{p} x \code{p}) where \code{p} is the number of covariables \code{X}
+#'  (\code{p} x \code{p}) where \code{p} is the number of covariables \code{X}.
+#'  Providing a graph \code{G.X} will optimize the regularization
+#'  parameter \code{psi.gx}. If this is not desired just set \code{G.X} to
+#'  \code{NULL}.
 #' @param G.Y  non-negativ affinity matrix for \code{n}, of dimensions
-#' (\code{q} x \code{q}) where \code{q} is the number of covariables \code{Y}
+#'  (\code{q} x \code{q}) where \code{q} is the number of responses \code{Y}.
+#'  Providing a graph \code{G.Y} will optimize the regularization
+#'  parameter \code{psi.gy}. If this is not desired just set \code{G.Y} to
+#'  \code{NULL}.
 #' @param thresh  threshold for coordinate descent
-#' @param maxit  maximum number of iterations
+#' @param maxit  maximum number of iterations for the coordinate descent
 #' @param family  family of response, e.g. gaussian
-#' @param epsilon the threshold criterion for BOBYQA to stop.
+#' @param optim.epsilon  the threshold criterion for the optimization to stop.
 #'   Usually 1e-3 is a good choice.
-#' @param approx.maxit the maximum number of iterations for BOBYQA
+#' @param optim.maxit  the maximum number of iterations for the optimization
 #'   (if choosen). Usually 1e4 is a good choice.
 #' @param nfolds  the number of folds to be used - default is 10
-#'  (minimum 3, maximum nrow(X)).
-#' @param ...  additional parameters
+#'  (minimum 3, maximum \code{nrow(X)}).
 
 #' @return An object of class \code{cv.edgenet}
 #' \item{call }{ the call that produced the object}
@@ -59,6 +63,10 @@
 #'  of intercepts}
 #'
 #' @references
+#'  Dirmeier, Simon and Fuchs, Christiane and Mueller, Nikola S and Theis,
+#'  Fabian J (2018),
+#'  netReg: Network-regularized linear models for biological association
+#'  studies. \cr
 #'  Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007),
 #'  Pathwise coordinate optimization.\cr
 #'  \emph{The Annals of Applied Statistics}\cr \cr
@@ -86,22 +94,24 @@
 #' # fit a Gaussian model
 #' Y <- X%*%b + rnorm(100)
 #' cv.edge <- cv.edgenet(X=X, Y=Y, G.X=G.X, family="gaussian")
-cv.edgenet <- function (X, Y, G.X=NULL, G.Y=NULL,
-                        thresh=1e-5, maxit=1e5,
-                        family=c("gaussian"),
-                        epsilon=1e-3, approx.maxit=1e4,
-                        nfolds=10, ...)
+cv.edgenet <- function(X, Y, G.X=NULL, G.Y=NULL,
+                       thresh=1e-5, maxit=1e5,
+                       family=c("gaussian"),
+                       optim.epsilon=1e-3,
+                       optim.maxit=1e4,
+                       nfolds=10)
 {
     UseMethod("cv.edgenet")
 }
 
 #' @export
 #' @method cv.edgenet default
-cv.edgenet.default <- function (X, Y, G.X=NULL, G.Y=NULL,
-                                thresh=1e-5, maxit=1e5,
-                                family=c("gaussian"),
-                                epsilon=1e-3, approx.maxit=1e4,
-                                nfolds=10, ...)
+cv.edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
+                               thresh=1e-5, maxit=1e5,
+                               family=c("gaussian"),
+                               optim.epsilon=1e-3,
+                               optim.maxit=1e4,
+                               nfolds=10)
 {
     stopifnot(is.numeric(nfolds), nfolds > 0,
                 is.numeric(epsilon), is.numeric(approx.maxit),

@@ -73,6 +73,10 @@ namespace netreg
          *  have on the penalization
          * @param psi_gy a vector of length q of how much influence GY should
          *  have on the penalization
+         *  @param do_psigx if true uses regularization of GX and psigx. Otherwise no
+         *  regularization will be used.
+         * @param do_psigy if true uses regularization of GY and psigy. Otherwise no
+         *  regularization will be used.
          * @param niter max number of iterations in case estimation of the
          *  coefficients does not converge
          * @param thresh convergence threshold
@@ -83,12 +87,9 @@ namespace netreg
           double* const x, double* const y,
           double* const gx, double* const gy,
           int n, int p, int q,
-          double lambda,
-          double psi_gx, double psi_gy,
-          int niter, double thresh,
           enum family fam):
-          penalized_linear_model_data(
-            x, y, n, p, q, lambda, niter, thresh, fam),
+          linear_model_data(
+            x, y),
           psi_gx(psi_gx),
           psi_gy(psi_gy),
           GX(gx, p, p, false, true),

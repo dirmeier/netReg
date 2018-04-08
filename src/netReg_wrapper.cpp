@@ -49,8 +49,12 @@ extern "C" {
  * @param lamdba penalization value for LASSO
  * @param psigx weighting value of GX
  * @param psigy weighting value of GY
+ * @param do_psigx if true uses regularization of GX and psigx. Otherwise no
+ *  regularization will be used.
+ * @param do_psigy if true uses regularization of GY and psigy. Otherwise no
+ *  regularization will be used.
  * @param niter max number of iterations if parameter estimation
- *        does not converge in time
+ *  does not converge in time
  * @param thresh convergence threshold
  * @param fs family of distribution the response
  */
@@ -61,6 +65,8 @@ SEXP edgenet_cpp(SEXP X,
                  SEXP lambda,
                  SEXP psigx,
                  SEXP psigy,
+                 SEXP do_psigx,
+                 SEXP do_psigy,
                  SEXP niter,
                  SEXP thresh,
                  SEXP fs)
@@ -75,6 +81,8 @@ SEXP edgenet_cpp(SEXP X,
       Rcpp::as<double>(lambda),
       Rcpp::as<double>(psigx),
       Rcpp::as<double>(psigy),
+      Rcpp::as<bool>(do_psigx),
+      Rcpp::as<bool>(do_psigy),
       Rcpp::as<int>(niter),
       Rcpp::as<double>(thresh),
       f

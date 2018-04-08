@@ -23,31 +23,29 @@
 #'
 #' @export
 #'
-#' @author Simon Dirmeier | \email{mail@@simon-dirmeier.net}
-#'
 #' @description  Fit a graph-regularized linear regression model using
-#' edge-penalization. The coefficients are computed using graph-prior
-#' knowledge in the form of one/two affinity matrices. Graph-regularization is
-#' an extension to previously introduced regularization techniques,
-#' such as the LASSO.
+#'  edge-penalization. The coefficients are computed using graph-prior
+#'  knowledge in the form of one/two affinity matrices. Graph-regularization is
+#'  an extension to previously introduced regularization techniques,
+#'  such as the LASSO. For that reason we are also using coordinate descent
+#'  for minimization of the objective function of the linear model.
 #'
 #' @param X  input matrix, of dimension (\code{n} x \code{p})
 #' where \code{n} is the number of observations and \code{p} is the number
 #' of covariables. Each row is an observation vector.
 #' @param Y  output matrix, of dimension (\code{n} x \code{q})
 #' where \code{n} is the number of observations and \code{q} is the number
-#' of response variables Each row is an observation vector.
+#' of response variables. Each row is an observation vector.
 #' @param G.X  non-negativ affinity matrix for \code{n}, of dimensions
 #' (\code{p} x \code{p}) where \code{p} is the number of covariables \code{X}
 #' @param G.Y  non-negativ affinity matrix for \code{n}, of dimensions
-#' (\code{q} x \code{q}) where \code{q} is the number of covariables \code{Y}
+#' (\code{q} x \code{q}) where \code{q} is the number of responses \code{Y}
 #' @param lambda  shrinkage parameter for LASSO.
 #' @param psigx  shrinkage parameter for graph-regularization of \code{G.X}
 #' @param psigy  shrinkage parameter for graph-regularization of \code{G.Y}
 #' @param thresh  threshold for coordinate descent
-#' @param maxit  maximum number of iterations
+#' @param maxit  maximum number of iterations for coordinate descent
 #' @param family  family of response, e.g. gaussian
-#' @param ...  additional params
 #'
 #' @return An object of class \code{edgenet}
 #' \item{coefficients }{ the estimated (\code{p} x \code{q})-dimensional
@@ -104,61 +102,71 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
     n <- dim(X)[1]
     p <- dim(X)[2]
     q <- dim(Y)[2]
+    do.psigx <- do.psigy <- TRUE
     if (is.null(G.X)) G.X <- matrix(0, 1, 1)
     if (is.null(G.Y)) G.Y <- matrix(0, 1, 1)
-    if (all(G.X == 0)) psigx <- 0
-    if (all(G.Y == 0)) psigy <- 0
+    if (all(G.X == 0)) {
+        psigx    <- 0
+        do.psigx <- FALSE
+    }
+    if (all(G.Y == 0) || q == 1) {
+        psigy    <- 0
+        do.psigy <- FALSE
+    }
     check.graphs(X, Y, G.X, G.Y, psigx, psigy)
     check.dimensions(X, Y, n, p)
-    if (lambda < 0)
-    {
+    if (lambda < 0) {
         warning("lambda < 0, setting to 0!")
         lambda <- 0
     }
-    if (psigx < 0)
-    {
+    if (psigx < 0) {
         warning("psigx < 0, setting to 0!")
         psigx <- 0
     }
-    if (psigy < 0)
-    {
+    if (psigy < 0) {
         warning("psigy < 0, setting to 0!")
         psigy <- 0
     }
-    if (maxit < 0)
-    {
+    if (maxit < 0) {
         warning("maxit < 0, setting to 1e5!")
         maxit <- 1e5
     }
-    if (thresh < 0)
-    {
+    if (thresh < 0) {
         warning("thresh < 0, setting to 1e-5!")
         thresh <- 1e-5
     }
-    if (q == 1) psigy <- 0
+    if (q == 1) {
+        psigy    <- 0
+        do.psigy <- FALSE
+    }
     family <- match.arg(family)
     # estimate coefficients
     ret <- .edgenet(X=X, Y=Y,
                     G.X=G.X, G.Y=G.Y,
-                    lambda=lambda,
-                    psigx=psigx, psigy=psigy,
+                    lambda=lambda, psigx=psigx, psigy=psigy,
+                    do.psigx=do.psigx, do.psigy=do.psigy,
                     thresh=thresh, maxit=maxit,
                     family=family)
     ret$call   <- match.call()
     class(ret) <- c(class(ret), "edgenet")
+
     ret
 }
 
 #' @noRd
 #' @import Rcpp
-.edgenet <- function(
-    X, Y, G.X, G.Y, lambda, psigx, psigy,
-    thresh, maxit, family)
+.edgenet <- function(X, Y, G.X, G.Y,
+                     lambda, psigx, psigy,
+                     do.psigx, do.psigy,
+                     thresh, maxit, family)
 {
-    res <- .Call("edgenet_cpp", X, Y, G.X, G.Y,
-                    as.double(lambda), as.double(psigx),  as.double(psigy),
-                    as.integer(maxit), as.double(thresh),
-                    as.character(family))
+    res <- .Call("edgenet_cpp",
+                 X, Y, G.X, G.Y,
+                 as.double(lambda), as.double(psigx),  as.double(psigy),
+                 as.logical(do.psigx), as.logical(do.psigy),
+                 as.integer(maxit), as.double(thresh),
+                 as.character(family))
+
     # finalize output
     coefficients <- matrix(res$coefficients, ncol(X))
     intr         <- res$intercept
@@ -171,5 +179,6 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
                 psigy=psigy)
     ret$family <- family
     class(ret) <- paste0(family, ".edgenet")
+
     ret
 }

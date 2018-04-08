@@ -24,11 +24,13 @@ intercept <-function(Y, X, B, n)
     ((t(Y - X %*% B) %*% rep(1, n)) / n)
 }
 
+
 #' @noRd
 intercept.matrix <- function(n, mu)
 {
     rep(1, n) %*% t(mu)
 }
+
 
 #' @noRd
 rss <- function(Y, Y.hat)
@@ -36,11 +38,13 @@ rss <- function(Y, Y.hat)
     sum((Y - Y.hat) ** 2)
 }
 
+
 #' @noRd
 check.matrices <- function(X, Y)
 {
     stopifnot(is.matrix(X), is.matrix(Y))
 }
+
 
 #' @noRd
 check.graphs <- function(X, Y, G.X, G.Y, psigx, psigy)
@@ -55,6 +59,7 @@ check.graphs <- function(X, Y, G.X, G.Y, psigx, psigy)
     if (any(G.Y < 0))
         stop("Some elements G.Y<0; please use non-negative matrix!")
 }
+
 
 #' @noRd
 check.dimensions <- function(X, Y, n, p)

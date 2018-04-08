@@ -22,8 +22,8 @@
  * @email: simon.dirmeier@gmx.de
  */
 
-#ifndef NETREG_LINEAR_MODEL_DATA_HPP
-#define NETREG_LINEAR_MODEL_DATA_HPP
+#ifndef NETREG_MODEL_DATA_HPP
+#define NETREG_MODEL_DATA_HPP
 
 #include <vector>
 #include <string>
@@ -42,30 +42,24 @@ namespace netreg
     /**
      * Data-structure for all required data for a linear model
      */
-    class linear_model_data
+    class model_data
     {
     public:
-        linear_model_data()
-        {}
 
         /**
          * Protected constructor in order to avoid instantiation.
          *
-         * @param x the design matrix as pointer
-         * @param y the desponse matrix as pointer
-         * @param n number of samples
-         * @param p number of covariables
-         * @param q number of responses
-         * @param niter maximal number of iterations
-         * @param thresh the convergence threshold
+         * @param x the design matrix
+         * @param y the response matrix
          * @param fam of distribution of y
          */
         linear_model_data(
-          double *const x, double *const y, int n, int p, int q,
-          int niter, double thresh, const family fam):
-          N(n), P(p), Q(q), X(x, n, p, false, true),
-          Y(y, n, q, false, true), THRESH(thresh), N_ITER(niter), TXY(p, q),
-          txx_rows_(p), family_(fam)
+          arma::Mat<double>& x, arma::Mat<double>& y,const family fam):
+          N(x.n_rows), P(x.n_cols), Q(y.n_cols),
+          X(x.memptr(), N, P, false, true),
+          Y(y.memptr(), N, Q, false, true),
+          TXY(P, Q),
+          txx_rows_(P), family_(fam)
         {
             arma::Mat<double> TX = X.t();
             arma::Mat<double> TXX = TX * X;
@@ -180,16 +174,14 @@ namespace netreg
         }
 
     protected:
-        int N;                // number of samples: n
-        int P;                // number of covariables: p
-        int Q;                // number of responses: q
-        arma::Mat<double> X;  // (n x p)-dimensional design matrix
-        arma::Mat<double> Y;  // (n x q)-dimensional response matrix
-        double THRESH;        // convergence threshold
-        int N_ITER;           // max number iterations if CCD does not converge
+        int N;                  // number of samples: n
+        int P;                  // number of covariables: p
+        int Q;                  // number of responses: q
+        arma::Mat<double> X;    // (n x p)-dimensional design matrix
+        arma::Mat<double> Y;    // (n x q)-dimensional response matrix
         arma::Mat<double> TXY;  // (p x q)-dimensional matrix: X'Y
-        std::vector<arma::Row<double> > txx_rows_;
-        enum family family_;  // family of distribution of y
+        std::vector<arma::Row<double> > txx_rows_; // TXX as vector of rows
+        enum family family_;    // family of distribution of y
     };
 }
 #endif  // NETREG_LINEARMODELDATA_HPP

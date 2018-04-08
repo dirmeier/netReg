@@ -40,6 +40,10 @@ namespace netreg
          *  do_psigx is false.
          * @param psigy regularization parameter for gy. Only considered if
          *  do_psigy is false.
+         * @param do_psigx if true uses regularization of GX and psigx. Otherwise no
+         *  regularization will be used.
+         * @param do_psigy if true uses regularization of GY and psigy. Otherwise no
+         *  regularization will be used.
          * @param niter number of maximal iterations for coordinate descent
          * @param thresh threshold for convergence of likelihood
          * @param family the family of the likelihood
@@ -51,6 +55,7 @@ namespace netreg
           double* gx, double* gy,
           int* xdim, int* ydim,
           double lambda, double psigx, double psigy,
+          bool do_psigx, bool do_psigy,
           int niter, double thresh,
           std::string& fam)
         {
@@ -59,6 +64,7 @@ namespace netreg
               gx, gy,
               xdim[0], xdim[1], ydim[1],
               lambda, psigx, psigy,
+              do_psigx, do_psigy,
               niter, thresh,
               family(fam)
             );
