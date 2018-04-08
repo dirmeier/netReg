@@ -47,16 +47,15 @@ add_executable(
         src/family.hpp
         src/graph_functions.cpp
         src/graph_functions.hpp
-        src/graph_penalized_linear_model_cv_data.cpp
-        src/graph_penalized_linear_model_cv_data.hpp
-        src/graph_penalized_linear_model_data.hpp
+        src/graph_model_cv_data.cpp
+        src/graph_model_cv_data.hpp
+        src/graph_model_data.hpp
         src/illegal_argument_exception.hpp
         src/io_exception.hpp
-        src/linear_model_data.hpp
+        src/model_data.hpp
         src/math_functions.hpp
         src/not_implemented_exception.hpp
         src/optim.hpp
-        src/penalized_linear_model_data.hpp
         src/stat_functions.cpp
         src/stat_functions.hpp
         src/vector_functions.cpp

@@ -40,7 +40,7 @@
 namespace netreg
 {
     /**
-     * Data-structure for all required data for a linear model
+     * Data-structure for all required data for a model
      */
     class model_data
     {
@@ -53,8 +53,8 @@ namespace netreg
          * @param y the response matrix
          * @param fam of distribution of y
          */
-        linear_model_data(
-          arma::Mat<double>& x, arma::Mat<double>& y,const family fam):
+        model_data(
+          arma::Mat<double>& x, arma::Mat<double>& y, const family fam):
           N(x.n_rows), P(x.n_cols), Q(y.n_cols),
           X(x.memptr(), N, P, false, true),
           Y(y.memptr(), N, Q, false, true),
@@ -153,26 +153,6 @@ namespace netreg
             return TXY;
         }
 
-        /**
-         * Getter for the number of maximal iterations.
-         *
-         * @return the max number of iterations
-         */
-        const int max_iter()
-        {
-            return N_ITER;
-        }
-
-        /**
-         * Getter for the convergence threshold of CCD.
-         *
-         * @return the convergence threshold.
-         */
-        double threshold()
-        {
-            return THRESH;
-        }
-
     protected:
         int N;                  // number of samples: n
         int P;                  // number of covariables: p
@@ -184,4 +164,4 @@ namespace netreg
         enum family family_;    // family of distribution of y
     };
 }
-#endif  // NETREG_LINEARMODELDATA_HPP
+#endif

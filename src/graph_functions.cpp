@@ -21,58 +21,45 @@
  * @author: Simon Dirmeier
  * @email: simon.dirmeier@gmx.de
  */
+
 #include "graph_functions.hpp"
 
 #ifdef _OPENMP
 #include <omp.h>
 #endif
-
 #include <vector>
 #include <cmath>
 
 namespace netreg
 {
-    std::vector<double> degree_distribution(const double* x,
-                                            const int n,
-                                            const int m)
+    std::vector<double> degree_distribution(const arma::Mat<double>& x)
     {
         std::vector<double> degrees(n);
-
         #pragma omp parallel for
-        for (int i = 0; i < n; ++i)
+        for (unsigned int i = 0; i < x.n_rows; ++i)
         {
             double rowSum = 0.0;
-            for (int j = 0; j < m; ++j) rowSum += x[i + n * j];
+            for (unsigned j = 0; j < x.n_cols; ++j) rowSum += x(i, j);
             degrees[i] = rowSum;
         }
 
         return degrees;
     }
 
-    arma::Mat<double> laplacian(const double* x,
-                                const int n,
-                                const int m,
-                                const double px)
+    arma::Mat<double> laplacian(const arma::Mat<double>& x)
     {
-        if (px < 0.001 && px >= 0.0)
-        {
-            arma::Mat<double> lap(1, 1, arma::fill::zeros);
-            return lap;
-        }
-
         std::vector<double> degrees = degree_distribution(x, n, m);
         arma::Mat<double> lap(n, m);
         // compute the normalized Laplacian
         #pragma omp parallel for
-        for (unsigned int i = 0; i < n; ++i)
+        for (unsigned int i = 0; i < x.n_rows; ++i)
         {
-            for (unsigned int j = 0; j < m; ++j)
+            for (unsigned int j = 0; j < x.n_cols; ++j)
             {
                 if (i == j && degrees[i] != 0)
-                    lap(i, j) = 1 - (x[i + n * j] / degrees[i]);
-                else if (i != j && x[i + n * j] != 0)
-                    lap(i, j) =
-                      -x[i + n * j] / std::sqrt(degrees[i] * degrees[j]);
+                    lap(i, j) = 1 - (x(i, j) / degrees[i]);
+                else if (i != j && x(i, j) != 0)
+                    lap(i, j) = -x(i, j) / std::sqrt(degrees[i] * degrees[j]);
                 else
                     lap(i, j) = 0.0;
             }

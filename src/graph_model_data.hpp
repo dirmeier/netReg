@@ -22,10 +22,10 @@
  * @email: simon.dirmeier@gmx.de
  */
 
-#ifndef NETREG_GRAPHPENALIZEDLINEARMODELDATA_HPP
-#define NETREG_GRAPHPENALIZEDLINEARMODELDATA_HPP
+#ifndef NETREG_GRAPHMODELDATA_HPP
+#define NETREG_GRAPHMODELDATA_HPP
 
-#include "penalized_linear_model_data.hpp"
+#include "model_data.hpp"
 
 #include <string>
 #include <vector>
@@ -53,7 +53,7 @@ namespace netreg
       public penalized_linear_model_data
     {
     public:
-        graph_penalized_linear_model_data()
+        graph_model_data()
         {}
 
         /**
@@ -63,9 +63,6 @@ namespace netreg
          * @param y the nxq-dimensional response matrix of the linear model
          * @param gx a pxp-dimensional prior graph for the covariables of x
          * @param gy a qxq-dimensional prior graph for the responses of y
-         * @param n the number of samples (nrows X/Y)
-         * @param p the number of covariables (ncols X)
-         * @param q the number of responses (ncol Y)
          * @param lambda a vector of length q of penalisation values for q
          *  univariate models
          * @param alpha a vector of length q of weightings for lasso/ridge
@@ -83,19 +80,15 @@ namespace netreg
          */
         //TODO: remove parameters from model data
 
-        graph_penalized_linear_model_data(
-          double* const x, double* const y,
-          double* const gx, double* const gy,
-          int n, int p, int q,
+        graph_model_data(
+          arma::Mat<double>& x, arma::Mat<double>& y,
+          arma::Mat<double>& gx, arma::Mat<double>& gy,
           enum family fam):
-          linear_model_data(
-            x, y),
-          psi_gx(psi_gx),
-          psi_gy(psi_gy),
-          GX(gx, p, p, false, true),
-          GY(gy, q, q, false, true),
-          LX(laplacian(gx, p, p, psi_gx)),
-          LY(laplacian(gy, q, q, psi_gy)),
+          linear_model_data(x, y fam),
+          GX(gx.memptr(), p, p, false, true),
+          GY(gy.memptr(), q, q, false, true),
+          LX(laplacian(GX)),
+          LY(laplacian(GY)),
           lx_rows_(LX.n_rows)
         {
             // stores a copy of LX rows as single vectors,
@@ -106,26 +99,6 @@ namespace netreg
             {
                 lx_rows_[i] = LX.row(i);
             }
-        }
-
-        /**
-         * Getter for penalization term for Laplacian of X
-         *
-         * @return the penalization term for X
-         */
-        const double psigx()
-        {
-            return psi_gx;
-        }
-
-        /**
-         * Getter for penalization term for Laplacian of Y
-         *
-         * @return the penalization term for Y
-         */
-        const double psigy()
-        {
-            return psi_gy;
         }
 
         /**
@@ -174,8 +147,6 @@ namespace netreg
         }
 
     protected:
-        double psi_gx;         // Penalization vector for GX
-        double psi_gy;         // Penalization vector for GY
         arma::Mat<double> GX;  // prior graph for the design matrix
         arma::Mat<double> GY;  // prior graph for response matrix
         arma::Mat<double> LX;  // Normalized Laplacian of GX
@@ -183,4 +154,4 @@ namespace netreg
         std::vector<arma::Row<double>> lx_rows_;
     };
 }
-#endif  // NETREG_GRAPHPENALIZEDLINEARMODELDATA_HPP
+#endif

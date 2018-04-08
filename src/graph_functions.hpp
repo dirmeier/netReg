@@ -37,25 +37,19 @@ namespace netreg
     /**
      * Compute the degrees of the nodes of a graph.
      *
-     * @param x the pointer for which the degrees are calculated for in column
-     *  first order
-     * @param n the number of rows of x
-     * @param m the number of columns of y
+     * @param x a matrix
      *
      * @return the degrees of every node
      */
-    std::vector<double> degree_distribution(double* x, int n, int m);
+    std::vector<double> degree_distribution(arma::Mat<double>& x);
 
     /**
      * Calculate the normalized Laplacian of a matrix.
      *
-     * @param x the pointer for which the Laplacian is calculated (col first)
-     * @param n the number of rows of x
-     * @param m the number of columns of y
-     * @param px normalisation coefficient for graph penalisation
+     * @param x a matrix
      *
      * @return the normalized laplacian
      */
-    arma::Mat<double> laplacian(const double* x, int n, int m, double px);
+    arma::Mat<double> laplacian(arma::Mat<double>& x);
 }
 #endif  // NETREG_GRAPH_FUNCTIONS_HPP
