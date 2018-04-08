@@ -22,7 +22,7 @@
  * @email: simon.dirmeier@gmx.de
  */
 
-#include "graph_penalized_linear_model_cv_data.hpp"
+#include "graph_model_cv_data.hpp"
 
 #ifdef _OPENMP
 #include <omp.h>
@@ -30,12 +30,13 @@
 
 namespace netreg
 {
-    void graph_penalized_linear_model_cv_data::set_fold_ids()
+    void graph_model_cv_data::set_fold_ids()
     {
         if (static_cast<int>(fold_ids_.size()) != N)
         {
             fold_ids_.resize(static_cast<std::vector<int>::size_type>(N));
         }
+
         #pragma omp parallel for
         for (int i = 0; i < cvset_.fold_count(); ++i)
         {

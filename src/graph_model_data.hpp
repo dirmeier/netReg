@@ -49,12 +49,9 @@ namespace netreg
     /**
      * Data-structure for all required data for graph-penalized regression.
      */
-    class graph_penalized_linear_model_data:
-      public penalized_linear_model_data
+    class graph_model_data: public model_data
     {
     public:
-        graph_model_data()
-        {}
 
         /**
          * Constructor.
@@ -78,12 +75,10 @@ namespace netreg
          *  coefficients does not converge
          * @param thresh convergence threshold
          */
-        //TODO: remove parameters from model data
-
         graph_model_data(
           arma::Mat<double>& x, arma::Mat<double>& y,
           arma::Mat<double>& gx, arma::Mat<double>& gy,
-          enum family fam):
+          const enum family fam):
           linear_model_data(x, y fam),
           GX(gx.memptr(), p, p, false, true),
           GY(gy.memptr(), q, q, false, true),
