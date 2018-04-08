@@ -85,21 +85,21 @@ namespace netreg
                 if (do_psigx_ && do_psigy_)
                 {
                     coef = edgenet_.run_cv(
-                      data_, p(0, 0), 1.0, p(1, 0), p(2, 0), fold);
+                      data_, p(0, 0), p(1, 0), p(2, 0), fold);
                 }
                 else if (do_psigy_)
                 {
                     coef =
-                      edgenet_.run_cv(data_, p(0, 0), 1.0, 0, p(2, 0), fold);
+                      edgenet_.run_cv(data_, p(0, 0), 0, p(2, 0), fold);
                 }
                 else if (do_psigx_)
                 {
                     coef =
-                      edgenet_.run_cv(data_, p(0, 0), 1.0, p(1, 0), 0, fold);
+                      edgenet_.run_cv(data_, p(0, 0), p(1, 0), 0, fold);
                 }
                 else
                 {
-                    coef = edgenet_.run_cv(data_, p(0, 0), 1.0, 0, 0, fold);
+                    coef = edgenet_.run_cv(data_, p(0, 0), 0, 0, fold);
                 }
                 sses[fc] = mse(coef, fold.test_x(), fold.test_y());
             }

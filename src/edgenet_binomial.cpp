@@ -53,7 +53,6 @@ namespace netreg
     arma::Mat<double> edgenet_binomial::run_cv(
       graph_penalized_linear_model_cv_data &data,
       const double lambda,
-      const double alpha,
       const double psigx,
       const double psigy,
       cv_fold &fold) const

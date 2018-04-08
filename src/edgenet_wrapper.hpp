@@ -25,10 +25,8 @@
 #ifndef NETREG_EDGENET_HPP
 #define NETREG_EDGENET_HPP
 
-
 #include "graph_penalized_linear_model_data.hpp"
 #include "graph_penalized_linear_model_cv_data.hpp"
-
 
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
@@ -47,6 +45,8 @@ namespace netreg
      * graph-regularized regression model.
      *
      * @param data an object that holds all required data for the model
+     * @param niter maximal number of iterations for BOBYQA
+     * @param epsilon threshold for convergence of BOBYQA
      *
      * @return returns the estimated parameters and foldids
      */

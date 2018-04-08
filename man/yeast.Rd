@@ -10,7 +10,8 @@ data(yeast)
 }
 \description{
 The yeast data set is a \code{list} containing three matrices that
-can be used as an example for using \code{netReg}.
+can be used as an example for using \code{netReg}. The data have been taken
+from the references listed below.
 }
 \details{
 \itemize{
@@ -21,6 +22,15 @@ can be used as an example for using \code{netReg}.
     \item \code{GY} (231 x 231)-dimensional adjaceny matrix representing
       protein-protein interactions for 231 yeast genes
  }
+}
+\references{
+Brem, Rachel B., et al. (2005),
+ Genetic interactions between polymorphisms that affect gene expression in
+ yeast. \cr
+ \emph{Nature} \cr \cr
+ Storey, John D., Joshua M. Akey, and Leonid Kruglyak (2005),
+ Multiple locus linkage analysis of genomewide expression in yeast. \cr
+ \emph{PLoS Biology} \cr \cr
 }
 \keyword{data}
 \keyword{datasets}

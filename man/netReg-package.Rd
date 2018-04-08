@@ -14,7 +14,12 @@ prior graphs in the models objective function.
 \emph{Dlib} for constrained derivate-free optimization.
 }
 \references{
-Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007),
+Dirmeier, Simon and Fuchs, Christiane and Mueller, Nikola S and Theis,
+ Fabian J (2018),
+ netReg: Network-regularized linear models for biological association
+ studies. \cr
+ \emph{Bioinformatics}\cr \cr
+ Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007),
  Pathwise coordinate optimization.\cr
  \emph{The Annals of Applied Statistics}\cr \cr
  Friedman J., Hastie T. and Tibshirani R. (2010),

@@ -49,13 +49,12 @@ namespace netreg
     /**
      * Data-structure for all required data for graph-penalized regression.
      */
-    class graph_penalized_linear_model_data
-      : public penalized_linear_model_data
+    class graph_penalized_linear_model_data:
+      public penalized_linear_model_data
     {
     public:
         graph_penalized_linear_model_data()
-        {
-        }
+        {}
 
         /**
          * Constructor.
@@ -68,25 +67,30 @@ namespace netreg
          * @param p the number of covariables (ncols X)
          * @param q the number of responses (ncol Y)
          * @param lambda a vector of length q of penalisation values for q
-         * univariate models
+         *  univariate models
          * @param alpha a vector of length q of weightings for lasso/ridge
          * @param psi_gx a vector of length q of how much influence GX should
-         * have on the penalization
+         *  have on the penalization
          * @param psi_gy a vector of length q of how much influence GY should
-         * have on the penalization
+         *  have on the penalization
          * @param niter max number of iterations in case estimation of the
-         * coefficients does not converge
+         *  coefficients does not converge
          * @param thresh convergence threshold
          */
+        //TODO: remove parameters from model data
+
         graph_penalized_linear_model_data(
-          double *const x, double *const y, double *const gx,
-          double *const gy, const int n, const int p, const int q,
-          const double lambda, const double alpha, const double psi_gx,
-          const double psi_gy, const int niter, const double thresh,
-          const enum family fam):
+          double* const x, double* const y,
+          double* const gx, double* const gy,
+          int n, int p, int q,
+          double lambda,
+          double psi_gx, double psi_gy,
+          int niter, double thresh,
+          enum family fam):
           penalized_linear_model_data(
-            x, y, n, p, q, lambda, alpha, niter, thresh, fam),
-          psi_gx(psi_gx), psi_gy(psi_gy),
+            x, y, n, p, q, lambda, niter, thresh, fam),
+          psi_gx(psi_gx),
+          psi_gy(psi_gy),
           GX(gx, p, p, false, true),
           GY(gy, q, q, false, true),
           LX(laplacian(gx, p, p, psi_gx)),
@@ -95,7 +99,6 @@ namespace netreg
         {
             // stores a copy of LX rows as single vectors,
             // such that access will be faster
-            #pragma omp parallel for
             for (std::vector<arma::Row<double>>::size_type i = 0;
                  i < LX.n_rows;
                  ++i)

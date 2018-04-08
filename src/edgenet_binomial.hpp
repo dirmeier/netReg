@@ -59,13 +59,11 @@ namespace netreg
          *
          * @param data an object that holds all required data for the model
          * @param lambda the shrinkage parameter you want to use for the LASSO
-         * @param alpha the parameter for the elastic net
          * @param psigx penalization of laplacian for X
          * @param psigy penalization of laplacian for Y
          */
         arma::Mat<double> run_cv(graph_penalized_linear_model_cv_data &data,
                                  const double lambda,
-                                 const double alpha,
                                  const double psigx,
                                  const double psigy,
                                  cv_fold &fold) const;

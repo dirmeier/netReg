@@ -37,7 +37,6 @@ namespace netreg
     {
         // load shrinkage coefficients
         const double lambda = data.lambda();
-        const double alpha  = data.alpha();
         const double psigx  = data.psigx();
         const double psigy  = data.psigy();
 
@@ -45,13 +44,12 @@ namespace netreg
         std::vector<arma::rowvec>& txx_rows = data.txx_rows();
         arma::Mat<double>& txy              = data.txy();
 
-        return mccd_(data, lambda, alpha, psigx, psigy, txx_rows, txy);
+        return mccd_(data, lambda, psigx, psigy, txx_rows, txy);
     }
 
     arma::Mat<double> edgenet_gaussian::run_cv(
       graph_penalized_linear_model_cv_data& data,
       const double lambda,
-      const double alpha,
       const double psigx,
       const double psigy,
       cv_fold& fold) const
@@ -62,13 +60,12 @@ namespace netreg
         arma::Mat<double>& train_txy              = fold.train_txy();
 
         return mccd_(
-          data, lambda, alpha, psigx, psigy, train_txx_rows, train_txy);
+          data, lambda, psigx, psigy, train_txx_rows, train_txy);
     }
 
     arma::Mat<double> edgenet_gaussian::mccd_(
       graph_penalized_linear_model_data& data,
       const double lambda,
-      const double alpha,
       const double psigx,
       const double psigy,
       std::vector<arma::rowvec>& txx_rows,
@@ -82,7 +79,7 @@ namespace netreg
         const double thresh = data.threshold();
         const int niter     = data.max_iter();
 
-        // load graph laplacians
+        // load graph Laplacians
         std::vector<arma::Row<double>>& lx_rows = data.lx_rows();
         arma::Mat<double>& ly                   = data.ly();
 
@@ -93,7 +90,6 @@ namespace netreg
 
         // TODO: method for this
         // safe an extra set of rowvectors so that access is faster
-        #pragma omp parallel for
         for (std::vector<arma::Row<double>>::size_type i = 0;
              i < coef.n_rows;
              ++i)
@@ -101,28 +97,22 @@ namespace netreg
             coef_rows[i] = coef.row(i);
         }
 
-        // TODO methods for this
-        // weighted penalization param of Elastic-net
-        const double lalph = alpha * lambda;
-        // normalization for soft-thresholding
-        const double enorm = 1.0 + lambda * (1 - alpha);
-
         for (int qi = 0; qi < Q; ++qi)
         {
             uccd_(P, Q,
                   qi,
                   thresh, niter,
-                  lalph, enorm,
+                  lambda, 1.0,
                   psigx, psigy,
                   txx_rows, txy,
                   lx_rows, ly,
                   coef, old_coef, coef_rows);
-#ifdef USE_RCPPARMADILLO
+            #ifdef USE_RCPPARMADILLO
             if (qi % 100 == 0)
             {
                 Rcpp::checkUserInterrupt();
             }
-#endif
+            #endif
         }
 
         return coef;
@@ -172,12 +162,12 @@ namespace netreg
                 // TODO: METHOD for this
                 coef(pi, qi) = d;
                 coef_rows[pi](qi) = d;
-#ifdef USE_RCPPARMADILLO
+                #ifdef USE_RCPPARMADILLO
                 if (iter % 100 == 0)
                 {
                     Rcpp::checkUserInterrupt();
                 }
-#endif
+                #endif
             }
         }
         // TODO method for accumulation

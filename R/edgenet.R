@@ -58,6 +58,11 @@
 #' \item{family }{ the family of the response}
 #'
 #' @references
+#'  Dirmeier, Simon and Fuchs, Christiane and Mueller, Nikola S and Theis,
+#'  Fabian J (2018),
+#'  netReg: Network-regularized linear models for biological association
+#'  studies. \cr
+#'  \emph{Bioinformatics}\cr \cr
 #'  Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007),
 #'  Pathwise coordinate optimization.\cr
 #'  \emph{The Annals of Applied Statistics}\cr \cr
@@ -80,8 +85,10 @@
 #' # fit a Gaussian model
 #' Y <- X%*%b + rnorm(100)
 #' fit <- edgenet(X=X, Y=Y, G.X=G.X, family="gaussian")
-edgenet <- function(X, Y, G.X=NULL, G.Y=NULL, lambda=1, psigx=1, psigy=1,
-                    thresh=1e-5, maxit=1e5, family=c("gaussian"), ...)
+edgenet <- function(X, Y, G.X=NULL, G.Y=NULL,
+                    lambda=1, psigx=1, psigy=1,
+                    thresh=1e-5, maxit=1e5,
+                    family=c("gaussian"))
 {
     UseMethod("edgenet")
 }
@@ -91,7 +98,7 @@ edgenet <- function(X, Y, G.X=NULL, G.Y=NULL, lambda=1, psigx=1, psigy=1,
 edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
                             lambda=1, psigx=1, psigy=1,
                             thresh=1e-5, maxit=1e5,
-                            family=c("gaussian"), ...)
+                            family=c("gaussian"))
 {
     check.matrices(X, Y)
     n <- dim(X)[1]

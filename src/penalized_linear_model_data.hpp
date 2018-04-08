@@ -58,10 +58,10 @@ namespace netreg
          */
         penalized_linear_model_data(
           double *const x, double *const y, int n, int p, int q,
-          double lambda, double alpha, int niter, double thresh,
+          double lambda, int niter, double thresh,
           const enum family fam):
           linear_model_data(x, y, n, p, q, niter, thresh, fam),
-          ALPHA(alpha), LAMBDA(lambda)
+          LAMBDA(lambda)
         {
         }
 
@@ -75,18 +75,7 @@ namespace netreg
             return LAMBDA;
         }
 
-        /**
-         * Getter for the mixing parameter of the elastic-net.
-         *
-         * @return the mixnig term for the elastic net
-         */
-        const double alpha()
-        {
-            return ALPHA;
-        }
-
     protected:
-        double ALPHA;   // mixing weights for elastic-net
         double LAMBDA;  // penalization term for LASSO
     };
 }

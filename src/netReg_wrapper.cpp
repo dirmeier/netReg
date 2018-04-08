@@ -66,7 +66,8 @@ SEXP edgenet_cpp(SEXP X,
                  SEXP fs)
 {
     BEGIN_RCPP
-    
+
+    std::string f = Rcpp::as<std::string>(fs);
     data dat = netreg::data_factory::build_data(
       REAL(X), REAL(Y), REAL(GX), REAL(GY),
       INTEGER(Rf_getAttrib(X, R_DimSymbol)),
@@ -76,10 +77,10 @@ SEXP edgenet_cpp(SEXP X,
       Rcpp::as<double>(psigy),
       Rcpp::as<int>(niter),
       Rcpp::as<double>(thresh),
-      Rcpp::as<std::string>(fs)
+      f
     );
 
-    return fit(data);
+    return fit(dat);
 
     END_RCPP
     return R_NilValue;
@@ -127,6 +128,7 @@ SEXP cv_edgenet_cpp(SEXP X,
 {
     BEGIN_RCPP
 
+    std::string f = Rcpp::as<std::string>(fs);
     cv_data data = netreg::data_factory::build_cv_data(
       REAL(X),
       REAL(Y),
@@ -143,7 +145,7 @@ SEXP cv_edgenet_cpp(SEXP X,
       Rcpp::as<int>(nfolds),
       Rcpp::as<int>(lenfs),
       INTEGER(foldids),
-      Rcpp::as<std::string>(fs)
+      f
     );
 
     return regularization_path(

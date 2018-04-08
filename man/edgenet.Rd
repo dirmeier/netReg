@@ -6,7 +6,7 @@
  edge-based regularization.}
 \usage{
 edgenet(X, Y, G.X = NULL, G.Y = NULL, lambda = 1, psigx = 1,
-  psigy = 1, thresh = 1e-05, maxit = 1e+05, family = c("gaussian"), ...)
+  psigy = 1, thresh = 1e-05, maxit = 1e+05, family = c("gaussian"))
 }
 \arguments{
 \item{X}{input matrix, of dimension (\code{n} x \code{p})
@@ -65,7 +65,12 @@ Y <- X\%*\%b + rnorm(100)
 fit <- edgenet(X=X, Y=Y, G.X=G.X, family="gaussian")
 }
 \references{
-Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007),
+Dirmeier, Simon and Fuchs, Christiane and Mueller, Nikola S and Theis,
+ Fabian J (2018),
+ netReg: Network-regularized linear models for biological association
+ studies. \cr
+ \emph{Bioinformatics}\cr \cr
+ Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007),
  Pathwise coordinate optimization.\cr
  \emph{The Annals of Applied Statistics}\cr \cr
  Friedman J., Hastie T. and Tibshirani R. (2010),

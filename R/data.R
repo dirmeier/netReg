@@ -21,7 +21,8 @@
 #' A sample yeast data set for regression
 #'
 #' The yeast data set is a \code{list} containing three matrices that
-#' can be used as an example for using \code{netReg}.
+#' can be used as an example for using \code{netReg}. The data have been taken
+#' from the references listed below.
 #'
 #' \itemize{
 #'     \item \code{X}  (112 x 500)-dimensional binary matrix of 500
@@ -33,6 +34,14 @@
 #'  }
 #'
 #' @name yeast
+#' @references
+#'  Brem, Rachel B., et al. (2005),
+#'  Genetic interactions between polymorphisms that affect gene expression in
+#'  yeast. \cr
+#'  \emph{Nature} \cr \cr
+#'  Storey, John D., Joshua M. Akey, and Leonid Kruglyak (2005),
+#'  Multiple locus linkage analysis of genomewide expression in yeast. \cr
+#'  \emph{PLoS Biology} \cr \cr
 #'
 #' @docType data
 #' @keywords datasets data

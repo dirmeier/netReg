@@ -123,7 +123,7 @@ It would be great if you cited `netReg` like this:
 
 Simon Dirmeier, Christiane Fuchs, Nikola S Mueller, Fabian J Theis; 
 netReg: network-regularized linear models for biological association studies, 
-Bioinformatics, Volume 34, Issue 5, 1 March 2018, Pages 896–898, https://doi.org/10.1093/bioinformatics/btx677
+*Bioinformatics*, Volume 34, Issue 5, 1 March 2018, Pages 896–898, https://doi.org/10.1093/bioinformatics/btx677
 
 ## Author
 
