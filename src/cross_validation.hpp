@@ -91,9 +91,7 @@ namespace netreg
             for (int fc = 0; fc < nfolds_; ++fc)
             {
                 cv_fold& fold = cvset_.get_fold(fc);
-                arma::Mat<double> coef = model_.run_cv(
-                  lam, psigx, psigy, fold);
-
+                arma::Mat<double> coef = model_.run_cv(lam, psigx, psigy, fold);
                 sses[fc] = mse(coef, fold.test_x(), fold.test_y());
             }
 

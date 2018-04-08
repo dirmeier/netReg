@@ -25,7 +25,6 @@
 #ifndef NETREG_EDGENET_WRAPPER_HPP
 #define NETREG_EDGENET_WRAPPER_HPP
 
-
 #include "params.hpp"
 #include "graph_model_data.hpp"
 #include "graph_model_cv_data.hpp"

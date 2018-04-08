@@ -74,13 +74,6 @@ namespace netreg
             netreg::graph_model_data data(
               xm, ym, gxm, gym,
               get_family(fam));
-
-            return data;
-        }
-
-        static graph_model_cv_data build_cv_data(
-          double* x, double* y, double* gx, double* gy,
-          int n, int p, int q, std::string& fam, int nfolds)
         {
             arma::Mat<double> xm(x, n, p, false, true);
             arma::Mat<double> ym(y, n, q, false, true);
@@ -154,3 +147,10 @@ namespace netreg
 
 
 #endif //NETREG_DATA_FACTORY_HPP
+
+const std::string netreg::data_factory::GAUSSIAN = "gaussian";
+const std::string netreg::data_factory::BINOMIAL = "binomial";
+const std::string netreg::data_factory::FAMILY_ERROR =
+  "Wrong family given. Choose one of " +
+  netreg::data_factory::GAUSSIAN + "/" +
+  netreg::data_factory::BINOMIAL;

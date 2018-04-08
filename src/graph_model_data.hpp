@@ -60,20 +60,6 @@ namespace netreg
          * @param y the nxq-dimensional response matrix of the linear model
          * @param gx a pxp-dimensional prior graph for the covariables of x
          * @param gy a qxq-dimensional prior graph for the responses of y
-         * @param lambda a vector of length q of penalisation values for q
-         *  univariate models
-         * @param alpha a vector of length q of weightings for lasso/ridge
-         * @param psi_gx a vector of length q of how much influence GX should
-         *  have on the penalization
-         * @param psi_gy a vector of length q of how much influence GY should
-         *  have on the penalization
-         *  @param do_psigx if true uses regularization of GX and psigx. Otherwise no
-         *  regularization will be used.
-         * @param do_psigy if true uses regularization of GY and psigy. Otherwise no
-         *  regularization will be used.
-         * @param niter max number of iterations in case estimation of the
-         *  coefficients does not converge
-         * @param thresh convergence threshold
          */
         graph_model_data(
           arma::Mat<double>& x, arma::Mat<double>& y,
