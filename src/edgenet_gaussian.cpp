@@ -33,7 +33,7 @@
 namespace netreg
 {
     arma::Mat<double> edgenet_gaussian::run(
-      graph_penalized_linear_model_data& data) const
+      graph_model_data& data) const
     {
         // load shrinkage coefficients
         const double lambda = data.lambda();
@@ -48,7 +48,7 @@ namespace netreg
     }
 
     arma::Mat<double> edgenet_gaussian::run_cv(
-      graph_penalized_linear_model_cv_data& data,
+      graph_model_cv_data& data,
       const double lambda,
       const double psigx,
       const double psigy,

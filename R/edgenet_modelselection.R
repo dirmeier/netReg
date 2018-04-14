@@ -220,20 +220,27 @@ cv.edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
 {
     cv <- .Call("cv_edgenet_cpp",
                 X, Y, G.X, G.Y,
-                as.double(lambda), as.double(psigx),  as.double(psigy),
+                as.double(lambda),
+                as.double(psigx),
+                as.double(psigy),
                 as.logical(do.lambda),
-                as.logical(do.psigx), as.logical(do.psigy),
-                as.integer(maxit), as.double(thresh),
-                as.integer(nfolds), as.integer(foldid),
+                as.logical(do.psigx),
+                as.logical(do.psigy),
+                as.integer(maxit),
+                as.double(thresh),
+                as.integer(nfolds),
+                as.integer(foldid),
                 as.integer(length(foldid)),
                 as.character(family),
-                as.integer(approx.maxit),
-                as.double(epsilon))
+                as.integer(optim.maxit),
+                as.double(optim.epsilon))
+
     ret <- list(lambda=cv$parameters[1],
                 psigx =cv$parameters[2],
                 psigy =cv$parameters[3],
                 folds =cv$folds+1)
     ret$family <- family
     class(ret) <- paste0(family, ".cv.edgenet")
+
     ret
 }

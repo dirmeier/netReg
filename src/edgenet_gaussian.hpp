@@ -48,12 +48,20 @@ namespace netreg
     class edgenet_gaussian
     {
     public:
+
+        edgenet_gaussian(
+          const graph_model_data& data,
+          double lambda, double psigx, double psigy,
+          int niter, double thresh):
+          DATA_(data), lambda_(lambda), psigx_(psigx), psigy_(psigy),
+          NITER_(niter), THRESH_(thresh)
+
         /**
          * Calulates the coefficients of a graph-regularized regression model.
          *
          * @param data an object that holds all required data for the model
          */
-        arma::Mat<double> run(graph_penalized_linear_model_data& data) const;
+        arma::Mat<double> run(graph_model_data& data) const;
 
         /**
          * Calculates the optimal set of shrinkage parameters of a
@@ -66,14 +74,14 @@ namespace netreg
          *
          * @return returns the estimated coefficients
          */
-        arma::Mat<double> run_cv(graph_penalized_linear_model_cv_data& data,
+        arma::Mat<double> run_cv(graph_model_cv_data& data,
                                  double lambda,
                                  double psigx,
                                  double psigy,
                                  cv_fold& fold) const;
 
     protected:
-        arma::Mat<double> mccd_(graph_penalized_linear_model_data& data,
+        arma::Mat<double> mccd_(graph_model_data& data,
                                 double lambda,
                                 double psigx,
                                 double psigy,
@@ -234,6 +242,16 @@ namespace netreg
             s = s - 2 * psigy * yPenalty;
             norm += 2 * psigy * ly(qi, qi);
         }
+
+    private:
+        const graph_model_data& DATA_;
+        double lambda_;
+        double psigx_;
+        double psigy_;
+        const int NITER_;
+        const double THRESH_;
+
+
     };
 }
 

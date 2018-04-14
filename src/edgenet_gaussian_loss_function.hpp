@@ -35,7 +35,7 @@
 #endif
 
 #include "edgenet_gaussian.hpp"
-#include "graph_penalized_linear_model_cv_data.hpp"
+#include "graph_model_cv_data.hpp"
 #include "cv_set.hpp"
 #include "error_functions.hpp"
 
@@ -62,10 +62,10 @@ namespace netreg
         edgenet_gaussian_loss_function(
           graph_penalized_linear_model_cv_data& data):
           data_(data), cvset_(data.cvset()),
-          nfolds_(static_cast<int>(data.cvset().fold_count())), edgenet_(),
+          nfolds_(static_cast<int>(data.cvset().fold_count())),
+          edgenet_(),
           do_psigx_(data.psigx() == -1), do_psigy_(data.psigy() == -1)
-        {
-        }
+        {}
 
         /**
          * Over-write operator () in order to get functor functionality (object

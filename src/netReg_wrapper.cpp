@@ -33,8 +33,8 @@
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
 
-using data = netreg::graph_penalized_linear_model_data;
-using cv_data = netreg::graph_penalized_linear_model_cv_data;
+using data = netreg::graph_model_data;
+using cv_data = netreg::graph_model_cv_data;
 
 
 extern "C" {
@@ -49,9 +49,6 @@ extern "C" {
  * @param lamdba penalization value for LASSO
  * @param psigx weighting value of GX
  * @param psigy weighting value of GY
- * @param do_psigx if true uses regularization of GX and psigx. Otherwise no
- *  regularization will be used.
- * @param do_psigy if true uses regularization of GY and psigy. Otherwise no
  *  regularization will be used.
  * @param niter max number of iterations if parameter estimation
  *  does not converge in time
@@ -62,11 +59,9 @@ SEXP edgenet_cpp(SEXP X,
                  SEXP Y,
                  SEXP GX,
                  SEXP GY,
-                 SEXP lambda,
+                 SEXP lambda, // 5
                  SEXP psigx,
                  SEXP psigy,
-                 SEXP do_psigx,
-                 SEXP do_psigy,
                  SEXP niter,
                  SEXP thresh,
                  SEXP fs)
@@ -80,7 +75,12 @@ SEXP edgenet_cpp(SEXP X,
       INTEGER(Rf_getAttrib(Y, R_DimSymbol)),
       f);
 
-    return fit(dat);
+    return fit(dat,
+               Rcpp::as<double>(lambda),
+               Rcpp::as<double>(psigx),
+               Rcpp::as<double>(psigy),
+               Rcpp::as<int>(niter),
+               Rcpp::as<double>(thresh));
 
     END_RCPP
     return R_NilValue;
@@ -119,17 +119,17 @@ SEXP cv_edgenet_cpp(SEXP X,
                     SEXP Y,
                     SEXP GX,
                     SEXP GY,
-                    SEXP lambda,
+                    SEXP lambda,  // 5
                     SEXP psigx,
                     SEXP psigy,
                     SEXP do_lambda,
                     SEXP do_psigx,
-                    SEXP do_psigy,
+                    SEXP do_psigy, // 10
                     SEXP niter,
                     SEXP thresh,
                     SEXP nfolds,
                     SEXP foldids,
-                    SEXP lenfs,
+                    SEXP lenfs,  // 15
                     SEXP fs,
                     SEXP optim_niter,
                     SEXP optim_epsilon)
@@ -142,10 +142,21 @@ SEXP cv_edgenet_cpp(SEXP X,
       INTEGER(Rf_getAttrib(X, R_DimSymbol)),
       INTEGER(Rf_getAttrib(Y, R_DimSymbol)),
       f, Rcpp::as<int>(nfolds),
-      Rcpp::as<int>(lenfs), INTEGER(foldids));
+      Rcpp::as<int>(lenfs),
+      INTEGER(foldids));
 
     return regularization_path(
-      data, Rcpp::as<int>(optim_niter), Rcpp::as<double>(epsilon));
+      data,
+      Rcpp::as<double>(lambda),
+      Rcpp::as<double>(psigx),
+      Rcpp::as<double>(psigy),
+      Rcpp::as<bool>(do_lambda),
+      Rcpp::as<bool>(do_psigx),
+      Rcpp::as<bool>(do_psigy),
+      Rcpp::as<int>(niter),
+      Rcpp::as<double>(thresh),
+      Rcpp::as<int>(optim_niter),
+      Rcpp::as<double>(optim_epsilon));
 
     END_RCPP
 
@@ -157,7 +168,7 @@ SEXP cv_edgenet_cpp(SEXP X,
 
 static R_CallMethodDef callMethods[] = {
   {"edgenet_cpp",    (DL_FUNC) & edgenet_cpp,    10},
-  {"cv_edgenet_cpp", (DL_FUNC) & cv_edgenet_cpp, 14},
+  {"cv_edgenet_cpp", (DL_FUNC) & cv_edgenet_cpp, 18},
   {NULL, NULL,                                   0}};
 
 extern "C" void R_init_netReg(DllInfo* dll)

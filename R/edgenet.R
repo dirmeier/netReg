@@ -105,17 +105,16 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
     n <- dim(X)[1]
     p <- dim(X)[2]
     q <- dim(Y)[2]
-    do.psigx <- do.psigy <- TRUE
+
     if (is.null(G.X)) G.X <- matrix(0, 1, 1)
     if (is.null(G.Y)) G.Y <- matrix(0, 1, 1)
     if (all(G.X == 0)) {
         psigx    <- 0
-        do.psigx <- FALSE
     }
     if (all(G.Y == 0) || q == 1) {
         psigy    <- 0
-        do.psigy <- FALSE
     }
+
     check.graphs(X, Y, G.X, G.Y, psigx, psigy)
     check.dimensions(X, Y, n, p)
     if (lambda < 0) {
@@ -140,7 +139,6 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
     }
     if (q == 1) {
         psigy    <- 0
-        do.psigy <- FALSE
     }
     family <- match.arg(family)
 
@@ -148,7 +146,6 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
     ret <- .edgenet(X=X, Y=Y,
                     G.X=G.X, G.Y=G.Y,
                     lambda=lambda, psigx=psigx, psigy=psigy,
-                    do.psigx=do.psigx, do.psigy=do.psigy,
                     thresh=thresh, maxit=maxit,
                     family=family)
     ret$call   <- match.call()
@@ -161,13 +158,11 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
 #' @import Rcpp
 .edgenet <- function(X, Y, G.X, G.Y,
                      lambda, psigx, psigy,
-                     do.psigx, do.psigy,
                      thresh, maxit, family)
 {
     res <- .Call("edgenet_cpp",
                  X, Y, G.X, G.Y,
                  as.double(lambda), as.double(psigx),  as.double(psigy),
-                 as.logical(do.psigx), as.logical(do.psigy),
                  as.integer(maxit), as.double(thresh),
                  as.character(family))
 

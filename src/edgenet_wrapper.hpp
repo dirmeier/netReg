@@ -25,8 +25,8 @@
 #ifndef NETREG_EDGENET_HPP
 #define NETREG_EDGENET_HPP
 
-#include "graph_penalized_linear_model_data.hpp"
-#include "graph_penalized_linear_model_cv_data.hpp"
+#include "graph_model_data.hpp"
+#include "graph_model_cv_data.hpp"
 
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
@@ -37,8 +37,16 @@ namespace netreg
      * Calulates the coefficients of a graph-regularized regression model.
      *
      * @param data an object that holds all required data for the model
+     * @param lamdba penalization value for LASSO
+     * @param psigx weighting value of GX
+     * @param psigy weighting value of GY
+     * @param niter max number of iterations if parameter estimation
+     *  does not converge in time
+     * @param thresh convergence threshold
      */
-    SEXP fit(graph_penalized_linear_model_data& data);
+    SEXP fit(graph_model_data& data,
+             double lambda, double psigx, double psigy,
+             int niter, double thresh);
 
     /**
      * Calulates the optimal set of shrinkage parameters of a
@@ -50,7 +58,7 @@ namespace netreg
      *
      * @return returns the estimated parameters and foldids
      */
-    SEXP regularization_path(graph_penalized_linear_model_cv_data& data,
+    SEXP regularization_path(graph_model_cv_data& data,
                              int niter,
                              double epsilon);
 }
