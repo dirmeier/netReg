@@ -31,6 +31,12 @@ namespace netreg
     class params
     {
     public:
+        params():
+          lambda_(0), psigx_(0), psigy_(0),
+          do_lambda_(false), do_psigx_(false), do_psigy_(false),
+          thresh_(0.0001), niter_(1000),
+          optim_niter_(1000), optim_epsilon_(0.001)
+
         params& lambda(double lambda)
         {
             lambda_ = lambda;

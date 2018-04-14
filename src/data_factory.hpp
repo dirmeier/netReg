@@ -23,6 +23,39 @@ namespace netreg
     {
     public:
 
+
+        /**
+         * Creates a graph_model_data object
+         *
+         * @param x the design matrix in column first order
+         * @param y the response matrix in column first order
+         * @param gx the adjacency matrix for variables of x
+         * @param gy the adjacency matrix for variables of y
+         * @param xdim the dimensionality of matrix x, where the first index
+         *  is the number of rows and the second index the number of columns
+         * @param ydim the dimensionality of matrix y, where the first index
+         *  is the number of rows and the second index the number of columns
+         * @param family the family of the likelihood
+         *
+         * @return returns a graph_model_data object
+         */
+        static params build_params(
+          double lambda, double psigx, double psigy, double)
+        {
+            const int n = xdim[0];
+            const int p = xdim[1];
+            const int q = ydim[1];
+
+            netreg::graph_model_data data(
+              arma::Mat<double>(x, n, p, false, true),
+              arma::Mat<double>(y, n, q, false, true),
+              arma::Mat<double>(gx, p, p, false, true),
+              arma::Mat<double>(gy, q, q, false, true),
+              family(fam));
+
+            return data;
+        }
+
         /**
          * Creates a graph_model_data object
          *

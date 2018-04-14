@@ -25,6 +25,7 @@
 #include <string>
 #include <memory>
 
+#include "params.hpp"
 #include "data_factory.hpp"
 #include "edgenet_wrapper.hpp"
 #include "graph_penalized_linear_model_data.hpp"
@@ -73,14 +74,17 @@ SEXP edgenet_cpp(SEXP X,
       REAL(X), REAL(Y), REAL(GX), REAL(GY),
       INTEGER(Rf_getAttrib(X, R_DimSymbol)),
       INTEGER(Rf_getAttrib(Y, R_DimSymbol)),
-      f);
+      f
+    );
 
-    return fit(dat,
-               Rcpp::as<double>(lambda),
-               Rcpp::as<double>(psigx),
-               Rcpp::as<double>(psigy),
-               Rcpp::as<int>(niter),
-               Rcpp::as<double>(thresh));
+    params pars = netreg::params()
+      .lambda(Rcpp::as<double>(lambda))
+      .psigx(Rcpp::as<double>(psigx))
+      .psigy(Rcpp::as<double>(psigy))
+      .thresh(Rcpp::as<double>(thresh))
+      .niter(Rcpp::as<int>(niter));
+
+    return fit(dat, pars);
 
     END_RCPP
     return R_NilValue;
@@ -137,7 +141,7 @@ SEXP cv_edgenet_cpp(SEXP X,
     BEGIN_RCPP
 
     std::string f = Rcpp::as<std::string>(fs);
-    cv_data data = netreg::data_factory::build_cv_data(
+    cv_data dat = netreg::data_factory::build_cv_data(
       REAL(X), REAL(Y), REAL(GX), REAL(GY),
       INTEGER(Rf_getAttrib(X, R_DimSymbol)),
       INTEGER(Rf_getAttrib(Y, R_DimSymbol)),
@@ -146,18 +150,19 @@ SEXP cv_edgenet_cpp(SEXP X,
       Rcpp::as<int>(lenfs),
       INTEGER(foldids));
 
-    return regularization_path(
-      data,
-      Rcpp::as<double>(lambda),
-      Rcpp::as<double>(psigx),
-      Rcpp::as<double>(psigy),
-      Rcpp::as<bool>(do_lambda),
-      Rcpp::as<bool>(do_psigx),
-      Rcpp::as<bool>(do_psigy),
-      Rcpp::as<int>(niter),
-      Rcpp::as<double>(thresh),
-      Rcpp::as<int>(optim_niter),
-      Rcpp::as<double>(optim_epsilon));
+    params pars = netreg::params()
+      .lambda(Rcpp::as<double>(lambda))
+      .psigx(Rcpp::as<double>(psigx))
+      .psigy(Rcpp::as<double>(psigy))
+      .do_lambda(Rcpp::as<bool>(do_lambda))
+      .do_psigx(Rcpp::as<bool>(do_psigx))
+      .do_psigy(Rcpp::as<bool>(do_psigy))
+      .thresh(Rcpp::as<double>(thresh))
+      .niter(Rcpp::as<int>(niter))
+      .optim_niter(Rcpp::as<int>(optim_niter))
+      .optim_epsilon(Rcpp::as<double>(optim_epsilon));
+
+    return regularization_path(dat, pars);
 
     END_RCPP
 

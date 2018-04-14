@@ -22,30 +22,32 @@
  * @email: simon.dirmeier@gmx.de
  */
 
-#include "edgenet_wrapper.hpp"
-#include "edgenet_gaussian.hpp"
-#include "edgenet_gaussian_model_selection.hpp"
-#include "stat_functions.hpp"
 
 #include <map>
 #include <numeric>
 #include <string>
 #include <vector>
 
+#include "edgenet_wrapper.hpp"
+#include "edgenet_gaussian.hpp"
+#include "edgenet_gaussian_model_selection.hpp"
+#include "stat_functions.hpp"
+
+
 namespace netreg
 {
-    SEXP fit(const graph_penalized_linear_model_data& data,
-             double lambda, double psigx, double psigy,
-             int niter, double thresh)
+    SEXP fit(const graph_model_data& data, params& pars)
     {
         BEGIN_RCPP
-        edgenet_gaussian edge(data, lambda, psigx, psigy, niter, thresh);
+        edgenet_gaussian edge(data, params);
 
         arma::Mat<double> coef = edge.run();
         arma::Col<double> intr =
           intercept(data.design(), data.response(), coef);
+
         return Rcpp::List::create(Rcpp::Named("coefficients") = coef,
                                   Rcpp::Named("intercept") = intr);
+
         END_RCPP
 
         return R_NilValue;
