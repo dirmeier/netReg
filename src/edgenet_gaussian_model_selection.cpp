@@ -31,16 +31,18 @@
 namespace netreg
 {
     std::map<std::string, double> model_selection(
-      graph_penalized_linear_model_cv_data& data,
-      const int niter,
-      const double epsilon)
+      const graph_model_cv_data& data,
+      double lambda, double psigx, double psigy,
+      bool do_lambda, bool do_psigx, do_psigy,
+      int niter, double thresh,
+      int optim_niter, double optim_epsilon)
     {
         optim opt;
 
         std::vector<double> start{0, 0, 0};
         std::vector<double> lower_bound{0.0, 0.0, 0.0};
         std::vector<double> upper_bound{100.0, 10000.0, 10000.0};
-        const double rad_start = 0.49, rad_end = epsilon;
+        const double rad_start = 0.49, rad_end = optim_epsilon;
 
         std::map<std::string, double> res;
         switch (data.distribution_family())
@@ -50,12 +52,15 @@ namespace netreg
             {
                 return opt.bobyqa<edgenet_gaussian_loss_function>(
                   data,
+                  lambda, psigx, psigy,
+                  do_lambda, do_psigx, do_psigy,
+                  niter, thresh,
                   start,
                   lower_bound,
                   upper_bound,
                   rad_start,
                   rad_end,
-                  niter);
+                  optim_niter);
             }
         }
 

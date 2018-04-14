@@ -42,10 +42,11 @@
 
 namespace netreg
 {
+
     /**
      * Data-structure for all required data for graph-penalized regression.
      */
-    class graph_model_cv_data: public graph_model_data
+    class graph_model_cv_data
     {
     public:
 
@@ -63,8 +64,9 @@ namespace netreg
           arma::Mat<double>& x, arma::Mat<double>& y,
           arma::Mat<double>& gx, arma::Mat<double>& gy,
           int nfolds, const enum family fam):
-            graph_model_data(x, y, gx, gy, fam),
-            fold_ids_(N), cvset_(N, nfolds, X, Y)
+            DATA_(x, y, gx, gy, fam),
+            FOLD_IDS_(N),
+            CVSET_(N, nfolds, X, Y)
         {
             set_fold_ids();
         }
@@ -85,8 +87,9 @@ namespace netreg
           arma::Mat<double>& gx, arma::Mat<double>& gy,
           int nfolds, int* const fold_ids,
           const enum family fam):
-          graph_model_data(x, y, gx, gy, fam),
-          fold_ids_(N), cvset_(N, fold_ids, X, Y)
+          DATA_(x, y, gx, gy, fam),
+          FOLD_IDS_(N),
+          CVSET_(N, fold_ids, X, Y)
         {
             throw not_implemented_exception();
             set_fold_ids();
@@ -97,7 +100,15 @@ namespace netreg
          */
         std::vector<int>& fold_ids()
         {
-            return fold_ids_;
+            return FOLD_IDS_;
+        }
+
+        /**
+         * Getter for the graph model data.
+         */
+        graph_model_data& data()
+        {
+            return DATA_;
         }
 
         /**
@@ -105,7 +116,7 @@ namespace netreg
          */
         cv_set& cvset()
         {
-            return cvset_;
+            return CVSET_;
         }
 
     protected:
@@ -114,10 +125,14 @@ namespace netreg
          * Function to set the fold id mappings to sample indexes.
          */
         void set_fold_ids();
+
+    private:
+        // the modelling data object
+        const graph_model_data DATA_;
         // mapping from fold id to index in samples
-        std::vector<int> fold_ids_;
+        const std::vector<int> FOLD_IDS_;
         // the cross validation folds
-        cv_set cvset_;
+        const cv_set CVSET_;
     };
 }
 

@@ -51,13 +51,22 @@ namespace netreg
         return R_NilValue;
     }
 
-    SEXP regularization_path(graph_penalized_linear_model_cv_data& data,
-                             const int niter,
-                             const double epsilon)
+    SEXP regularization_path(
+      const graph_model_cv_data& data,
+      double lambda, double psigx, double psigy,
+      bool do_lambda, bool do_psigx, do_psigy,
+      int niter, double thresh,
+      int optim_niter, double optim_epsilon)
     {
         BEGIN_RCPP
 
-        std::map<std::string, double> res = model_selection(data, niter, epsilon);
+        std::map<std::string, double> res = model_selection(
+          data,
+          lambda, psigx, psigy,
+          do_lambda, do_psigx, do_psigy,
+          niter, thresh, optim_niter, optim_epsilon
+        );
+
         return Rcpp::List::create(Rcpp::Named("parameters") = Rcpp::wrap(res),
                                   Rcpp::Named("folds") = data.fold_ids());
         END_RCPP

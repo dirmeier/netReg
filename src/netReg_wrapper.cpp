@@ -141,7 +141,8 @@ SEXP cv_edgenet_cpp(SEXP X,
       REAL(X), REAL(Y), REAL(GX), REAL(GY),
       INTEGER(Rf_getAttrib(X, R_DimSymbol)),
       INTEGER(Rf_getAttrib(Y, R_DimSymbol)),
-      f, Rcpp::as<int>(nfolds),
+      f,
+      Rcpp::as<int>(nfolds),
       Rcpp::as<int>(lenfs),
       INTEGER(foldids));
 

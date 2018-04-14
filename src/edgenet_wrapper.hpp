@@ -44,22 +44,35 @@ namespace netreg
      *  does not converge in time
      * @param thresh convergence threshold
      */
-    SEXP fit(graph_model_data& data,
-             double lambda, double psigx, double psigy,
-             int niter, double thresh);
+    SEXP fit(
+      graph_model_data& data,
+      double lambda, double psigx, double psigy,
+      int niter, double thresh);
 
     /**
      * Calulates the optimal set of shrinkage parameters of a
      * graph-regularized regression model.
      *
      * @param data an object that holds all required data for the model
-     * @param niter maximal number of iterations for BOBYQA
-     * @param epsilon threshold for convergence of BOBYQA
+     * @param lamdba penalization value for LASSO
+     * @param psigx weighting value of GX
+     * @param psigy weighting value of GY
+     * @param do_lambda do estimation of lambda
+     * @param do_psigx do estimation of psigx
+     * @param do_psigy do estimation of psigy
+     * @param niter max number of iterations if parameter estimation
+     *        does not converge in time
+     * @param thresh convergence threshold
+     * @param optim_niter maximla number of iterations of BOBYQA
+     * @param optim_epsilon threshold for convergence for BOBYQA
      *
      * @return returns the estimated parameters and foldids
      */
-    SEXP regularization_path(graph_model_cv_data& data,
-                             int niter,
-                             double epsilon);
+    SEXP regularization_path(
+      graph_model_cv_data& data,
+      double lambda, double psigx, double psigy,
+      bool do_lambda, bool do_psigx, do_psigy,
+      int niter, double thresh,
+      int optim_niter, double optim_epsilon);
 }
 #endif  // NETREG_EDGENET_HPP
