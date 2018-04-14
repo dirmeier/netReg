@@ -47,7 +47,7 @@ namespace netreg
 {
     class cv_set
     {
-       public:
+    public:
         /**
          * Creates a cross-validation set.
          *
@@ -56,9 +56,9 @@ namespace netreg
          */
         cv_set(const int n,
                const int n_folds,
-               arma::Mat<double> &X,
-               arma::Mat<double> &Y)
-            : N_FOLDS_(n_folds), N_(n), folds_(N_FOLDS_)
+               arma::Mat<double>& X,
+               arma::Mat<double>& Y)
+          : N_FOLDS_(n_folds), N_(n), folds_(N_FOLDS_)
         {
             init(X, Y);
         }
@@ -70,16 +70,16 @@ namespace netreg
          * @param foldids fold assignments for all samples
          */
         cv_set(const int n,
-               int *const foldids,
-               arma::Mat<double> &X,
-               arma::Mat<double> &Y)
-            : N_FOLDS_(n), N_(n)
+               int* const foldids,
+               arma::Mat<double>& X,
+               arma::Mat<double>& Y)
+          : N_FOLDS_(n), N_(n)
         {
             throw not_implemented_exception();
             //init(foldids, X, Y);
         }
 
-        std::vector<cv_fold> &folds()
+        std::vector<cv_fold>& folds()
         {
             return folds_;
         }
@@ -90,7 +90,7 @@ namespace netreg
          * @param i index of fold
          * @return a cv_fold object
          */
-        cv_fold &get_fold(const int i)
+        cv_fold& get_fold(const int i)
         {
             return folds_[i];
         }
@@ -115,13 +115,14 @@ namespace netreg
             return N_;
         }
 
-       private:
+    private:
         // init folds from scratch
-        void init(arma::Mat<double> &X, arma::Mat<double> &Y);
+        void init(arma::Mat<double>& X, arma::Mat<double>& Y);
+
         // init folds using predefined fold ids
-        void init(int *const foldids,
-                  arma::Mat<double> &X,
-                  arma::Mat<double> &Y);
+        void init(int* const foldids,
+                  arma::Mat<double>& X,
+                  arma::Mat<double>& Y);
 
         const int N_FOLDS_;           // the number of folds
         const int N_;                 // the sample size

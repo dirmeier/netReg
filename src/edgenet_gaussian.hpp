@@ -26,9 +26,8 @@
 #define NETREG_EDGENET_GAUSSIAN_HPP
 
 #include <vector>
-
-#include "graph_penalized_linear_model_data.hpp"
-#include "graph_penalized_linear_model_cv_data.hpp"
+#include "graph_model_data.hpp"
+#include "graph_model_cv_data.hpp"
 #include "cv_fold.hpp"
 #include "math_functions.hpp"
 #include "stat_functions.hpp"

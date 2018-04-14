@@ -78,15 +78,7 @@ SEXP edgenet_cpp(SEXP X,
       REAL(X), REAL(Y), REAL(GX), REAL(GY),
       INTEGER(Rf_getAttrib(X, R_DimSymbol)),
       INTEGER(Rf_getAttrib(Y, R_DimSymbol)),
-      Rcpp::as<double>(lambda),
-      Rcpp::as<double>(psigx),
-      Rcpp::as<double>(psigy),
-      Rcpp::as<bool>(do_psigx),
-      Rcpp::as<bool>(do_psigy),
-      Rcpp::as<int>(niter),
-      Rcpp::as<double>(thresh),
-      f
-    );
+      f);
 
     return fit(dat);
 
@@ -106,8 +98,12 @@ extern "C" {
  * @param Y a (n x q)-dimensional response matrix
  * @param GX a (p x p)-prior graph for XS
  * @param GY a (q x q)-prior graph for YS
+ * @param lambda regularization parameter for LASSO
  * @param psigx weighting value of GX
  * @param psigy weighting value of GY
+ * @param do_lambda do estimation of lambda
+ * @param do_psigx do estimation of psigx
+ * @param do_psigy do estimation of psigy
  * @param niter max number of iterations if parameter estimation
  *        does not converge in time
  * @param thresh convergence threshold
@@ -117,14 +113,18 @@ extern "C" {
  * @param lenfs length of the vector above
  * @param fs family of distribution the response
  * @param optim_niter maximla number of iterations of BOBYQA
- * @param epsilon threshold for convergence for BOBYQA
+ * @param optim_epsilon threshold for convergence for BOBYQA
  */
 SEXP cv_edgenet_cpp(SEXP X,
                     SEXP Y,
                     SEXP GX,
                     SEXP GY,
+                    SEXP lambda,
                     SEXP psigx,
                     SEXP psigy,
+                    SEXP do_lambda,
+                    SEXP do_psigx,
+                    SEXP do_psigy,
                     SEXP niter,
                     SEXP thresh,
                     SEXP nfolds,
@@ -132,29 +132,17 @@ SEXP cv_edgenet_cpp(SEXP X,
                     SEXP lenfs,
                     SEXP fs,
                     SEXP optim_niter,
-                    SEXP epsilon)
+                    SEXP optim_epsilon)
 {
     BEGIN_RCPP
 
     std::string f = Rcpp::as<std::string>(fs);
     cv_data data = netreg::data_factory::build_cv_data(
-      REAL(X),
-      REAL(Y),
-      REAL(GX),
-      REAL(GY),
+      REAL(X), REAL(Y), REAL(GX), REAL(GY),
       INTEGER(Rf_getAttrib(X, R_DimSymbol)),
       INTEGER(Rf_getAttrib(Y, R_DimSymbol)),
-      -1,
-      Rcpp::as<double>(psigx),
-      Rcpp::as<double>(psigy),
-      true, true, true,
-      Rcpp::as<int>(niter),
-      Rcpp::as<double>(thresh),
-      Rcpp::as<int>(nfolds),
-      Rcpp::as<int>(lenfs),
-      INTEGER(foldids),
-      f
-    );
+      f, Rcpp::as<int>(nfolds),
+      Rcpp::as<int>(lenfs), INTEGER(foldids));
 
     return regularization_path(
       data, Rcpp::as<int>(optim_niter), Rcpp::as<double>(epsilon));

@@ -40,12 +40,15 @@
 #' (\code{p} x \code{p}) where \code{p} is the number of covariables \code{X}
 #' @param G.Y  non-negativ affinity matrix for \code{n}, of dimensions
 #' (\code{q} x \code{q}) where \code{q} is the number of responses \code{Y}
-#' @param lambda  shrinkage parameter for LASSO.
-#' @param psigx  shrinkage parameter for graph-regularization of \code{G.X}
-#' @param psigy  shrinkage parameter for graph-regularization of \code{G.Y}
-#' @param thresh  threshold for coordinate descent
+#' @param lambda  \code{numerical} shrinkage parameter for LASSO.
+#' @param psigx  \code{numerical} shrinkage parameter for graph-regularization
+#'  of \code{G.X}
+#' @param psigy  \code{numerical} shrinkage parameter for graph-regularization
+#'  of \code{G.Y}
+#' @param thresh  \code{numerical} threshold for coordinate descent
 #' @param maxit  maximum number of iterations for coordinate descent
-#' @param family  family of response, e.g. gaussian
+#'  (\code{integer})
+#' @param family  family of response, e.g. \emph{gaussian}
 #'
 #' @return An object of class \code{edgenet}
 #' \item{coefficients }{ the estimated (\code{p} x \code{q})-dimensional
@@ -140,6 +143,7 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
         do.psigy <- FALSE
     }
     family <- match.arg(family)
+
     # estimate coefficients
     ret <- .edgenet(X=X, Y=Y,
                     G.X=G.X, G.Y=G.Y,

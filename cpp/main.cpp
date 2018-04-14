@@ -16,8 +16,8 @@
 
 #include "../src/stat_functions.hpp"
 #include "../src/family.hpp"
+#include "../src/graph_model_cv_data.hpp"
 #include "../src/edgenet_gaussian.hpp"
-#include "../src/graph_penalized_linear_model_cv_data.hpp"
 #include "../src/edgenet_gaussian_model_selection.hpp"
 
 static const char* netReg = "\nnetReg - a network-regularized generalized regression model";

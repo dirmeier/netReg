@@ -43,16 +43,32 @@
 #'  Providing a graph \code{G.Y} will optimize the regularization
 #'  parameter \code{psi.gy}. If this is not desired just set \code{G.Y} to
 #'  \code{NULL}.
-#' @param thresh  threshold for coordinate descent
+#' @param lambda  \code{numerical} shrinkage parameter for LASSO. Per default
+#' this parameter is
+#'  set to \code{NULL} which means that \code{lambda} is going to be estimated
+#'  using cross-validation. If any \code{numerical} value for \code{lambda}
+#'  is set, estimation of the optimal parameter will \emph{not} be conducted.
+#' @param psigx  \code{numerical} shrinkage parameter for graph-regularization
+#'  of \code{G.X}. Per default this parameter is
+#'  set to \code{NULL} which means that \code{psigx} is going to be estimated
+#'  in the cross-validation. If any \code{numerical} value for \code{psigx} is
+#'  set, estimation of the optimal parameter will \emph{not} be conducted.
+#' @param psigy  \code{numerical} shrinkage parameter for graph-regularization
+#'  of \code{G.Y}. Per default this parameter is
+#'  set to \code{NULL} which means that \code{psigy} is going to be estimated
+#'  in the cross-validation. If any \code{numerical} value for \code{psigy} is
+#'  set, estimation of the optimal parameter will \emph{not} be conducted.
+#' @param thresh  \code{numerical} threshold for coordinate descent
 #' @param maxit  maximum number of iterations for the coordinate descent
-#' @param family  family of response, e.g. gaussian
-#' @param optim.epsilon  the threshold criterion for the optimization to stop.
-#'   Usually 1e-3 is a good choice.
+#'  (\code{integer})
+#' @param family  family of response, e.g. \emph{gaussian}
+#' @param optim.epsilon  \code{numerical} threshold criterion for the
+#'  optimization to stop.  Usually 1e-3 is a good choice.
 #' @param optim.maxit  the maximum number of iterations for the optimization
-#'   (if choosen). Usually 1e4 is a good choice.
+#'   (\code{integer}). Usually 1e4 is a good choice.
 #' @param nfolds  the number of folds to be used - default is 10
 #'  (minimum 3, maximum \code{nrow(X)}).
-
+#'
 #' @return An object of class \code{cv.edgenet}
 #' \item{call }{ the call that produced the object}
 #' \item{lambda }{ the estimated (\code{p} x \code{q})-dimensional
@@ -95,6 +111,7 @@
 #' Y <- X%*%b + rnorm(100)
 #' cv.edge <- cv.edgenet(X=X, Y=Y, G.X=G.X, family="gaussian")
 cv.edgenet <- function(X, Y, G.X=NULL, G.Y=NULL,
+                       lambda=NULL, psigx=NULL, psigy=NULL,
                        thresh=1e-5, maxit=1e5,
                        family=c("gaussian"),
                        optim.epsilon=1e-3,
@@ -107,6 +124,7 @@ cv.edgenet <- function(X, Y, G.X=NULL, G.Y=NULL,
 #' @export
 #' @method cv.edgenet default
 cv.edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
+                               lambda=NULL, psigx=NULL, psigy=NULL,
                                thresh=1e-5, maxit=1e5,
                                family=c("gaussian"),
                                optim.epsilon=1e-3,
@@ -114,44 +132,51 @@ cv.edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
                                nfolds=10)
 {
     stopifnot(is.numeric(nfolds), nfolds > 0,
-                is.numeric(epsilon), is.numeric(approx.maxit),
-                is.numeric(maxit), is.numeric(thresh))
+              is.numeric(optim.epsilon), is.numeric(10),
+              is.numeric(maxit), is.numeric(thresh))
     check.matrices(X, Y)
     n <- dim(X)[1]
     p <- dim(X)[2]
     q <- dim(Y)[2]
-    psigx <- psigy <- -1
+
+    do.lambda <- do.psigx <- do.psigy <- TRUE
+    if (is.positive.numeric(lambda)) do.lambda <- FALSE
+    if (is.positive.numeric(psigx))  do.psigx  <- FALSE
+    if (is.positive.numeric(psigy))  do.psigy  <- FALSE
+
     if (is.null(G.X)) G.X <- matrix(0, 1, 1)
     if (is.null(G.Y)) G.Y <- matrix(0, 1, 1)
-    if (all(G.X == 0)) psigx <- 0
-    if (all(G.Y == 0)) psigy <- 0
+    if (all(G.X == 0)) {
+        psigx <- 0
+        do.psigx <- FALSE
+    }
+    if (all(G.Y == 0)) {
+        psigy <- 0
+        do.psigy <- FALSE
+    }
+
     check.graphs(X, Y, G.X, G.Y, psigx, psigy)
     check.dimensions(X, Y, n, p)
-    if (maxit < 0)
-    {
+    if (maxit < 0) {
         warning("maxit < 0, setting to 1e5!")
         maxit <- 1e5
     }
-    if (thresh < 0)
-    {
+    if (thresh < 0) {
         warning("thresh < 0, setting to 1e-5!")
         thresh <- 1e-5
     }
-    if (epsilon < 0)
-    {
+    if (optim.epsilon < 0) {
         warning("epsilon < 0; settint to 1e-3")
-        epsilon <- 1e-3
+        optim.epsilon <- 1e-3
     }
-    if (approx.maxit < 0)
-    {
+    if (optim.maxit < 0) {
         warning("approx.maxit < 0; settint to 1e4")
-        approx.maxit <- 1e4
+        optim.maxit <- 1e4
     }
-    # TODO; implement this
+
     foldid <- NULL
     # check if some parameters have values
-    if (!is.null(foldid) & is.numeric(foldid))
-    {
+    if (!is.null(foldid) & is.numeric(foldid)) {
         nfolds <- max(foldid)
         stopifnot(length(foldid) == n)
     }
@@ -160,32 +185,44 @@ cv.edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
         stop("Please provide either an integer vector or NULL for foldid")
     if (q == 1)     psigy  <- 0
     if (n < nfolds) nfolds <- n
+
+    # cast nulls to doubles to avoid errors
+    if (is.null(lambda)) lambda <- 0
+    if (is.null(psigx))  psigx <- 0
+    if (is.null(psigy))  psigy <- 0
+
     # set static to avoid memory overload
     if (n >= 1000 && p >= 500) nfolds <- 5
-    family                 <- match.arg(family)
+    family <- match.arg(family)
+
     # estimate shrinkage parameters
-    ret <- .cv.edgenet (X=X, Y=Y,
-                        G.X=G.X, G.Y=G.Y,
-                        psigx=psigx, psigy=psigy,
-                        thresh=thresh, maxit=maxit,
-                        family=family,
-                        nfolds=nfolds,
-                        foldid=foldid,
-                        approx.maxit=approx.maxit,
-                        epsilon=epsilon)
+    ret <- .cv.edgenet(
+        X=X, Y=Y, G.X=G.X, G.Y=G.Y,
+        lambda=lambda, psigx=psigx, psigy=psigy,
+        do.lambda=do.lambda, do.psigx=do.psigx, do.psigy=do.psigy,
+        family=family, thresh=thresh, maxit=maxit,
+        nfolds=nfolds, foldid=foldid,
+        optim.epsilon=optim.epsilon, optim.maxit=optim.maxit)
+
     ret$call   <- match.call()
     class(ret) <- c(class(ret), "cv.edgenet")
+
     ret
 }
 
 #' @noRd
 #' @import Rcpp
 .cv.edgenet <- function(X, Y, G.X, G.Y,
-                        psigx, psigy, thresh, maxit, family,
-                        nfolds, foldid, approx.maxit, epsilon)
+                        lambda, psigx, psigy,
+                        do.lambda, do.psigx, do.psigy,
+                        family ,thresh, maxit,
+                        nfolds, foldid, optim.maxit, optim.epsilon)
 {
-    cv <- .Call("cv_edgenet_cpp", X, Y, G.X, G.Y,
-                as.double(psigx),  as.double(psigy),
+    cv <- .Call("cv_edgenet_cpp",
+                X, Y, G.X, G.Y,
+                as.double(lambda), as.double(psigx),  as.double(psigy),
+                as.logical(do.lambda),
+                as.logical(do.psigx), as.logical(do.psigy),
                 as.integer(maxit), as.double(thresh),
                 as.integer(nfolds), as.integer(foldid),
                 as.integer(length(foldid)),

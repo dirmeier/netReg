@@ -24,7 +24,7 @@ namespace netreg
     public:
 
         /**
-         * Returns a graph_penalized_linear_model_data object
+         * Creates a graph_model_data object
          *
          * @param x the design matrix in column first order
          * @param y the response matrix in column first order
@@ -34,46 +34,30 @@ namespace netreg
          *  is the number of rows and the second index the number of columns
          * @param ydim the dimensionality of matrix y, where the first index
          *  is the number of rows and the second index the number of columns
-         * @param lambda regularization parameter for the LASSO.
-         *  Only considered if do_lambda is false.
-         * @param psigx regularization parameter for gx. Only considered if
-         *  do_psigx is false.
-         * @param psigy regularization parameter for gy. Only considered if
-         *  do_psigy is false.
-         * @param do_psigx if true uses regularization of GX and psigx. Otherwise no
-         *  regularization will be used.
-         * @param do_psigy if true uses regularization of GY and psigy. Otherwise no
-         *  regularization will be used.
-         * @param niter number of maximal iterations for coordinate descent
-         * @param thresh threshold for convergence of likelihood
          * @param family the family of the likelihood
          *
-         * @return returns a graph_penalized_linear_model_cv_data object
+         * @return returns a graph_model_data object
          */
-        static graph_penalized_linear_model_data build_data(
-          double* x, double* y,
-          double* gx, double* gy,
-          int* xdim, int* ydim,
-          double lambda, double psigx, double psigy,
-          bool do_psigx, bool do_psigy,
-          int niter, double thresh,
-          std::string& fam)
+        static graph_model_data build_data(
+          double* x, double* y, double* gx, double* gy,
+          int* xdim, int* ydim, std::string& fam)
         {
-            netreg::graph_penalized_linear_model_data data(
-              x, y,
-              gx, gy,
-              xdim[0], xdim[1], ydim[1],
-              lambda, psigx, psigy,
-              do_psigx, do_psigy,
-              niter, thresh,
-              family(fam)
-            );
+            const int n = xdim[0];
+            const int p = xdim[1];
+            const int q = ydim[1];
+
+            netreg::graph_model_data data(
+              arma::Mat<double>(x, n, p, false, true),
+              arma::Mat<double>(y, n, q, false, true),
+              arma::Mat<double>(gx, p, p, false, true),
+              arma::Mat<double>(gy, q, q, false, true),
+              family(fam));
 
             return data;
         }
 
         /**
-         * Returns a graph_penalized_linear_model_cv_data object
+         * Creats a graph_model_cv_data object
          *
          * @param x the design matrix in column first order
          * @param y the response matrix in column first order
@@ -83,46 +67,29 @@ namespace netreg
          *  is the number of rows and the second index the number of columns
          * @param ydim the dimensionality of matrix y, where the first index
          *  is the number of rows and the second index the number of columns
-         * @param lambda regularization parameter for the LASSO.
-         *  Only considered if do_lambda is false.
-         * @param psigx regularization parameter for gx. Only considered if
-         *  do_psigx is false.
-         * @param psigy regularization parameter for gy. Only considered if
-         *  do_psigy is false.
-         * @param do_lambda boolean if the optimal regularization parameter
-         *  for lambda should be estimated. If true disregards lambda and
-         *  instead estimated.
-         * @param do_psigx boolean if the optimal regularization parameter
-         *  psigx should be estimated. If true disregards psigx and
-         *  instead estimated.
-         * @param do_psigy boolean if the optimal regularization parameter
-         *  psigy should be estimated. If true disregards psigy and
-         *  instead estimated.
-         * @param niter number of maximal iterations for coordinate descent
-         * @param thresh threshold for convergence of likelihood
          * @param lenfoldid length of the ptr foldids
          * @param foldids indexes of cross-validation folds
          * @param family the family of the likelihood
          *
-         * @return returns a graph_penalized_linear_model_cv_data object
+         * @return returns a graph_model_cv_data object
          */
-        static graph_penalized_linear_model_cv_data build_cv_data(
-          double* x, double* y,
-          double* gx, double* gy,
-          int* xdim, int* ydim,
-          double lambda, double psigx, double psigy,
-          bool do_lambda, bool do_psigx, bool do_psigy,
-          int niter, double thresh,
-          int nfolds, int lenfoldid, int* foldids,
-          std::string& fam)
+        static graph_model_cv_data build_cv_data(
+          double* x, double* y, double* gx, double* gy,
+          int* xdim, int* ydim, std::string& fam,
+          int nfolds, int lenfoldid, int* foldids)
         {
+
+            const int n = xdim[0];
+            const int p = xdim[1];
+            const int q = ydim[1];
+
             if (lenfoldid == xdim[0])
             {
-                graph_penalized_linear_model_cv_data data(
-                  x, y, gx, gy,
-                  xdim[0], xdim[1], ydim[1],
-                  lambda, psigx, psigy,
-                  niter, thresh,
+                graph_model_cv_data data(
+                  arma::Mat<double>(x, n, p, false, true),
+                  arma::Mat<double>(y, n, q, false, true),
+                  arma::Mat<double>(gx, p, p, false, true),
+                  arma::Mat<double>(gy, q, q, false, true),
                   foldids,
                   family(fam));
 
@@ -130,11 +97,11 @@ namespace netreg
             }
             else
             {
-                graph_penalized_linear_model_cv_data data(
-                  x, y, gx, gy,
-                  xdim[0], xdim[1], ydim[1],
-                  lambda, psigx, psigy,
-                  niter, thresh,
+                graph_model_cv_data data(
+                  arma::Mat<double>(x, n, p, false, true),
+                  arma::Mat<double>(y, n, q, false, true),
+                  arma::Mat<double>(gx, p, p, false, true),
+                  arma::Mat<double>(gy, q, q, false, true),
                   nfolds,
                   family(fam));
 

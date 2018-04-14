@@ -73,3 +73,10 @@ check.dimensions <- function(X, Y, n, p)
     if (p < 2)
         stop("Pls use a X matrix with at least 2 covariables!")
 }
+
+
+#' @noRd
+is.positive.numeric <- function(d)
+{
+    is.numeric(d) && d > 0
+}
