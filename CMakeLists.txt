@@ -56,6 +56,7 @@ add_executable(
         src/math_functions.hpp
         src/not_implemented_exception.hpp
         src/optim.hpp
+        src/params.hpp
         src/stat_functions.cpp
         src/stat_functions.hpp
         src/vector_functions.cpp
