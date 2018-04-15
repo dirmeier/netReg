@@ -32,9 +32,10 @@ namespace netreg
 {
     void graph_model_cv_data::set_fold_ids()
     {
-        if (static_cast<int>(FOLD_IDS_.size()) != N)
+        if (static_cast<int>(FOLD_IDS_.size()) != DATA_.sample_count())
         {
-            FOLD_IDS_.resize(static_cast<std::vector<int>::size_type>(N));
+            FOLD_IDS_.resize(
+              static_cast<std::vector<int>::size_type>(DATA_.sample_count()));
         }
 
         #pragma omp parallel for

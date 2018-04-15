@@ -84,7 +84,8 @@ namespace netreg
      *
      * @return return the maximal element
      */
-    template<typename T> T max_element(T *const ptr, int len)
+    template<typename T>
+    T max_element(T* const ptr, int len)
     {
         T maximum = ptr[len - 1];
         for (unsigned int i = 0; i < len - 1; ++i)
@@ -98,14 +99,19 @@ namespace netreg
 
     /**
      * Calculates the sigmoid function.
-     *
-     * @param d some value
-     *
-     * @return returns the sigmoid function value
      */
     inline double sigmoid(double d)
     {
         return 1 / (1 + exp(d));
     }
+
+    /**
+    * Computes the L1 norm of two vectors
+    */
+    inline double l1(const arma::vec& v1, const arma::vec& v2)
+    {
+        return arma::accu(arma::abs(v1 - v2));
+    }
+
 }
 #endif  // NETREG_MATH_HPP

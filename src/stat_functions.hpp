@@ -67,5 +67,6 @@ namespace netreg
         return txy(pi, qi) + (txx_row(pi) * cfs(pi, qi)) -
           arma::accu(txx_row * cfs.col(qi));
     }
+
 }
 #endif  // NETREG_STAT_FUNCTIONS_HPP

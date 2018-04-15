@@ -26,8 +26,8 @@
 #define NETREG_EDGENET_GAUSSIAN_MODEL_SELECTION_HPP
 
 #include <map>
-
-#include "graph_penalized_linear_model_cv_data.hpp"
+#include "params.hpp"
+#include "graph_model_cv_data.hpp"
 
 namespace netreg
 {
@@ -37,24 +37,11 @@ namespace netreg
      * model. Set is calculated using cross-validation.
      *
      * @param data an object that holds all required data for the model
-     * @param lamdba penalization value for LASSO
-     * @param psigx weighting value of GX
-     * @param psigy weighting value of GY
-     * @param do_lambda do estimation of lambda
-     * @param do_psigx do estimation of psigx
-     * @param do_psigy do estimation of psigy
-     * @param niter max number of iterations if parameter estimation
-     *        does not converge in time
-     * @param thresh convergence threshold
-     * @param optim_niter maximla number of iterations of BOBYQA
-     * @param optim_epsilon threshold for convergence for BOBYQA
+     * @param pars a parameter object containing all relevant informations
      *
      * @returns returns a map of shrinkage parameters
      */
     std::map<std::string, double> model_selection(
-      const graph_model_cv_data& data,
-      double lambda, double psigx, double psigy,
-      bool do_lambda, bool do_psigx, do_psigy,
-      int niter, double thresh, int optim_niter, double optim_epsilon);
+      graph_model_cv_data& data, params& pars);
 }
 #endif  // NETREG_EDGENET_GAUSSIAN_MODEL_SELECTION_HPP

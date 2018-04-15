@@ -36,6 +36,7 @@ namespace netreg
           do_lambda_(false), do_psigx_(false), do_psigy_(false),
           thresh_(0.0001), niter_(1000),
           optim_niter_(1000), optim_epsilon_(0.001)
+        {}
 
         params& lambda(double lambda)
         {
@@ -43,9 +44,9 @@ namespace netreg
             return *this;
         }
 
-        const double lambda()
+        double lambda()
         {
-            return lambda;
+            return lambda_;
         }
 
         params& psigx(double psigx)
@@ -54,11 +55,10 @@ namespace netreg
             return *this;
         }
 
-        const double psigx()
+        double psigx()
         {
-            return psigx;
+            return psigx_;
         }
-
 
         params& psigy(double psigy)
         {
@@ -66,9 +66,9 @@ namespace netreg
             return *this;
         }
 
-        const double psigy()
+        double psigy()
         {
-            return psigy;
+            return psigy_;
         }
 
         params& do_lambda(bool do_lambda)
@@ -77,9 +77,9 @@ namespace netreg
             return *this;
         }
 
-        const bool do_lambda()
+        bool do_lambda()
         {
-            return do_lambda;
+            return do_lambda_;
         }
 
         params& do_psigx(bool do_psigx)
@@ -88,9 +88,9 @@ namespace netreg
             return *this;
         }
 
-        const bool do_psigx()
+        bool do_psigx()
         {
-            return do_psigx;
+            return do_psigx_;
         }
 
         params& do_psigy(bool do_psigy)
@@ -99,9 +99,9 @@ namespace netreg
             return *this;
         }
 
-        const bool do_psigy()
+        bool do_psigy()
         {
-            return do_psigx;
+            return do_psigx_;
         }
 
         params& thresh(double thresh)
@@ -110,11 +110,10 @@ namespace netreg
             return *this;
         }
 
-        const double thresh()
+        double thresh()
         {
-            return thresh;
+            return thresh_;
         }
-
 
         params& niter(int niter)
         {
@@ -122,11 +121,10 @@ namespace netreg
             return *this;
         }
 
-        const int niter()
+        int niter()
         {
-            return niter;
+            return niter_;
         }
-
 
         params& optim_niter(int optim_niter)
         {
@@ -134,9 +132,9 @@ namespace netreg
             return *this;
         }
 
-        const int optim_niter()
+        int optim_niter()
         {
-            return optim_niter;
+            return optim_niter_;
         }
 
         params& optim_epsilon(double optim_epsilon)
@@ -145,9 +143,9 @@ namespace netreg
             return *this;
         }
 
-        const double optim_epsilon()
+        double optim_epsilon()
         {
-            return optim_epsilon;
+            return optim_epsilon_;
         }
 
     private:

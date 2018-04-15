@@ -33,17 +33,16 @@
 #include "edgenet_gaussian_model_selection.hpp"
 #include "stat_functions.hpp"
 
-
 namespace netreg
 {
-    SEXP fit(const graph_model_data& data, params& pars)
+    SEXP fit(graph_model_data& data, params& pars)
     {
         BEGIN_RCPP
         edgenet_gaussian edge(data, params);
 
         arma::Mat<double> coef = edge.run();
-        arma::Col<double> intr =
-          intercept(data.design(), data.response(), coef);
+        arma::Col<double> intr = intercept(
+          data.design(), data.response(), coef);
 
         return Rcpp::List::create(Rcpp::Named("coefficients") = coef,
                                   Rcpp::Named("intercept") = intr);
@@ -54,12 +53,11 @@ namespace netreg
     }
 
     SEXP regularization_path(
-      const graph_model_cv_data& data, const params& pars)
+      graph_model_cv_data& data, params& pars)
     {
         BEGIN_RCPP
 
-        std::map<std::string, double> res = model_selection(
-          data, pars);
+        std::map<std::string, double> res = model_selection(data, pars);
 
         return Rcpp::List::create(Rcpp::Named("parameters") = Rcpp::wrap(res),
                                   Rcpp::Named("folds") = data.fold_ids());

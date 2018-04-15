@@ -79,9 +79,9 @@ namespace netreg
           arma::Mat<double>& x, arma::Mat<double>& y,
           arma::Mat<double>& gx, arma::Mat<double>& gy,
           const enum family fam):
-          linear_model_data(x, y fam),
-          GX(gx.memptr(), p, p, false, true),
-          GY(gy.memptr(), q, q, false, true),
+          model_data(x, y, fam),
+          GX(gx.memptr(), gx.n_rows, gx.n_cols, false, true),
+          GY(gy.memptr(), gy.n_rows, gy.n_cols, false, true),
           LX(laplacian(GX)),
           LY(laplacian(GY)),
           lx_rows_(LX.n_rows)

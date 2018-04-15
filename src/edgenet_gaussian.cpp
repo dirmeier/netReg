@@ -32,11 +32,11 @@
 
 namespace netreg
 {
-    arma::Mat<double> edgenet_gaussian::run() const
+    arma::Mat<double> edgenet_gaussian::run()
     {
         // load square matrices
-        std::vector<arma::rowvec>& txx_rows = data.txx_rows();
-        arma::Mat<double>& txy = data.txy();
+        std::vector<arma::rowvec>& txx_rows = DATA_.txx_rows();
+        arma::Mat<double>& txy = DATA_.txy();
 
         return mccd_(txx_rows, txy);
     }
@@ -52,9 +52,9 @@ namespace netreg
         arma::Mat<double>& train_txy = fold.train_txy();
 
         // set parameters we want to use for cross-validation
-        lambda(lambda);
-        psigx(psigx);
-        psigy(psigy);
+        set_lambda(lambda);
+        set_psigx(psigx);
+        set_psigy(psigy);
 
         return mccd_(train_txx_rows, train_txy);
     }
@@ -65,9 +65,9 @@ namespace netreg
     {
 
         // setup coefficient matrix
-        arma::Mat<double> B(P, Q, arma::fill::ones);
-        arma::Mat<double> B_old(P, Q);
-        std::vector<arma::rowvec> B_rows(static_cast<unsigned int>(P));
+        arma::Mat<double> B(P_, Q_, arma::fill::ones);
+        arma::Mat<double> B_old(P_, Q_);
+        std::vector<arma::rowvec> B_rows(static_cast<unsigned int>(P_));
 
         // safe an extra set of rowvectors so that access is faster
         for (std::vector<arma::Row<double>>::size_type i = 0;
@@ -77,7 +77,7 @@ namespace netreg
             B_rows[i] = B.row(i);
         }
 
-        for (int qi = 0; qi < Q; ++qi)
+        for (unsigned int qi = 0; qi < Q_; ++qi)
         {
             uccd_(qi, txx_rows, txy, B, B_old, B_rows);
 
@@ -89,7 +89,7 @@ namespace netreg
             #endif
         }
 
-        return coef;
+        return B;
     }
 
     void edgenet_gaussian::uccd_(const int qi,
@@ -109,14 +109,16 @@ namespace netreg
         {
             // fix bnew_i and calculate least-squares
             // coefficient on partial residual
-            for (int pi = 0; pi < P; ++pi)
+            for (unsigned int pi = 0; pi < P_; ++pi)
             {
                 // safe current estimate of coefficients
                 B_old(pi, qi) = B(pi, qi);
+
                 // TODO: no void stuff :(
                 set_params(s, norm, pi, qi, txx_rows[pi], txy, B, B_rows[pi]);
+
                 // soft-thresholded version of estimate
-                const double d = softnorm(s, lalph, enorm * norm);
+                const double d = softnorm(s, lambda_, norm);
 
                 // TODO: METHOD for this
                 B(pi, qi) = d;
@@ -130,8 +132,6 @@ namespace netreg
                 #endif
             }
         }
-            // TODO method for accumulation
-        while (arma::accu(arma::abs(B.col(qi) - B_old.col(qi))) >
-               thresh && iter++ < niter);
+        while (!converged_(B.col(qi), B_old.col(qi), iter++));
     }
 }

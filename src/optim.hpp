@@ -79,16 +79,14 @@ namespace netreg
          */
         template<typename loss_function>
         std::map<std::string, double> bobyqa(
-          graph_penalized_linear_model_cv_data& data,
-          double lambda, double psigx, double psigy,
-          bool do_lambda, bool do_psigx, do_psigy,
-          int niter, double thresh,
+          graph_model_cv_data& data,
+          params& pars,
           std::vector<double>& start,
           std::vector<double>& lower_bound,
           std::vector<double>& upper_bound,
-          const double radius_start,
-          const double radius_stop,
-          const int niter) const
+          double radius_start,
+          double radius_stop,
+          int optim_niter)
         {
             const auto sz = static_cast<int>(start.size());
 
@@ -107,14 +105,14 @@ namespace netreg
                 #ifdef USE_RCPPARMADILLO
                 GetRNGstate();
                 #endif
-                dlib::find_min_bobyqa(loss_function(data),
+                dlib::find_min_bobyqa(loss_function(data, pars),
                                       par,
                                       par.size() * 2 + 1,
                                       lb,
                                       ub,
                                       radius_start,
                                       radius_stop,
-                                      niter);
+                                      optim_niter);
                 #ifdef USE_RCPPARMADILLO
                 PutRNGstate();
                 #endif
@@ -129,9 +127,9 @@ namespace netreg
                 #endif
             }
 
-            return {{"lambda", par(0, 0)},
-                    {"psigx",  data.psigx() == -1 ? par(1, 0) : 0.0},
-                    {"psigy",  data.psigy() == -1 ? par(2, 0) : 0.0}};
+            return {{"lambda", pars.do_lambda() ? par(0, 0) : pars.lambda()},
+                    {"psigx",  pars.do_psigx() ? par(1, 0) : pars.psigx()},
+                    {"psigy",  pars.do_psigy() ? par(2, 0) : pars.psigy()}};
         }
     };
 }

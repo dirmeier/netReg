@@ -31,36 +31,30 @@
 namespace netreg
 {
     std::map<std::string, double> model_selection(
-      const graph_model_cv_data& data,
-      double lambda, double psigx, double psigy,
-      bool do_lambda, bool do_psigx, do_psigy,
-      int niter, double thresh,
-      int optim_niter, double optim_epsilon)
+       graph_model_cv_data& cv_data, params& pars)
     {
         optim opt;
 
         std::vector<double> start{0, 0, 0};
         std::vector<double> lower_bound{0.0, 0.0, 0.0};
         std::vector<double> upper_bound{100.0, 10000.0, 10000.0};
-        const double rad_start = 0.49, rad_end = optim_epsilon;
+        const double rad_start = 0.49, rad_end = pars.optim_epsilon();
 
         std::map<std::string, double> res;
-        switch (data.distribution_family())
+        switch (cv_data.data().distribution_family())
         {
             case family::GAUSSIAN:
             default:
             {
                 return opt.bobyqa<edgenet_gaussian_loss_function>(
-                  data,
-                  lambda, psigx, psigy,
-                  do_lambda, do_psigx, do_psigy,
-                  niter, thresh,
+                  cv_data,
+                  pars,
                   start,
                   lower_bound,
                   upper_bound,
                   rad_start,
                   rad_end,
-                  optim_niter);
+                  pars.optim_niter());
             }
         }
 

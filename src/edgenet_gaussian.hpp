@@ -50,24 +50,25 @@ namespace netreg
     {
     public:
 
-        edgenet_gaussian(const graph_model_data& data, const params& pars):
+        edgenet_gaussian(graph_model_data& data, params& pars):
           DATA_(data),
           LX_(data.lx_rows()),
           LY_(data.ly()),
-          P_(data.covariable_count()),
-          Q_(data.response_count()),
+          P_(static_cast<unsigned int>(data.covariable_count())),
+          Q_(static_cast<unsigned int>(data.response_count())),
           lambda_(pars.lambda()),
           psigx_(pars.psigx()),
           psigy_(pars.psigy()),
           NITER_(pars.niter()),
           THRESH_(pars.thresh())
+        {}
 
         /**
          * Calulates the coefficients of a graph-regularized regression model.
          *
          * @param data an object that holds all required data for the model
          */
-        arma::Mat<double> run() const;
+        arma::Mat<double> run();
 
         /**
          * Calculates the optimal set of shrinkage parameters of a
@@ -85,18 +86,17 @@ namespace netreg
                                  double psigy,
                                  cv_fold& fold) const;
 
-
-        void set_lambda(double lambda)
+        void set_lambda(double lambda) const
         {
             lambda_ = lambda;
         }
 
-        void set_psigx()
+        void set_psigx(double psigx) const
         {
             psigx_ = psigx;
         }
 
-        void set_psigy()
+        void set_psigy(double psigy) const
         {
             psigy = psigy;
         }
@@ -134,24 +134,11 @@ namespace netreg
                                    arma::rowvec& B_row) const
         {
             if (psigx_ > 0.001 && LX_.size() == P_)
-                lx_penalize(s, norm, pi, qi, psigx, B);
+                lx_penalize(s, norm, pi, qi, B);
             if (psigy_ > 0.001 && LY_.n_rows == Q_ && Q_ > 1)
-                ly_penalize(s, norm, pi, qi, psigy, B_row);
+                ly_penalize(s, norm, pi, qi, B_row);
         }
 
-        /**
-         * Adds the penalty from the Laplacian of X to the softthresholding
-         * parameter s and the normalization constant norm.
-         *
-         * @param s the softthresholding parameter to be set
-         * @param norm the normalization constant to be set
-         * @param cfs the current estimate of the coefficients
-         * @param LX the normalized laplacian of X
-         * @param P the number of covariables
-         * @param pi the current index of the column of X
-         * @param qi the current index of the column of Y
-         * @param psigx the penalty for the Laplacian of X
-         */
         inline void lx_penalize(double& s,
                                 double& norm,
                                 const int pi,
@@ -159,24 +146,11 @@ namespace netreg
                                 arma::Mat<double>& B) const
         {
             double xPenalty =
-              -LX_[pi](pi) * B(pi, qi) + arma::accu(LX_[pi] * cfs.col(qi));
+              -LX_[pi](pi) * B(pi, qi) + arma::accu(LX_[pi] * B.col(qi));
             s = s - 2 * psigx_ * xPenalty;
             norm += 2 * psigx_ * LX_[pi](pi);
         }
 
-        /**
-         * Adds the penalty from the Laplacian of X to the softthresholding
-         * parameter s and the normalization constant norm.
-         *
-         * @param s the softthresholding parameter to be set
-         * @param norm the normalization constant to be set
-         * @param psigy the penalty for the Laplacien of Y
-         * @param LY the normalized laplacian of Y
-         * @param B the current estimate of the coefficients
-         * @param Q the number of responses
-         * @param pi the current index of the column of X
-         * @param qi the current index of the column of Y
-         */
         inline void ly_penalize(double& s,
                                 double& norm,
                                 const int pi,
@@ -185,21 +159,28 @@ namespace netreg
         {
             double yPenalty = -B_row(qi) * LY_(qi, qi)
                               + arma::accu(B_row * LY_.col(qi));
-            s = s - 2 * psigy * yPenalty;
-            norm += 2 * psigy * LY_(qi, qi);
+            s = s - 2 * psigy_ * yPenalty;
+            norm += 2 * psigy_ * LY_(qi, qi);
         }
 
     private:
-        const graph_model_data& DATA_;
-        const std::vector<arma::Row<double>>& LX_;
-        const arma::Mat<double>& LY_;
-        const int P_;
-        const int Q_;
-        double lambda_;
-        double psigx_;
-        double psigy_;
-        const int NITER_;
-        const double THRESH_;
+        inline bool converged_(const arma::vec& v1,
+                               const arma::vec& v2,
+                               int iter) const
+        {
+            return l1(v1, v2) > THRESH_ && iter < NITER_;
+        }
+
+        graph_model_data& DATA_;
+        std::vector<arma::Row<double>>& LX_;
+        arma::Mat<double>& LY_;
+        unsigned int P_;
+        unsigned int Q_;
+        mutable double lambda_;
+        mutable double psigx_;
+        mutable double psigy_;
+        int NITER_;
+        double THRESH_;
 
     };
 }

@@ -1,3 +1,27 @@
+/**
+ * netReg: graph-regularized linear regression models.
+ * <p>
+ * Copyright (C) 2015 - 2016 Simon Dirmeier
+ * <p>
+ * This file is part of netReg.
+ * <p>
+ * netReg is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * netReg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with netReg. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @author: Simon Dirmeier
+ * @email: simon.dirmeier@gmx.de
+ */
+
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
@@ -14,13 +38,17 @@
 
 #include "armadillo"
 
-#include "../src/stat_functions.hpp"
 #include "../src/family.hpp"
+#include "../src/params.hpp"
+#include "../src/stat_functions.hpp"
 #include "../src/graph_model_cv_data.hpp"
 #include "../src/edgenet_gaussian.hpp"
 #include "../src/edgenet_gaussian_model_selection.hpp"
 
-static const char* netReg = "\nnetReg - a network-regularized generalized regression model";
+
+static const char* netReg =
+  "\nnetReg - a network-regularized generalized regression model";
+
 
 struct data_set
 {
@@ -29,7 +57,9 @@ struct data_set
     unsigned int ncol;
 };
 
+
 static data_set read_tsv(const std::string& file);
+
 
 static void fit(struct data_set& X,
                 struct data_set& Y,
@@ -42,6 +72,7 @@ static void fit(struct data_set& X,
                 double threshold,
                 uint32_t maxit,
                 uint32_t nfolds);
+
 
 static std::map<std::string, double> modelselection(
   struct data_set& X,
@@ -58,6 +89,7 @@ static std::map<std::string, double> modelselection(
   uint32_t bobit,
   double epsilon);
 
+
 static netreg::graph_penalized_linear_model_data get_fit_data(
   struct data_set& X,
   struct data_set& Y,
@@ -70,6 +102,7 @@ static netreg::graph_penalized_linear_model_data get_fit_data(
   uint32_t maxit,
   uint32_t nfolds);
 
+
 static netreg::graph_penalized_linear_model_cv_data get_ms_data(
   struct data_set& X,
   struct data_set& Y,
@@ -81,6 +114,7 @@ static netreg::graph_penalized_linear_model_cv_data get_ms_data(
   double threshold,
   uint32_t maxit,
   uint32_t nfolds);
+
 
 static void check_matrix(const data_set& aff,
                          const data_set& m,
@@ -96,6 +130,7 @@ static void check_params(double lambda,
                          double epsilon,
                          const struct data_set& X,
                          const struct data_set& Y);
+
 
 int main(int argc, char *argv[])
 {
@@ -226,36 +261,23 @@ int main(int argc, char *argv[])
             nfolds = 5;
 
         std::cout << "Doing model selection.\n";
-        std::map<std::string, double> opt = modelselection(X,
-                                                           Y,
-                                                           gx_filename,
-                                                           gy_filename,
-                                                           out_filename,
-                                                           lambda,
-                                                           psi,
-                                                           phi,
-                                                           threshold,
-                                                           maxit,
-                                                           nfolds,
-                                                           bobit,
-                                                           epsilon);
+        std::map<std::string, double> opt = modelselection(
+          X, Y, gx_filename, gy_filename,
+          out_filename,
+          lambda, psi, phi,
+          threshold, maxit, nfolds,
+          bobit, epsilon);
+
         lambda = opt["lambda"];
         psi = opt["psigx"];
         phi = opt["psigy"];
     }
 
     std::cout << "Fitting model" << std::endl;
-    fit(X,
-        Y,
-        gx_filename,
-        gy_filename,
+    fit(X, Y, gx_filename, gy_filename,
         out_filename,
-        lambda,
-        psi,
-        phi,
-        threshold,
-        maxit,
-        nfolds);
+        lambda, psi, phi,
+        threshold, maxit, nfolds);
 
     return EXIT_SUCCESS;
 }
@@ -325,6 +347,7 @@ void fit(struct data_set& X,
                           outfile.substr(outfile.find_last_of('.'));
     std::cout << "Writing coefficients to:" << coeffile << std::endl;
     std::cout << "Writing intercept to:" << intfile << std::endl;
+
     coef.save(coeffile, arma::csv_ascii);
     intr.save(intfile, arma::csv_ascii);
 }

@@ -65,8 +65,8 @@ namespace netreg
           arma::Mat<double>& gx, arma::Mat<double>& gy,
           int nfolds, const enum family fam):
             DATA_(x, y, gx, gy, fam),
-            FOLD_IDS_(N),
-            CVSET_(N, nfolds, X, Y)
+            FOLD_IDS_(DATA_.sample_count()),
+            CVSET_(DATA_.sample_count(), nfolds, DATA_.design(), DATA_.response())
         {
             set_fold_ids();
         }
@@ -86,10 +86,10 @@ namespace netreg
           arma::Mat<double>& x, arma::Mat<double>& y,
           arma::Mat<double>& gx, arma::Mat<double>& gy,
           int nfolds, int* const fold_ids,
-          const enum family fam):
+          enum family fam):
           DATA_(x, y, gx, gy, fam),
-          FOLD_IDS_(N),
-          CVSET_(N, fold_ids, X, Y)
+          FOLD_IDS_(DATA_.sample_count()),
+          CVSET_(DATA_.sample_count(), fold_ids, DATA_.design(), DATA_.response())
         {
             throw not_implemented_exception();
             set_fold_ids();
@@ -128,11 +128,11 @@ namespace netreg
 
     private:
         // the modelling data object
-        const graph_model_data DATA_;
+         graph_model_data DATA_;
         // mapping from fold id to index in samples
-        const std::vector<int> FOLD_IDS_;
+         std::vector<int> FOLD_IDS_;
         // the cross validation folds
-        const cv_set CVSET_;
+         cv_set CVSET_;
     };
 }
 

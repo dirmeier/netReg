@@ -37,7 +37,6 @@
 #endif
 #include "family.hpp"
 
-
 namespace netreg
 {
     /**
@@ -60,7 +59,8 @@ namespace netreg
           X(x.memptr(), N, P, false, true),
           Y(y.memptr(), N, Q, false, true),
           TXY(P, Q),
-          txx_rows_(P), family_(fam)
+          txx_rows_(P),
+          family_(fam)
         {
             arma::Mat<double> TX = X.t();
             arma::Mat<double> TXX = TX * X;
@@ -79,7 +79,7 @@ namespace netreg
          *
          * @return returns the family
          */
-        const family distribution_family()
+        family distribution_family()
         {
             return family_;
         }
@@ -89,7 +89,7 @@ namespace netreg
          *
          * @return returns the number of samples
          */
-        const int sample_count()
+        int sample_count()
         {
             return N;
         }
@@ -99,7 +99,7 @@ namespace netreg
          *
          * @return returns the number of responses
          */
-        const int response_count()
+        int response_count()
         {
             return Q;
         }
@@ -109,7 +109,7 @@ namespace netreg
          *
          * @return returns the number of covariables
          */
-        const int covariable_count()
+        int covariable_count()
         {
             return P;
         }
