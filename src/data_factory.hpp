@@ -13,8 +13,8 @@
 
 #include <string>
 #include <stdexcept>
-#include "graph_penalized_linear_model_data.hpp"
-#include "graph_penalized_linear_model_cv_data.hpp"
+#include "graph_model_data.hpp"
+#include "graph_model_cv_data.hpp"
 #include "family.hpp"
 
 namespace netreg
@@ -22,55 +22,22 @@ namespace netreg
     class data_factory
     {
     public:
-
-
-        /**
-         * Creates a graph_model_data object
-         *
-         * @param x the design matrix in column first order
-         * @param y the response matrix in column first order
-         * @param gx the adjacency matrix for variables of x
-         * @param gy the adjacency matrix for variables of y
-         * @param xdim the dimensionality of matrix x, where the first index
-         *  is the number of rows and the second index the number of columns
-         * @param ydim the dimensionality of matrix y, where the first index
-         *  is the number of rows and the second index the number of columns
-         * @param family the family of the likelihood
-         *
-         * @return returns a graph_model_data object
-         */
-        static params build_params(
-          double lambda, double psigx, double psigy, double)
+        static graph_model_data build_data(
+          double* x, double* y, double* gx, double* gy,
+          int n, int p, int q, std::string& fam)
         {
-            const int n = xdim[0];
-            const int p = xdim[1];
-            const int q = ydim[1];
+            arma::Mat<double> xm(x, n, p, false, true);
+            arma::Mat<double> ym(y, n, q, false, true);
+            arma::Mat<double> gxm(gx, p, p, false, true);
+            arma::Mat<double> gym(gy, q, q, false, true);
 
             netreg::graph_model_data data(
-              arma::Mat<double>(x, n, p, false, true),
-              arma::Mat<double>(y, n, q, false, true),
-              arma::Mat<double>(gx, p, p, false, true),
-              arma::Mat<double>(gy, q, q, false, true),
-              family(fam));
+              xm, ym, gxm, gym,
+              get_family(fam));
 
             return data;
         }
 
-        /**
-         * Creates a graph_model_data object
-         *
-         * @param x the design matrix in column first order
-         * @param y the response matrix in column first order
-         * @param gx the adjacency matrix for variables of x
-         * @param gy the adjacency matrix for variables of y
-         * @param xdim the dimensionality of matrix x, where the first index
-         *  is the number of rows and the second index the number of columns
-         * @param ydim the dimensionality of matrix y, where the first index
-         *  is the number of rows and the second index the number of columns
-         * @param family the family of the likelihood
-         *
-         * @return returns a graph_model_data object
-         */
         static graph_model_data build_data(
           double* x, double* y, double* gx, double* gy,
           int* xdim, int* ydim, std::string& fam)
@@ -79,64 +46,64 @@ namespace netreg
             const int p = xdim[1];
             const int q = ydim[1];
 
+            arma::Mat<double> xm(x, n, p, false, true);
+            arma::Mat<double> ym(y, n, q, false, true);
+            arma::Mat<double> gxm(gx, p, p, false, true);
+            arma::Mat<double> gym(gy, q, q, false, true);
+
             netreg::graph_model_data data(
-              arma::Mat<double>(x, n, p, false, true),
-              arma::Mat<double>(y, n, q, false, true),
-              arma::Mat<double>(gx, p, p, false, true),
-              arma::Mat<double>(gy, q, q, false, true),
-              family(fam));
+              xm, ym, gxm, gym,
+              get_family(fam));
 
             return data;
         }
 
-        /**
-         * Creats a graph_model_cv_data object
-         *
-         * @param x the design matrix in column first order
-         * @param y the response matrix in column first order
-         * @param gx the adjacency matrix for variables of x
-         * @param gy the adjacency matrix for variables of y
-         * @param xdim the dimensionality of matrix x, where the first index
-         *  is the number of rows and the second index the number of columns
-         * @param ydim the dimensionality of matrix y, where the first index
-         *  is the number of rows and the second index the number of columns
-         * @param lenfoldid length of the ptr foldids
-         * @param foldids indexes of cross-validation folds
-         * @param family the family of the likelihood
-         *
-         * @return returns a graph_model_cv_data object
-         */
         static graph_model_cv_data build_cv_data(
           double* x, double* y, double* gx, double* gy,
-          int* xdim, int* ydim, std::string& fam,
-          int nfolds, int lenfoldid, int* foldids)
+          int n, int p, int q, std::string& fam, int nfolds)
         {
 
             const int n = xdim[0];
             const int p = xdim[1];
             const int q = ydim[1];
 
+            arma::Mat<double> xm(x, n, p, false, true);
+            arma::Mat<double> ym(y, n, q, false, true);
+            arma::Mat<double> gxm(gx, p, p, false, true);
+            arma::Mat<double> gym(gy, q, q, false, true);
+
+            graph_model_cv_data data(
+              xm, ym, gxm, gym, nfolds,
+              get_family(fam));
+
+            return data;
+        }
+
+        static graph_model_cv_data build_cv_data(
+          double* x, double* y, double* gx, double* gy,
+          int* xdim, int* ydim, std::string& fam,
+          int nfolds, int lenfoldid, int* foldids)
+        {
+            const int n = xdim[0];
+            const int p = xdim[1];
+            const int q = ydim[1];
+
+            arma::Mat<double> xm(x, n, p, false, true);
+            arma::Mat<double> ym(y, n, q, false, true);
+            arma::Mat<double> gxm(gx, p, p, false, true);
+            arma::Mat<double> gym(gy, q, q, false, true);
+
             if (lenfoldid == xdim[0])
             {
                 graph_model_cv_data data(
-                  arma::Mat<double>(x, n, p, false, true),
-                  arma::Mat<double>(y, n, q, false, true),
-                  arma::Mat<double>(gx, p, p, false, true),
-                  arma::Mat<double>(gy, q, q, false, true),
-                  foldids,
-                  family(fam));
+                  xm, ym, gxm, gym, foldids, get_family(fam));
 
                 return data;
             }
             else
             {
                 graph_model_cv_data data(
-                  arma::Mat<double>(x, n, p, false, true),
-                  arma::Mat<double>(y, n, q, false, true),
-                  arma::Mat<double>(gx, p, p, false, true),
-                  arma::Mat<double>(gy, q, q, false, true),
-                  nfolds,
-                  family(fam));
+                  xm, ym, gxm, gym, nfolds, get_family(fam));
 
                 return data;
             }
@@ -147,7 +114,7 @@ namespace netreg
         static const std::string BINOMIAL;
         static const std::string FAMILY_ERROR;
 
-        static family family(std::string& fam)
+        static enum family get_family(std::string& fam)
         {
             enum family f =
               fam == GAUSSIAN ? family::GAUSSIAN :
@@ -161,7 +128,6 @@ namespace netreg
                 #else
                 throw std::invalid_argument(FAMILY_ERROR + "\n");
                 #endif
-
             }
 
             return f;

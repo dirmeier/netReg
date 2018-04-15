@@ -38,6 +38,7 @@
 
 #include "armadillo"
 
+#include "../src/data_factory.hpp"
 #include "../src/family.hpp"
 #include "../src/params.hpp"
 #include "../src/stat_functions.hpp"
@@ -45,10 +46,8 @@
 #include "../src/edgenet_gaussian.hpp"
 #include "../src/edgenet_gaussian_model_selection.hpp"
 
-
 static const char* netReg =
   "\nnetReg - a network-regularized generalized regression model";
-
 
 struct data_set
 {
@@ -57,9 +56,7 @@ struct data_set
     unsigned int ncol;
 };
 
-
 static data_set read_tsv(const std::string& file);
-
 
 static void fit(struct data_set& X,
                 struct data_set& Y,
@@ -72,7 +69,6 @@ static void fit(struct data_set& X,
                 double threshold,
                 uint32_t maxit,
                 uint32_t nfolds);
-
 
 static std::map<std::string, double> modelselection(
   struct data_set& X,
@@ -89,32 +85,18 @@ static std::map<std::string, double> modelselection(
   uint32_t bobit,
   double epsilon);
 
+static netreg::graph_model_data get_fit_data(
+  struct data_set& X,
+  struct data_set& Y,
+  const std::string& gx_filename,
+  const std::string& gy_filename);
 
-static netreg::graph_penalized_linear_model_data get_fit_data(
+static netreg::graph_model_cv_data get_ms_data(
   struct data_set& X,
   struct data_set& Y,
   const std::string& gx_filename,
   const std::string& gy_filename,
-  double lambda,
-  double psi,
-  double phi,
-  double threshold,
-  uint32_t maxit,
   uint32_t nfolds);
-
-
-static netreg::graph_penalized_linear_model_cv_data get_ms_data(
-  struct data_set& X,
-  struct data_set& Y,
-  const std::string& gx_filename,
-  const std::string& gy_filename,
-  double lambda,
-  double psi,
-  double phi,
-  double threshold,
-  uint32_t maxit,
-  uint32_t nfolds);
-
 
 static void check_matrix(const data_set& aff,
                          const data_set& m,
@@ -131,8 +113,7 @@ static void check_params(double lambda,
                          const struct data_set& X,
                          const struct data_set& Y);
 
-
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     std::string design_filename = "";
     std::string response_filename = "";
@@ -297,7 +278,7 @@ data_set read_tsv(const std::string& file)
     std::vector<std::string> strs;
     while (getline(in, line))
     {
-        if(boost::starts_with(line, "#")) continue;
+        if (boost::starts_with(line, "#")) continue;
         boost::split(strs, line, boost::is_any_of("\t"));
         data.ncol = strs.size();
         for (std::vector<std::string>::size_type i = 0; i < strs.size(); ++i)
@@ -323,19 +304,19 @@ void fit(struct data_set& X,
          uint32_t maxit,
          uint32_t nfolds)
 {
-    netreg::graph_penalized_linear_model_data dat = get_fit_data(X,
-                                                                 Y,
-                                                                 gx_filename,
-                                                                 gy_filename,
-                                                                 lambda,
-                                                                 psi,
-                                                                 phi,
-                                                                 threshold,
-                                                                 maxit,
-                                                                 nfolds);
+    netreg::graph_model_data dat = get_fit_data(
+      X, Y, gx_filename, gy_filename);
 
-    netreg::edgenet_gaussian edge;
-    arma::Mat<double> coef = edge.run(dat);
+    netreg::params pars = netreg::params()
+      .lambda(lambda)
+      .psigx(psi)
+      .psigy(phi)
+      .thresh(threshold)
+      .niter(maxit);
+
+    netreg::edgenet_gaussian edge(dat, pars);
+
+    arma::Mat<double> coef = edge.run();
     arma::Col<double> intr =
       netreg::intercept(dat.design(), dat.response(), coef);
 
@@ -366,18 +347,22 @@ std::map<std::string, double> modelselection(struct data_set& X,
                                              uint32_t bobit,
                                              double epsilon)
 {
-    netreg::graph_penalized_linear_model_cv_data dat = get_ms_data(X,
-                                                                   Y,
-                                                                   gx_filename,
-                                                                   gy_filename,
-                                                                   lambda,
-                                                                   psi,
-                                                                   phi,
-                                                                   threshold,
-                                                                   maxit,
-                                                                   nfolds);
+    netreg::graph_model_cv_data dat = get_ms_data(
+      X, Y, gx_filename, gy_filename, nfolds);
 
-    std::map<std::string, double> m = model_selection(dat, bobit, epsilon);
+    netreg::params pars = netreg::params()
+      .lambda(lambda)
+      .psigx(psi)
+      .psigy(phi)
+      .do_lambda(true)
+      .do_psigx(true)
+      .do_psigy(true)
+      .thresh(threshold)
+      .niter(maxit)
+      .optim_niter(bobit)
+      .optim_epsilon(epsilon);
+
+    std::map<std::string, double> m = model_selection(dat, pars);
 
     std::string paramfile = outfile.substr(0, outfile.find_last_of('.')) +
                             "_optimal_shrinkage_params" +
@@ -393,195 +378,112 @@ std::map<std::string, double> modelselection(struct data_set& X,
     return m;
 }
 
-netreg::graph_penalized_linear_model_data get_fit_data(
+netreg::graph_model_data get_fit_data(
   struct data_set& X,
   struct data_set& Y,
   const std::string& gx_filename,
-  const std::string& gy_filename,
-  double lambda,
-  double psi,
-  double phi,
-  double threshold,
-  uint32_t maxit,
-  uint32_t nfolds)
+  const std::string& gy_filename)
 {
+    std::string G = "gaussian";
+
     if (gx_filename != "" && gy_filename != "")
     {
         struct data_set GX = read_tsv(gx_filename);
         struct data_set GY = read_tsv(gy_filename);
         check_matrix(GX, X, "GX", X.ncol);
         check_matrix(GY, Y, "GY", Y.ncol);
-        return netreg::graph_penalized_linear_model_data(
-          X.data.data(),
-          Y.data.data(),
-          GX.data.data(),
-          GY.data.data(),
-          X.nrow,
-          X.ncol,
-          Y.ncol,
-          lambda,
-          1.0,
-          psi,
-          phi,
-          maxit,
-          threshold,
-          netreg::family::GAUSSIAN);
+
+        return netreg::data_factory::build_data(
+          X.data.data(), Y.data.data(),
+          GX.data.data(), GY.data.data(),
+          X.nrow, X.ncol, Y.ncol,
+          G);
     }
     else if (gx_filename != "")
     {
         struct data_set GX = read_tsv(gx_filename);
         check_matrix(GX, X, "GX", X.ncol);
-        return netreg::graph_penalized_linear_model_data(
-          X.data.data(),
-          Y.data.data(),
-          GX.data.data(),
-          std::vector<double>(1).data(),
-          X.nrow,
-          X.ncol,
-          Y.ncol,
-          lambda,
-          1.0,
-          psi,
-          0,
-          maxit,
-          threshold,
-          netreg::family::GAUSSIAN);
+
+        return netreg::data_factory::build_data(
+          X.data.data(), Y.data.data(),
+          GX.data.data(), std::vector<double>(1).data(),
+          X.nrow, X.ncol, Y.ncol,
+          G);
     }
     else if (gy_filename != "")
     {
         struct data_set GY = read_tsv(gy_filename);
         check_matrix(GY, Y, "GY", Y.ncol);
-        return netreg::graph_penalized_linear_model_data(
-          X.data.data(),
-          Y.data.data(),
-          std::vector<double>(1).data(),
-          GY.data.data(),
-          X.nrow,
-          X.ncol,
-          Y.ncol,
-          lambda,
-          1.0,
-          0,
-          phi,
-          maxit,
-          threshold,
-          netreg::family::GAUSSIAN);
+
+        return netreg::data_factory::build_data(
+          X.data.data(), Y.data.data(),
+          std::vector<double>(1).data(), GY.data.data(),
+          X.nrow, X.ncol, Y.ncol,
+          G);
     }
     else
     {
-        return netreg::graph_penalized_linear_model_data(
-          X.data.data(),
-          Y.data.data(),
-          std::vector<double>(1).data(),
-          std::vector<double>(1).data(),
-          X.nrow,
-          X.ncol,
-          Y.ncol,
-          lambda,
-          1.0,
-          0,
-          0,
-          maxit,
-          threshold,
-          netreg::family::GAUSSIAN);
+        return netreg::data_factory::build_data(
+          X.data.data(), Y.data.data(),
+          std::vector<double>(1).data(), std::vector<double>(1).data(),
+          X.nrow, X.ncol, Y.ncol,
+          G);
     }
 }
 
-netreg::graph_penalized_linear_model_cv_data get_ms_data(
+netreg::graph_model_cv_data get_ms_data(
   struct data_set& X,
   struct data_set& Y,
   const std::string& gx_filename,
   const std::string& gy_filename,
-  double lambda,
-  double psi,
-  double phi,
-  double threshold,
-  uint32_t maxit,
   uint32_t nfolds)
 {
+    int nf = static_cast<int>(nfolds);
+    std::string G = "gaussian";
+
     if (gx_filename != "" && gy_filename != "")
     {
         struct data_set GX = read_tsv(gx_filename);
         struct data_set GY = read_tsv(gy_filename);
         check_matrix(GX, X, "GX", X.ncol);
         check_matrix(GY, Y, "GY", Y.ncol);
-        return netreg::graph_penalized_linear_model_cv_data(
-          X.data.data(),
-          Y.data.data(),
-          GX.data.data(),
-          GY.data.data(),
-          X.nrow,
-          X.ncol,
-          Y.ncol,
-          -1,
-          1.0,
-          -1,
-          -1,
-          maxit,
-          threshold,
-          nfolds,
-          netreg::family::GAUSSIAN);
+
+        return netreg::data_factory::build_cv_data(
+          X.data.data(), Y.data.data(),
+          GX.data.data(), GY.data.data(),
+          X.nrow, X.ncol, Y.ncol,
+          G, nf);
     }
     else if (gx_filename != "")
     {
         struct data_set GX = read_tsv(gx_filename);
         check_matrix(GX, X, "GX", X.ncol);
-        return netreg::graph_penalized_linear_model_cv_data(
-          X.data.data(),
-          Y.data.data(),
-          GX.data.data(),
-          std::vector<double>(1).data(),
-          X.nrow,
-          X.ncol,
-          Y.ncol,
-          -1,
-          1.0,
-          -1,
-          0,
-          maxit,
-          threshold,
-          nfolds,
-          netreg::family::GAUSSIAN);
+
+        return netreg::data_factory::build_cv_data(
+          X.data.data(), Y.data.data(),
+          GX.data.data(), std::vector<double>(1).data(),
+          X.nrow, X.ncol, Y.ncol,
+          G, nf);
     }
     else if (gy_filename != "")
     {
         struct data_set GY = read_tsv(gy_filename);
         check_matrix(GY, Y, "GY", Y.ncol);
-        return netreg::graph_penalized_linear_model_cv_data(
-          X.data.data(),
-          Y.data.data(),
-          std::vector<double>(1).data(),
-          GY.data.data(),
-          X.nrow,
-          X.ncol,
-          Y.ncol,
-          -1,
-          1.0,
-          0,
-          -1,
-          maxit,
-          threshold,
-          nfolds,
-          netreg::family::GAUSSIAN);
+
+        return netreg::data_factory::build_cv_data(
+          X.data.data(), Y.data.data(),
+          std::vector<double>(1).data(), GY.data.data(),
+          X.nrow, X.ncol, Y.ncol,
+          G, nf);
     }
     else
     {
-        return netreg::graph_penalized_linear_model_cv_data(
-          X.data.data(),
-          Y.data.data(),
+        return netreg::data_factory::build_cv_data(
+          X.data.data(), Y.data.data(),
           std::vector<double>(1).data(),
           std::vector<double>(1).data(),
-          X.nrow,
-          X.ncol,
-          Y.ncol,
-          -1,
-          1.0,
-          0,
-          0,
-          maxit,
-          threshold,
-          nfolds,
-          netreg::family::GAUSSIAN);
+          X.nrow, X.ncol, Y.ncol,
+          G, nf);
     }
 }
 
