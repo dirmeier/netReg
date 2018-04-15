@@ -26,6 +26,7 @@
 #define NETREG_EDGENET_GAUSSIAN_HPP
 
 #include <vector>
+#include "params.hpp"
 #include "graph_model_data.hpp"
 #include "graph_model_cv_data.hpp"
 #include "cv_fold.hpp"
@@ -49,144 +50,93 @@ namespace netreg
     {
     public:
 
-        edgenet_gaussian(
-          const graph_model_data& data,
-          double lambda, double psigx, double psigy,
-          int niter, double thresh):
-          DATA_(data), lambda_(lambda), psigx_(psigx), psigy_(psigy),
-          NITER_(niter), THRESH_(thresh)
+        edgenet_gaussian(const graph_model_data& data, const params& pars):
+          DATA_(data),
+          LX_(data.lx_rows()),
+          LY_(data.ly()),
+          P_(data.covariable_count()),
+          Q_(data.response_count()),
+          lambda_(pars.lambda()),
+          psigx_(pars.psigx()),
+          psigy_(pars.psigy()),
+          NITER_(pars.niter()),
+          THRESH_(pars.thresh())
 
         /**
          * Calulates the coefficients of a graph-regularized regression model.
          *
          * @param data an object that holds all required data for the model
          */
-        arma::Mat<double> run(graph_model_data& data) const;
+        arma::Mat<double> run() const;
 
         /**
          * Calculates the optimal set of shrinkage parameters of a
          * graph-regularized regression model.
          *
-         * @param data an object that holds all required data for the model
          * @param lambda the shrinkage parameter you want to use for the LASSO
          * @param psigx penalization of laplacian for X
          * @param psigy penalization of laplacian for Y
+         * @param fold the fold you want to use of the data
          *
          * @return returns the estimated coefficients
          */
-        arma::Mat<double> run_cv(graph_model_cv_data& data,
-                                 double lambda,
+        arma::Mat<double> run_cv(double lambda,
                                  double psigx,
                                  double psigy,
                                  cv_fold& fold) const;
 
-    protected:
-        arma::Mat<double> mccd_(graph_model_data& data,
-                                double lambda,
-                                double psigx,
-                                double psigy,
-                                std::vector<arma::rowvec>& txx_rows,
-                                arma::Mat<double>& txy) const;
 
-        /**
-         * Calculate an univariate cyclic coordinate descent on the index of
-         * a column of a multivariate response matrix.
-         *
-         * @param data an object containing all relevant data
-         * @param B the current coefficient matrix
-         * @param B_old the old coefficient matrix
-         * @param qi the index of a column of the multivariate response matrix
-         */
-        void uccd_(int P,
-                   int Q,
-                   int qi,
-                   double thresh,
-                   int niter,
-                   double lalph,
-                   double enorm,
-                   double psigx,
-                   double psigy,
-                   std::vector<arma::rowvec>& txx_rows,
-                   arma::Mat<double>& txy,
-                   std::vector<arma::rowvec>& lx_rows,
-                   arma::Mat<double>& ly,
-                   arma::Mat<double>& coef,
-                   arma::Mat<double>& old_coef,
-                   std::vector<arma::rowvec>& coef_rows) const;
-
-        /**
-         * Calculates the softhresholding parameter as well as the
-         * normalisation constant.
-         *
-         * @param s the softthresholding parameter to be set
-         * @param norm the normalization constant to be set
-         * @param TXX the square of the design matrix
-         * @param TXY the design times the response matrix
-         * @param B the current estimate of the coefficients
-         * @param LX the normalized laplacian of X
-         * @param LY the normalized laplacian of Y
-         * @param P the number of covariables
-         * @param Q the number of responses
-         * @param pi the current index of the column of X
-         * @param qi the current index of the column of Y
-         * @param psigx the penalty for the Laplacian of X
-         * @param psigy the penalty for the Laplacien of Y
-         * @param lower boolean flag whether only the lower triangular
-         *  matrix of TXX is initialized
-         */
-        inline void set_params(double& s,
-                               double& norm,
-                               const int P,
-                               const int Q,
-                               const int pi,
-                               const int qi,
-                               const double psigx,
-                               const double psigy,
-                               arma::rowvec& txx_row,
-                               arma::Mat<double>& txy,
-                               arma::rowvec& lx_row,
-                               arma::Mat<double>& ly,
-                               arma::Mat<double>& coef,
-                               arma::rowvec& coef_row) const
+        void set_lambda(double lambda)
         {
-            s = partial_least_squares(txx_row, txy, coef, pi, qi);
-            norm = txx_row(pi);
-            graph_penalize(
-              s, norm, pi, qi, psigx, psigy, Q, lx_row, ly, coef, coef_row);
+            lambda_ = lambda;
         }
 
-        /**
-         * Updates the softthresholding parameter and the normalization
-         * constant using the graph Laplacians.
-         *
-         * @param s the softthresholding parameter to be set
-         * @param norm the normalization constant to be set
-         * @param cfs the current estimate of the coefficients
-         * @param LX the normalized laplacian of X
-         * @param LY the normalized laplacian of Y
-         * @param P the number of covariables
-         * @param Q the number of responses
-         * @param pi the current index of the column of X
-         * @param qi the current index of the column of Y
-         * @param psigx the penalty for the Laplacian of X
-         * @param psigy the penalty for the Laplacian of Y
-         */
+        void set_psigx()
+        {
+            psigx_ = psigx;
+        }
+
+        void set_psigy()
+        {
+            psigy = psigy;
+        }
+
+    protected:
+        arma::Mat<double> mccd_(std::vector<arma::rowvec>& txx_rows,
+                                arma::Mat<double>& txy) const;
+
+        void uccd_(int qi,
+                   std::vector<arma::rowvec>& txx_rows,
+                   arma::Mat<double>& txy,
+                   arma::Mat<double>& B,
+                   arma::Mat<double>& B_old,
+                   std::vector<arma::rowvec>& B_rows) const;
+
+        inline void set_params(double& s,
+                               double& norm,
+                               const int pi,
+                               const int qi,
+                               arma::rowvec& txx_row,
+                               arma::Mat<double>& txy,
+                               arma::Mat<double>& B,
+                               arma::rowvec& B_row) const
+        {
+            s = partial_least_squares(txx_row, txy, B, pi, qi);
+            norm = txx_row(pi);
+            graph_penalize(s, norm, pi, qi, B, B_row);
+        }
+
         inline void graph_penalize(double& s,
                                    double& norm,
                                    const int pi,
                                    const int qi,
-                                   const double psigx,
-                                   const double psigy,
-                                   const int Q,
-                                   arma::rowvec& lx_row,
-                                   arma::Mat<double>& ly,
-                                   arma::Mat<double>& cfs,
-                                   arma::rowvec& cfs_row) const
+                                   arma::Mat<double>& B,
+                                   arma::rowvec& B_row) const
         {
-            if (psigx > 0.001)
-                lx_penalize(s, norm, pi, qi, psigx, cfs, lx_row);
-            if (psigy > 0.001 && Q > 1)
-                ly_penalize(s, norm, pi, qi, psigy, ly, cfs_row);
+            if (psigx_ > 0.001 && LX_.size() == P_)
+                lx_penalize(s, norm, pi, qi, psigx, B);
+            if (psigy_ > 0.001 && LY_.n_rows == Q_ && Q_ > 1)
+                ly_penalize(s, norm, pi, qi, psigy, B_row);
         }
 
         /**
@@ -206,14 +156,12 @@ namespace netreg
                                 double& norm,
                                 const int pi,
                                 const int qi,
-                                const double psigx,
-                                arma::Mat<double>& cfs,
-                                arma::rowvec& lx_row) const
+                                arma::Mat<double>& B) const
         {
             double xPenalty =
-              -lx_row(pi) * cfs(pi, qi) + arma::accu(lx_row * cfs.col(qi));
-            s = s - 2 * psigx * xPenalty;
-            norm += 2 * psigx * lx_row(pi);
+              -LX_[pi](pi) * B(pi, qi) + arma::accu(LX_[pi] * cfs.col(qi));
+            s = s - 2 * psigx_ * xPenalty;
+            norm += 2 * psigx_ * LX_[pi](pi);
         }
 
         /**
@@ -233,24 +181,25 @@ namespace netreg
                                 double& norm,
                                 const int pi,
                                 const int qi,
-                                const double psigy,
-                                arma::Mat<double>& ly,
-                                arma::rowvec& cfs_row) const
+                                arma::rowvec& B_row) const
         {
-            double yPenalty =
-              -cfs_row(qi) * ly(qi, qi) + arma::accu(cfs_row * ly.col(qi));
+            double yPenalty = -B_row(qi) * LY_(qi, qi)
+                              + arma::accu(B_row * LY_.col(qi));
             s = s - 2 * psigy * yPenalty;
-            norm += 2 * psigy * ly(qi, qi);
+            norm += 2 * psigy * LY_(qi, qi);
         }
 
     private:
         const graph_model_data& DATA_;
+        const std::vector<arma::Row<double>>& LX_;
+        const arma::Mat<double>& LY_;
+        const int P_;
+        const int Q_;
         double lambda_;
         double psigx_;
         double psigy_;
         const int NITER_;
         const double THRESH_;
-
 
     };
 }

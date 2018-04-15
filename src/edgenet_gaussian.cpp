@@ -32,81 +32,55 @@
 
 namespace netreg
 {
-    arma::Mat<double> edgenet_gaussian::run(
-      graph_model_data& data) const
+    arma::Mat<double> edgenet_gaussian::run() const
     {
-        // load shrinkage coefficients
-        const double lambda = data.lambda();
-        const double psigx  = data.psigx();
-        const double psigy  = data.psigy();
-
         // load square matrices
         std::vector<arma::rowvec>& txx_rows = data.txx_rows();
-        arma::Mat<double>& txy              = data.txy();
+        arma::Mat<double>& txy = data.txy();
 
-        return mccd_(data, lambda, psigx, psigy, txx_rows, txy);
+        return mccd_(txx_rows, txy);
     }
 
     arma::Mat<double> edgenet_gaussian::run_cv(
-      graph_model_cv_data& data,
       const double lambda,
       const double psigx,
       const double psigy,
       cv_fold& fold) const
     {
-        // load square matrices
-        // but load the TRAINING matrices of the fold
+        // load the TRAINING squares matrices of the fold
         std::vector<arma::rowvec>& train_txx_rows = fold.train_txx_rows();
-        arma::Mat<double>& train_txy              = fold.train_txy();
+        arma::Mat<double>& train_txy = fold.train_txy();
 
-        return mccd_(
-          data, lambda, psigx, psigy, train_txx_rows, train_txy);
+        // set parameters we want to use for cross-validation
+        lambda(lambda);
+        psigx(psigx);
+        psigy(psigy);
+
+        return mccd_(train_txx_rows, train_txy);
     }
 
     arma::Mat<double> edgenet_gaussian::mccd_(
-      graph_penalized_linear_model_data& data,
-      const double lambda,
-      const double psigx,
-      const double psigy,
       std::vector<arma::rowvec>& txx_rows,
       arma::Mat<double>& txy) const
     {
-        /*
-         * Load variables from data-set
-         */
-        const int P         = data.covariable_count();
-        const int Q         = data.response_count();
-        const double thresh = data.threshold();
-        const int niter     = data.max_iter();
-
-        // load graph Laplacians
-        std::vector<arma::Row<double>>& lx_rows = data.lx_rows();
-        arma::Mat<double>& ly                   = data.ly();
 
         // setup coefficient matrix
-        arma::Mat<double> coef(P, Q, arma::fill::ones);
-        arma::Mat<double> old_coef(P, Q);
-        std::vector<arma::rowvec> coef_rows(static_cast<unsigned int>(P));
+        arma::Mat<double> B(P, Q, arma::fill::ones);
+        arma::Mat<double> B_old(P, Q);
+        std::vector<arma::rowvec> B_rows(static_cast<unsigned int>(P));
 
-        // TODO: method for this
         // safe an extra set of rowvectors so that access is faster
         for (std::vector<arma::Row<double>>::size_type i = 0;
-             i < coef.n_rows;
+             i < B.n_rows;
              ++i)
         {
-            coef_rows[i] = coef.row(i);
+            B_rows[i] = B.row(i);
         }
 
         for (int qi = 0; qi < Q; ++qi)
         {
-            uccd_(P, Q,
-                  qi,
-                  thresh, niter,
-                  lambda, 1.0,
-                  psigx, psigy,
-                  txx_rows, txy,
-                  lx_rows, ly,
-                  coef, old_coef, coef_rows);
+            uccd_(qi, txx_rows, txy, B, B_old, B_rows);
+
             #ifdef USE_RCPPARMADILLO
             if (qi % 100 == 0)
             {
@@ -118,27 +92,18 @@ namespace netreg
         return coef;
     }
 
-    void edgenet_gaussian::uccd_(const int P,
-                                 const int Q,
-                                 const int qi,
-                                 const double thresh,
-                                 const int niter,
-                                 const double lalph,
-                                 const double enorm,
-                                 const double psigx,
-                                 const double psigy,
+    void edgenet_gaussian::uccd_(const int qi,
                                  std::vector<arma::rowvec>& txx_rows,
                                  arma::Mat<double>& txy,
-                                 std::vector<arma::rowvec>& lx_rows,
-                                 arma::Mat<double>& ly,
-                                 arma::Mat<double>& coef,
-                                 arma::Mat<double>& old_coef,
-                                 std::vector<arma::rowvec>& coef_rows) const
+                                 arma::Mat<double>& B,
+                                 arma::Mat<double>& B_old,
+                                 std::vector<arma::rowvec>& B_rows) const
     {
         // iteration counter
-        int iter    = 0;
-        double s    = 0.0;
+        int iter = 0;
+        double s = 0.0;
         double norm = 0.0;
+
         // do while estimation of params does not converge
         do
         {
@@ -146,22 +111,17 @@ namespace netreg
             // coefficient on partial residual
             for (int pi = 0; pi < P; ++pi)
             {
-                // TODO methodize
                 // safe current estimate of coefficients
-                old_coef(pi, qi) = coef(pi, qi);
+                B_old(pi, qi) = B(pi, qi);
                 // TODO: no void stuff :(
-                set_params(s, norm,
-                           P, Q,
-                           pi, qi,
-                           psigx, psigy,
-                           txx_rows[pi], txy,
-                           lx_rows[pi], ly,
-                           coef, coef_rows[pi]);
+                set_params(s, norm, pi, qi, txx_rows[pi], txy, B, B_rows[pi]);
                 // soft-thresholded version of estimate
                 const double d = softnorm(s, lalph, enorm * norm);
+
                 // TODO: METHOD for this
-                coef(pi, qi) = d;
-                coef_rows[pi](qi) = d;
+                B(pi, qi) = d;
+                B_rows[pi](qi) = d;
+
                 #ifdef USE_RCPPARMADILLO
                 if (iter % 100 == 0)
                 {
@@ -170,8 +130,8 @@ namespace netreg
                 #endif
             }
         }
-        // TODO method for accumulation
-        while (arma::accu(arma::abs(coef.col(qi) - old_coef.col(qi))) >
-                   thresh && iter++ < niter);
+            // TODO method for accumulation
+        while (arma::accu(arma::abs(B.col(qi) - B_old.col(qi))) >
+               thresh && iter++ < niter);
     }
 }

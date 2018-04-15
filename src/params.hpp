@@ -43,16 +43,32 @@ namespace netreg
             return *this;
         }
 
+        const double lambda()
+        {
+            return lambda;
+        }
+
         params& psigx(double psigx)
         {
             psigx_ = psigx;
             return *this;
         }
 
+        const double psigx()
+        {
+            return psigx;
+        }
+
+
         params& psigy(double psigy)
         {
             psigy_ = psigy;
             return *this;
+        }
+
+        const double psigy()
+        {
+            return psigy;
         }
 
         params& do_lambda(bool do_lambda)
@@ -61,10 +77,20 @@ namespace netreg
             return *this;
         }
 
+        const bool do_lambda()
+        {
+            return do_lambda;
+        }
+
         params& do_psigx(bool do_psigx)
         {
             do_psigx_ = do_psigx;
             return *this;
+        }
+
+        const bool do_psigx()
+        {
+            return do_psigx;
         }
 
         params& do_psigy(bool do_psigy)
@@ -73,11 +99,22 @@ namespace netreg
             return *this;
         }
 
+        const bool do_psigy()
+        {
+            return do_psigx;
+        }
+
         params& thresh(double thresh)
         {
             thresh_ = thresh;
             return *this;
         }
+
+        const double thresh()
+        {
+            return thresh;
+        }
+
 
         params& niter(int niter)
         {
@@ -85,16 +122,32 @@ namespace netreg
             return *this;
         }
 
+        const int niter()
+        {
+            return niter;
+        }
+
+
         params& optim_niter(int optim_niter)
         {
             optim_niter_ = optim_niter;
             return *this;
         }
 
+        const int optim_niter()
+        {
+            return optim_niter;
+        }
+
         params& optim_epsilon(double optim_epsilon)
         {
             optim_epsilon_ = optim_epsilon;
             return *this;
+        }
+
+        const double optim_epsilon()
+        {
+            return optim_epsilon;
         }
 
     private:
