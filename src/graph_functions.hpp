@@ -50,6 +50,6 @@ namespace netreg
      *
      * @return the normalized laplacian
      */
-    arma::Mat<double> laplacian(arma::Mat<double>& x);
+    arma::Mat<double> laplacian(const arma::Mat<double>& x);
 }
 #endif  // NETREG_GRAPH_FUNCTIONS_HPP
