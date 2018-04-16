@@ -61,7 +61,6 @@ namespace netreg
          */
         edgenet_gaussian_loss_function(
           graph_model_cv_data& data, params& pars):
-          data_(data),
           pars_(pars),
           cvset_(data.cvset()),
           nfolds_(static_cast<int>(data.cvset().fold_count())),
@@ -99,8 +98,6 @@ namespace netreg
         }
 
     private:
-        // data required for a edge-regularized regression model
-        graph_model_cv_data& data_;
         params& pars_;
         cv_set& cvset_;     // cv-set on which the selected model is evaluated
         int nfolds_;  // number of folds

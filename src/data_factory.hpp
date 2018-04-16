@@ -13,9 +13,11 @@
 
 #include <string>
 #include <stdexcept>
+#include "graph_functions.hpp"
 #include "graph_model_data.hpp"
 #include "graph_model_cv_data.hpp"
 #include "family.hpp"
+
 
 namespace netreg
 {
@@ -62,11 +64,6 @@ namespace netreg
           double* x, double* y, double* gx, double* gy,
           int n, int p, int q, std::string& fam, int nfolds)
         {
-
-            const int n = xdim[0];
-            const int p = xdim[1];
-            const int q = ydim[1];
-
             arma::Mat<double> xm(x, n, p, false, true);
             arma::Mat<double> ym(y, n, q, false, true);
             arma::Mat<double> gxm(gx, p, p, false, true);
@@ -96,7 +93,8 @@ namespace netreg
             if (lenfoldid == xdim[0])
             {
                 graph_model_cv_data data(
-                  xm, ym, gxm, gym, foldids, get_family(fam));
+                  xm, ym, gxm, gym,
+                  nfolds, foldids, get_family(fam));
 
                 return data;
             }

@@ -38,6 +38,7 @@ add_executable(
         src/cv_fold.hpp
         src/cv_set.cpp
         src/cv_set.hpp
+        src/data_factory.hpp
         src/edgenet_gaussian.cpp
         src/edgenet_gaussian.hpp
         src/edgenet_gaussian_loss_function.hpp

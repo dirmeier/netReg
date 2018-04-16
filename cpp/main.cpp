@@ -42,6 +42,7 @@
 #include "../src/family.hpp"
 #include "../src/params.hpp"
 #include "../src/stat_functions.hpp"
+#include "../src/graph_model_data.hpp"
 #include "../src/graph_model_cv_data.hpp"
 #include "../src/edgenet_gaussian.hpp"
 #include "../src/edgenet_gaussian_model_selection.hpp"

@@ -79,27 +79,6 @@ namespace netreg
          * @param y the nxq-dimensional response matrix of the linear model
          * @param gx a pxp-dimensional prior graph for the covariables of x
          * @param nfolds the number of folds
-         * @param fam the fmily of the reponse variable
-         *
-         */
-        graph_model_cv_data(
-          arma::Mat<double>& x, arma::Mat<double>& y,
-          arma::Mat<double>& gx, arma::Mat<double>& gy,
-          int nfolds, const enum family fam):
-          DATA_(x, y, gx, gy, fam),
-          FOLD_IDS_(DATA_.sample_count()),
-          CVSET_(DATA_.sample_count(), nfolds, DATA_.design(), DATA_.response())
-        {
-            set_fold_ids();
-        }
-
-        /**
-         * Constructor.
-         *
-         * @param x the nxp-dimensional design matrix of the linear model
-         * @param y the nxq-dimensional response matrix of the linear model
-         * @param gx a pxp-dimensional prior graph for the covariables of x
-         * @param nfolds the number of folds
          * @param fold_ids fold id mappings
          * @param fam the fmily of the reponse variable
          *

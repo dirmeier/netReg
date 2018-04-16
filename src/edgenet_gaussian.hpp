@@ -98,7 +98,7 @@ namespace netreg
 
         void set_psigy(double psigy) const
         {
-            psigy = psigy;
+            psigy_ = psigy;
         }
 
     protected:
