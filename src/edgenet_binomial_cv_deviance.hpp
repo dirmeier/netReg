@@ -21,6 +21,7 @@
  * @author: Simon Dirmeier
  * @email: simon.dirmeier@gmx.de
  */
+
 #ifndef NETREG_EDGENET_BINOMIAL_LIKELIHOOD_FUNCTION_HPP
 #define NETREG_EDGENET_BINOMIAL_LIKELIHOOD_FUNCTION_HPP
 
@@ -38,7 +39,7 @@
 #include <omp.h>
 #endif
 
-#include "graph_penalized_linear_model_data.hpp"
+#include "graph_model_data.hpp"
 #include "../inst/dlib/matrix.h"
 
 namespace netreg
@@ -59,7 +60,7 @@ namespace netreg
          * @param cvset a cross-validation set
          */
         edgenet_binomial_likelihood_function(
-          graph_penalized_linear_model_data &data)
+          graph_model_data &data)
             : data_(data), X_(data.design()), Y_(data.response()),
               nfolds_(static_cast<int>(cvset.fold_count())), edgenet_(),
               do_psigx_(data.psigx() == -1), do_psigy_(data.psigy() == -1),
@@ -91,7 +92,7 @@ namespace netreg
 
        private:
         // data required for a edge-regularized regression model
-        graph_penalized_linear_model_data &data_;
+        graph_model_data &data_;
         matrix<double> &X_;  // design matrix
         matrix<double> &Y_;  // response matrix
         const bool do_psigx_;
