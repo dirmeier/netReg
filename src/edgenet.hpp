@@ -22,8 +22,9 @@
  * @email: simon.dirmeier@gmx.de
  */
 
-#ifndef NETREG_EDGENET_GAUSSIAN_HPP
-#define NETREG_EDGENET_GAUSSIAN_HPP
+#ifndef NETREG_EDGENET_HPP
+#define NETREG_EDGENET_HPP
+
 
 #include <vector>
 #include "params.hpp"
@@ -46,11 +47,11 @@ namespace netreg
      * Class for estimating the coefficients of a edge-regularized linear
      * regression model.
      */
-    class edgenet_gaussian
+    class edgenet
     {
     public:
 
-        edgenet_gaussian(graph_model_data& data, params& pars):
+        edgenet(graph_model_data& data, params& pars):
           DATA_(data),
           LX_(data.lx_rows()),
           LY_(data.ly()),
@@ -185,4 +186,4 @@ namespace netreg
     };
 }
 
-#endif  // NETREG_EDGENET_H
+#endif

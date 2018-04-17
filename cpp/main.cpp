@@ -38,14 +38,16 @@
 
 #include "armadillo"
 
-#include "../src/data_factory.hpp"
 #include "../src/family.hpp"
 #include "../src/params.hpp"
 #include "../src/stat_functions.hpp"
+
+#include "../src/data_factory.hpp"
 #include "../src/graph_model_data.hpp"
 #include "../src/graph_model_cv_data.hpp"
-#include "../src/edgenet_gaussian.hpp"
-#include "../src/edgenet_gaussian_model_selection.hpp"
+
+#include "../src/edgenet.hpp"
+#include "../src/edgenet_model_selection.hpp"
 
 static const char* netReg =
   "\nnetReg - a network-regularized generalized regression model";
@@ -315,7 +317,7 @@ void fit(struct data_set& X,
       .thresh(threshold)
       .niter(maxit);
 
-    netreg::edgenet_gaussian edge(dat, pars);
+    netreg::edgenet edge(dat, pars);
 
     arma::Mat<double> coef = edge.run();
     arma::Col<double> intr =

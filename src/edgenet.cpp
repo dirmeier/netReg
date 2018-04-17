@@ -22,7 +22,7 @@
  * @email: simon.dirmeier@gmx.de
  */
 
-#include "edgenet_gaussian.hpp"
+#include "edgenet.hpp"
 
 #ifdef _OPENMP
 #include <omp.h>
@@ -32,7 +32,7 @@
 
 namespace netreg
 {
-    arma::Mat<double> edgenet_gaussian::run()
+    arma::Mat<double> edgenet::run()
     {
         // load square matrices
         std::vector<arma::rowvec>& txx_rows = DATA_.txx_rows();
@@ -41,7 +41,7 @@ namespace netreg
         return mccd_(txx_rows, txy);
     }
 
-    arma::Mat<double> edgenet_gaussian::run_cv(
+    arma::Mat<double> edgenet::run_cv(
       const double lambda,
       const double psigx,
       const double psigy,
@@ -59,7 +59,7 @@ namespace netreg
         return mccd_(train_txx_rows, train_txy);
     }
 
-    arma::Mat<double> edgenet_gaussian::mccd_(
+    arma::Mat<double> edgenet::mccd_(
       std::vector<arma::rowvec>& txx_rows,
       arma::Mat<double>& txy) const
     {
@@ -92,7 +92,7 @@ namespace netreg
         return B;
     }
 
-    void edgenet_gaussian::uccd_(const int qi,
+    void edgenet::uccd_(const int qi,
                                  std::vector<arma::rowvec>& txx_rows,
                                  arma::Mat<double>& txy,
                                  arma::Mat<double>& B,

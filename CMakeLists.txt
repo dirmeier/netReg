@@ -35,15 +35,14 @@ endif()
 add_executable(
     netReg
         src/config.h
+        src/cross_validation.hpp
         src/cv_fold.hpp
         src/cv_set.cpp
         src/cv_set.hpp
         src/data_factory.hpp
-
         src/edgenet_binomial_cv_deviance.hpp
         src/edgenet.cpp
         src/edgenet.hpp
-        src/edgenet_gaussian_cv_deviance.hpp
         src/edgenet_model_selection.cpp
         src/edgenet_model_selection.hpp
         src/error_functions.hpp

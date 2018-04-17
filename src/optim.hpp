@@ -41,7 +41,7 @@
 
 #include "graph_model_cv_data.hpp"
 #include "cv_set.hpp"
-#include "edgenet_gaussian_loss_function.hpp"
+#include "edgenet_gaussian_cv_deviance.hpp"
 #include "../inst/include/dlib/optimization.h"
 
 namespace netreg
@@ -66,6 +66,7 @@ namespace netreg
          * @template loss_function the class-name of an objective function that
          *  should be minimized. The class must overwrite the () operator and
          *  return a double.
+         * @template deviance the deviance of some distribution
          *
          * @param data the model data for the loss function
          * @param start a vector of starting values for the parameters of the
@@ -77,7 +78,7 @@ namespace netreg
          * @param niter maximum calls to the loss function
          *
          */
-        template<typename loss_function>
+        template<template<typename ...> class validator, typename deviance>
         std::map<std::string, double> bobyqa(
           graph_model_cv_data& data,
           params& pars,

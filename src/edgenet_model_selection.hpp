@@ -22,8 +22,8 @@
  * @email: simon.dirmeier@gmx.de
  */
 
-#ifndef NETREG_EDGENET_GAUSSIAN_MODEL_SELECTION_HPP
-#define NETREG_EDGENET_GAUSSIAN_MODEL_SELECTION_HPP
+#ifndef NETREG_EDGENET_MODEL_SELECTION_HPP
+#define NETREG_EDGENET_MODEL_SELECTION_HPP
 
 #include <map>
 #include "params.hpp"
@@ -36,12 +36,17 @@ namespace netreg
      * regression
      * model. Set is calculated using cross-validation.
      *
+     * @template validator a validator
+     * @template deviance the deviance of some distribution
+     *
      * @param data an object that holds all required data for the model
      * @param pars a parameter object containing all relevant informations
      *
      * @returns returns a map of shrinkage parameters
      */
+    template<template<typename ...> class validator, typename deviance>
     std::map<std::string, double> model_selection(
       graph_model_cv_data& data, params& pars);
 }
-#endif  // NETREG_EDGENET_GAUSSIAN_MODEL_SELECTION_HPP
+
+#endif

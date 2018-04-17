@@ -22,8 +22,9 @@
  * @email: simon.dirmeier@gmx.de
  */
 
-#ifndef NETREG_EDGENET_GAUSSIAN_LOSSFUNCTION_HPP
-#define NETREG_EDGENET_GAUSSIAN_LOSSFUNCTION_HPP
+
+#ifndef NETREG_CROSSVALIDATION_HPP
+#define NETREG_CROSSVALIDATION_HPP
 
 #include <numeric>
 
@@ -34,9 +35,9 @@
 #include "armadillo"
 #endif
 
-#include "edgenet_gaussian.hpp"
-#include "graph_model_cv_data.hpp"
+#include "edgenet.hpp"
 #include "cv_set.hpp"
+#include "graph_model_cv_data.hpp"
 #include "error_functions.hpp"
 
 #include "../inst/include/dlib/matrix.h"
@@ -44,10 +45,9 @@
 namespace netreg
 {
     /**
-     * Functor class representing the objective function of a edge-regularized
-     * regression model.
+     * Functor class representing a cross validator.
      */
-    class edgenet_gaussian_loss_function
+    class cross_validator
     {
     public:
         /**
@@ -59,7 +59,7 @@ namespace netreg
          *
          * @param cvset a cross-validation set
          */
-        edgenet_gaussian_loss_function(
+        cross_validator(
           graph_model_cv_data& data, params& pars):
           pars_(pars),
           cvset_(data.cvset()),
@@ -101,10 +101,10 @@ namespace netreg
         params& pars_;
         cv_set& cvset_;     // cv-set on which the selected model is evaluated
         int nfolds_;  // number of folds
-        edgenet_gaussian edgenet_;
+        T model_;
         bool do_lambda_;
         bool do_psigx_;
         bool do_psigy_;
     };
 }
-#endif  // NETREG_EDGENETLOSSFUNCTION_HPP
+#endif

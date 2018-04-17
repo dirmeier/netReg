@@ -22,14 +22,15 @@
  * @email: simon.dirmeier@gmx.de
  */
 
-#include "edgenet_gaussian_model_selection.hpp"
+#include "edgenet_model_selection.hpp"
 
 #include "family.hpp"
 #include "optim.hpp"
-#include "edgenet_gaussian_loss_function.hpp"
+
 
 namespace netreg
 {
+    template<template<typename ...> class validator, typename deviance>
     std::map<std::string, double> model_selection(
        graph_model_cv_data& cv_data, params& pars)
     {
@@ -38,7 +39,8 @@ namespace netreg
         std::vector<double> start{0, 0, 0};
         std::vector<double> lower_bound{0.0, 0.0, 0.0};
         std::vector<double> upper_bound{100.0, 10000.0, 10000.0};
-        const double rad_start = 0.49, rad_end = pars.optim_epsilon();
+        const double rad_start = 0.49;
+        const double rad_end = pars.optim_epsilon();
 
         std::map<std::string, double> res;
         switch (cv_data.data().distribution_family())
@@ -46,7 +48,7 @@ namespace netreg
             case family::GAUSSIAN:
             default:
             {
-                return opt.bobyqa<edgenet_gaussian_loss_function>(
+                return opt.bobyqa<validator<deviance>>(
                   cv_data,
                   pars,
                   start,
