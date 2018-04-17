@@ -38,7 +38,7 @@ namespace netreg
     SEXP fit(graph_model_data& data, params& pars)
     {
         BEGIN_RCPP
-        edgenet_gaussian edge(data, params);
+        edgenet_gaussian edge(data, pars);
 
         arma::Mat<double> coef = edge.run();
         arma::Col<double> intr = intercept(

@@ -28,8 +28,8 @@
 #include "params.hpp"
 #include "data_factory.hpp"
 #include "edgenet_wrapper.hpp"
-#include "graph_penalized_linear_model_data.hpp"
-#include "graph_penalized_linear_model_cv_data.hpp"
+#include "graph_model_data.hpp"
+#include "graph_model_cv_data.hpp"
 
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
@@ -77,7 +77,7 @@ SEXP edgenet_cpp(SEXP X,
       f
     );
 
-    params pars = netreg::params()
+    netreg::params pars = netreg::params()
       .lambda(Rcpp::as<double>(lambda))
       .psigx(Rcpp::as<double>(psigx))
       .psigy(Rcpp::as<double>(psigy))
@@ -150,7 +150,7 @@ SEXP cv_edgenet_cpp(SEXP X,
       Rcpp::as<int>(lenfs),
       INTEGER(foldids));
 
-    params pars = netreg::params()
+    netreg::params pars = netreg::params()
       .lambda(Rcpp::as<double>(lambda))
       .psigx(Rcpp::as<double>(psigx))
       .psigy(Rcpp::as<double>(psigy))
