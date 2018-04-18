@@ -26,8 +26,10 @@
 #define NETREG_EDGENET_MODEL_SELECTION_HPP
 
 #include <map>
+
 #include "params.hpp"
 #include "graph_model_cv_data.hpp"
+#include "cross_validation.hpp"
 
 namespace netreg
 {
@@ -44,7 +46,7 @@ namespace netreg
      *
      * @returns returns a map of shrinkage parameters
      */
-    template<template<typename ...> class validator, typename deviance>
+    template<template<typename ...> class validator>
     std::map<std::string, double> model_selection(
       graph_model_cv_data& data, params& pars);
 }

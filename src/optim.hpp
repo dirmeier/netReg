@@ -41,7 +41,6 @@
 
 #include "graph_model_cv_data.hpp"
 #include "cv_set.hpp"
-#include "edgenet_gaussian_cv_deviance.hpp"
 #include "../inst/include/dlib/optimization.h"
 
 namespace netreg
@@ -78,7 +77,7 @@ namespace netreg
          * @param niter maximum calls to the loss function
          *
          */
-        template<template<typename ...> class validator, typename deviance>
+        template<template<typename ...> class validator, typename model>
         std::map<std::string, double> bobyqa(
           graph_model_cv_data& data,
           params& pars,
@@ -106,7 +105,7 @@ namespace netreg
                 #ifdef USE_RCPPARMADILLO
                 GetRNGstate();
                 #endif
-                dlib::find_min_bobyqa(loss_function(data, pars),
+                dlib::find_min_bobyqa(validator<model>(data, pars),
                                       par,
                                       par.size() * 2 + 1,
                                       lb,

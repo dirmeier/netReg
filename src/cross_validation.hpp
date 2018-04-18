@@ -47,6 +47,7 @@ namespace netreg
     /**
      * Functor class representing a cross validator.
      */
+    template<typename T>
     class cross_validator
     {
     public:
@@ -64,7 +65,7 @@ namespace netreg
           pars_(pars),
           cvset_(data.cvset()),
           nfolds_(static_cast<int>(data.cvset().fold_count())),
-          edgenet_(data.data(), pars),
+          model_(data.data(), pars),
           do_lambda_(pars.do_lambda()),
           do_psigx_(pars.do_psigx()),
           do_psigy_(pars.do_psigy())
@@ -88,7 +89,7 @@ namespace netreg
             for (int fc = 0; fc < nfolds_; ++fc)
             {
                 cv_fold& fold = cvset_.get_fold(fc);
-                arma::Mat<double> coef = edgenet_.run_cv(
+                arma::Mat<double> coef = model_.run_cv(
                   lam, psigx, psigy, fold);
 
                 sses[fc] = mse(coef, fold.test_x(), fold.test_y());

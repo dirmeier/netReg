@@ -24,15 +24,15 @@
 
 #include "edgenet_model_selection.hpp"
 
+#include "edgenet.hpp"
 #include "family.hpp"
 #include "optim.hpp"
 
-
 namespace netreg
 {
-    template<template<typename ...> class validator, typename deviance>
+    template<template<typename ...> class validator>
     std::map<std::string, double> model_selection(
-       graph_model_cv_data& cv_data, params& pars)
+      graph_model_cv_data& cv_data, params& pars)
     {
         optim opt;
 
@@ -42,24 +42,14 @@ namespace netreg
         const double rad_start = 0.49;
         const double rad_end = pars.optim_epsilon();
 
-        std::map<std::string, double> res;
-        switch (cv_data.data().distribution_family())
-        {
-            case family::GAUSSIAN:
-            default:
-            {
-                return opt.bobyqa<validator<deviance>>(
-                  cv_data,
-                  pars,
-                  start,
-                  lower_bound,
-                  upper_bound,
-                  rad_start,
-                  rad_end,
-                  pars.optim_niter());
-            }
-        }
-
-        return res;
+        return opt.bobyqa< validator<edgenet> >(
+          cv_data,
+            pars,
+            start,
+            lower_bound,
+            upper_bound,
+            rad_start,
+            rad_end,
+            pars.optim_niter());
     }
 }
