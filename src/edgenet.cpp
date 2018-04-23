@@ -99,12 +99,7 @@ namespace netreg
                                  arma::Mat<double>& B_old,
                                  std::vector<arma::rowvec>& B_rows) const
     {
-        // iteration counter
         int iter = 0;
-        double s = 0.0;
-        double norm = 0.0;
-
-        // do while estimation of params does not converge
         do
         {
             // fix bnew_i and calculate least-squares
@@ -115,7 +110,8 @@ namespace netreg
                 B_old(pi, qi) = B(pi, qi);
 
                 // TODO: no void stuff :(
-                set_params(s, norm, pi, qi, txx_rows[pi], txy, B, B_rows[pi]);
+                double s = partial(pi, qi, txx_rows[pi], txy, B, B_rows[pi]);
+                double norm = norm(pi, qi, txx_rows[pi],      B, B_rows[pi])
 
                 // soft-thresholded version of estimate
                 const double d = softnorm(s, lambda_, norm);

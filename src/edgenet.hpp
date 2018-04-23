@@ -25,7 +25,6 @@
 #ifndef NETREG_EDGENET_HPP
 #define NETREG_EDGENET_HPP
 
-
 #include <vector>
 #include "params.hpp"
 #include "graph_model_data.hpp"
@@ -113,39 +112,13 @@ namespace netreg
                    arma::Mat<double>& B_old,
                    std::vector<arma::rowvec>& B_rows) const;
 
-        inline void set_params(double& s,
-                               double& norm,
-                               const int pi,
-                               const int qi,
-                               arma::rowvec& txx_row,
-                               arma::Mat<double>& txy,
-                               arma::Mat<double>& B,
-                               arma::rowvec& B_row) const
-        {
-            s = partial_least_squares(txx_row, txy, B, pi, qi);
-            norm = txx_row(pi);
-            graph_penalize(s, norm, pi, qi, B, B_row);
-        }
 
-        inline double partial()
+        inline double partial_lx_penalize(
+          const int pi, const int qi, arma::Mat<double>& B) const
         {
-            double s = partial_least_squares(txx_row, txy, B, pi, qi);
-            if (psigx_ > 0.001 && LX_.size() == P_)
-                s += partial_lx_penalize(s, norm, pi, qi, B);
-            if (psigy_ > 0.001 && LY_.n_rows == Q_ && Q_ > 1)
-                ly_penalize(s, norm, pi, qi, B_row);
-        }
-
-
-        inline double partial_lx_penalize(double& s,
-                                          double& norm,
-                                          const int pi,
-                                          const int qi,
-                                          arma::Mat<double>& B) const
-        {
-            double pen =
-              -LX_[pi](pi) * B(pi, qi) + arma::accu(LX_[pi] * B.col(qi));
-            pen = - 2 * psigx_ * pen;
+            double pen = -2 * psigx_ *
+                         (-LX_[pi](pi) * B(pi, qi) +
+                          arma::accu(LX_[pi] * B.col(qi)));
             return pen;
         }
 
@@ -155,101 +128,53 @@ namespace netreg
                                           const int qi,
                                           arma::rowvec& B_row) const
         {
-            double pen =
-              -B_row(qi) * LY_(qi, qi) + arma::accu(B_row * LY_.col(qi));
-            pen = - 2 * psigy_ * pen;
+            double pen = -2 * psigy_ *
+                         (-B_row(qi) * LY_(qi, qi) +
+                          arma::accu(B_row * LY_.col(qi)));
             return pen;
         }
 
+        inline double partial(int pi, int qi,
+                              arma::rowvec& txx_row,
+                              arma::Mat<double>& txy,
+                              arma::Mat<double>& B,
+                              arma::rowvec& B_row) const
+        {
+            double s = partial_least_squares(txx_row, txy, B, pi, qi);
+            if (psigx_ > 0.001 && LX_.size() == P_)
+                s += partial_lx_penalize(pi, qi, B);
+            if (psigy_ > 0.001 && LY_.n_rows == Q_ && Q_ > 1)
+                s += partial_ly_penalize(pi, qi, B_row);
+        }
 
-        inline double norm()
+        inline double norm(int pi, int qi,
+                           arma::rowvec& txx_row,
+                           arma::Mat<double>& B,
+                           arma::rowvec& B_row)
         {
             double norm = txx_row(pi);
             if (psigx_ > 0.001 && LX_.size() == P_)
-                norm += norm_lx_penalize(s, norm, pi, qi, B);
+                norm += norm_lx_penalize(pi, qi, B);
             if (psigy_ > 0.001 && LY_.n_rows == Q_ && Q_ > 1)
-                norm += norm_lx_penalize(s, norm, pi, qi, B_row);
+                norm += norm_lx_penalize(pi, qi, B_row);
         }
 
         inline double norm_lx_penalize(double& s,
-                                          double& norm,
-                                          const int pi,
-                                          const int qi,
-                                          arma::Mat<double>& B) const
+                                       double& norm,
+                                       const int pi,
+                                       const int qi,
+                                       arma::Mat<double>& B) const
         {
             return 2 * psigx_ * LX_[pi](pi);
         }
 
         inline double norm_ly_penalize(double& s,
-                                          double& norm,
-                                          const int pi,
-                                          const int qi,
-                                          arma::rowvec& B_row) const
+                                       double& norm,
+                                       const int pi,
+                                       const int qi,
+                                       arma::rowvec& B_row) const
         {
-            return  2 * psigy_ * LY_(qi, qi);
-        }
-
-        inline void lx_penalize(double& s,
-                                double& norm,
-                                const int pi,
-                                const int qi,
-                                arma::Mat<double>& B) const
-        {
-            double xPenalty =
-              -LX_[pi](pi) * B(pi, qi) + arma::accu(LX_[pi] * B.col(qi));
-            s = s - 2 * psigx_ * xPenalty;
-            norm += 2 * psigx_ * LX_[pi](pi);
-        }
-
-        inline void ly_penalize(double& s,
-                                double& norm,
-                                const int pi,
-                                const int qi,
-                                arma::rowvec& B_row) const
-        {
-            double yPenalty = -B_row(qi) * LY_(qi, qi)
-                              + arma::accu(B_row * LY_.col(qi));
-            s = s - 2 * psigy_ * yPenalty;
-            norm += 2 * psigy_ * LY_(qi, qi);
-        }
-
-        inline void graph_penalize(double& s,
-                                   double& norm,
-                                   const int pi,
-                                   const int qi,
-                                   arma::Mat<double>& B,
-                                   arma::rowvec& B_row) const
-        {
-            if (psigx_ > 0.001 && LX_.size() == P_)
-                lx_penalize(s, norm, pi, qi, B);
-            if (psigy_ > 0.001 && LY_.n_rows == Q_ && Q_ > 1)
-                ly_penalize(s, norm, pi, qi, B_row);
-        }
-
-
-
-        inline void lx_penalize(double& s,
-                                double& norm,
-                                const int pi,
-                                const int qi,
-                                arma::Mat<double>& B) const
-        {
-            double xPenalty =
-              -LX_[pi](pi) * B(pi, qi) + arma::accu(LX_[pi] * B.col(qi));
-            s = s - 2 * psigx_ * xPenalty;
-            norm += 2 * psigx_ * LX_[pi](pi);
-        }
-
-        inline void ly_penalize(double& s,
-                                double& norm,
-                                const int pi,
-                                const int qi,
-                                arma::rowvec& B_row) const
-        {
-            double yPenalty = -B_row(qi) * LY_(qi, qi)
-                              + arma::accu(B_row * LY_.col(qi));
-            s = s - 2 * psigy_ * yPenalty;
-            norm += 2 * psigy_ * LY_(qi, qi);
+            return 2 * psigy_ * LY_(qi, qi);
         }
 
     private:
