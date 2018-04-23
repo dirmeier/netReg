@@ -46,7 +46,6 @@ namespace netreg
      *
      * @returns returns a map of shrinkage parameters
      */
-    template<template<typename ...> class validator>
     std::map<std::string, double> model_selection(
       graph_model_cv_data& data, params& pars);
 }

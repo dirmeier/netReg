@@ -62,10 +62,8 @@ namespace netreg
          * It finds a local optimum for non-convex loss functions defined by a
          * specified radius.
          *
-         * @template loss_function the class-name of an objective function that
-         *  should be minimized. The class must overwrite the () operator and
-         *  return a double.
-         * @template deviance the deviance of some distribution
+         * @template model the model you want to you use for regularization.
+         *  So far only 'edgenet' is supported
          *
          * @param data the model data for the loss function
          * @param start a vector of starting values for the parameters of the

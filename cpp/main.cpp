@@ -367,8 +367,7 @@ std::map<std::string, double> modelselection(struct data_set& X,
       .optim_niter(bobit)
       .optim_epsilon(epsilon);
 
-    std::map<std::string, double> m =\
-      netreg::model_selection<netreg::cross_validator>(dat, pars);
+    std::map<std::string, double> m = netreg::model_selection(dat, pars);
 
     std::string paramfile = outfile.substr(0, outfile.find_last_of('.')) +
                             "_optimal_shrinkage_params" +

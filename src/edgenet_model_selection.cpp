@@ -30,7 +30,6 @@
 
 namespace netreg
 {
-    template<template<typename ...> class validator>
     std::map<std::string, double> model_selection(
       graph_model_cv_data& cv_data, params& pars)
     {
@@ -42,7 +41,7 @@ namespace netreg
         const double rad_start = 0.49;
         const double rad_end = pars.optim_epsilon();
 
-        return opt.bobyqa< validator<edgenet> >(
+        return opt.bobyqa<cross_validator, edgenet>(
           cv_data,
             pars,
             start,

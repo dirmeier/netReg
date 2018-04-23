@@ -152,7 +152,7 @@ namespace netreg
             norm += 2 * psigx_ * LX_[pi](pi);
         }
 
-        inline void ly_penalize(double& s,
+        inline void ly_penalize(double& s,q
                                 double& norm,
                                 const int pi,
                                 const int qi,

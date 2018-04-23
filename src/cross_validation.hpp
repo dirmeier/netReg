@@ -46,6 +46,8 @@ namespace netreg
 {
     /**
      * Functor class representing a cross validator.
+     *
+     * @template T a model that should be optimized.
      */
     template<typename T>
     class cross_validator
