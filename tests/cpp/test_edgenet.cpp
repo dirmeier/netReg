@@ -34,20 +34,23 @@
 
 #include "../../src/stat_functions.hpp"
 #include "../../src/graph_functions.hpp"
-#include "../../src/edgenet_gaussian.hpp"
+#include "../../src/graph_model_data.hpp"
+#include "../../src/data_factory.hpp"
+#include "../../src/edgenet.hpp"
 
-class F : public netreg::edgenet_gaussian
+
+class F : public netreg::edgenet
 {};
 
 /*
 * Testing suite for edgenet function for Gaussian variables
 */
-BOOST_FIXTURE_TEST_SUITE(edgenet_gaussian_test, F);
+BOOST_FIXTURE_TEST_SUITE(edgenet_test, F);
 
 BOOST_AUTO_TEST_CASE(test_set_param_with_y_penalty)
 {
     double s           = 1;
-    double norm        = 1;
+    double n        = 1;
     const int pi       = 0;
     const int qi       = 0;
     const double psigx = 0;
@@ -55,6 +58,7 @@ BOOST_AUTO_TEST_CASE(test_set_param_with_y_penalty)
     const int n        = 5;
     double fill        = 1;
 
+    std::string fam = "gaussian";
     arma::Mat<double> X(n, n);
     arma::Mat<double>Y(n, n);
     arma::Mat<double> B(n, n);
@@ -72,15 +76,20 @@ BOOST_AUTO_TEST_CASE(test_set_param_with_y_penalty)
         GY(i, i) = 0;
     }
 
-    arma::Mat<double> lx  = netreg::laplacian(GX.memptr(), n, n, 1);
-    arma::Mat<double> ly  = netreg::laplacian(GY.memptr(), n, n, 1);
+    arma::Mat<double> lx  = netreg::laplacian(GX);
+    arma::Mat<double> ly  = netreg::laplacian(GY);
     arma::rowvec b_row    = B.row(pi);
     arma::rowvec txx_row  = X.row(pi);
     arma::Mat<double> txy = Y;
     arma::rowvec lx_row   = lx.row(pi);
 
-    set_params(
-      s, norm, n, n, pi, qi, psigx, psigy, txx_row, txy, lx_row, ly, B, b_row);
+
+    netreg::graph_model_data dat = netreg::data_factory::build_data(
+      X.get(), Y.get(), GX.get(), GY.get(), n, p, q, fam);
+    netreg::edgenet egde(dat, params)
+
+    s = edgepartial(pi, qi , txx_row, txy, B, b_row);
+    n = norm(pi, qi, txx_row);
 
     double s_l    = netreg::partial_least_squares(txx_row, txy, B, pi, qi);
     double norm_l = txx_row(pi);

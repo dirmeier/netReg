@@ -108,13 +108,11 @@ namespace netreg
             {
                 // safe current estimate of coefficients
                 B_old(pi, qi) = B(pi, qi);
-
-                // TODO: no void stuff :(
-                double s = partial(pi, qi, txx_rows[pi], txy, B, B_rows[pi]);
-                double norm = norm(pi, qi, txx_rows[pi],      B, B_rows[pi])
-
+                const double s = partial(pi, qi, txx_rows[pi],
+                                         txy, B, B_rows[pi]);
+                const double n = norm(pi, qi, txx_rows[pi]);
                 // soft-thresholded version of estimate
-                const double d = softnorm(s, lambda_, norm);
+                const double d = softnorm(s, lambda_, n);
 
                 // TODO: METHOD for this
                 B(pi, qi) = d;
