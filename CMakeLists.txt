@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.6)
 
-project(netReg LANGUAGES CXX)
+project(netReg LANGUAGES CXX C)
 
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "RelWithDebInfo")
@@ -20,9 +20,11 @@ set(CMAKE_VERBOSE_MAKEFILE OFF)
 
 include(GNUInstallDirs)
 include(FeatureSummary)
+include(CTest)
 
 find_package(OpenMP)
 find_package(Armadillo REQUIRED)
+find_package(HDF5) # required because the FindArmadillo module doesn't look for HDF5
 find_package(Boost COMPONENTS program_options system REQUIRED)
 find_package(BLAS REQUIRED)
 find_package(LAPACK REQUIRED)
@@ -32,64 +34,71 @@ if (OPENMP_FOUND)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 endif()
 
-add_executable(
-    netReg
-        src/config.h
-        src/cross_validation.hpp
-        src/cv_fold.hpp
+add_library(
+    netRegLib STATIC
         src/cv_set.cpp
-        src/cv_set.hpp
-        src/data_factory.hpp
-        src/edgenet_binomial_cv_deviance.hpp
+        src/data_factory.cpp
         src/edgenet.cpp
-        src/edgenet.hpp
         src/edgenet_model_selection.cpp
-        src/edgenet_model_selection.hpp
-        src/error_functions.hpp
-        src/family.hpp
         src/graph_functions.cpp
-        src/graph_functions.hpp
         src/graph_model_cv_data.cpp
-        src/graph_model_cv_data.hpp
-        src/graph_model_data.hpp
-        src/illegal_argument_exception.hpp
-        src/io_exception.hpp
-        src/model_data.hpp
-        src/math_functions.hpp
-        src/not_implemented_exception.hpp
-        src/optim.hpp
-        src/params.hpp
         src/stat_functions.cpp
-        src/stat_functions.hpp
-        src/vector_functions.cpp
-        src/vector_functions.hpp
-        cpp/main.cpp)
+        src/vector_functions.cpp)
 
 target_compile_definitions(
-    netReg PRIVATE
+    netRegLib PUBLIC
         -DARMA_DONT_USE_WRAPPER)
 
 target_compile_options(
-    netReg PRIVATE
+    netRegLib PUBLIC
         -Wall)
 
 target_include_directories(
-    netReg PRIVATE
+    netRegLib PUBLIC
         ${ARMADILLO_INCLUDE_DIRS}
+        ${HDF5_INCLUDE_DIRS}
         ${Boost_INCLUDE_DIRS}
         ${BLAS_INCLUDE_DIRS}
         ${LAPACK_INCLUDE_DIRS})
 
 target_link_libraries(
-    netReg PRIVATE
+    netRegLib PUBLIC
         ${ARMADILLO_LIBRARIES}
+        ${HDF5_LIBRARIES}
         ${Boost_LIBRARIES}
         ${BLAS_LIBRARIES}
         ${LAPACK_LIBRARIES})
 
+add_executable(
+    netReg
+        cpp/main.cpp)
+
+target_link_libraries(
+    netReg PRIVATE
+        netRegLib)
+
 install(
     TARGETS netReg
     DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+add_executable(
+    test_netReg
+        tests/cpp/test.cpp
+        tests/cpp/test_data.cpp
+        tests/cpp/test_edgenet.cpp
+        tests/cpp/test_edgenet_modelselection.cpp
+        tests/cpp/test_error_functions.cpp
+        tests/cpp/test_graph_functions.cpp
+        tests/cpp/test_math_functions.cpp
+        tests/cpp/test_model.cpp
+        tests/cpp/test_stat_functions.cpp
+        tests/cpp/test_vector_functions.cpp)
+
+target_link_libraries(
+    test_netReg PRIVATE
+        netRegLib)
+
+add_test(NAME main_test COMMAND test_netReg)
 
 feature_summary(WHAT ALL)
 MESSAGE( STATUS "Using CMAKE_CXX_COMPILER: " ${CMAKE_CXX_COMPILER} )
