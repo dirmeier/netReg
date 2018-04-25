@@ -13,7 +13,7 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
     set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -vec -simd -qopenmp")
 endif ()
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_VERBOSE_MAKEFILE OFF)
@@ -32,12 +32,13 @@ if (OPENMP_FOUND)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 endif ()
 
-set(SOUCES
+set(SOURCES
         ../../src/config.h
         ../../src/cross_validation.hpp
         ../../src/cv_fold.hpp
         ../../src/cv_set.cpp
         ../../src/cv_set.hpp
+        ../../src/data_factory.cpp
         ../../src/data_factory.hpp
         ../../src/edgenet_binomial_cv_deviance.hpp
         ../../src/edgenet.cpp
