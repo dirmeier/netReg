@@ -29,8 +29,8 @@
 #include <vector>
 
 #include "edgenet_wrapper.hpp"
-#include "edgenet_gaussian.hpp"
-#include "edgenet_gaussian_model_selection.hpp"
+#include "edgenet.hpp"
+#include "edgenet_model_selection.hpp"
 #include "stat_functions.hpp"
 
 namespace netreg
@@ -38,7 +38,7 @@ namespace netreg
     SEXP fit(graph_model_data& data, params& pars)
     {
         BEGIN_RCPP
-        edgenet_gaussian edge(data, pars);
+        edgenet edge(data, pars);
 
         arma::Mat<double> coef = edge.run();
         arma::Col<double> intr = intercept(
@@ -52,8 +52,7 @@ namespace netreg
         return R_NilValue;
     }
 
-    SEXP regularization_path(
-      graph_model_cv_data& data, params& pars)
+    SEXP regularization_path(graph_model_cv_data& data, params& pars)
     {
         BEGIN_RCPP
 

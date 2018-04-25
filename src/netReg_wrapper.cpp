@@ -22,21 +22,21 @@
  * @email: simon.dirmeier@gmx.de
  */
 
+
 #include <string>
 #include <memory>
-
 #include "params.hpp"
 #include "data_factory.hpp"
 #include "edgenet_wrapper.hpp"
 #include "graph_model_data.hpp"
 #include "graph_model_cv_data.hpp"
 
+
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
 
 using data = netreg::graph_model_data;
 using cv_data = netreg::graph_model_cv_data;
-
 
 extern "C" {
 
@@ -60,7 +60,7 @@ SEXP edgenet_cpp(SEXP X,
                  SEXP Y,
                  SEXP GX,
                  SEXP GY,
-                 SEXP lambda, // 5
+                 SEXP lambda,
                  SEXP psigx,
                  SEXP psigy,
                  SEXP niter,
@@ -84,7 +84,7 @@ SEXP edgenet_cpp(SEXP X,
       .thresh(Rcpp::as<double>(thresh))
       .niter(Rcpp::as<int>(niter));
 
-    return fit(dat, pars);
+    return netreg::fit(dat, pars);
 
     END_RCPP
     return R_NilValue;
@@ -162,7 +162,7 @@ SEXP cv_edgenet_cpp(SEXP X,
       .optim_niter(Rcpp::as<int>(optim_niter))
       .optim_epsilon(Rcpp::as<double>(optim_epsilon));
 
-    return regularization_path(dat, pars);
+    return netreg::regularization_path(dat, pars);
 
     END_RCPP
 
