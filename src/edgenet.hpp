@@ -154,7 +154,7 @@ namespace netreg
             if (psigx_ > 0.001 && LX_.size() == P_)
                 norm += norm_lx_penalize(pi, qi);
             if (psigy_ > 0.001 && LY_.n_rows == Q_ && Q_ > 1)
-                norm += norm_lx_penalize(pi, qi);
+                norm += norm_ly_penalize(pi, qi);
 
             return norm;
         }

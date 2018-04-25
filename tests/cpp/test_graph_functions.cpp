@@ -33,7 +33,6 @@
 #include <armadillo>
 #include <boost/test/unit_test.hpp>
 
-
 #include "../../src/graph_functions.hpp"
 
 

@@ -154,13 +154,13 @@ BOOST_AUTO_TEST_CASE(test_params_set)
       .niter(maxit)
       .optim_epsilon(threshold)
       .optim_niter(maxit)
-      .do_psigy(false)
+      .do_psigx(false)
       .do_psigy(false)
       .do_lambda(false);
 
     BOOST_REQUIRE(pars.lambda() == lambda);
     BOOST_REQUIRE(pars.psigx() == psi);
-    BOOST_REQUIRE(pars.psigy() == psi);
+    BOOST_REQUIRE(pars.psigy() == phi);
     BOOST_REQUIRE(pars.do_lambda() == false);
     BOOST_REQUIRE(pars.do_psigx() == false);
     BOOST_REQUIRE(pars.do_psigy() == false);

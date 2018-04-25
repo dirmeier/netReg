@@ -172,7 +172,7 @@ BOOST_AUTO_TEST_SUITE(edgenet_test);
         const int pi = 0;
         const int qi = 0;
         const double lambda = 3;
-        const double psigx = 1;
+        const double psigx = 0;
         const double psigy = 0;
         const int n = 5;
         double fill = 1;
