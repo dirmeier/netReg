@@ -22,8 +22,8 @@
  * @email: simon.dirmeier@gmx.de
  */
 
-#ifndef NETREG_EDGENET_HPP
-#define NETREG_EDGENET_HPP
+#ifndef NETREG_EDGENET_WRAPPER_HPP
+#define NETREG_EDGENET_WRAPPER_HPP
 
 
 #include "params.hpp"
@@ -56,4 +56,5 @@ namespace netreg
      */
     SEXP regularization_path(graph_model_cv_data& data, params& pars);
 }
-#endif  // NETREG_EDGENET_HPP
+
+#endif

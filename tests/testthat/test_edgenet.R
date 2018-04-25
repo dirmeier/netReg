@@ -33,6 +33,7 @@ B   <- matrix(rnorm(p * q), p, q)
 Y   <- X %*% B + matrix(rnorm(n * q), n)
 
 e <- edgenet(X, Y, lambda=1, maxit=1000, thresh=1e-5)
+e0 <- edgenet(X, Y, lambda=0, maxit=1000, thresh=1e-5)
 
 test_that("gaussian edgenet returns s3 class", {
     testthat::expect_s3_class(e, "edgenet")
@@ -88,9 +89,15 @@ test_that("gaussian edgenet throws at wrong dim[2] G.Y", {
 })
 
 if (requireNamespace("lassoshooting", quietly = TRUE)) {
-    test_that("gaussian edgenet correct output", {
+    test_that("gaussian edgenet correct output with lambda 1", {
         l <- lassoshooting::lassoshooting(
             X, Y[,1], lambda=1, maxit=1000, thr=1e-5)$coefficients
         testthat::expect_equal(l, e$coefficients[ ,1], 0.01)
+    })
+
+    test_that("gaussian edgenet correct output with lambda 0", {
+        l <- lassoshooting::lassoshooting(
+            X, Y[,1], lambda=0, maxit=1000, thr=1e-5)$coefficients
+        testthat::expect_equal(l, e0$coefficients[ ,1], 0.01)
     })
 }
