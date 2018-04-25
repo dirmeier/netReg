@@ -25,6 +25,8 @@
 #ifndef NETREG_GRAPH_FUNCTIONS_HPP
 #define NETREG_GRAPH_FUNCTIONS_HPP
 
+#include <vector>
+
 #ifdef USE_RCPPARMADILLO
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>

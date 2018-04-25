@@ -25,6 +25,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
+#include <vector>
 
 #ifndef ARMA_DONT_USE_WRAPPER
 #define ARMA_DONT_USE_WRAPPER
@@ -32,7 +33,9 @@
 #include <armadillo>
 #include <boost/test/unit_test.hpp>
 
+
 #include "../../src/graph_functions.hpp"
+
 
 bool degrees_are_correct(const std::vector<double>& degrees,
                          const arma::Mat<double>& x)
@@ -50,7 +53,7 @@ bool degrees_are_correct(const std::vector<double>& degrees,
 }
 
 bool laplacian_is_correct(const arma::Mat<double>& lapl,
-                          const arma::Mat<double>& x)
+                           arma::Mat<double>& x)
 {
     std::vector<double> degrees = netreg::degree_distribution(x);
     for (uint32_t i = 0; i < lapl.n_rows; ++i)
