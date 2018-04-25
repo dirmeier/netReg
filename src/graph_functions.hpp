@@ -41,7 +41,7 @@ namespace netreg
      *
      * @return the degrees of every node
      */
-    std::vector<double> degree_distribution(arma::Mat<double>& x);
+    std::vector<double> degree_distribution(const arma::Mat<double>& x);
 
     /**
      * Calculate the normalized Laplacian of a matrix.

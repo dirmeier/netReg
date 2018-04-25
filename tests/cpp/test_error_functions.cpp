@@ -43,7 +43,6 @@ BOOST_AUTO_TEST_SUITE(error_function_tests)
 BOOST_AUTO_TEST_CASE(test_mse_zero)
 {
     int m = 3;
-    double fill = 1;
     arma::Mat<double> x(m, m);
     arma::Mat<double> y(m, 1);
     arma::Mat<double> b(m, 1);

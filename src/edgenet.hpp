@@ -112,6 +112,7 @@ namespace netreg
                    arma::Mat<double>& B_old,
                    std::vector<arma::rowvec>& B_rows) const;
 
+    public:
         inline double partial(int pi, int qi,
                               arma::rowvec& txx_row,
                               arma::Mat<double>& txy,

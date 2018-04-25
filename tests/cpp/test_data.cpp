@@ -147,22 +147,27 @@ BOOST_AUTO_TEST_CASE(test_params_unset)
 BOOST_AUTO_TEST_CASE(test_params_set)
 {
     netreg::params pars = netreg::params()
-      .lambda(Rcpp::as<double>(lambda))
-      .psigx(Rcpp::as<double>(psigx))
-      .psigy(Rcpp::as<double>(psigy))
-      .thresh(Rcpp::as<double>(thresh))
-      .niter(Rcpp::as<int>(niter))
+      .lambda(lambda)
+      .psigx(psi)
+      .psigy(phi)
+      .thresh(threshold)
+      .niter(maxit)
+      .optim_epsilon(threshold)
+      .optim_niter(maxit)
+      .do_psigy(false)
+      .do_psigy(false)
+      .do_lambda(false);
 
-    BOOST_REQUIRE(pars.lambda() == 0);
-    BOOST_REQUIRE(pars.psigx() == 0);
-    BOOST_REQUIRE(pars.psigy() == 0);
-    BOOST_REQUIRE(pars.do_lambda() == true);
-    BOOST_REQUIRE(pars.do_psigx() == true);
-    BOOST_REQUIRE(pars.do_psigy() == true);
-    BOOST_REQUIRE(pars.thresh() == .0001);
-    BOOST_REQUIRE(pars.niter() == 1000);
-    BOOST_REQUIRE(pars.optim_niter() == 1000);
-    BOOST_REQUIRE(pars.optim_epsilon() == .0001);
+    BOOST_REQUIRE(pars.lambda() == lambda);
+    BOOST_REQUIRE(pars.psigx() == psi);
+    BOOST_REQUIRE(pars.psigy() == psi);
+    BOOST_REQUIRE(pars.do_lambda() == false);
+    BOOST_REQUIRE(pars.do_psigx() == false);
+    BOOST_REQUIRE(pars.do_psigy() == false);
+    BOOST_REQUIRE(pars.thresh() == threshold);
+    BOOST_REQUIRE(pars.niter() == maxit);
+    BOOST_REQUIRE(pars.optim_niter() == maxit);
+    BOOST_REQUIRE(pars.optim_epsilon() == threshold);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

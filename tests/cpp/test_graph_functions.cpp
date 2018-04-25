@@ -34,7 +34,8 @@
 
 #include "../../src/graph_functions.hpp"
 
-bool degrees_are_correct(std::vector<double>& degrees, arma::Mat<double>& x)
+bool degrees_are_correct(const std::vector<double>& degrees,
+                         const arma::Mat<double>& x)
 {
     for (std::vector<double>::size_type i = 0; i < degrees.size(); ++i)
     {
@@ -48,10 +49,10 @@ bool degrees_are_correct(std::vector<double>& degrees, arma::Mat<double>& x)
     return true;
 }
 
-bool laplacian_is_correct(arma::Mat<double>& lapl, arma::Mat<double>& x)
+bool laplacian_is_correct(const arma::Mat<double>& lapl,
+                          const arma::Mat<double>& x)
 {
-    std::vector<double> degrees =
-      netreg::degree_distribution(x.memptr(), x.n_rows, x.n_cols);
+    std::vector<double> degrees = netreg::degree_distribution(x);
     for (uint32_t i = 0; i < lapl.n_rows; ++i)
     {
         for (uint32_t j = 0; j < lapl.n_cols; ++j)
@@ -81,12 +82,11 @@ BOOST_AUTO_TEST_CASE(test_degree_distribution)
     {
         for (int j = 0; j < m; ++j)
         {
-            if (i == j)
-                continue;
+            if (i == j) continue;
             x(i, j) = i + j;
         }
     }
-    std::vector<double> degrees = netreg::degree_distribution(x.memptr(), m, m);
+    std::vector<double> degrees = netreg::degree_distribution(x);
     BOOST_REQUIRE(degrees_are_correct(degrees, x));
 }
 
@@ -104,7 +104,7 @@ BOOST_AUTO_TEST_CASE(test_laplacian)
                 x(i, j) = i + j;
         }
     }
-    arma::Mat<double> lapl = netreg::laplacian(x.memptr(), m, m, 1);
+    arma::Mat<double> lapl = netreg::laplacian(x);
     BOOST_REQUIRE(laplacian_is_correct(lapl, x));
 }
 
