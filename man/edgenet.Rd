@@ -15,27 +15,28 @@ of covariables. Each row is an observation vector.}
 
 \item{Y}{output matrix, of dimension (\code{n} x \code{q})
 where \code{n} is the number of observations and \code{q} is the number
-of response variables Each row is an observation vector.}
+of response variables. Each row is an observation vector.}
 
 \item{G.X}{non-negativ affinity matrix for \code{n}, of dimensions
 (\code{p} x \code{p}) where \code{p} is the number of covariables \code{X}}
 
 \item{G.Y}{non-negativ affinity matrix for \code{n}, of dimensions
-(\code{q} x \code{q}) where \code{q} is the number of covariables \code{Y}}
+(\code{q} x \code{q}) where \code{q} is the number of responses \code{Y}}
 
-\item{lambda}{shrinkage parameter for LASSO.}
+\item{lambda}{\code{numerical} shrinkage parameter for LASSO.}
 
-\item{psigx}{shrinkage parameter for graph-regularization of \code{G.X}}
+\item{psigx}{\code{numerical} shrinkage parameter for graph-regularization
+of \code{G.X}}
 
-\item{psigy}{shrinkage parameter for graph-regularization of \code{G.Y}}
+\item{psigy}{\code{numerical} shrinkage parameter for graph-regularization
+of \code{G.Y}}
 
-\item{thresh}{threshold for coordinate descent}
+\item{thresh}{\code{numerical} threshold for coordinate descent}
 
-\item{maxit}{maximum number of iterations}
+\item{maxit}{maximum number of iterations for coordinate descent
+(\code{integer})}
 
-\item{family}{family of response, e.g. gaussian}
-
-\item{...}{additional params}
+\item{family}{family of response, e.g. \emph{gaussian}}
 }
 \value{
 An object of class \code{edgenet}
@@ -48,10 +49,11 @@ An object of class \code{edgenet}
 }
 \description{
 Fit a graph-regularized linear regression model using
-edge-penalization. The coefficients are computed using graph-prior
-knowledge in the form of one/two affinity matrices. Graph-regularization is
-an extension to previously introduced regularization techniques,
-such as the LASSO.
+ edge-penalization. The coefficients are computed using graph-prior
+ knowledge in the form of one/two affinity matrices. Graph-regularization is
+ an extension to previously introduced regularization techniques,
+ such as the LASSO. For that reason we are also using coordinate descent
+ for minimization of the objective function of the linear model.
 }
 \examples{
 X <- matrix(rnorm(100*10), 100, 10)
@@ -81,7 +83,4 @@ Dirmeier, Simon and Fuchs, Christiane and Mueller, Nikola S and Theis,
  Cheng W. and Wang W. (2014), Graph-regularized dual Lasso for robust
  eQTL mapping.\cr
  \emph{Bioinformatics}
-}
-\author{
-Simon Dirmeier | \email{mail@simon-dirmeier.net}
 }

@@ -4,7 +4,6 @@ bibliography: netReg.bib
 ---
 
 This document explains how to install and use the `netReg` command line tool.
-If something is unclear/buggy/not working I am glad to take any questions.
 
 ## Installation
 
@@ -16,7 +15,8 @@ You have two options for installing the command line tool. You can either
 ### Installation with bioconda
 
 The best way to install `netReg` is using *conda*. 
-For that you should download [Anaconda](https://www.continuum.io/downloads) and create a [virtual environment](https://conda.io/docs/using/envs.html).
+For that you should download [Anaconda](https://www.continuum.io/downloads)
+and create a [virtual environment](https://conda.io/docs/using/envs.html).
 Then install the tool using:
 
 ```sh
@@ -25,11 +25,13 @@ $ conda install -c bioconda netreg
 $ netReg -h
 ```
 
-This would install the package from the *bioconda* channel (a highly recommented platform) and then test if the tool is installed.
+This would install the package from the *bioconda* channel 
+and then test if the tool is installed.
 
 ### Manual installation
 
-Alternatively you can of course install `netReg` manually. The **command line tool has the following dependencies**:
+Alternatively you can of course install `netReg` manually. 
+The **command line tool has the following dependencies**:
 
 * `CMake >= 3.6`,
 * `Boost >= 1.6.x`,
@@ -37,7 +39,8 @@ Alternatively you can of course install `netReg` manually. The **command line to
 * `OpenBLAS/BLAS` and `Lapack` (older versions should work),
 * *optional*: `OpenMP` (older versions should work).
 
-Then download the tarball of the latest [release](https://github.com/dirmeier/netReg/releases/). We use `CMake` for building the package. You build the package like this:
+Then download the tarball of the latest [release](https://github.com/dirmeier/netReg/releases/). 
+We use `CMake` for building the package. You build the package like this:
 
 ```sh
 $ mkdir build && cd build
@@ -100,7 +103,8 @@ $ netReg -h
                                          BOBYQA algorithm.
 ```
 
-This gives a list of required arguments which I think are rather self explanatory, but we will look at some examples later.
+This gives a list of required arguments which I think are rather self explanatory, 
+but we will look at some examples later.
 
 We have provided some example data files in the GitHub
 repository [here](https://github.com/dirmeier/netReg/tree/master/data) to test the package.
@@ -119,7 +123,10 @@ $ netReg -d X.tsv -r Y.tsv -v GY.tsv
          -o outfile.tsv
 ```
 
-In this example we use a design matrix given in `X.tsv` and response matrix `Y.tsv`. For the response variables we use an affinity matrix that represents *biological relationships* with `GY.tsv`. We promote sparsity by setting $\lambda = 10$ and put a week penalty on similar coefficients by setting $\xi = 1$. We stop the algorithm after maximal $1000$ iterations or if a convergence threshold of $0.0001$ is reached. The coefficients are written to `outfile.tsv`.
+In this example we use a design matrix given in `X.tsv` and response matrix `Y.tsv`. 
+For the response variables we use an affinity matrix that represents *biological relationships* with `GY.tsv`. 
+We promote sparsity by setting $\lambda = 10$ and put a week penalty on similar coefficients by setting $\xi = 1$. 
+We stop the algorithm after maximal $1000$ iterations or if a convergence threshold of $0.0001$ is reached. The coefficients are written to `outfile.tsv`.
 
 ### Model selection
 
@@ -133,6 +140,8 @@ $ netReg --modelselection
 ```
 
 This estimates $\lambda$ and $\xi$ and writes them to `outfile.tsv`. 
-Since we did not provide an affinity matrix for the design matrix we do not estimate $\psi$. The optimization uses the `BOBYQA` algorithm by Powell [@powell2009bobyqa]. Since for such a complex likelihood as we use it this takes time, we only iterate `BOBYQA` $100$ times here. Other than that we use default parameters here.
+Since we did not provide an affinity matrix for the design matrix we do not estimate $\psi$. 
+The optimization uses the `BOBYQA` algorithm by Powell [@powell2009bobyqa]. 
+Since for such a complex likelihood as we use it this takes time, we only iterate `BOBYQA` $100$ times here. Other than that we use default parameters here.
 
 ## References

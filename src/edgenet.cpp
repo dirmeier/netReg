@@ -63,29 +63,6 @@ namespace netreg
       std::vector<arma::rowvec>& txx_rows,
       arma::Mat<double>& txy) const
     {
-
-        for (int i = 0; i < DATA_.sample_count(); ++i )
-        {
-            for (int j = 0; j < P_; ++j)
-            {
-                std::cout << DATA_.design()(i, j) <<  " ";
-            }
-            std::cout << "\n";
-        }
-        for (int i = 0; i < DATA_.sample_count(); ++i )
-        {
-            for (int j = 0; j < Q_; ++j)
-            {
-                std::cout << DATA_.response()(i, j) <<  " ";
-            }
-            std::cout << "\n";
-        }
-        std::cout << lambda_ <<  "\n";
-        std::cout << psigx_ <<  "\n";
-        std::cout << psigy_ <<  "\n";
-        std::cout << NITER_ <<  "\n";
-        std::cout << THRESH_ <<  "\n";
-
         // setup coefficient matrix
         arma::Mat<double> B(P_, Q_, arma::fill::ones);
         arma::Mat<double> B_old(P_, Q_);
@@ -136,13 +113,9 @@ namespace netreg
                 // soft-thresholded version of estimate
                 const double d = softnorm(s, lambda_, n);
 
-                // TODO: METHOD for this
                 B(pi, qi) = d;
                 B_rows[pi](qi) = d;
 
-                if (qi == 0) {
-                    std::cout << iter << " " << B(pi, qi) << "\n";
-                }
                 #ifdef USE_RCPPARMADILLO
                 if (iter % 100 == 0)
                 {
@@ -151,7 +124,6 @@ namespace netreg
                 #endif
             }
         }
-        while (iter++ < NITER_);
-//while (!converged_(B.col(qi), B_old.col(qi), iter++));
+        while (!converged_(B.col(qi), B_old.col(qi), iter++));
     }
 }

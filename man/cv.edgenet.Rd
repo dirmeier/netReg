@@ -4,9 +4,9 @@
 \alias{cv.edgenet}
 \title{Find the optimal shrinkage parameters for edgenet}
 \usage{
-cv.edgenet(X, Y, G.X = NULL, G.Y = NULL, thresh = 1e-05, maxit = 1e+05,
-  family = c("gaussian"), epsilon = 0.001, approx.maxit = 10000,
-  nfolds = 10, ...)
+cv.edgenet(X, Y, G.X = NULL, G.Y = NULL, lambda = NULL, psigx = NULL,
+  psigy = NULL, thresh = 1e-05, maxit = 1e+05, family = c("gaussian"),
+  optim.epsilon = 0.001, optim.maxit = 10000, nfolds = 10)
 }
 \arguments{
 \item{X}{input matrix, of dimension (\code{n} x \code{p})
@@ -18,27 +18,50 @@ where \code{n} is the number of observations and \code{q} is the number
 of response variables Each row is an observation vector.}
 
 \item{G.X}{non-negativ affinity matrix for \code{n}, of dimensions
-(\code{p} x \code{p}) where \code{p} is the number of covariables \code{X}}
+(\code{p} x \code{p}) where \code{p} is the number of covariables \code{X}.
+Providing a graph \code{G.X} will optimize the regularization
+parameter \code{psi.gx}. If this is not desired just set \code{G.X} to
+\code{NULL}.}
 
 \item{G.Y}{non-negativ affinity matrix for \code{n}, of dimensions
-(\code{q} x \code{q}) where \code{q} is the number of covariables \code{Y}}
+(\code{q} x \code{q}) where \code{q} is the number of responses \code{Y}.
+Providing a graph \code{G.Y} will optimize the regularization
+parameter \code{psi.gy}. If this is not desired just set \code{G.Y} to
+\code{NULL}.}
 
-\item{thresh}{threshold for coordinate descent}
+\item{lambda}{\code{numerical} shrinkage parameter for LASSO. Per default
+this parameter is
+ set to \code{NULL} which means that \code{lambda} is going to be estimated
+ using cross-validation. If any \code{numerical} value for \code{lambda}
+ is set, estimation of the optimal parameter will \emph{not} be conducted.}
 
-\item{maxit}{maximum number of iterations}
+\item{psigx}{\code{numerical} shrinkage parameter for graph-regularization
+of \code{G.X}. Per default this parameter is
+set to \code{NULL} which means that \code{psigx} is going to be estimated
+in the cross-validation. If any \code{numerical} value for \code{psigx} is
+set, estimation of the optimal parameter will \emph{not} be conducted.}
 
-\item{family}{family of response, e.g. gaussian}
+\item{psigy}{\code{numerical} shrinkage parameter for graph-regularization
+of \code{G.Y}. Per default this parameter is
+set to \code{NULL} which means that \code{psigy} is going to be estimated
+in the cross-validation. If any \code{numerical} value for \code{psigy} is
+set, estimation of the optimal parameter will \emph{not} be conducted.}
 
-\item{epsilon}{the threshold criterion for BOBYQA to stop.
-Usually 1e-3 is a good choice.}
+\item{thresh}{\code{numerical} threshold for coordinate descent}
 
-\item{approx.maxit}{the maximum number of iterations for BOBYQA
-(if choosen). Usually 1e4 is a good choice.}
+\item{maxit}{maximum number of iterations for the coordinate descent
+(\code{integer})}
+
+\item{family}{family of response, e.g. \emph{gaussian}}
+
+\item{optim.epsilon}{\code{numerical} threshold criterion for the
+optimization to stop.  Usually 1e-3 is a good choice.}
+
+\item{optim.maxit}{the maximum number of iterations for the optimization
+(\code{integer}). Usually 1e4 is a good choice.}
 
 \item{nfolds}{the number of folds to be used - default is 10
-(minimum 3, maximum nrow(X)).}
-
-\item{...}{additional parameters}
+(minimum 3, maximum \code{nrow(X)}).}
 }
 \value{
 An object of class \code{cv.edgenet}
@@ -53,7 +76,8 @@ An object of class \code{cv.edgenet}
 \description{
 Finds the optimal shrinkage parameters
  using cross-validation for edgenet. We use the BOBYQA algorithm to
- minimize the sum of squared residuals objective function.
+ find the optimial regularization parameters and coordinate
+ descent in order to minimize the objective function of the linear model.
 }
 \examples{
 X <- matrix(rnorm(100*10), 100, 10)
@@ -67,7 +91,11 @@ Y <- X\%*\%b + rnorm(100)
 cv.edge <- cv.edgenet(X=X, Y=Y, G.X=G.X, family="gaussian")
 }
 \references{
-Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007),
+Dirmeier, Simon and Fuchs, Christiane and Mueller, Nikola S and Theis,
+ Fabian J (2018),
+ netReg: Network-regularized linear models for biological association
+ studies. \cr
+ Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007),
  Pathwise coordinate optimization.\cr
  \emph{The Annals of Applied Statistics}\cr \cr
  Friedman J., Hastie T. and Tibshirani R. (2010),
@@ -83,7 +111,4 @@ Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007),
  The BOBYQA algorithm for bound constrained optimization without
   derivatives.\cr
  \url{http://www.damtp.cam.ac.uk/user/na/NA_papers/NA2009_06.pdf}
-}
-\author{
-Simon Dirmeier, \email{mail@simon-dirmeier.net}
 }

@@ -3,7 +3,7 @@ title: "netReg"
 author: "Simon Dirmeier"
 date: "`r Sys.Date()`"
 output: 
-    BiocStyle::html_document2:
+    BiocStyle::html_document:
         toc: true
         toc_depth: 2
         toc_float: true
@@ -95,7 +95,7 @@ predict novel data-sets:
 
 ```{r}
     X.new <- matrix(rnorm(10*5),10)
-    pred  <- predict(fit, X.new)
+    pred  <- predict(fit, X)
 ```
 
 The `pred` objects contains the predicted values for the responses.

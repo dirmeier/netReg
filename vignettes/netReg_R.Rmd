@@ -3,7 +3,7 @@ title: "netReg R tutorial"
 bibliography: netReg.bib
 ---
 
-This document explains how to install and use the `R` package. If something is unclear/buggy/not working I am glad to take any questions.
+This document explains how to install and use the `R` package. 
 
 ## Installation
 
@@ -25,7 +25,8 @@ The easiest way to install `netReg` is using the `R`-console:
  
 ### Manual installation
  
-If you want to build the package yourself first download the tarball of the latest [release](https://github.com/dirmeier/netReg/releases/) and then call:
+If you want to build the package yourself first download the tarball of the 
+latest [release](https://github.com/dirmeier/netReg/releases/) and then call:
 
 ```bash
 $ R CMD install <netReg-x.y.z.tar.gz>
@@ -51,7 +52,10 @@ At first we load the library and some data:
 > GY <- yeast$GY[40:45, 40:45]
 ```
 
-The *yeast* data $\mathbf{X}$ and $\mathbf{Y}$ set is taken and adopted from [@brem2005genetic], [@storey2005multiple], and [@cheng2014graph]. $\mathbf{GY}$ is taken from [BioGRID](https://thebiogrid.org/downloads/archives/Release%20Archive/BIOGRID-3.4.150/BIOGRID-ORGANISM-3.4.150.tab.zip). $\mathbf{X}$ is a $(n \times p)$ matrix of genetic markers where $n$ is the number of samples (112) and $p$ is the number of markers. $\mathbf{Y}$ is a $(n \times q)$ matrix of expression values for $q$ yeast genes. $n$ is again the numer of samples (112).
+The *yeast* data $\mathbf{X}$ and $\mathbf{Y}$ set is taken and adopted from [@brem2005genetic], [@storey2005multiple], and [@cheng2014graph].
+$\mathbf{GY}$ is taken from [BioGRID](https://thebiogrid.org/downloads/archives/Release%20Archive/BIOGRID-3.4.150/BIOGRID-ORGANISM-3.4.150.tab.zip).
+$\mathbf{X}$ is a $(n \times p)$ matrix of genetic markers where $n$ is the number of samples (112) and $p$ is the number of markers.
+$\mathbf{Y}$ is a $(n \times q)$ matrix of expression values for $q$ yeast genes. $n$ is again the numer of samples (112).
 $\mathbf{GY}$ is a $(q \times q)$ adjacency matrix representing protein-protein interactions for the $q$ response variables.
 
 We only use a smaller network in order to be able to print the results here.
@@ -95,7 +99,9 @@ Family:
 [1] "gaussian"
 ```
 
-For the response variables we use an affinity matrix that represents *biological relationships* with $\mathbf{GY}$. We promote sparsity by setting $\lambda = 10$ and put a week penalty on similar coefficients by setting $\psi_{gy} = 1$. Other than that we used standard parameters in this case.
+For the response variables we use an affinity matrix that represents *biological relationships* with $\mathbf{GY}$.
+We promote sparsity by setting $\lambda = 10$ and put a week penalty on similar coefficients by setting $\psi_{gy} = 1$. 
+Other than that we used standard parameters in this case.
 
 The `fit` object contains information about coefficients and intercepts. Having the coefficients estimated we are able to
 predict novel data-sets:

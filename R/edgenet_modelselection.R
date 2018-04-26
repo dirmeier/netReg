@@ -140,9 +140,15 @@ cv.edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
     q <- dim(Y)[2]
 
     do.lambda <- do.psigx <- do.psigy <- TRUE
-    if (is.positive.numeric(lambda)) do.lambda <- FALSE
-    if (is.positive.numeric(psigx))  do.psigx  <- FALSE
-    if (is.positive.numeric(psigy))  do.psigy  <- FALSE
+    if (is.positive.numeric(lambda)) {
+        do.lambda <- FALSE
+    } else  lambda <- 0
+    if (is.positive.numeric(psigx))  {
+        do.psigx  <- FALSE
+    } else psigx <- 0
+    if (is.positive.numeric(psigy)) {
+        do.psigy  <- FALSE
+    } else psigy <- 0
 
     if (is.null(G.X)) G.X <- matrix(0, 1, 1)
     if (is.null(G.Y)) G.Y <- matrix(0, 1, 1)
@@ -185,11 +191,6 @@ cv.edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
         stop("Please provide either an integer vector or NULL for foldid")
     if (q == 1)     psigy  <- 0
     if (n < nfolds) nfolds <- n
-
-    # cast nulls to doubles to avoid errors
-    if (is.null(lambda)) lambda <- 0
-    if (is.null(psigx))  psigx <- 0
-    if (is.null(psigy))  psigy <- 0
 
     # set static to avoid memory overload
     if (n >= 1000 && p >= 500) nfolds <- 5

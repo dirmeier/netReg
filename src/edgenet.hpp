@@ -174,7 +174,7 @@ namespace netreg
                                const arma::vec& v2,
                                int iter) const
         {
-            return l1(v1, v2) > THRESH_ && iter < NITER_;
+            return l1(v1, v2) < THRESH_ || iter > NITER_;
         }
 
         graph_model_data& DATA_;
