@@ -13,7 +13,8 @@
 <meta property="og:title" content="Network-Regularized Regression Models">
 <meta property="og:description" content="netReg fits linear regression models using network-penalization.
     Graph prior knowledge, in the form of biological networks, is being
-    incorporated into the likelihood of the linear model. The networks describe
+    incorporated into the loss function of the linear model. 
+    The networks describe
     biological relationships such as co-regulation or dependency of the same
     transcription factors/metabolites/etc. yielding a part sparse and part
     smooth solution for coefficient profiles.">
@@ -35,7 +36,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">netReg</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.3.0</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.3.1</span>
       </span>
     </div>
 
@@ -90,95 +91,77 @@
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
-<p><code>netReg</code> is an R/C++ implementation of a network-regularized linear regression model. It incorporates prior knowledge in the form of graphs into the model’s likelihood and by that allows better estimation of regression coefficients. The main routines for estimation of coefficients and shrinkage parameters are implemented in <code>C++11</code>.</p>
-<p>Depending on your installed libraries <code>netReg</code> uses <code>OpenBLAS</code> or <code>BLAS</code>, and <code>Lapack</code> for fast computation of matrix operations in an <code>Armadillo\RcppArmadillo</code> framework. We use <code>Dlib</code> in order to calculate the most optimal set of shrinkage parameters using k-fold cross-validation.</p>
-<p><code>netReg</code> comes as a stand alone <code>C++</code> command line tool shipped with <a href="https://anaconda.org/bioconda/netreg"><code>bioconda</code></a> as well as a <a href="https://bioconductor.org/packages/release/bioc/html/netReg.html"><code>Bioconductor</code></a> package.</p>
+<p><code>netReg</code> is an R/C++ implementation of a network-regularized linear regression model. Graph prior knowledge, in the form of biological networks, is being incorporated into the loss function of the linear model which allows better estimation of regression coefficients.</p>
+<p>Depending on your installed libraries <code>netReg</code> uses <code>OpenBLAS</code> or <code>BLAS</code> and <code>Lapack</code> for fast computation of matrix operations in an <code>Armadillo\RcppArmadillo</code> framework. We use <code>Dlib</code> in order to calculate the most optimal set of shrinkage parameters using k-fold cross-validation.</p>
+<p>For instance, using R, you could fit a network-regularized model like that:</p>
+<pre class="{r}"><code>&gt; X &lt;- matrix(rnorm(10*5), 10)
+&gt; Y &lt;- matrix(rnorm(10*5), 10)
+&gt; aff.mat &lt;- abs(rWishart(1, 10, diag(5))[,,1])
+
+&gt; fit &lt;- edgenet(X=X, Y=Y, G.X=aff.mat, 
+                 lambda=1, psigx=1, family="gaussian")
+&gt; print(fit)
+
+Call: edgenet.default(X = X, Y = Y, G.X = aff.mat, lambda = 1, psigx = 1, 
+    family = "gaussian")
+
+Coefficients:
+             [,1]       [,2]       [,3]      [,4]        [,5]
+[1,]  0.015999757  0.0000000  0.1614923 0.1200417  0.11848110
+[2,]  0.023446755 -0.2021715  0.0000000 0.4316659  0.00000000
+[3,] -0.139861486  0.0000000  0.2917003 0.3362468  0.82524790
+[4,]  0.000000000  0.4495721 -0.2507407 0.3454617 -0.01794482
+[5,] -0.007317568  0.0000000  0.2590443 0.0000000 -0.10663651
+
+Intercept:
+            [,1]
+[1,]  0.18825966
+[2,] -0.36970048
+[3,]  0.27555425
+[4,]  0.04295871
+[5,]  0.25898488
+
+Parameters:
+lambda psi_gx psi_gy 
+     1      1      0 
+
+Family:
+[1] "gaussian"</code></pre>
 </div>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<p>You can install and use <code>netReg</code> either</p>
-<ul>
-<li>as an <code>R</code> library from <a href="https://bioconductor.org/packages/release/bioc/html/netReg.html">Bioconductor</a>,</li>
-<li>or as a <code>C++</code> command line tool from <a href="https://anaconda.org/bioconda/netreg">bioconda</a>,</li>
-<li>or by downloading the <a href="https://github.com/dirmeier/netReg/releases">tarball</a> and doing either of the previous options manually.</li>
-</ul>
-<div id="installation-for-r-with-bioconductor" class="section level3">
+<p><code>netReg</code> comes as a stand alone <code>C++</code> command line tool shipped with <a href="https://anaconda.org/bioconda/netreg"><code>bioconda</code></a> as well as a <a href="https://bioconductor.org/packages/release/bioc/html/netReg.html"><code>Bioconductor</code></a> package.</p>
+<div id="installation-of-the-r-package" class="section level3">
 <h3 class="hasAnchor">
-<a href="#installation-for-r-with-bioconductor" class="anchor"></a>Installation for R with Bioconductor</h3>
-<p>If you want to use the <code>R</code> version of <code>netReg</code> call:</p>
+<a href="#installation-of-the-r-package" class="anchor"></a>Installation of the R package</h3>
+<p>You can install and use <code>netReg</code> either as an <code>R</code> library from <a href="https://bioconductor.org/packages/release/bioc/html/netReg.html">Bioconductor</a>, or by downloading the <a href="https://github.com/dirmeier/netReg/releases">tarball</a>.</p>
+<p>If you want to use the <strong>recommended way</strong> using Bioconductor just call:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="op">&gt;</span><span class="st"> </span><span class="kw">source</span>(<span class="st">"https://bioconductor.org/biocLite.R"</span>)
 <span class="op">&gt;</span><span class="st"> </span><span class="kw">biocLite</span>(<span class="st">"netReg"</span>)
   
 <span class="op">&gt;</span><span class="st"> </span><span class="kw">library</span>(netReg)</code></pre></div>
-<p>from the <code>R</code>-console.</p>
+<p>from the R-console. Installing the R package using the downloaded tarball works like this:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="ex">R</span> CMD install <span class="op">&lt;</span>netReg-x.y.z.tar.gz<span class="op">&gt;</span></code></pre></div>
+<p>I <strong>do not</strong> recommend using <code>devtools</code>, but preferring tarballed releases over the most recent commit.</p>
 </div>
-<div id="installation-for-command-line-with-bioconda" class="section level3">
+<div id="installation-of-the-command-line-tool" class="section level3">
 <h3 class="hasAnchor">
-<a href="#installation-for-command-line-with-bioconda" class="anchor"></a>Installation for command line with bioconda</h3>
-<p>If you want to use the <code>C++</code> command line tool you can do this using conda. For that you should download <a href="https://www.continuum.io/downloads">Anaconda</a> and create a <a href="https://conda.io/docs/using/envs.html">virtual environment</a>. Then install the tool using:</p>
+<a href="#installation-of-the-command-line-tool" class="anchor"></a>Installation of the command-line tool</h3>
+<p>You can install the <code>C++</code> command line tool using <code>conda</code>. For that you should download <a href="https://www.continuum.io/downloads">Anaconda</a> and create a <a href="https://conda.io/docs/using/envs.html">virtual environment</a>. Then install the tool using:</p>
 <div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash">$ <span class="ex">conda</span> install -c bioconda netreg
   
 $ <span class="ex">netReg</span> -h</code></pre></div>
-</div>
-<div id="manual-installation" class="section level3">
-<h3 class="hasAnchor">
-<a href="#manual-installation" class="anchor"></a>Manual installation</h3>
-<p>If you don’t like package managers you can download the tarball of the latest <a href="https://github.com/dirmeier/netReg/releases">release</a> and install both or either from the two.</p>
-<div id="command-line-tool" class="section level4">
-<h4 class="hasAnchor">
-<a href="#command-line-tool" class="anchor"></a>Command line tool</h4>
-<p>The command line tool has the <strong>following dependencies</strong> which need to be installed:</p>
-<ul>
-<li>
-<code>CMake &gt;= 3.6</code>,</li>
-<li>
-<code>Boost &gt;= 1.6.x</code>,</li>
-<li>
-<code>Armadillo &gt;= 7.800.3</code>,</li>
-<li>
-<code>OpenBLAS/BLAS</code> and <code>Lapack</code> (older versions should work),</li>
-<li>
-<em>optional</em>: <code>OpenMP</code> (older versions should work).</li>
-</ul>
-<p>To install the command line tool manually:</p>
-<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash">$ <span class="fu">mkdir</span> build <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> build
-$ <span class="fu">cmake</span> .. <span class="kw">&amp;&amp;</span> <span class="fu">make</span>
-  
-$ <span class="ex">./netReg</span> -h</code></pre></div>
-<p>If you want the tool to be installed in some specific folder you would also call:</p>
-<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash">$ <span class="fu">make</span> install --prefix=/some/path</code></pre></div>
-</div>
-<div id="r-package" class="section level4">
-<h4 class="hasAnchor">
-<a href="#r-package" class="anchor"></a>R package</h4>
-<p>Installing the <code>R</code> using the downloaded tarball works like this:</p>
-<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="ex">R</span> CMD install <span class="op">&lt;</span>netReg-x.y.z.tar.gz<span class="op">&gt;</span></code></pre></div>
-</div>
-</div>
-<div id="installation-on-mac" class="section level3">
-<h3 class="hasAnchor">
-<a href="#installation-on-mac" class="anchor"></a>Installation on Mac</h3>
-<p>In some cases it is required to install <code>gfortan</code> for Mac first (which is needed by <code>Armadillo/RcppArmadillo</code>). In that case run:</p>
-<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash">$ <span class="ex">curl</span> -O http://r.research.att.com/libs/gfortran-4.8.2-darwin13.tar.bz2
-$ <span class="fu">sudo</span> tar fvxz gfortran-4.8.2-darwin13.tar.bz2 -C /</code></pre></div>
-<p>Afterwards just install the package as described above.</p>
+<p>You can find more instructions for (manual) installation <a href="https://dirmeier.github.io/netReg/articles/netReg_commandline.html">here</a>.</p>
 </div>
 </div>
 <div id="documentation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#documentation" class="anchor"></a>Documentation</h2>
-<p>There are two tutorials for either <code>R</code> or the <code>C++</code> command line tool available. We are always glad to take questions, so feel free to write or open up an issue.</p>
-<div id="r-package-1" class="section level3">
-<h3 class="hasAnchor">
-<a href="#r-package-1" class="anchor"></a>R package</h3>
-<p>Load the package using <code>library(netReg)</code>. We provide a vignette for the package that can be called using: <code><a href="articles/netReg.html">vignette("netReg")</a></code>. You can also use the online <a href="https://dirmeier.github.io/netReg/articles/netReg_R.html">tutorial</a>.</p>
-</div>
-<div id="command-line-tool-1" class="section level3">
-<h3 class="hasAnchor">
-<a href="#command-line-tool-1" class="anchor"></a>Command line tool</h3>
-<p>Have a look at the command line <a href="https://dirmeier.github.io/netReg/articles/netReg_commandline.html">tutorial</a>.</p>
-</div>
+<ul>
+<li>For the R package: load the package using <code>library(netReg)</code>. We provide a vignette for the package that can be called using: <code><a href="articles/netReg.html">vignette("netReg")</a></code>.</li>
+<li>For the command-line tool: You can also use the online <a href="https://dirmeier.github.io/netReg/articles/netReg_R.html">tutorial</a>. Have a look at the command line <a href="https://dirmeier.github.io/netReg/articles/netReg_commandline.html">tutorial</a>.</li>
+</ul>
 </div>
 <div id="citation" class="section level2">
 <h2 class="hasAnchor">

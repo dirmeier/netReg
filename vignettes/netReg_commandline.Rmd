@@ -44,23 +44,36 @@ We use `CMake` for building the package. You build the package like this:
 
 ```sh
 $ mkdir build && cd build
-$ cmake .. && make
+$ cmake .. (-DCMAKE_INSTALL_PREFIX=/some/path)  && make
+$ make test
   
 $ ./netReg -h
 ```
 
-This builds the package in folder `build` and then tests if the package is installed. 
-In case you want to install it properly subsequently use:
+This builds the package in folder `build`, runs the test suite and then tests if
+the package is installed. If you also want to install the binary to `/usr/local/bin`, 
+or the respective install path provided with `DCMAKE_INSTALL_PREFIX`, call:
 
 ```sh
-$ (sudo) make install --prefix=/some/path
+$ (sudo) make install
 ```
+
+#### Installation on Mac
+
+In some cases it is required to install `gfortan` for Mac first 
+(which is needed by `Armadillo/RcppArmadillo`). In that case run:
+
+```sh
+$ curl -O http://r.research.att.com/libs/gfortran-4.8.2-darwin13.tar.bz2
+$ sudo tar fvxz gfortran-4.8.2-darwin13.tar.bz2 -C /
+```
+
 
 ## Usage
 
 This section explains how to fit a linear model and do parameter estimation. 
-Using the command line tool is rather straightforward. First let's call `netReg` without parameters to 
-see how it is used:
+Using the command line tool is rather straightforward.
+First let's call `netReg` without parameters to see how it is used:
 
 ```sh
 $ netReg -h

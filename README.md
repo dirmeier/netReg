@@ -13,25 +13,62 @@ Network-penalized generalized linear models in `R` and `C++`.
 ## Introduction
 
 `netReg` is an R/C++ implementation of a network-regularized linear regression model.
-It incorporates prior knowledge in the form of graphs into the model's likelihood and by that allows better estimation of regression coefficients.
-The main routines for estimation of coefficients and shrinkage parameters are implemented in `C++11`. 
+Graph prior knowledge, in the form of biological networks,
+is being incorporated into the loss function of the linear model
+which allows better estimation of regression coefficients. 
 
-Depending on your installed libraries `netReg` uses `OpenBLAS` or `BLAS`, and `Lapack` for fast computation of matrix operations in an `Armadillo\RcppArmadillo` framework. 
+Depending on your installed libraries `netReg` uses `OpenBLAS` or `BLAS` and `Lapack` for
+fast computation of matrix operations in an `Armadillo\RcppArmadillo` framework. 
 We use `Dlib` in order to calculate the most optimal set of shrinkage parameters using k-fold cross-validation.
+
+For instance, using R, you could fit a network-regularized model like that:
+
+```{r}
+> X <- matrix(rnorm(10*5), 10)
+> Y <- matrix(rnorm(10*5), 10)
+> aff.mat <- abs(rWishart(1, 10, diag(5))[,,1])
+
+> fit <- edgenet(X=X, Y=Y, G.X=aff.mat, 
+                 lambda=1, psigx=1, family="gaussian")
+> print(fit)
+
+Call: edgenet.default(X = X, Y = Y, G.X = aff.mat, lambda = 1, psigx = 1, 
+    family = "gaussian")
+
+Coefficients:
+             [,1]       [,2]       [,3]      [,4]        [,5]
+[1,]  0.015999757  0.0000000  0.1614923 0.1200417  0.11848110
+[2,]  0.023446755 -0.2021715  0.0000000 0.4316659  0.00000000
+[3,] -0.139861486  0.0000000  0.2917003 0.3362468  0.82524790
+[4,]  0.000000000  0.4495721 -0.2507407 0.3454617 -0.01794482
+[5,] -0.007317568  0.0000000  0.2590443 0.0000000 -0.10663651
+
+Intercept:
+            [,1]
+[1,]  0.18825966
+[2,] -0.36970048
+[3,]  0.27555425
+[4,]  0.04295871
+[5,]  0.25898488
+
+Parameters:
+lambda psi_gx psi_gy 
+     1      1      0 
+
+Family:
+[1] "gaussian"
+```
+
+## Installation
 
 `netReg` comes as a stand alone `C++` command line tool shipped with [`bioconda`](https://anaconda.org/bioconda/netreg) as well as a [`Bioconductor`](https://bioconductor.org/packages/release/bioc/html/netReg.html) package.
 
-## Installation
- 
-You can install and use `netReg` either
+### Installation of the R package
 
-* as an `R` library from [Bioconductor](https://bioconductor.org/packages/release/bioc/html/netReg.html),
-* or as a `C++` command line tool from [bioconda](https://anaconda.org/bioconda/netreg),
-* or by downloading the [tarball](https://github.com/dirmeier/netReg/releases) and doing either of the previous options manually.
+You can install and use `netReg` either as an `R` library from [Bioconductor](https://bioconductor.org/packages/release/bioc/html/netReg.html),
+or by downloading the [tarball](https://github.com/dirmeier/netReg/releases).
 
-### Installation for R with Bioconductor
-
-If you want to use the `R` version of `netReg` call:
+If you want to use the **recommended way** using Bioconductor just call:
 
 ```r
 > source("https://bioconductor.org/biocLite.R")
@@ -40,12 +77,17 @@ If you want to use the `R` version of `netReg` call:
 > library(netReg)
 ```
  
-from the `R`-console. 
+from the R-console. Installing the R package using the downloaded tarball works like this:
 
-### Installation for command line with bioconda
+```bash
+$ R CMD install <netReg-x.y.z.tar.gz>
+```
 
-If you want to use the `C++` command line tool you can do this using conda. 
-For that you should download [Anaconda](https://www.continuum.io/downloads) and create a [virtual environment](https://conda.io/docs/using/envs.html).
+I **do not** recommend using `devtools`, but preferring tarballed releases over the most recent commit.
+
+### Installation of the command-line tool
+
+You can install the `C++` command line tool using `conda`. For that you should download [Anaconda](https://www.continuum.io/downloads) and create a [virtual environment](https://conda.io/docs/using/envs.html).
 Then install the tool using:
 
 ```sh
@@ -54,68 +96,13 @@ $ conda install -c bioconda netreg
 $ netReg -h
 ```
 
-### Manual installation
-
-If you don't like package managers you can download the tarball of the latest [release](https://github.com/dirmeier/netReg/releases) and install both or either from the two.
-
-#### Command line tool
-
-The command line tool has the **following dependencies** which need to be installed:
-
-* `CMake >= 3.6`,
-* `Boost >= 1.6.x`,
-* `Armadillo >= 7.800.3`,
-* `OpenBLAS/BLAS` and `Lapack` (older versions should work),
-* *optional*: `OpenMP` (older versions should work).
-
-To install the command line tool manually:
-
-```sh
-$ mkdir build && cd build
-$ cmake .. && make
-  
-$ ./netReg -h
-```
-
-If you want the tool to be installed in some specific folder you would also call:
-
-```sh
-$ make install --prefix=/some/path
-```
-
-#### R package
-
-Installing the `R` using the downloaded tarball works like this:
-
-```bash
-$ R CMD install <netReg-x.y.z.tar.gz>
-```
-
-### Installation on Mac
-
-In some cases it is required to install `gfortan` for Mac first (which is needed by `Armadillo/RcppArmadillo`). In that case run:
-
-```sh
-$ curl -O http://r.research.att.com/libs/gfortran-4.8.2-darwin13.tar.bz2
-$ sudo tar fvxz gfortran-4.8.2-darwin13.tar.bz2 -C /
-```
-
-Afterwards just install the package as described above.
+You can find more instructions for (manual) installation [here](https://dirmeier.github.io/netReg/articles/netReg_commandline.html).
 
 ## Documentation
 
-There are two tutorials for either `R` or the `C++` command line tool available.
-We are always glad to take questions, so feel free to write or open up an issue.
-
-### R package
-
-Load the package using `library(netReg)`. 
-We provide a vignette for the package that can be called using: `vignette("netReg")`. 
-You can also use the online [tutorial](https://dirmeier.github.io/netReg/articles/netReg_R.html).
-
-### Command line tool
-
-Have a look at the command line [tutorial](https://dirmeier.github.io/netReg/articles/netReg_commandline.html).
+* For the R package: load the package using `library(netReg)`. We provide a vignette for the package that can be called using: `vignette("netReg")`. 
+* For the command-line tool: You can also use the online [tutorial](https://dirmeier.github.io/netReg/articles/netReg_R.html).
+  Have a look at the command line [tutorial](https://dirmeier.github.io/netReg/articles/netReg_commandline.html).
 
 ## Citation
 

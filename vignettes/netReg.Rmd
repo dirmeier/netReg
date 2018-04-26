@@ -26,8 +26,8 @@ provide better estimates for regression coefficients. Recently several
 network-based regularization techniques have been proposed 
 [@li2008network, @kim2013network, @cheng2014graph].
 
-`netReg` provides an efficient implementation of these graph-penalized 
-regression model. The models introduce a priori generated biological graph 
+`netReg` provides an efficient implementation of a graph-penalized 
+regression model. The model introduces a priori generated biological graph 
 information into generalized linear models yielding sparse or smooth solutions 
 for regression coefficients.  
 
