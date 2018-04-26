@@ -23,7 +23,7 @@ We use `Dlib` in order to calculate the most optimal set of shrinkage parameters
 
 For instance, using R, you could fit a network-regularized model like that:
 
-```{r}
+``` r
 > X <- matrix(rnorm(10*5), 10)
 > Y <- matrix(rnorm(10*5), 10)
 > aff.mat <- abs(rWishart(1, 10, diag(5))[,,1])
@@ -32,31 +32,31 @@ For instance, using R, you could fit a network-regularized model like that:
                  lambda=1, psigx=1, family="gaussian")
 > print(fit)
 
-Call: edgenet.default(X = X, Y = Y, G.X = aff.mat, lambda = 1, psigx = 1, 
-    family = "gaussian")
+#>Call: edgenet.default(X = X, Y = Y, G.X = aff.mat, lambda = 1, psigx = 1, 
+#>                      family = "gaussian")
 
-Coefficients:
-             [,1]       [,2]       [,3]      [,4]        [,5]
-[1,]  0.015999757  0.0000000  0.1614923 0.1200417  0.11848110
-[2,]  0.023446755 -0.2021715  0.0000000 0.4316659  0.00000000
-[3,] -0.139861486  0.0000000  0.2917003 0.3362468  0.82524790
-[4,]  0.000000000  0.4495721 -0.2507407 0.3454617 -0.01794482
-[5,] -0.007317568  0.0000000  0.2590443 0.0000000 -0.10663651
+#>Coefficients:
+#>             [,1]       [,2]       [,3]      [,4]        [,5]
+#>[1,]  0.015999757  0.0000000  0.1614923 0.1200417  0.11848110
+#>[2,]  0.023446755 -0.2021715  0.0000000 0.4316659  0.00000000
+#>[3,] -0.139861486  0.0000000  0.2917003 0.3362468  0.82524790
+#>[4,]  0.000000000  0.4495721 -0.2507407 0.3454617 -0.01794482
+#>[5,] -0.007317568  0.0000000  0.2590443 0.0000000 -0.10663651
 
-Intercept:
+#>Intercept:
             [,1]
-[1,]  0.18825966
-[2,] -0.36970048
-[3,]  0.27555425
-[4,]  0.04295871
-[5,]  0.25898488
+#>[1,]  0.18825966
+#>[2,] -0.36970048
+#>[3,]  0.27555425
+#>[4,]  0.04295871
+#>[5,]  0.25898488
 
-Parameters:
-lambda psi_gx psi_gy 
-     1      1      0 
+#>Parameters:
+#>lambda psi_gx psi_gy 
+#>     1      1      0 
 
-Family:
-[1] "gaussian"
+#>Family:
+#>[1] "gaussian"
 ```
 
 ## Installation
