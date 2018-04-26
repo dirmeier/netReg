@@ -100,7 +100,8 @@ Family:
 ```
 
 For the response variables we use an affinity matrix that represents *biological relationships* with $\mathbf{GY}$.
-We promote sparsity by setting $\lambda = 10$ and put a week penalty on similar coefficients by setting $\psi_{gy} = 1$. Other than that we used standard parameters in this case.
+We promote sparsity by setting $\lambda = 10$ and put a week penalty on similar coefficients by setting $\psi_{gy} = 1$. 
+Other than that we used standard parameters in this case.
 
 The `fit` object contains information about coefficients and intercepts. Having the coefficients estimated we are able to
 predict novel data-sets:
