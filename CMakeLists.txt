@@ -24,7 +24,7 @@ include(CTest)
 
 find_package(OpenMP)
 find_package(Armadillo REQUIRED)
-find_package(HDF5) # required because the FindArmadillo module doesn't look for HDF5
+find_package(HDF5 REQUIRED) # required because the FindArmadillo module doesn't look for HDF5
 find_package(Boost COMPONENTS program_options system REQUIRED)
 find_package(BLAS REQUIRED)
 find_package(LAPACK REQUIRED)

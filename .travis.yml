@@ -1,6 +1,4 @@
 language: r
-r: bioc-devel
-
 sudo: required
 dist: trusty
 
@@ -9,6 +7,7 @@ cache: packages
 matrix:
   include:
     - compiler: gcc
+      r: bioc-devel
       addons:
         apt:
           sources:
@@ -16,15 +15,15 @@ matrix:
           packages:
             - g++-5
       env: COMPILER=g++-5
-    - compiler: clang
+    - compiler: gcc
+      r: bioc-release
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.7
           packages:
-            - clang-3.7
-      env: COMPILER=clang++-3.7
+            - g++-5
+      env: COMPILER=g++-5
 
 env:
   global:
@@ -33,16 +32,18 @@ env:
     - LINTR_COMMENT_BOT=false
 
 r_packages:
+  - devtools
   - covr
   - testthat
   - lintr
 
 addons:
-    apt:
-      packages:
-        - cmake
-      sources:
-        - kalakris-cmake
+  apt:
+    packages:
+      - cmake
+      - cmake-data
+    sources:
+      - kalakris-cmake
 
 bioc_packages:
   - BiocCheck
@@ -53,9 +54,19 @@ before_install:
   - sudo apt-get install --only-upgrade automake
   - sudo apt-get install --only-upgrade autotools-dev
   - sudo apt-get install autoconf-archive
+  - sudo apt-get install libboost-all-dev
+  - sudo apt-get install libopenblas-dev liblapack-dev
+  - sudo apt-get install libarmadillo-dev
+  - sudo apt-get install libhdf5-dev
 
 before_script:
   - autoreconf -vif
+
+after_script:
+  - mkdir build && cd build
+  - cmake ..
+  - make && make test
+  - ./netReg -h
 
 after_success:
   - tar -C .. -xf $PKG_TARBALL

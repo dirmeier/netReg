@@ -9,9 +9,11 @@
 
 // GCC 4.8 gives false alarms about some matrix operations going out of bounds.  Disable
 // these false warnings.
-#if ( defined(__GNUC__) && __GNUC__ == 4 && __GNUC_MINOR__ == 8)
-    #pragma GCC diagnostic ignored "-Warray-bounds"
-#endif
+//
+// outcommented by S. D.
+//#if ( defined(__GNUC__) && __GNUC__ == 4 && __GNUC_MINOR__ == 8)
+    //#pragma GCC diagnostic ignored "-Warray-bounds"
+//#endif
 
 namespace dlib
 {
@@ -21,8 +23,8 @@ namespace dlib
     /*!
         A matrix layout object is any object that contains a templated class called "layout"
         with an interface identical to one below:
-        (Note that all the template arguments are just the template arguments from the dlib::matrix 
-        object and the member functions are defined identically to the ones with the same 
+        (Note that all the template arguments are just the template arguments from the dlib::matrix
+        object and the member functions are defined identically to the ones with the same
         signatures inside the matrix object.)
 
         struct matrix_layout
@@ -33,22 +35,22 @@ namespace dlib
                 long num_cols,
                 typename mem_manager
                 >
-            class layout 
+            class layout
             {
             public:
 
                 T& operator() (
-                    long r, 
+                    long r,
                     long c
                 );
 
                 const T& operator() (
-                    long r, 
+                    long r,
                     long c
                 );
 
                 T& operator() (
-                    long i 
+                    long i
                 );
 
                 const T& operator() (
@@ -80,9 +82,9 @@ namespace dlib
         // if a matrix is bigger than this many bytes then don't put it on the stack
         const static size_t max_stack_based_size = 256;
 
-        // this is a hack to avoid a compile time error in visual studio 8.  I would just 
-        // use sizeof(T) and be done with it but that won't compile.  The idea here 
-        // is to avoid using the stack allocation of the layout object if it 
+        // this is a hack to avoid a compile time error in visual studio 8.  I would just
+        // use sizeof(T) and be done with it but that won't compile.  The idea here
+        // is to avoid using the stack allocation of the layout object if it
         // is going to contain another matrix and also avoid asking for the sizeof()
         // the contained matrix.
         template <typename T>
@@ -105,7 +107,7 @@ namespace dlib
             int val = static_switch <
                 // when the sizes are all non zero and small
                 (num_rows*num_cols*get_sizeof_helper<T>::val <= max_stack_based_size) && (num_rows != 0 && num_cols != 0),
-            // when the sizes are all non zero and big 
+            // when the sizes are all non zero and big
             (num_rows*num_cols*get_sizeof_helper<T>::val >  max_stack_based_size) && (num_rows != 0 && num_cols != 0),
             num_rows == 0 && num_cols != 0,
             num_rows != 0 && num_cols == 0,
@@ -137,17 +139,17 @@ namespace dlib
             layout() {}
 
             T& operator() (
-                long r, 
+                long r,
                 long c
             ) { return *(data+r*num_cols + c); }
 
             const T& operator() (
-                long r, 
+                long r,
                 long c
             ) const { return *(data+r*num_cols + c); }
 
             T& operator() (
-                long i 
+                long i
             ) { return data[i]; }
 
             const T& operator() (
@@ -175,7 +177,7 @@ namespace dlib
 
             void set_size (
                 long ,
-                long 
+                long
             )
             {
             }
@@ -192,7 +194,7 @@ namespace dlib
             long num_cols,
             typename mem_manager
             >
-        class layout<T,num_rows,num_cols,mem_manager,2> : noncopyable // when the sizes are all non zero and big 
+        class layout<T,num_rows,num_cols,mem_manager,2> : noncopyable // when the sizes are all non zero and big
         {
         public:
             const static long NR = num_rows;
@@ -205,21 +207,21 @@ namespace dlib
             { pool.deallocate_array(data); }
 
             T& operator() (
-                long r, 
+                long r,
                 long c
             ) { return data[r*num_cols + c]; }
 
             const T& operator() (
-                long r, 
+                long r,
                 long c
             ) const { return data[r*num_cols + c]; }
 
             T& operator() (
-                long i 
+                long i
             ) { return data[i]; }
 
             const T& operator() (
-                long i 
+                long i
             ) const { return data[i]; }
 
             void swap(
@@ -238,7 +240,7 @@ namespace dlib
 
             void set_size (
                 long ,
-                long 
+                long
             )
             {
             }
@@ -267,27 +269,27 @@ namespace dlib
             ):data(0), nr_(0) { }
 
             ~layout ()
-            { 
-                if (data) 
-                    pool.deallocate_array(data); 
+            {
+                if (data)
+                    pool.deallocate_array(data);
             }
 
             T& operator() (
-                long r, 
+                long r,
                 long c
             ) { return data[r*num_cols + c]; }
 
             const T& operator() (
-                long r, 
+                long r,
                 long c
             ) const { return data[r*num_cols + c]; }
 
             T& operator() (
-                long i 
+                long i
             ) { return data[i]; }
 
             const T& operator() (
-                long i 
+                long i
             ) const { return data[i]; }
 
             void swap(
@@ -310,7 +312,7 @@ namespace dlib
                 long nc
             )
             {
-                if (data) 
+                if (data)
                 {
                     pool.deallocate_array(data);
                 }
@@ -343,29 +345,29 @@ namespace dlib
             ):data(0), nc_(0) { }
 
             ~layout ()
-            { 
-                if (data) 
+            {
+                if (data)
                 {
                     pool.deallocate_array(data);
                 }
             }
 
             T& operator() (
-                long r, 
+                long r,
                 long c
             ) { return data[r*nc_ + c]; }
 
             const T& operator() (
-                long r, 
+                long r,
                 long c
             ) const { return data[r*nc_ + c]; }
 
             T& operator() (
-                long i 
+                long i
             ) { return data[i]; }
 
             const T& operator() (
-                long i 
+                long i
             ) const { return data[i]; }
 
             void swap(
@@ -388,7 +390,7 @@ namespace dlib
                 long nc
             )
             {
-                if (data) 
+                if (data)
                 {
                     pool.deallocate_array(data);
                 }
@@ -421,29 +423,29 @@ namespace dlib
             ):data(0), nr_(0), nc_(0) { }
 
             ~layout ()
-            { 
-                if (data) 
+            {
+                if (data)
                 {
                     pool.deallocate_array(data);
                 }
             }
 
             T& operator() (
-                long r, 
+                long r,
                 long c
             ) { return data[r*nc_ + c]; }
 
             const T& operator() (
-                long r, 
+                long r,
                 long c
             ) const { return data[r*nc_ + c]; }
 
             T& operator() (
-                long i 
+                long i
             ) { return data[i]; }
 
             const T& operator() (
-                long i 
+                long i
             ) const { return data[i]; }
 
             void swap(
@@ -467,7 +469,7 @@ namespace dlib
                 long nc
             )
             {
-                if (data) 
+                if (data)
                 {
                     pool.deallocate_array(data);
                 }
@@ -493,9 +495,9 @@ namespace dlib
         const static size_t max_stack_based_size = 256;
 
 
-        // this is a hack to avoid a compile time error in visual studio 8.  I would just 
-        // use sizeof(T) and be done with it but that won't compile.  The idea here 
-        // is to avoid using the stack allocation of the layout object if it 
+        // this is a hack to avoid a compile time error in visual studio 8.  I would just
+        // use sizeof(T) and be done with it but that won't compile.  The idea here
+        // is to avoid using the stack allocation of the layout object if it
         // is going to contain another matrix and also avoid asking for the sizeof()
         // the contained matrix.
         template <typename T>
@@ -518,7 +520,7 @@ namespace dlib
             int val = static_switch <
                 // when the sizes are all non zero and small
                 (num_rows*num_cols*get_sizeof_helper<T>::val <= max_stack_based_size) && (num_rows != 0 && num_cols != 0),
-            // when the sizes are all non zero and big 
+            // when the sizes are all non zero and big
             (num_rows*num_cols*get_sizeof_helper<T>::val > max_stack_based_size) && (num_rows != 0 && num_cols != 0),
             num_rows == 0 && num_cols != 0,
             num_rows != 0 && num_cols == 0,
@@ -550,17 +552,17 @@ namespace dlib
             layout() {}
 
             T& operator() (
-                long r, 
+                long r,
                 long c
             ) { return *(data+c*num_rows + r); }
 
             const T& operator() (
-                long r, 
+                long r,
                 long c
             ) const { return *(data+c*num_rows + r); }
 
             T& operator() (
-                long i 
+                long i
             ) { return data[i]; }
 
             const T& operator() (
@@ -588,7 +590,7 @@ namespace dlib
 
             void set_size (
                 long,
-                long 
+                long
             )
             {
             }
@@ -605,7 +607,7 @@ namespace dlib
             long num_cols,
             typename mem_manager
             >
-        class layout<T,num_rows,num_cols,mem_manager,2> : noncopyable // when the sizes are all non zero and big 
+        class layout<T,num_rows,num_cols,mem_manager,2> : noncopyable // when the sizes are all non zero and big
         {
         public:
             const static long NR = num_rows;
@@ -618,21 +620,21 @@ namespace dlib
             { pool.deallocate_array(data); }
 
             T& operator() (
-                long r, 
+                long r,
                 long c
             ) { return data[c*num_rows + r]; }
 
             const T& operator() (
-                long r, 
+                long r,
                 long c
             ) const { return data[c*num_rows + r]; }
 
             T& operator() (
-                long i 
+                long i
             ) { return data[i]; }
 
             const T& operator() (
-                long i 
+                long i
             ) const { return data[i]; }
 
             void swap(
@@ -651,7 +653,7 @@ namespace dlib
 
             void set_size (
                 long ,
-                long 
+                long
             )
             {
             }
@@ -680,27 +682,27 @@ namespace dlib
             ):data(0), nr_(0) { }
 
             ~layout ()
-            { 
-                if (data) 
-                    pool.deallocate_array(data); 
+            {
+                if (data)
+                    pool.deallocate_array(data);
             }
 
             T& operator() (
-                long r, 
+                long r,
                 long c
             ) { return data[c*nr_ + r]; }
 
             const T& operator() (
-                long r, 
+                long r,
                 long c
             ) const { return data[c*nr_ + r]; }
 
             T& operator() (
-                long i 
+                long i
             ) { return data[i]; }
 
             const T& operator() (
-                long i 
+                long i
             ) const { return data[i]; }
 
             void swap(
@@ -723,7 +725,7 @@ namespace dlib
                 long nc
             )
             {
-                if (data) 
+                if (data)
                 {
                     pool.deallocate_array(data);
                 }
@@ -756,29 +758,29 @@ namespace dlib
             ):data(0), nc_(0) { }
 
             ~layout ()
-            { 
-                if (data) 
+            {
+                if (data)
                 {
                     pool.deallocate_array(data);
                 }
             }
 
             T& operator() (
-                long r, 
+                long r,
                 long c
             ) { return data[c*num_rows + r]; }
 
             const T& operator() (
-                long r, 
+                long r,
                 long c
             ) const { return data[c*num_rows + r]; }
 
             T& operator() (
-                long i 
+                long i
             ) { return data[i]; }
 
             const T& operator() (
-                long i 
+                long i
             ) const { return data[i]; }
 
             void swap(
@@ -801,7 +803,7 @@ namespace dlib
                 long nc
             )
             {
-                if (data) 
+                if (data)
                 {
                     pool.deallocate_array(data);
                 }
@@ -834,29 +836,29 @@ namespace dlib
             ):data(0), nr_(0), nc_(0) { }
 
             ~layout ()
-            { 
-                if (data) 
+            {
+                if (data)
                 {
                     pool.deallocate_array(data);
                 }
             }
 
             T& operator() (
-                long r, 
+                long r,
                 long c
             ) { return data[c*nr_ + r]; }
 
             const T& operator() (
-                long r, 
+                long r,
                 long c
             ) const { return data[c*nr_ + r]; }
 
             T& operator() (
-                long i 
+                long i
             ) { return data[i]; }
 
             const T& operator() (
-                long i 
+                long i
             ) const { return data[i]; }
 
             void swap(
@@ -880,7 +882,7 @@ namespace dlib
                 long nc
             )
             {
-                if (data) 
+                if (data)
                 {
                     pool.deallocate_array(data);
                 }
