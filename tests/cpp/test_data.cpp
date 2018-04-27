@@ -42,7 +42,7 @@
 #include "../../src/graph_model_cv_data.hpp"
 
 static double threshold = .0000001;
-static uint32_t maxit   = 100000;
+static int maxit   = 100000;
 
 static double lambda = .1;
 static double psi    = .05;
