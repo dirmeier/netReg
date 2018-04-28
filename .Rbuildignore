@@ -8,7 +8,6 @@
 ^.lintr$
 ^.travis.yml$
 ^CMakeLists.txt$
-^LICENSE$
 ^Makefile$
 ^README\.md$
 ^VERSIONS.md$
