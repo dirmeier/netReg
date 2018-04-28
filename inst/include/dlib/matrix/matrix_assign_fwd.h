@@ -9,7 +9,7 @@
 //#if ( defined(__GNUC__) && __GNUC__ == 4 && __GNUC_MINOR__ == 8)
 //    #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 //#endif
-=======
+
 
 #include "../enable_if.h"
 #include "matrix_data_layout.h"

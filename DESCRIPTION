@@ -1,24 +1,15 @@
 Package: netReg
 Type: Package
 Title: Network-Regularized Regression Models
-<<<<<<< HEAD
-Version: 1.3.3
+Version: 1.3.4
 Date: 2018-04-28
-=======
-Version: 1.3.2
-Date: 2018-01-22
->>>>>>> upstream/master
 Authors@R: person("Simon", "Dirmeier",
                     email = "simon.dirmeier@web.de", role = c("aut", "cre"))
 Maintainer: Simon Dirmeier <simon.dirmeier@web.de>
 Description: netReg fits linear regression models using network-penalization.
     Graph prior knowledge, in the form of biological networks, is being
-<<<<<<< HEAD
     incorporated into the loss function of the linear model. 
     The networks describe
-=======
-    incorporated into the likelihood of the linear model. The networks describe
->>>>>>> upstream/master
     biological relationships such as co-regulation or dependency of the same
     transcription factors/metabolites/etc. yielding a part sparse and part
     smooth solution for coefficient profiles.
