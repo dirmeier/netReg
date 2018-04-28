@@ -42,7 +42,7 @@ namespace dlib
                 e(i) = old_val - eps;
                 const double delta_minus = f(e);
 
-                der(i) = (delta_plus - delta_minus)/(2*eps);
+                der(i) = (delta_plus - delta_minus)/((old_val+eps)-(old_val-eps)); 
 
                 // and finally restore the old value of this element
                 e(i) = old_val;
@@ -68,7 +68,7 @@ namespace dlib
                 e(i) = old_val - eps;
                 const double delta_minus = f(item,e);
 
-                der(i) = (delta_plus - delta_minus)/(2*eps);
+                der(i) = (delta_plus - delta_minus)/((old_val+eps)-(old_val-eps)); 
 
                 // and finally restore the old value of this element
                 e(i) = old_val;
@@ -80,7 +80,7 @@ namespace dlib
 
         double operator()(const double& x) const
         {
-            return (f(x+eps)-f(x-eps))/(2*eps);
+            return (f(x+eps)-f(x-eps))/((x+eps)-(x-eps));
         }
 
     private:
@@ -427,7 +427,7 @@ namespace dlib
         for (long i = 0; i < gradient.size(); ++i)
         {
             const double tol = eps*std::abs(x(i));
-            // if x(i) is an active bound constraint then we should set it's search
+            // If x(i) is an active bound constraint then we should set its search
             // direction such that a single step along the direction either does nothing or
             // closes the gap of size tol before hitting the bound exactly.
             if (x_lower(i)+tol >= x(i) && gradient(i) > 0)
@@ -482,7 +482,7 @@ namespace dlib
             << "\n\t x_upper.size():         " << x_upper.size()
         );
         DLIB_ASSERT (
-            min(x_upper-x_lower) > 0,
+            min(x_upper-x_lower) >= 0,
             "\tdouble find_min_box_constrained()"
             << "\n\t You have to supply proper box constraints to this function."
             << "\n\r min(x_upper-x_lower): " << min(x_upper-x_lower)
@@ -527,7 +527,7 @@ namespace dlib
                 last_alpha = alpha;
 
             // Take the search step indicated by the above line search
-            x = clamp(x + alpha*s, x_lower, x_upper);
+            x = dlib::clamp(x + alpha*s, x_lower, x_upper);
             g = der(x);
 
             if (!is_finite(f_value))
@@ -610,7 +610,7 @@ namespace dlib
             << "\n\t x_upper.size():         " << x_upper.size()
         );
         DLIB_ASSERT (
-            min(x_upper-x_lower) > 0,
+            min(x_upper-x_lower) >= 0,
             "\tdouble find_max_box_constrained()"
             << "\n\t You have to supply proper box constraints to this function."
             << "\n\r min(x_upper-x_lower): " << min(x_upper-x_lower)
@@ -658,7 +658,7 @@ namespace dlib
                 last_alpha = alpha;
 
             // Take the search step indicated by the above line search
-            x = clamp(x + alpha*s, x_lower, x_upper);
+            x = dlib::clamp(x + alpha*s, x_lower, x_upper);
             g = -der(x);
 
             // Don't forget to negate the output from the line search since it is  from the

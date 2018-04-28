@@ -260,6 +260,19 @@ namespace dlib
             return !(*this == rect);
         }
 
+        inline bool operator< (const dlib::rectangle& b) const
+        { 
+            if      (left() < b.left()) return true;
+            else if (left() > b.left()) return false;
+            else if (top() < b.top()) return true;
+            else if (top() > b.top()) return false;
+            else if (right() < b.right()) return true;
+            else if (right() > b.right()) return false;
+            else if (bottom() < b.bottom()) return true;
+            else if (bottom() > b.bottom()) return false;
+            else                    return false;
+        }
+
     private:
         long l;
         long t;
@@ -448,6 +461,36 @@ namespace dlib
             temp.y() = rect.bottom();
 
         return temp;
+    }
+
+// ----------------------------------------------------------------------------------------
+
+    inline size_t nearest_rect (
+        const std::vector<rectangle>& rects,
+        const point& p
+    )
+    {
+        DLIB_ASSERT(rects.size() > 0);
+        size_t idx = 0;
+        double best_dist = std::numeric_limits<double>::infinity();
+
+        for (size_t i = 0; i < rects.size(); ++i)
+        {
+            if (rects[i].contains(p))
+            {
+                return i;
+            }
+            else
+            {
+                double dist = (nearest_point(rects[i],p)-p).length();
+                if (dist < best_dist)
+                {
+                    best_dist = dist;
+                    idx = i;
+                }
+            }
+        }
+        return idx;
     }
 
 // ----------------------------------------------------------------------------------------
@@ -685,6 +728,29 @@ namespace dlib
 
 // ----------------------------------------------------------------------------------------
 
+    inline rectangle set_rect_area (
+        const rectangle& rect,
+        unsigned long area
+    )
+    {
+        DLIB_ASSERT(area > 0);
+
+        if (rect.area() == 0)
+        {
+            // In this case we will make the output rectangle a square with the requested
+            // area.
+            unsigned long scale = std::round(std::sqrt(area));
+            return centered_rect(rect, scale, scale);
+        }
+        else
+        {
+            double scale = std::sqrt(area/(double)rect.area());
+            return centered_rect(rect, (long)std::round(rect.width()*scale), (long)std::round(rect.height()*scale));
+        }
+    }
+
+// ----------------------------------------------------------------------------------------
+
     inline rectangle set_aspect_ratio (
         const rectangle& rect,
         double ratio
@@ -751,29 +817,6 @@ namespace dlib
 
 // ----------------------------------------------------------------------------------------
 
-}
-
-namespace std
-{
-    /*!
-        Define std::less<rectangle> so that you can use rectangles in the associative containers.
-    !*/
-    template<>
-    struct less<dlib::rectangle> : public binary_function<dlib::rectangle ,dlib::rectangle,bool>
-    {
-        inline bool operator() (const dlib::rectangle& a, const dlib::rectangle& b) const
-        { 
-            if      (a.left() < b.left()) return true;
-            else if (a.left() > b.left()) return false;
-            else if (a.top() < b.top()) return true;
-            else if (a.top() > b.top()) return false;
-            else if (a.right() < b.right()) return true;
-            else if (a.right() > b.right()) return false;
-            else if (a.bottom() < b.bottom()) return true;
-            else if (a.bottom() > b.bottom()) return false;
-            else                    return false;
-        }
-    };
 }
 
 #endif // DLIB_RECTANGLe_

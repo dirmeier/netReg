@@ -14,6 +14,9 @@
 #cmakedefine DLIB_NO_GUI_SUPPORT
 #cmakedefine DLIB_ENABLE_STACK_TRACE
 
+#cmakedefine LAPACK_FORCE_UNDERSCORE
+#cmakedefine LAPACK_FORCE_NOUNDERSCORE
+
 // You should also consider telling dlib to link against libjpeg, libpng, libgif, fftw, CUDA, 
 // and a BLAS and LAPACK library.  To do this you need to uncomment the following #defines.
 #cmakedefine DLIB_JPEG_SUPPORT
@@ -23,3 +26,4 @@
 #cmakedefine DLIB_USE_BLAS
 #cmakedefine DLIB_USE_LAPACK
 #cmakedefine DLIB_USE_CUDA
+#cmakedefine DLIB_USE_MKL_FFT

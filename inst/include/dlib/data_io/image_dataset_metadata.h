@@ -16,6 +16,15 @@ namespace dlib
 
     // ------------------------------------------------------------------------------------
 
+        enum gender_t
+        {
+            UNKNOWN,
+            MALE,
+            FEMALE
+        };
+
+    // ------------------------------------------------------------------------------------
+
         struct box
         {
             /*!
@@ -34,7 +43,11 @@ namespace dlib
                 truncated(false),
                 occluded(false),
                 ignore(false),
-                angle(0)
+                pose(0),
+                detection_score(0),
+                angle(0),
+                gender(UNKNOWN),
+                age(0)
             {}
 
             box (
@@ -45,7 +58,11 @@ namespace dlib
                 truncated(false),
                 occluded(false),
                 ignore(false),
-                angle(0)
+                pose(0),
+                detection_score(0),
+                angle(0),
+                gender(UNKNOWN),
+                age(0)
             {}
 
             rectangle rect;
@@ -58,6 +75,8 @@ namespace dlib
             bool truncated;
             bool occluded;
             bool ignore;
+            double pose;
+            double detection_score;
 
             // The angle of the object in radians.  Positive values indicate that the
             // object at the center of the box is rotated clockwise by angle radians.  A
@@ -65,6 +84,9 @@ namespace dlib
             // Therefore, to make the object appear upright we would have to rotate the
             // image counter-clockwise by angle radians.
             double angle; 
+
+            gender_t gender;
+            double age;
 
             bool has_label() const { return label.size() != 0; }
             /*!
