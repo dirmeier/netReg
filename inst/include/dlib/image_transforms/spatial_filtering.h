@@ -12,7 +12,6 @@
 #include "../geometry/border_enumerator.h"
 #include "../simd.h"
 #include <limits>
-#include "assign_image.h"
 
 namespace dlib
 {
@@ -1234,25 +1233,15 @@ namespace dlib
             << "\n\t is_same_object(in_img,out_img): " << is_same_object(in_img,out_img) 
         );
 
-        if (sigma < 18)
-        {
-            typedef typename pixel_traits<typename image_traits<out_image_type>::pixel_type>::basic_pixel_type type;
-            typedef typename promote<type>::type ptype;
-            const matrix<ptype,0,1>& filt = create_gaussian_filter<ptype>(sigma, max_size);
-            ptype scale = sum(filt);
-            scale = scale*scale;
-            return spatially_filter_image_separable(in_img, out_img, filt, filt, scale);
-        }
-        else
-        {
-            // For large sigma we need to use a type with a lot of precision to avoid
-            // numerical problems.  So we use double here.
-            typedef double ptype;
-            const matrix<ptype,0,1>& filt = create_gaussian_filter<ptype>(sigma, max_size);
-            ptype scale = sum(filt);
-            scale = scale*scale;
-            return spatially_filter_image_separable(in_img, out_img, filt, filt, scale);
-        }
+        typedef typename pixel_traits<typename image_traits<out_image_type>::pixel_type>::basic_pixel_type type;
+        typedef typename promote<type>::type ptype;
+
+        const matrix<ptype,0,1>& filt = create_gaussian_filter<ptype>(sigma, max_size);
+
+        ptype scale = sum(filt);
+        scale = scale*scale;
+
+        return spatially_filter_image_separable(in_img, out_img, filt, filt, scale);
 
     }
 

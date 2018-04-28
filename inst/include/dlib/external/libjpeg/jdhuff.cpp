@@ -19,9 +19,6 @@
 #include "jpeglib.h"
 #include "jdhuff.h"		/* Declarations shared with jdphuff.c */
 
-#ifdef __GNUC__
-#pragma GCC diagnostic ignored "-Wshift-negative-value"
-#endif
 
 /*
  * Expanded entropy decoder object for Huffman decoding.
@@ -293,13 +290,13 @@ jpeg_make_d_derived_tbl (j_decompress_ptr cinfo, int isDC, int tblno,
 
 GLOBAL(int)
 jpeg_fill_bit_buffer (bitread_working_state * state,
-		      bit_buf_type get_buffer, register int bits_left,
+		      register bit_buf_type get_buffer, register int bits_left,
 		      int nbits)
 /* Load up the bit buffer to a depth of at least nbits */
 {
   /* Copy heavily used state fields into locals (hopefully registers) */
-  const JOCTET * next_input_byte = state->next_input_byte;
-  size_t bytes_in_buffer = state->bytes_in_buffer;
+  register const JOCTET * next_input_byte = state->next_input_byte;
+  register size_t bytes_in_buffer = state->bytes_in_buffer;
   j_decompress_ptr cinfo = state->cinfo;
 
   /* Attempt to load at least MIN_GET_BITS bits into get_buffer. */
@@ -308,7 +305,7 @@ jpeg_fill_bit_buffer (bitread_working_state * state,
 
   if (cinfo->unread_marker == 0) {	/* cannot advance past a marker */
     while (bits_left < MIN_GET_BITS) {
-      int c;
+      register int c;
 
       /* Attempt to read a byte */
       if (bytes_in_buffer == 0) {
@@ -399,11 +396,11 @@ jpeg_fill_bit_buffer (bitread_working_state * state,
 
 GLOBAL(int)
 jpeg_huff_decode (bitread_working_state * state,
-		  bit_buf_type get_buffer, register int bits_left,
+		  register bit_buf_type get_buffer, register int bits_left,
 		  d_derived_tbl * htbl, int min_bits)
 {
-  int l = min_bits;
-  long code;
+  register int l = min_bits;
+  register long code;
 
   /* HUFF_DECODE has determined that the code is at least min_bits */
   /* bits long, so fetch that many bits in one swoop. */
@@ -546,7 +543,7 @@ decode_mcu (j_decompress_ptr cinfo, JBLOCKROW *MCU_data)
       JBLOCKROW block = MCU_data[blkn];
       d_derived_tbl * dctbl = entropy->dc_cur_tbls[blkn];
       d_derived_tbl * actbl = entropy->ac_cur_tbls[blkn];
-      int s, k, r;
+      register int s, k, r;
 
       /* Decode a single block's worth of coefficients */
 

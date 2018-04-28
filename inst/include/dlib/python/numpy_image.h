@@ -6,7 +6,6 @@
 #include "numpy.h"
 #include <dlib/pixel.h>
 #include <dlib/matrix.h>
-#include <dlib/array.h>
 
 
 // ----------------------------------------------------------------------------------------
@@ -19,7 +18,7 @@ public:
     numpy_gray_image (boost::python::object& img) 
     {
         long shape[2];
-        get_numpy_ndarray_parts(img, _data, _contig_buf, shape);
+        get_numpy_ndarray_parts(img, _data, shape);
         _nr = shape[0];
         _nc = shape[1];
     }
@@ -33,7 +32,6 @@ public:
 private:
 
     unsigned char* _data;
-    dlib::array<unsigned char> _contig_buf;
     long _nr;
     long _nc;
 };
@@ -53,8 +51,7 @@ inline bool is_gray_python_image (boost::python::object& img)
 {
     try
     {
-        long shape[2];
-        get_numpy_ndarray_shape(img, shape);
+        numpy_gray_image temp(img);
         return true;
     }
     catch (dlib::error&)
@@ -73,7 +70,7 @@ public:
     numpy_rgb_image (boost::python::object& img) 
     {
         long shape[3];
-        get_numpy_ndarray_parts(img, _data, _contig_buf, shape);
+        get_numpy_ndarray_parts(img, _data, shape);
         _nr = shape[0];
         _nc = shape[1];
         if (shape[2] != 3)
@@ -90,7 +87,6 @@ public:
 private:
 
     dlib::rgb_pixel* _data;
-    dlib::array<dlib::rgb_pixel> _contig_buf;
     long _nr;
     long _nc;
 };
@@ -111,11 +107,8 @@ inline bool is_rgb_python_image (boost::python::object& img)
 {
     try
     {
-        long shape[3];
-        get_numpy_ndarray_shape(img, shape);
-        if (shape[2] == 3)
-            return true;
-        return false;
+        numpy_rgb_image temp(img);
+        return true;
     }
     catch (dlib::error&)
     {

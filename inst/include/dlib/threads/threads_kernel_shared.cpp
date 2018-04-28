@@ -41,6 +41,15 @@ namespace dlib
 
 // ----------------------------------------------------------------------------------------
 
+        threader& thread_pool (
+        ) 
+        {
+            static threader* thread_pool = new threader;
+            return *thread_pool;
+        }
+
+// ----------------------------------------------------------------------------------------
+
         struct threader_destruct_helper
         {
             // cause the thread pool to begin its destruction process when 
@@ -50,16 +59,7 @@ namespace dlib
                 thread_pool().destruct_if_ready();
             }
         };
-
-// ----------------------------------------------------------------------------------------
-
-        threader& thread_pool (
-        ) 
-        {
-            static threader* thread_pool = new threader;
-            static threader_destruct_helper a;
-            return *thread_pool;
-        }
+        static threader_destruct_helper a;
 
 // ----------------------------------------------------------------------------------------
 

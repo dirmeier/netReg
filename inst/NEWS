@@ -1,3 +1,6 @@
+## Version 1.3.x
+  - Modernizes C base and adds more abstractions
+
 ## Version 1.2.0
   - Version bump after `Bioconductor` release 3.6
   - Addition of unit-tests for C++

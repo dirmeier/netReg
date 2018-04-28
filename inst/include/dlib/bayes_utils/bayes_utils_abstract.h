@@ -367,7 +367,7 @@ namespace dlib
         std::ostream& out 
     );   
     /*!
-        provides serialization support
+        provides deserialization support 
     !*/
 
     void deserialize (
@@ -499,7 +499,7 @@ namespace dlib
         std::ostream& out 
     );   
     /*!
-        provides serialization support
+        provides deserialization support 
     !*/
 
     void deserialize (
@@ -615,7 +615,7 @@ namespace dlib
         std::ostream& out 
     );   
     /*!
-        provides serialization support
+        provides deserialization support 
     !*/
 
     void deserialize (

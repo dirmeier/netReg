@@ -10,7 +10,7 @@
 #include "kernel.h"
 #include "kcentroid.h"
 #include <iostream>
-#include <memory>
+#include "../smart_pointers.h"
 
 namespace dlib
 {
@@ -460,7 +460,7 @@ namespace dlib
 
             const sample_vector_type* samples;
 
-            std::shared_ptr<cache_type> cache;
+            shared_ptr<cache_type> cache;
             mutable unsigned long counter;
             unsigned long counter_threshold;
             long cache_size;

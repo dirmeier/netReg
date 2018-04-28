@@ -3,9 +3,8 @@
 #ifndef DLIB_PNG_IMPORT
 #define DLIB_PNG_IMPORT
 
-#include <memory>
-
 #include "png_loader_abstract.h"
+#include "../smart_pointers.h"
 #include "image_loader.h"
 #include "../pixel.h"
 #include "../dir_nav.h"
@@ -194,7 +193,7 @@ namespace dlib
         unsigned height_, width_;
         unsigned bit_depth_;
         int color_type_;
-        std::unique_ptr<LibpngData> ld_;
+        scoped_ptr<LibpngData> ld_;
     };
 
 // ----------------------------------------------------------------------------------------

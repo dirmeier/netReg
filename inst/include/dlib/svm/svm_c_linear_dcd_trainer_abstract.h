@@ -67,7 +67,6 @@ namespace dlib
                 - #forces_last_weight_to_1() == false
                 - #includes_bias() == true
                 - #shrinking_enabled() == true
-                - #solving_svm_l2_problem() == false
         !*/
 
         explicit svm_c_linear_dcd_trainer (
@@ -87,7 +86,6 @@ namespace dlib
                 - #forces_last_weight_to_1() == false
                 - #includes_bias() == true
                 - #shrinking_enabled() == true
-                - #solving_svm_l2_problem() == false
         !*/
 
         bool includes_bias (
@@ -140,23 +138,6 @@ namespace dlib
         /*!
             ensures
                 - #shrinking_enabled() == enabled
-        !*/
-
-        bool solving_svm_l2_problem (
-        ) const; 
-        /*!
-            ensures
-                - returns true if this solver will solve the L2 version of the SVM
-                  objective function.  That is, if solving_svm_l2_problem()==true then this
-                  object, rather than using the hinge loss, uses the squared hinge loss.
-        !*/
-
-        void solve_svm_l2_problem (
-            bool enabled
-        ); 
-        /*!
-            ensures
-                - #solving_svm_l2_problem() == enabled
         !*/
 
         void be_verbose (
@@ -304,16 +285,10 @@ namespace dlib
         !*/
 
         // optimizer_state is used to record the internal state of the SVM optimizer.  It
-        // can be used with the following train() routine to warm-start the optimizer or
-        // access the optimal alpha values (see the Hsieh paper mentioned above).  The
-        // optimizer_state objects are serializable and allow you to get the alphas, but
-        // are otherwise completely opaque to the user.
-        class optimizer_state
-        {
-        public:
-            const std::vector<scalar_type>& get_alpha (
-            ) const; 
-        };
+        // can be used with the following train() routine to warm-start the optimizer.
+        // Note, that optimizer_state objects are serializable but are otherwise completely
+        // opaque to the user.
+        class optimizer_state;
 
         template <
             typename in_sample_vector_type,
@@ -361,8 +336,6 @@ namespace dlib
                 - #state == the internal state of the optimizer at the solution to the SVM
                   problem.  Therefore, passing #state to a new call to train() will start
                   the optimizer from the current solution.
-                - #state.get_alpha().size() == x.size()
-                - #state.get_alpha() == the optimal alpha/dual values learned by the optimizer.
                 - returns a decision function F with the following properties:
                     - F.alpha.size() == 1
                     - F.basis_vectors.size() == 1

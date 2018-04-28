@@ -15,12 +15,11 @@
         The BOBYQA algorithm for bound constrained optimization 
         without derivatives by M.J.D. Powell
 */
-
+#include <limits>
 #include <algorithm>
 #include <cmath>
-#include <memory>
-
 #include "../matrix.h"
+#include "../smart_pointers.h"
 #include "optimization_bobyqa_abstract.h"
 #include "optimization.h"
 
@@ -60,7 +59,7 @@ namespace dlib
         {
             const unsigned long n = x.size();
             const unsigned long w_size = (npt+5)*(npt+n)+3*n*(n+5)/2;
-            std::unique_ptr<doublereal[]> w(new doublereal[w_size]);
+            scoped_ptr<doublereal[]> w(new doublereal[w_size]);
 
             // make these temporary matrices becuse U might be some
             // kind of matrix_exp that doesn't support taking the address
@@ -3354,37 +3353,10 @@ L210:
         const long max_f_evals
     ) 
     {
-        // The starting point (i.e. x) must be a column vector.  
-        COMPILE_TIME_ASSERT(T::NC <= 1);
-
-        // check the requirements.  Also split the assert up so that the error message isn't huge.
-        DLIB_CASSERT(is_col_vector(x) && is_col_vector(x_lower) && is_col_vector(x_upper) &&
-                    x.size() == x_lower.size() && x_lower.size() == x_upper.size() &&
-                    x.size() > 1 && max_f_evals > 1,
-            "\tdouble find_min_bobyqa()"
-            << "\n\t Invalid arguments have been given to this function"
-            << "\n\t is_col_vector(x):       " << is_col_vector(x) 
-            << "\n\t is_col_vector(x_lower): " << is_col_vector(x_lower) 
-            << "\n\t is_col_vector(x_upper): " << is_col_vector(x_upper) 
-            << "\n\t x.size():               " << x.size()
-            << "\n\t x_lower.size():         " << x_lower.size()
-            << "\n\t x_upper.size():         " << x_upper.size()
-            << "\n\t max_f_evals:            " << max_f_evals
-        );
-
-        DLIB_CASSERT(x.size() + 2 <= npt && npt <= (x.size()+1)*(x.size()+2)/2 &&
-                    0 < rho_end && rho_end < rho_begin &&
-                    min(x_upper - x_lower) > 2*rho_begin &&
-                    min(x - x_lower) >= 0 && min(x_upper - x) >= 0,
-            "\tdouble find_min_bobyqa()"
-            << "\n\t Invalid arguments have been given to this function"
-            << "\n\t ntp in valid range: " << (x.size() + 2 <= npt && npt <= (x.size()+1)*(x.size()+2)/2)
-            << "\n\t npt:                " << npt 
-            << "\n\t rho_begin:          " << rho_begin 
-            << "\n\t rho_end:            " << rho_end
-            << "\n\t min(x_upper - x_lower) > 2*rho_begin:           " << (min(x_upper - x_lower) > 2*rho_begin)
-            << "\n\t min(x - x_lower) >= 0 && min(x_upper - x) >= 0: " << (min(x - x_lower) >= 0 && min(x_upper - x) >= 0)
-        );
+         /* modified by Simon Dirmeier to be compatible with R
+          *
+          *
+          */
 
 
         bobyqa_implementation impl;

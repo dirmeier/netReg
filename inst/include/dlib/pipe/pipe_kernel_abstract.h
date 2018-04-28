@@ -219,11 +219,6 @@ namespace dlib
                     - #item == item (i.e. the value of item is unchanged)
         !*/
 
-        bool enqueue (T&& item) { return enqueue(item); }
-        /*!
-            enable enqueueing from rvalues 
-        !*/
-
         bool enqueue_or_timeout (
             T& item,
             unsigned long timeout
@@ -252,11 +247,6 @@ namespace dlib
                 - else
                     - item was NOT added into the pipe
                     - #item == item (i.e. the value of item is unchanged)
-        !*/
-
-        bool enqueue_or_timeout (T&& item, unsigned long timeout) { return enqueue_or_timeout(item,timeout); }
-        /*!
-            enable enqueueing from rvalues 
         !*/
 
         bool dequeue (

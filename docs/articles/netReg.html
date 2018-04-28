@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">netReg</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.3.3</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.3.6</span>
       </span>
     </div>
 
@@ -89,16 +89,16 @@
 
     
     
-<div id="introduction" class="section level2">
-<h2 class="hasAnchor">
-<a href="#introduction" class="anchor"></a>Introduction</h2>
+<div id="introduction" class="section level1">
+<h1 class="hasAnchor">
+<a href="#introduction" class="anchor"></a>Introduction</h1>
 <p>Modelling biological associations or dependencies using linear regression models is often complicated when the analysed data-sets are high-dimensional and less observations than variables are available (<span class="math inline">\(n \ll p\)</span>). For these scenarios methods utilizing a priori knowledge, e.g. in the form of biological networks, have been proposed, arguing that this information might provide better estimates for regression coefficients. Recently several network-based regularization techniques have been proposed <span class="citation">(C. Li and Li 2008, <span class="citation">Kim, Pan, and Shen (2013)</span>, <span class="citation">Cheng et al. (2014)</span>)</span>.</p>
 <p><code>netReg</code> provides an efficient implementation of a graph-penalized regression model. The model introduces a priori generated biological graph information into generalized linear models yielding sparse or smooth solutions for regression coefficients.</p>
 <p><code>netReg</code> computes coefficients using  as previously introduced <span class="citation">(Fu 1998, <span class="citation">Friedman et al. (2007)</span>)</span>, <span class="citation">(Friedman, Hastie, and Tibshirani 2010)</span>. The package is an <code>R</code>-wrapper to an external <code>C++</code> library that uses <code>RcppArmadillo</code> <span class="citation">(Eddelbuettel and Sanderson 2014)</span> for fast matrix calculations and <code>Dlib</code> <span class="citation">(King 2009)</span> for gradient-free convex optimization for model selection.</p>
 </div>
-<div id="edgenet-tutorial" class="section level2">
-<h2 class="hasAnchor">
-<a href="#edgenet-tutorial" class="anchor"></a>Edgenet tutorial</h2>
+<div id="edgenet-tutorial" class="section level1">
+<h1 class="hasAnchor">
+<a href="#edgenet-tutorial" class="anchor"></a>Edgenet tutorial</h1>
 <p>This section explains how to fit a linear model and do parameter estimation using <code>edgenet</code>-regularization. The model is a truncated version from <span class="citation">(Cheng et al. 2014)</span> that is able to introduce prior graphs for the design and response matrices for penalization.</p>
 <p>At first we generate some toy data randomly:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">    <span class="kw">set.seed</span>(<span class="dv">23</span>)
@@ -111,9 +111,9 @@
     aff.mat &lt;-<span class="st"> </span>(<span class="kw">t</span>(aff.mat) <span class="op">+</span><span class="st"> </span>aff.mat) <span class="op">/</span><span class="st"> </span><span class="dv">2</span>
     <span class="kw">diag</span>(aff.mat) &lt;-<span class="st"> </span><span class="dv">0</span></code></pre></div>
 <p>We created the affinity matrix absolutely random, although in practice a <em>real</em> (biological) observed affinity matrix should be used, because in the end the affinity matrix decides the shrinkage of the coefficients.</p>
-<div id="model-fitting" class="section level3">
-<h3 class="hasAnchor">
-<a href="#model-fitting" class="anchor"></a>Model fitting</h3>
+<div id="model-fitting" class="section level2">
+<h2 class="hasAnchor">
+<a href="#model-fitting" class="anchor"></a>Model fitting</h2>
 <p>Fitting a model using edge-based regularization with <code>netReg</code> is easy:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">    fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/edgenet.html">edgenet</a></span>(<span class="dt">X=</span>X, <span class="dt">Y=</span>Y, <span class="dt">G.X=</span>aff.mat, <span class="dt">lambda=</span><span class="dv">1</span>, <span class="dt">psigx=</span><span class="dv">1</span>, <span class="dt">family=</span><span class="st">"gaussian"</span>)
     <span class="kw">print</span>(fit)</code></pre></div>
@@ -149,9 +149,9 @@
     pred  &lt;-<span class="st"> </span><span class="kw">predict</span>(fit, X)</code></pre></div>
 <p>The <code>pred</code> objects contains the predicted values for the responses.</p>
 </div>
-<div id="model-selection" class="section level3">
-<h3 class="hasAnchor">
-<a href="#model-selection" class="anchor"></a>Model selection</h3>
+<div id="model-selection" class="section level2">
+<h2 class="hasAnchor">
+<a href="#model-selection" class="anchor"></a>Model selection</h2>
 <p>In most cases we do not have the optimal shrinkage parameters <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(\psi_{gx}\)</span> and <span class="math inline">\(\psi_{gy}\)</span>. For these settings you can use <code>netReg</code>’s included model selection. We use Powell’s BOBYQA algorithm (<span class="citation">(Powell 2009)</span>) for gradient-free optimization that is included in the <code>C++</code> library <code>Dlib</code>. Doing the model selection only requires calling <code>cv.edgenet</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">    cv &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cv.edgenet.html">cv.edgenet</a></span>(<span class="dt">X=</span>X, <span class="dt">Y=</span>Y, <span class="dt">G.X=</span>aff.mat, <span class="dt">family=</span><span class="st">"gaussian"</span>, <span class="dt">maxit=</span><span class="dv">1000</span>)
     <span class="kw">print</span>(cv)</code></pre></div>
@@ -184,16 +184,16 @@
 ##     family = "gaussian")
 ## 
 ## Parameters:
-## lambda  psigx  psigy 
-##   0.00   0.00   0.49 
+##       lambda        psigx        psigy 
+## 0.0000000000 0.9879898003 0.0001424622 
 ## Family:
 ## [1] "gaussian"</code></pre>
 <p>In the above example <span class="math inline">\(\lambda\)</span> should have changed quite a bit, while <span class="math inline">\(\psi_{gy}\)</span> should still be <span class="math inline">\(0\)</span>. Since we generated <code>aff.mat</code> randomly <span class="math inline">\(\psi_{gx}\)</span> should be roughly (or exact) zero as well. This makes sense intuitively since we did not put any biological relationships into the affinity matrices.</p>
 </div>
 </div>
-<div id="references" class="section level2 unnumbered">
-<h2 class="hasAnchor">
-<a href="#references" class="anchor"></a>References</h2>
+<div id="references" class="section level1 unnumbered">
+<h1 class="hasAnchor">
+<a href="#references" class="anchor"></a>References</h1>
 <div id="refs" class="references">
 <div id="ref-cheng2014graph">
 <p>Cheng, Wei, Xiang Zhang, Zhishan Guo, Yu Shi, and Wei Wang. 2014. “Graph-Regularized Dual Lasso for Robust eQTL Mapping.” <em>Bioinformatics</em> 30 (12). Oxford Univ Press: i139–i148.</p>
@@ -232,7 +232,12 @@
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
 <li><a href="#introduction">Introduction</a></li>
-      <li><a href="#edgenet-tutorial">Edgenet tutorial</a></li>
+      <li>
+<a href="#edgenet-tutorial">Edgenet tutorial</a><ul class="nav nav-pills nav-stacked">
+<li><a href="#model-fitting">Model fitting</a></li>
+      <li><a href="#model-selection">Model selection</a></li>
+      </ul>
+</li>
       <li><a href="#references">References</a></li>
       </ul>
 </div>

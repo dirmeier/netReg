@@ -10,7 +10,6 @@
 //    #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 //#endif
 
-
 #include "../enable_if.h"
 #include "matrix_data_layout.h"
 #include "../algs.h"
@@ -404,10 +403,6 @@ inline typename enable_if_c<ma::is_small_matrix<src_exp>::value && ma::is_very_s
 // ----------------------------------------------------------------------------------------
 
 }
-
-#if defined(__GNUC__) && ((__GNUC__ >= 4 && __GNUC_MINOR__ >= 8) || (__GNUC__ > 4))
-#pragma GCC diagnostic pop
-#endif
 
 #endif // DLIB_MATRIx_ASSIGn_FWD_
 

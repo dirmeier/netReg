@@ -319,25 +319,6 @@ namespace dlib
                 - returns #*this
         !*/
 
-        bool operator== (
-            const drectangle& rect
-        ) const;
-        /*!
-            ensures
-                - if (top() == rect.top() && left() == rect.left() &&
-                      right() == rect.right() && bottom() == rect.bottom()) then
-                    - returns true
-                - else
-                    - returns false
-        !*/
-
-        bool operator!= (
-            const drectangle& rect
-        ) const;
-        /*!
-            ensures
-                - returns !(*this == rect)
-        !*/
     };
 
 // ----------------------------------------------------------------------------------------
@@ -583,23 +564,6 @@ namespace dlib
         ensures
             - return shrink_rect(rect, -width, -height)
               (i.e. grows the given drectangle by expanding its border)
-    !*/
-
-// ----------------------------------------------------------------------------------------
-
-    drectangle set_rect_area (
-        const drectangle& rect,
-        double area
-    );
-    /*!
-        requires
-            - area >= 0
-        ensures
-            - Returns a rectangle R such that:
-                - center(R) == center(rect)
-                - R has the same aspect ratio as rect.  If rect.area() == 0 then the
-                  returned rect has a 1:1 aspect ratio.
-                - R.area() == area
     !*/
 
 // ----------------------------------------------------------------------------------------

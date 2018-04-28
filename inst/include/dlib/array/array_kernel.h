@@ -90,21 +90,6 @@ namespace dlib
             _at_start(true)
         {}
 
-        array(
-            array&& item
-        ) : array()
-        {
-            swap(item);
-        }
-
-        array& operator=(
-            array&& item
-        )
-        {
-            swap(item);
-            return *this;
-        }
-
         explicit array (
             unsigned long new_size
         ) :
@@ -191,10 +176,6 @@ namespace dlib
 
         void push_back (
             T& item
-        );
-
-        void push_back (
-            T&& item
         );
 
         typedef T* iterator;
@@ -782,17 +763,6 @@ namespace dlib
             exchange(item,(*this)[this->size()-1]);
         }
     }
-
-// ----------------------------------------------------------------------------------------
-
-    template <
-        typename T,
-        typename mem_manager
-        >
-    void array<T,mem_manager>::
-    push_back (
-        T&& item
-    ) { push_back(item); }
 
 // ----------------------------------------------------------------------------------------
 
