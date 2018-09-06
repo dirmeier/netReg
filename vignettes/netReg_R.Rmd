@@ -17,8 +17,9 @@ You can install and use `netReg` either
 The easiest way to install `netReg` is using the `R`-console:
 
 ```{r, eval=FALSE}
-> source("https://bioconductor.org/biocLite.R")
-> biocLite("netReg")
+> if (!requireNamespace("BiocManager", quietly=TRUE))
+    > install.packages("BiocManager")
+> BiocManager::install("netReg")
 
 > library(netReg)
 ```

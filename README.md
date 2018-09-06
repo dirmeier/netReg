@@ -71,8 +71,9 @@ or by downloading the [tarball](https://github.com/dirmeier/netReg/releases).
 If you want to use the **recommended way** using Bioconductor just call:
 
 ```r
-> source("https://bioconductor.org/biocLite.R")
-> biocLite("netReg")
+> if (!requireNamespace("BiocManager", quietly=TRUE))
+    > install.packages("BiocManager")
+> BiocManager::install("netReg")
   
 > library(netReg)
 ```
