@@ -36,7 +36,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">netReg</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.3.6</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.7.0</span>
       </span>
     </div>
 
@@ -98,7 +98,7 @@
 <span class="op">&gt;</span><span class="st"> </span>Y &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="dv">10</span><span class="op">*</span><span class="dv">5</span>), <span class="dv">10</span>)
 <span class="op">&gt;</span><span class="st"> </span>aff.mat &lt;-<span class="st"> </span><span class="kw">abs</span>(<span class="kw">rWishart</span>(<span class="dv">1</span>, <span class="dv">10</span>, <span class="kw">diag</span>(<span class="dv">5</span>))[,,<span class="dv">1</span>])
 
-<span class="op">&gt;</span><span class="st"> </span>fit &lt;-<span class="st"> </span><span class="kw"><a href="reference/edgenet.html">edgenet</a></span>(<span class="dt">X=</span>X, <span class="dt">Y=</span>Y, <span class="dt">G.X=</span>aff.mat, 
+<span class="op">&gt;</span><span class="st"> </span>fit &lt;-<span class="st"> </span><span class="kw">edgenet</span>(<span class="dt">X=</span>X, <span class="dt">Y=</span>Y, <span class="dt">G.X=</span>aff.mat, 
                  <span class="dt">lambda=</span><span class="dv">1</span>, <span class="dt">psigx=</span><span class="dv">1</span>, <span class="dt">family=</span><span class="st">"gaussian"</span>)
 <span class="op">&gt;</span><span class="st"> </span><span class="kw">print</span>(fit)
 
@@ -137,8 +137,9 @@
 <a href="#installation-of-the-r-package" class="anchor"></a>Installation of the R package</h3>
 <p>You can install and use <code>netReg</code> either as an <code>R</code> library from <a href="https://bioconductor.org/packages/release/bioc/html/netReg.html">Bioconductor</a>, or by downloading the <a href="https://github.com/dirmeier/netReg/releases">tarball</a>.</p>
 <p>If you want to use the <strong>recommended way</strong> using Bioconductor just call:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="op">&gt;</span><span class="st"> </span><span class="kw">source</span>(<span class="st">"https://bioconductor.org/biocLite.R"</span>)
-<span class="op">&gt;</span><span class="st"> </span><span class="kw">biocLite</span>(<span class="st">"netReg"</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="op">&gt;</span><span class="st"> </span><span class="cf">if</span> (<span class="op">!</span><span class="kw">requireNamespace</span>(<span class="st">"BiocManager"</span>, <span class="dt">quietly=</span><span class="ot">TRUE</span>))
+    <span class="op">&gt;</span><span class="st"> </span><span class="kw">install.packages</span>(<span class="st">"BiocManager"</span>)
+<span class="op">&gt;</span><span class="st"> </span>BiocManager<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/BiocManager/topics/install">install</a></span>(<span class="st">"netReg"</span>)
   
 <span class="op">&gt;</span><span class="st"> </span><span class="kw">library</span>(netReg)</code></pre></div>
 <p>from the R-console. Installing the R package using the downloaded tarball works like this:</p>
@@ -159,7 +160,7 @@ $ <span class="ex">netReg</span> -h</code></pre></div>
 <h2 class="hasAnchor">
 <a href="#documentation" class="anchor"></a>Documentation</h2>
 <ul>
-<li>For the R package: load the package using <code>library(netReg)</code>. We provide a vignette for the package that can be called using: <code><a href="articles/netReg.html">vignette("netReg")</a></code>.</li>
+<li>For the R package: load the package using <code>library(netReg)</code>. We provide a vignette for the package that can be called using: <code>vignette("netReg")</code>.</li>
 <li>For the command-line tool: You can also use the online <a href="https://dirmeier.github.io/netReg/articles/netReg_R.html">tutorial</a>. Have a look at the command line <a href="https://dirmeier.github.io/netReg/articles/netReg_commandline.html">tutorial</a>.</li>
 </ul>
 </div>
