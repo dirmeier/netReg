@@ -2,7 +2,7 @@ dnl Initialise Autoconf
 AC_PREREQ([2.69])
 AC_INIT(
 	[netReg],
-	[1.2.0],
+	[1.7.0],
 	[simon.dirmeier@web.de],
 	[netReg],
 	[https://github.com/dirmeier/netReg])
@@ -15,10 +15,10 @@ then
 else
   AC_MSG_NOTICE([R home found in ${R_HOME}])
 
-	CXX1X=`"${R_HOME}/bin/R" CMD config CXX1X`
-	CXX1XSTD=`"${R_HOME}/bin/R" CMD config CXX1XSTD`
+	CXX1X=`"${R_HOME}/bin/R" CMD config CXX11`
+	CXX1XSTD=`"${R_HOME}/bin/R" CMD config CXX11STD`
 	CXX="${CXX1X} ${CXX1XSTD}"
-	CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXX1XFLAGS`
+	CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXX11FLAGS`
 	CPPFLAGS=`"${R_HOME}/bin/R" CMD config CPPFLAGS`
   AC_MSG_NOTICE([setting CXX to ${CXX}])
 fi
