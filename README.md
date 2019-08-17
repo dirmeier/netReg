@@ -6,22 +6,19 @@
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/dirmeier/netReg?branch=master&svg=true)](https://ci.appveyor.com/project/dirmeier/netReg)
 [![codecov](https://codecov.io/gh/dirmeier/netReg/branch/master/graph/badge.svg)](https://codecov.io/gh/dirmeier/netReg)
 [![bioc](https://bioconductor.org/shields/years-in-bioc/netReg.svg)](https://bioconductor.org/packages/release/bioc/html/netReg.html)
-[![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat-square)](http://bioconda.github.io/recipes/netreg/README.html)
 
-Network-penalized generalized linear models in `R` and `C++`.
+Network-penalized generalized linear models in `R`. Now with `TensorFlow`.
 
 ## Introduction
 
-`netReg` is an R/C++ implementation of a network-regularized linear regression model.
-Graph prior knowledge, in the form of biological networks,
-is being incorporated into the loss function of the linear model
+`netReg` is an R implementation of a network-regularized linear regression model.
+Graph prior knowledge, in the form of biological networks, is being incorporated into the loss function of the linear model
 which allows better estimation of regression coefficients. 
 
-Depending on your installed libraries `netReg` uses `OpenBLAS` or `BLAS` and `Lapack` for
-fast computation of matrix operations in an `Armadillo\RcppArmadillo` framework. 
-We use `Dlib` in order to calculate the most optimal set of shrinkage parameters using k-fold cross-validation.
+From version `v1.9.0` on, we use `TensorFlow` instead of uses `OpenBLAS` or `BLAS` and `Lapack` and `Dlib`.
+Some matrix operations are still done in `RcppArmadillo`. 
 
-For instance, using R, you could fit a network-regularized model like that:
+For isntance, in R, you could fit a network-regularized model like that:
 
 ``` r
 > X <- matrix(rnorm(10*5), 10)
@@ -61,12 +58,8 @@ For instance, using R, you could fit a network-regularized model like that:
 
 ## Installation
 
-`netReg` comes as a stand alone `C++` command line tool shipped with [`bioconda`](https://anaconda.org/bioconda/netreg) as well as a [`Bioconductor`](https://bioconductor.org/packages/release/bioc/html/netReg.html) package.
-
-### Installation of the R package
-
-You can install and use `netReg` either as an `R` library from [Bioconductor](https://bioconductor.org/packages/release/bioc/html/netReg.html),
-or by downloading the [tarball](https://github.com/dirmeier/netReg/releases).
+You can install and use `netReg` either from [Bioconductor](https://bioconductor.org/packages/release/bioc/html/netReg.html),
+or by downloading the latest [tarball](https://github.com/dirmeier/netReg/releases).
 
 If you want to use the **recommended way** using Bioconductor just call:
 
@@ -78,7 +71,7 @@ If you want to use the **recommended way** using Bioconductor just call:
 > library(netReg)
 ```
  
-from the R-console. Installing the R package using the downloaded tarball works like this:
+nstalling the R package using the downloaded tarball works like this:
 
 ```bash
 $ R CMD install <netReg-x.y.z.tar.gz>
@@ -86,24 +79,10 @@ $ R CMD install <netReg-x.y.z.tar.gz>
 
 I **do not** recommend using `devtools`, but preferring tarballed releases over the most recent commit.
 
-### Installation of the command-line tool
-
-You can install the `C++` command line tool using `conda`. For that you should download [Anaconda](https://www.continuum.io/downloads) and create a [virtual environment](https://conda.io/docs/using/envs.html).
-Then install the tool using:
-
-```sh
-$ conda install -c bioconda netreg
-  
-$ netReg -h
-```
-
-You can find more instructions for (manual) installation [here](https://dirmeier.github.io/netReg/articles/netReg_commandline.html).
-
 ## Documentation
 
 * For the R package: load the package using `library(netReg)`. We provide a vignette for the package that can be called using: `vignette("netReg")`. 
-* For the command-line tool: You can also use the online [tutorial](https://dirmeier.github.io/netReg/articles/netReg_R.html).
-  Have a look at the command line [tutorial](https://dirmeier.github.io/netReg/articles/netReg_commandline.html).
+* For the command-line tool: You can also use the online [vignette](https://dirmeier.github.io/netReg/articles/netReg.html).
 
 ## Citation
 
@@ -115,4 +94,4 @@ netReg: network-regularized linear models for biological association studies,
 
 ## Author
 
-* Simon Dirmeier <a href="mailto:simon.dirmeier@gmx.de">simon.dirmeier@gmx.de</a>
+Simon Dirmeier <a href="mailto:simon.dirmeier@gmx.de">simon.dirmeier@gmx.de</a>
