@@ -40,23 +40,42 @@ convex optimization for model selection.
 
 # Edgenet tutorial
 
+## The Gaussian case
+
 This section explains how to fit a linear model and do parameter estimation 
 using `edgenet`-regularization. The model is a truncated version from 
 [@cheng2014graph] that is able to introduce prior graphs for the design and 
 response matrices for penalization.
 
+$\ell_1$-regularized likelihood as:
+\begin{equation}
+\small
+\begin{split}
+\hat{\mathbf{B}} = \arg \min_{\mathbf{B}} \,
+ & \frac{1}{2} || \mathbf{Y} - \mathbf{XB}  ||^2_2  + \lambda ||\mathbf{B} ||_1  \\  & + 
+      		  \frac{\phi_1}{2}  \sum_{i=1}^p \sum_{j=1}^q
+      		   || \boldsymbol \beta_{i,*} - \boldsymbol \beta_{j,*} ||_2^2 (\mathbf{G}_X)_{i,j}    \\  & +
+ \frac{\phi_2}{2}  \sum_{i=1}^p \sum_{j=1}^q || \boldsymbol \beta_{*,i} - \boldsymbol \beta_{*,j} ||_2^2 (\mathbf{G}_Y)_{i,j} \\
+ = \arg \min_{\mathbf{B}} \,
+ & \frac{1}{2} || \mathbf{Y} - \mathbf{XB}  ||^2_2  + \lambda ||\mathbf{B} ||_1  \\  & + 
+ \phi_1 \text{tr}\left( \mathbf{B}^T \left( \mathbf{D}_{\mathbf{G}_X} - \mathbf{G}_X \right) \mathbf{B}  \right) \\  & + 
+ \phi_2 \text{tr}\left( \mathbf{B} \left( \mathbf{D}_{\mathbf{G}_Y} - \mathbf{G}_Y  \right) \mathbf{B}^T  \right)
+\end{split}
+\label{equ:graphreg}
+\end{equation}
+
 At first we generate some toy data randomly:
 
 ```{r}
-    set.seed(23)
-    X <- matrix(rnorm(1000*5), 1000)
-    Y <- matrix(rnorm(1000*5), 1000)
+set.seed(23)
+X <- matrix(rnorm(1000*5), 1000)
+Y <- matrix(rnorm(1000*5), 1000)
 ```
 
 Then we load the `netReg` library:
 
 ```{r}
-    library(netReg)
+library(netReg)
 ```
 
 For `edgenet` we need to create an affinity matrix for the co-variables first. 
@@ -64,9 +83,9 @@ We also can create a graph for the responses, but this is not necessary to
 demonstrate the method. We could create a random graph like this:
 
 ```{r}
-    aff.mat <- matrix(rbeta(25, 1, 5),  5)
-    aff.mat <- (t(aff.mat) + aff.mat) / 2
-    diag(aff.mat) <- 0
+aff.mat <- matrix(rbeta(25, 1, 5),  5)
+aff.mat <- (t(aff.mat) + aff.mat) / 2
+diag(aff.mat) <- 0
 ```
 
 We created the affinity matrix absolutely random, although in practice a *real*
@@ -78,8 +97,8 @@ affinity matrix decides the shrinkage of the coefficients.
 Fitting a model using edge-based regularization with `netReg` is easy:
 
 ```{r}
-    fit <- edgenet(X=X, Y=Y, G.X=aff.mat, lambda=1, psigx=1, family="gaussian")
-    print(fit)
+fit <- edgenet(X=X, Y=Y, G.X=aff.mat, lambda=1, psigx=1, family="gaussian")
+print(fit)
 ```
 
 In this case we used a single affinity matrix `G.X` which represents the
@@ -94,8 +113,8 @@ residuals, etc. Having the coefficients estimated we are able to
 predict novel data-sets:
 
 ```{r}
-    X.new <- matrix(rnorm(10*5),10)
-    pred  <- predict(fit, X)
+X.new <- matrix(rnorm(10*5),10)
+pred  <- predict(fit, X)
 ```
 
 The `pred` objects contains the predicted values for the responses.
@@ -110,8 +129,8 @@ included model selection. We use Powell's BOBYQA algorithm
 `cv.edgenet`:
 
 ```{r}
-    cv <- cv.edgenet(X=X, Y=Y, G.X=aff.mat, family="gaussian", maxit=1000)
-    print(cv)
+cv <- cv.edgenet(X=X, Y=Y, G.X=aff.mat, family="gaussian", maxit=1000)
+print(cv)
 ```
 
 You can use the fitted parameters for the normal `edgenet` function. 
@@ -127,14 +146,14 @@ Let's do a scenario where we need to shrink some coefficients, i.e. $n \ll p$.
 We choose a small $p$, such that the computation does not take too long.
 
 ```{r}
-    p <- 25
-    X <- matrix(rnorm(10*p), 10)
-    Y <- matrix(rnorm(10*p), 10)
-    aff.mat <- matrix(rgamma(p * p, 5, 1), p)
-    aff.mat <- (t(aff.mat) + aff.mat)
-    diag(aff.mat) <- 0
-    cv <- cv.edgenet(X=X, Y=Y, G.X=aff.mat, family="gaussian", maxit=1000)
-    print(cv)
+p <- 25
+X <- matrix(rnorm(10*p), 10)
+Y <- matrix(rnorm(10*p), 10)
+aff.mat <- matrix(rgamma(p * p, 5, 1), p)
+aff.mat <- (t(aff.mat) + aff.mat)
+diag(aff.mat) <- 0
+cv <- cv.edgenet(X=X, Y=Y, G.X=aff.mat, family="gaussian", maxit=1000)
+print(cv)
 ```
 
 In the above example $\lambda$ should have changed quite a bit, while

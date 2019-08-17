@@ -24,16 +24,23 @@
 
 #include "stat_functions.hpp"
 
-namespace netreg
-{
-    arma::Col<double> intercept(arma::Mat<double>& X,
-                                arma::Mat<double>& Y,
-                                arma::Mat<double>& B)
-    {
-        arma::Mat<double> terr = (Y - (X * B)).t();
-        arma::Col<double> rep(Y.n_rows, arma::fill::ones);
-        arma::Col<double> intr = (terr * rep) / Y.n_rows;
 
-        return intr;
-    }
+/' Compute the estimated intercept of a linear model
+//'
+//' @noRd
+//' @param x matrix of covariates
+//' @param y matrix of responses
+//' @param y matrix of estimated coefficients (without intercept)
+//' @return returns a matrix
+// [[Rcpp::interfaces(r, cpp)]]
+// [[Rcpp::export]]
+arma::Col<double> intercept(arma::Mat<double>& X,
+                            arma::Mat<double>& Y,
+                            arma::Mat<double>& B)
+{
+    arma::Mat<double> terr = (Y - (X * B)).t();
+    arma::Col<double> rep(Y.n_rows, arma::fill::ones);
+    arma::Col<double> intr = (terr * rep) / Y.n_rows;
+
+    return intr;
 }
