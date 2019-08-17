@@ -12,10 +12,10 @@ Network-penalized generalized linear models in `R`. Now with `TensorFlow`.
 ## Introduction
 
 `netReg` is an R implementation of a network-regularized linear regression model.
-Graph prior knowledge, in the form of biological networks, is being incorporated into the loss function of the linear model
+Graph prior knowledge, in the form of biological networks, is being incorporated into the loss function of a linear model
 which allows better estimation of regression coefficients. 
 
-From version `v1.9.0` on, we use `TensorFlow` instead of uses `OpenBLAS` or `BLAS` and `Lapack` and `Dlib`.
+From version `v1.9.0` on, we use `TensorFlow` instead of custom `C++` and `Dlib` which allowed deleting of major parts of the code base.
 Some matrix operations are still done in `RcppArmadillo`. 
 
 For isntance, in R, you could fit a network-regularized model like that:
@@ -65,7 +65,7 @@ If you want to use the **recommended way** using Bioconductor just call:
 
 ```r
 > if (!requireNamespace("BiocManager", quietly=TRUE))
-    > install.packages("BiocManager")
+>   install.packages("BiocManager")
 > BiocManager::install("netReg")
   
 > library(netReg)

@@ -1,5 +1,9 @@
-## Version 1.3.x
-  - Modernizes C base and adds more abstractions
+## Version 1.9.x
+  - Modernizes code base to use TensorFlow instead of custom C++ and DLib.
+  - Drops large part of code base.
+
+## Version 1.3.0 - 1.8.0
+  - Modernizes C base and adds more abstractions,
 
 ## Version 1.2.0
   - Version bump after `Bioconductor` release 3.6
