@@ -31,7 +31,7 @@
 #include <algorithm>
 
 
-/' Get the weighted node degrees of a adjacency matrix.
+//' Get the weighted node degrees of a adjacency matrix.
 //'
 //' @noRd
 //' @param x matrix for which node degrees are computed
@@ -53,7 +53,8 @@ std::vector<double> node_degrees_(const arma::Mat<double>& x)
     return degrees;
 }
 
-/' Compute a normalized graph Laplacian
+
+//' Compute a normalized graph Laplacian
 //'
 //' @noRd
 //' @param  x  matrix for which Laplacian is computed

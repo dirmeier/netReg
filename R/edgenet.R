@@ -95,6 +95,7 @@ edgenet <- function(X, Y, G.X=NULL, G.Y=NULL,
     UseMethod("edgenet")
 }
 
+
 #' @export
 #' @method edgenet default
 edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
@@ -155,17 +156,19 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
     ret
 }
 
+
 #' @noRd
 #' @import Rcpp
 .edgenet <- function(X, Y, G.X, G.Y,
                      lambda, psigx, psigy,
                      thresh, maxit, family)
 {
-    res <- .Call("edgenet_cpp",
-                 X, Y, G.X, G.Y,
-                 as.double(lambda), as.double(psigx),  as.double(psigy),
-                 as.integer(maxit), as.double(thresh),
-                 as.character(family))
+    res <- switch(
+        as.character(family),
+        "gaussian" = .fit.edgenet.gaussian(
+            X, Y, G.X, G.Y,
+            as.double(lambda), as.double(psigx),  as.double(psigy),
+            as.integer(maxit), as.double(thresh)))
 
     # finalize output
     coefficients <- matrix(res$coefficients, ncol(X))
@@ -181,4 +184,44 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
     class(ret) <- paste0(family, ".edgenet")
 
     ret
+}
+
+
+#' @noRd
+#' @import Rcpp tensorflow
+.fit.edgenet.gaussian <- function(
+    X, Y, G.X, G.Y,
+    lambda, psigx, psigy,
+    maxit, thresh)
+{
+    G.X <- laplacian_(G.X)
+    G.Y <- laplacian_(G.Y)
+
+    tf$reset_default_graph()
+
+    beta  <- tf$Variable(tf$zeros(shape(ncol(X), ncol(Y))))
+    alpha <- tf$Variable(tf$zeros(shape(ncol(Y))))
+
+    X <- tf$cast(X, tf$float32)
+    Y <- tf$cast(Y, tf$float32)
+    G.X <- tf$cast(G.X, tf$float32)
+    G.Y <- tf$cast(G.Y, tf$float32)
+
+    loss <- function(alpha, beta) {
+        mean <- tf$matmul(x, beta) + tf$matmul(tf$onesalpha
+        tf$reduce_sum(tf$pow(y - mean, 2)) +
+            0.1 * tf$reduce_sum(tf$abs(b)) +
+            0.1 * tf$reduce_sum(tf$trace(tf$matmul(tf$transpose(b), tf$matmul(gx, b))))
+    }
+
+    optimizer <- tf$train$AdamOptimizer(learning_rate = 0.01)
+    train <- optimizer$minimize(loss(alpha, beta))
+
+    sess <- tf$Session()
+    sess$run(tf$global_variables_initializer())
+    for (step in seq(1000)) {
+        sess$run(train)
+    }
+
+
 }

@@ -22,10 +22,11 @@
  * @email: simon.dirmeier@gmx.de
  */
 
+
 #include "stat_functions.hpp"
 
 
-/' Compute the estimated intercept of a linear model
+//' Compute the estimated intercept of a linear model
 //'
 //' @noRd
 //' @param x matrix of covariates
@@ -34,7 +35,7 @@
 //' @return returns a matrix
 // [[Rcpp::interfaces(r, cpp)]]
 // [[Rcpp::export]]
-arma::Col<double> intercept(arma::Mat<double>& X,
+arma::Col<double> intercept_(arma::Mat<double>& X,
                             arma::Mat<double>& Y,
                             arma::Mat<double>& B)
 {
