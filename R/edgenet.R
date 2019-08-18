@@ -111,45 +111,30 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
     if (is.null(G.X)) G.X <- matrix(0, 1, 1)
     if (is.null(G.Y)) G.Y <- matrix(0, 1, 1)
     if (all(G.X == 0)) {
-        psigx    <- 0
+        psigx <- 0
     }
     if (all(G.Y == 0) || q == 1) {
-        psigy    <- 0
+        psigy <- 0
     }
 
     check.graphs(X, Y, G.X, G.Y, psigx, psigy)
     check.dimensions(X, Y, n, p)
-    if (lambda < 0) {
-        warning("lambda < 0, setting to 0!")
-        lambda <- 0
-    }
-    if (psigx < 0) {
-        warning("psigx < 0, setting to 0!")
-        psigx <- 0
-    }
-    if (psigy < 0) {
-        warning("psigy < 0, setting to 0!")
-        psigy <- 0
-    }
-    if (maxit < 0) {
-        warning("maxit < 0, setting to 1e5!")
-        maxit <- 1e5
-    }
-    if (thresh < 0) {
-        warning("thresh < 0, setting to 1e-5!")
-        thresh <- 1e-5
-    }
+    lambda <- check.param(lambda, 0, `<`, 0)
+    psigx <- check.param(psigx, 0, `<`, 0)
+    psigy <- check.param(psigy, 0, `<`, 0)
+    maxit <- check.param(maxit, 0, `<`, 1e5)
+    thresh <- check.param(thresh, 0, `<`, 1e-5)
+
     if (q == 1) {
-        psigy    <- 0
+        psigy <- 0
     }
     family <- match.arg(family)
 
     # estimate coefficients
-    ret <- .edgenet(X=X, Y=Y,
-                    G.X=G.X, G.Y=G.Y,
-                    lambda=lambda, psigx=psigx, psigy=psigy,
-                    thresh=thresh, maxit=maxit,
-                    family=family)
+    ret <- .edgenet(X = X, Y = Y,
+                    G.X = G.X, G.Y = G.Y,
+                    lambda = lambda, psigx = psigx, psigy = psigy,
+                    thresh = thresh, maxit = maxit, family = family)
     ret$call   <- match.call()
     class(ret) <- c(class(ret), "edgenet")
 
@@ -173,11 +158,12 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
     alpha <- res$alpha
     rownames(beta) <- colnames(X)
     colnames(beta) <- colnames(Y)
-    ret <- list(beta=beta,
-                alpha=intr,
-                lambda=alpha,
-                psigx=psigx,
-                psigy=psigy)
+    ret <- list(beta = beta,
+                alpha = alpha,
+                lambda = lambda,
+                psigx = psigx,
+                psigy = psigy)
+
     ret$family <- family
     class(ret) <- paste0(family, ".edgenet")
 
@@ -196,31 +182,31 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
 
     X <- tf$cast(X, tf$float32)
     Y <- tf$cast(Y, tf$float32)
-    gx <- tf$cast(laplacian_(gx), tf$float32)
-    gy <- tf$cast(laplacian_(gy), tf$float32)
+    gx <- tf$cast(netReg:::laplacian_(gx), tf$float32)
+    gy <- tf$cast(netReg:::laplacian_(gy), tf$float32)
 
     beta  <- tf$Variable(tf$zeros(shape(ncol(X), ncol(Y))))
     alpha <- tf$Variable(tf$zeros(shape(ncol(Y))))
     ones  <- tf$ones(shape(ncol(Y), 1), tf$float32)
 
     loss.function <- switch(family, "gaussian" = .edgenet.gaussian.loss)
-    loss  <- loss.function(alpha, beta, X, Y, ones, lambda, psigx, psigy, gx, gy)
+    loss  <- loss.function(alpha, beta, X, Y, gx, gy, ones, lambda, psigx, psigy)
     coefs <- fit(loss)
 
     coefs
 }
 
-.edgenet.gaussian.loss <- function(a, b, x, y, ones, lambda, psigx, psigy, gx, gy)
+.edgenet.gaussian.loss <- function(alpha, beta, x, y, gx, gy, ones, lambda, psigx, psigy)
 {
-    loss <- function(a, b) {
-        mean <- tf$matmul(x, b) + ones * tf$transpose(a)
+    loss <- function(alpha, beta) {
+        mean <- tf$matmul(x, beta) + ones * tf$transpose(alpha)
         tf$reduce_sum(tf$pow(y - mean, 2)) +
-            lambda * tf$reduce_sum(tf$abs(b)) +
+            lambda * tf$reduce_sum(tf$abs(beta)) #+
             psigx * tf$reduce_sum(
-                tf$trace(tf$matmul(tf$transpose(b), tf$matmul(gx, b)))) +
+                tf$trace(tf$matmul(tf$transpose(beta), tf$matmul(gx, beta)))) +
             psigx * tf$reduce_sum(
-                tf$trace(tf$matmul(b, tf$matmul(gy, tf$transpose(b)))))
+                tf$trace(tf$matmul(beta, tf$matmul(gy, tf$transpose(beta)))))
     }
 
-    loss(a, b)
+    loss(alpha, beta)
 }

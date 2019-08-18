@@ -19,7 +19,7 @@
 
 
 #' @noRd
-intercept <-function(Y, X, B, n)
+intercept <- function(Y, X, B, n)
 {
     ((t(Y - X %*% B) %*% rep(1, n)) / n)
 }
@@ -81,4 +81,13 @@ is.positive.numeric <- function(d)
     is.numeric(d) && d > 0
 }
 
+#' @noRd
+check.param <- function(param, comp, op, replace.with)
+{
+    if (op(param, comp)) {
+        warning(sprintf("%s < 0, setting to 0!", substitute(param)))
+        param <- replace.with
+    }
 
+    param
+}
