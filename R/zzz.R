@@ -18,6 +18,16 @@
 # along with netReg. If not, see <http://www.gnu.org/licenses/>.
 
 
+
+# crate the node list object whenever the package is loaded
+.onLoad <- function(libname, pkgname)
+{
+    library(tensorflow)
+    tfp <- reticulate::import("tensorflow_probability", delay_load = TRUE)
+    Sys.setenv(TF_CPP_MIN_LOG_LEVEL = 2)
+}
+
+
 .onUnload <- function(libpath)
 {
     library.dynam.unload("netReg", libpath)

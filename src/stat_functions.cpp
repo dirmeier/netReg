@@ -23,8 +23,9 @@
  */
 
 
-#include "stat_functions.hpp"
-
+// [[Rcpp::depends(RcppArmadillo)]]
+#include <RcppArmadillo.h>
+// [[Rcpp::plugins(cpp11)]]
 
 //' Compute the estimated intercept of a linear model
 //'

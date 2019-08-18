@@ -134,14 +134,11 @@ RcppExport SEXP _netReg_RcppExport_registerCCallable() {
     return R_NilValue;
 }
 
-RcppExport SEXP cv_edgenet_cpp(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
-
 static const R_CallMethodDef CallEntries[] = {
     {"_netReg_node_degrees_", (DL_FUNC) &_netReg_node_degrees_, 1},
     {"_netReg_laplacian_", (DL_FUNC) &_netReg_laplacian_, 1},
     {"_netReg_intercept_", (DL_FUNC) &_netReg_intercept_, 3},
     {"_netReg_RcppExport_registerCCallable", (DL_FUNC) &_netReg_RcppExport_registerCCallable, 0},
-    {"cv_edgenet_cpp", (DL_FUNC) &cv_edgenet_cpp, 18},
     {NULL, NULL, 0}
 };
 

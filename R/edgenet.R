@@ -163,21 +163,19 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
                      lambda, psigx, psigy,
                      thresh, maxit, family)
 {
-    res <- switch(
-        as.character(family),
-        "gaussian" = .fit.edgenet.gaussian(
-            X, Y, G.X, G.Y,
-            as.double(lambda), as.double(psigx),  as.double(psigy),
-            as.integer(maxit), as.double(thresh)))
+    res <- .fit.edgenet(
+        X, Y, G.X, G.Y,
+        as.double(lambda), as.double(psigx),  as.double(psigy),
+        as.integer(maxit), as.double(thresh), family)
 
     # finalize output
-    coefficients <- matrix(res$coefficients, ncol(X))
-    intr         <- res$intercept
-    rownames(coefficients) <- colnames(X)
-    colnames(coefficients) <- colnames(Y)
-    ret <- list(coefficients=coefficients,
-                intercept=intr,
-                lambda=lambda,
+    beta  <- matrix(res$beta, ncol(X))
+    alpha <- res$alpha
+    rownames(beta) <- colnames(X)
+    colnames(beta) <- colnames(Y)
+    ret <- list(beta=beta,
+                alpha=intr,
+                lambda=alpha,
                 psigx=psigx,
                 psigy=psigy)
     ret$family <- family
@@ -189,39 +187,40 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
 
 #' @noRd
 #' @import Rcpp tensorflow
-.fit.edgenet.gaussian <- function(
-    X, Y, G.X, G.Y,
+.fit.edgenet <- function(
+    X, Y, gx, gy,
     lambda, psigx, psigy,
-    maxit, thresh)
+    maxit, thresh, family)
 {
-    G.X <- laplacian_(G.X)
-    G.Y <- laplacian_(G.Y)
-
     tf$reset_default_graph()
-
-    beta  <- tf$Variable(tf$zeros(shape(ncol(X), ncol(Y))))
-    alpha <- tf$Variable(tf$zeros(shape(ncol(Y))))
 
     X <- tf$cast(X, tf$float32)
     Y <- tf$cast(Y, tf$float32)
-    G.X <- tf$cast(G.X, tf$float32)
-    G.Y <- tf$cast(G.Y, tf$float32)
+    gx <- tf$cast(laplacian_(gx), tf$float32)
+    gy <- tf$cast(laplacian_(gy), tf$float32)
 
-    loss <- function(alpha, beta) {
-        mean <- tf$matmul(x, beta) + tf$matmul(tf$onesalpha
+    beta  <- tf$Variable(tf$zeros(shape(ncol(X), ncol(Y))))
+    alpha <- tf$Variable(tf$zeros(shape(ncol(Y))))
+    ones  <- tf$ones(shape(ncol(Y), 1), tf$float32)
+
+    loss.function <- switch(family, "gaussian" = .edgenet.gaussian.loss)
+    loss  <- loss.function(alpha, beta, X, Y, ones, lambda, psigx, psigy, gx, gy)
+    coefs <- fit(loss)
+
+    coefs
+}
+
+.edgenet.gaussian.loss <- function(a, b, x, y, ones, lambda, psigx, psigy, gx, gy)
+{
+    loss <- function(a, b) {
+        mean <- tf$matmul(x, b) + ones * tf$transpose(a)
         tf$reduce_sum(tf$pow(y - mean, 2)) +
-            0.1 * tf$reduce_sum(tf$abs(b)) +
-            0.1 * tf$reduce_sum(tf$trace(tf$matmul(tf$transpose(b), tf$matmul(gx, b))))
+            lambda * tf$reduce_sum(tf$abs(b)) +
+            psigx * tf$reduce_sum(
+                tf$trace(tf$matmul(tf$transpose(b), tf$matmul(gx, b)))) +
+            psigx * tf$reduce_sum(
+                tf$trace(tf$matmul(b, tf$matmul(gy, tf$transpose(b)))))
     }
 
-    optimizer <- tf$train$AdamOptimizer(learning_rate = 0.01)
-    train <- optimizer$minimize(loss(alpha, beta))
-
-    sess <- tf$Session()
-    sess$run(tf$global_variables_initializer())
-    for (step in seq(1000)) {
-        sess$run(train)
-    }
-
-
+    loss(a, b)
 }

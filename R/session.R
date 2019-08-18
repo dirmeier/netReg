@@ -39,6 +39,9 @@ fit <- function(loss, niter=1000, learning.rate = 0.01, threshold = 10e-2)
       }
   }
 
+  alpha <- sess$run(alpha)
   beta <- sess$run(beta)
   sess$close()
+
+  list(beta=beta, alpha=alpha)
 }
