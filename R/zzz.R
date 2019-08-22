@@ -17,14 +17,14 @@
 # You should have received a copy of the GNU General Public License
 # along with netReg. If not, see <http://www.gnu.org/licenses/>.
 
+tfp <- reticulate::import("tensorflow_probability", delay_load = TRUE)
 
-
-# crate the node list object whenever the package is loaded
 .onLoad <- function(libname, pkgname)
 {
+    if (!reticulate::py_module_available("tensorflow"))
+        tensorflow::install_tensorflow(extra_packages = "tensorflow-probability")
     library(tensorflow)
-    tfp <- reticulate::import("tensorflow_probability", delay_load = TRUE)
-    Sys.setenv(TF_CPP_MIN_LOG_LEVEL = 2)
+    options(tensorflow.one_based_extract = TRUE)
 }
 
 

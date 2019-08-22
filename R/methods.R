@@ -18,31 +18,14 @@
 # along with netReg. If not, see <http://www.gnu.org/licenses/>.
 
 
-#' @noRd
-#' @import tensorflow
-fit <- function(loss, alpha, beta, niter=1000, learning.rate = 0.01, threshold = 10e-2)
+#' @export
+#' @method print edgenet
+coef.edgenet <- function(x,...)
 {
-  optimizer <- tf$train$AdamOptimizer(learning_rate = learning.rate)
-  objective <- loss(alpha, beta)
-  train <- optimizer$minimize(objective)
-
-  sess <- tf$Session()
-  sess$run(tf$global_variables_initializer())
-
-  target.old <- Inf
-  for (step in seq(niter)) {
-      sess$run(train)
-      if (step %% 25 == 0) {
-          target <- sess$run(objective)
-          if (sum(abs(target - target.old)) < threshold)
-              break
-          target.old <- target
-      }
-  }
-
-  alpha <- sess$run(alpha)
-  beta <- sess$run(beta)
-  sess$close()
-
-  list(beta=beta, alpha=alpha)
+    alpha <- x$alpha
+    beta  <- x$beta
+    coefs <- rbind(alpha, beta)
+    rownames(coefs) <- c("(Intercept)", sprintf("x[%s]", seq(nrow(beta))))
+    colnames(coefs) <- sprintf("y[%s]", seq(ncol(beta)))
+    coefs
 }

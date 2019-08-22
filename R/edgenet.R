@@ -90,7 +90,7 @@
 edgenet <- function(X, Y, G.X=NULL, G.Y=NULL,
                     lambda=1, psigx=1, psigy=1,
                     thresh=1e-5, maxit=1e5,
-                    family=c("gaussian"))
+                    family=gaussian)
 {
     UseMethod("edgenet")
 }
@@ -101,21 +101,15 @@ edgenet <- function(X, Y, G.X=NULL, G.Y=NULL,
 edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
                             lambda=1, psigx=1, psigy=1,
                             thresh=1e-5, maxit=1e5,
-                            family=c("gaussian"))
+                            family=gaussian)
 {
     check.matrices(X, Y)
     n <- dim(X)[1]
     p <- dim(X)[2]
     q <- dim(Y)[2]
 
-    if (is.null(G.X)) G.X <- matrix(0, 1, 1)
-    if (is.null(G.Y)) G.Y <- matrix(0, 1, 1)
-    if (all(G.X == 0)) {
-        psigx <- 0
-    }
-    if (all(G.Y == 0) || q == 1) {
-        psigy <- 0
-    }
+    if (is.null(G.X)) psigx <- 0
+    if (is.null(G.Y)) psigy <- 0
 
     check.graphs(X, Y, G.X, G.Y, psigx, psigy)
     check.dimensions(X, Y, n, p)
@@ -127,8 +121,9 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
 
     if (q == 1) {
         psigy <- 0
+        G.Y <- NULL
     }
-    family <- match.arg(family)
+    family <- get.family(family)
 
     # estimate coefficients
     ret <- .edgenet(X = X, Y = Y,
@@ -149,9 +144,7 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
                      thresh, maxit, family)
 {
     res <- .fit.edgenet(
-        X, Y, G.X, G.Y,
-        as.double(lambda), as.double(psigx),  as.double(psigy),
-        as.integer(maxit), as.double(thresh), family)
+        X, Y, G.X, G.Y, lambda, psigx, psigy, maxit, thresh, family)
 
     # finalize output
     beta  <- matrix(res$beta, ncol(X))
@@ -178,35 +171,66 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
     lambda, psigx, psigy,
     maxit, thresh, family)
 {
+
     tf$reset_default_graph()
 
     X <- tf$cast(X, tf$float32)
     Y <- tf$cast(Y, tf$float32)
-    gx <- tf$cast(netReg:::laplacian_(gx), tf$float32)
-    gy <- tf$cast(netReg:::laplacian_(gy), tf$float32)
+    if (!is.null(gx))
+        gx <- tf$cast(netReg:::laplacian_(gx), tf$float32)
+    if (!is.null(gy))
+        gy <- tf$cast(netReg:::laplacian_(gy), tf$float32)
 
     beta  <- tf$Variable(tf$zeros(shape(ncol(X), ncol(Y))))
     alpha <- tf$Variable(tf$zeros(shape(ncol(Y))))
-    ones  <- tf$ones(shape(ncol(Y), 1), tf$float32)
+    ones  <- tf$ones(shape(nrow(Y), 1), tf$float32)
 
-    loss.function <- switch(family, "gaussian" = .edgenet.gaussian.loss)
-    loss  <- loss.function(alpha, beta, X, Y, gx, gy, ones, lambda, psigx, psigy)
-    coefs <- fit(loss)
-
+    loss  <- .edgenet.loss(alpha, beta, X, Y, gx, gy, ones,
+                           lambda, psigx, psigy, family)
+    coefs <- fit(loss, alpha, beta)
     coefs
 }
 
-.edgenet.gaussian.loss <- function(alpha, beta, x, y, gx, gy, ones, lambda, psigx, psigy)
+.edgenet.loss <- function(alpha, beta, x, y, gx, gy, ones, lambda, psigx, psigy, family)
 {
+    loss.function <- switch(family, "gaussian" = .edgenet.gaussian.loss)
+
     loss <- function(alpha, beta) {
-        mean <- tf$matmul(x, beta) + ones * tf$transpose(alpha)
-        tf$reduce_sum(tf$pow(y - mean, 2)) +
-            lambda * tf$reduce_sum(tf$abs(beta)) #+
-            psigx * tf$reduce_sum(
-                tf$trace(tf$matmul(tf$transpose(beta), tf$matmul(gx, beta)))) +
-            psigx * tf$reduce_sum(
-                tf$trace(tf$matmul(beta, tf$matmul(gy, tf$transpose(beta)))))
+        eta <- tf$matmul(x, beta) + ones * tf$transpose(alpha)
+        obj <- loss.function(y, eta, lambda) + .lasso(lambda, beta)
+
+        if (!is.null(gx)) {
+            x.penalty <- tf$trace(tf$matmul(tf$transpose(beta), tf$matmul(gx, beta)))
+            obj <- obj + psigx * x.penalty
+        }
+        if (!is.null(gy)) {
+            y.penalty <- tf$trace(tf$matmul(beta, tf$matmul(gy, tf$transpose(beta))))
+            obj <- obj + psigy * y.penalty
+        }
+
+        obj
     }
 
-    loss(alpha, beta)
+    loss
+}
+
+.edgenet.gaussian.loss <- function(y, mean, lambda)
+{
+    obj <- tf$reduce_sum(tf$pow(y - mean, 2))
+    obj
+}
+
+.edgenet.binomial.loss <- function(y, means, lambda, ncol)
+{
+    obj <-  tf$reduce_sum(
+        sapply(seq(ncol), function(j) {
+            prob <- tfp$distributions$Bernoulli(logits = means[,j])
+            tf$reduce_sum(prob$lob_prob(y[,j]))
+        })
+    )
+    -obj
+}
+
+.lasso <- function(lambda, beta) {
+    lambda * tf$reduce_sum(tf$abs(beta))
 }
