@@ -1,0 +1,289 @@
+---
+title: "edgenet: regularization with pair-wise interactions"
+author: "Simon Dirmeier"
+date: "`r Sys.Date()`"
+output: 
+    BiocStyle::html_document:
+        toc: true
+        toc_depth: 2
+        toc_float: true
+        theme: lumen
+vignette: >
+ %\VignetteIndexEntry{edgenet}
+ %\VignetteEngine{knitr::rmarkdown}
+ %\usepackage[utf8]{inputenc}
+bibliography: netReg.bib
+---
+
+# Introduction
+
+Modelling biological associations or dependencies using linear regression 
+models is often complicated when the analysed data-sets are high-dimensional 
+and less observations than variables are available ($n \ll p$). 
+For these scenarios methods utilizing a priori knowledge, e.g. in the form of 
+biological networks, have been proposed, arguing that this information might 
+provide better estimates for regression coefficients. Recently several 
+network-based regularization techniques have been proposed 
+[@li2008network, @kim2013network, @cheng2014graph].
+
+`netReg` provides an efficient implementation of a graph-penalized 
+regression model. The model introduces a priori generated biological graph 
+information into generalized linear models yielding sparse or smooth solutions 
+for regression coefficients.  
+
+`netReg` computes coefficients using \textit{cyclic coordinate descent} as 
+previously introduced [@fu1998penalized, @friedman2007pathwise], 
+[@friedman2010regularization]. The package is an `R`-wrapper to an external 
+`C++` library that uses `RcppArmadillo` [@eddelbuettel2014rcpparmadillo] for 
+fast matrix calculations and `Dlib` [@king2009dlib] for gradient-free 
+convex optimization for model selection.
+
+# Edgenet tutorial
+
+## The Gaussian case
+
+This section explains how to fit a linear model and do parameter estimation 
+using `edgenet`-regularization. The model is a truncated version from 
+[@cheng2014graph] that is able to introduce prior graphs for the design and 
+response matrices for penalization.
+
+$\ell_1$-regularized likelihood as:
+\begin{equation}
+\small
+\begin{split}
+\hat{\mathbf{B}} = \arg \min_{\mathbf{B}} \,
+ & \frac{1}{2} || \mathbf{Y} - \mathbf{XB}  ||^2_2  + \lambda ||\mathbf{B} ||_1  \\  & + 
+      		  \frac{\phi_1}{2}  \sum_{i=1}^p \sum_{j=1}^q
+      		   || \boldsymbol \beta_{i,*} - \boldsymbol \beta_{j,*} ||_2^2 (\mathbf{G}_X)_{i,j}    \\  & +
+ \frac{\phi_2}{2}  \sum_{i=1}^p \sum_{j=1}^q || \boldsymbol \beta_{*,i} - \boldsymbol \beta_{*,j} ||_2^2 (\mathbf{G}_Y)_{i,j} \\
+ = \arg \min_{\mathbf{B}} \,
+ & \frac{1}{2} || \mathbf{Y} - \mathbf{XB}  ||^2_2  + \lambda ||\mathbf{B} ||_1  \\  & + 
+ \phi_1 \text{tr}\left( \mathbf{B}^T \left( \mathbf{D}_{\mathbf{G}_X} - \mathbf{G}_X \right) \mathbf{B}  \right) \\  & + 
+ \phi_2 \text{tr}\left( \mathbf{B} \left( \mathbf{D}_{\mathbf{G}_Y} - \mathbf{G}_Y  \right) \mathbf{B}^T  \right)
+\end{split}
+\label{equ:graphreg}
+\end{equation}
+
+At first we generate some toy data randomly:
+
+```{r}
+set.seed(23)
+X <- matrix(rnorm(1000*5), 1000)
+Y <- matrix(rnorm(1000*5), 1000)
+```
+
+Then we load the `netReg` library:
+
+```{r}
+library(netReg)
+```
+
+For `edgenet` we need to create an affinity matrix for the co-variables first. 
+We also can create a graph for the responses, but this is not necessary to
+demonstrate the method. We could create a random graph like this:
+
+<!-- ```{r} -->
+<!-- aff.mat <- matrix(rbeta(25, 1, 5),  5) -->
+<!-- aff.mat <- (t(aff.mat) + aff.mat) / 2 -->
+<!-- diag(aff.mat) <- 0 -->
+<!-- ``` -->
+
+<!-- We created the affinity matrix absolutely random, although in practice a *real* -->
+<!-- (biological) observed affinity matrix should be used, because in the end the  -->
+<!-- affinity matrix decides the shrinkage of the coefficients. -->
+
+<!-- ## Model fitting -->
+
+<!-- Fitting a model using edge-based regularization with `netReg` is easy: -->
+
+<!-- ```{r} -->
+<!-- fit <- edgenet(X=X, Y=Y, G.X=aff.mat, lambda=1, psigx=1, family="gaussian") -->
+<!-- print(fit) -->
+<!-- ``` -->
+
+<!-- In this case we used a single affinity matrix `G.X` which represents the -->
+<!-- relationship of the covariables $\mathit{X}$. If the design matrix has $p$  -->
+<!-- variables, `G.X` has to be an $(p \times p)$-dimensional symmetric matrix.  -->
+<!-- We can also include a matrix for the response matrix `Y` with $q$ dependent  -->
+<!-- variables. In that case the affinity matrix `G.Y` has to be  -->
+<!-- $(q \times q)$-dimensional (and also symmetric). -->
+
+<!-- The `fit` object contains information about coefficients, intercepts,  -->
+<!-- residuals, etc. Having the coefficients estimated we are able to -->
+<!-- predict novel data-sets: -->
+
+<!-- ```{r} -->
+<!-- X.new <- matrix(rnorm(10*5),10) -->
+<!-- pred  <- predict(fit, X) -->
+<!-- ``` -->
+
+<!-- The `pred` objects contains the predicted values for the responses. -->
+
+<!-- ## Model selection -->
+
+<!-- In most cases we do not have the optimal shrinkage parameters $\lambda$,  -->
+<!-- $\psi_{gx}$ and $\psi_{gy}$. For these settings you can use `netReg`'s  -->
+<!-- included model selection. We use Powell's BOBYQA algorithm  -->
+<!-- ([@powell2009bobyqa]) for gradient-free optimization that is included in the -->
+<!-- `C++` library `Dlib`. Doing the model selection only requires calling  -->
+<!-- `cv.edgenet`: -->
+
+<!-- ```{r} -->
+<!-- cv <- cv.edgenet(X=X, Y=Y, G.X=aff.mat, family="gaussian", maxit=1000) -->
+<!-- print(cv) -->
+<!-- ``` -->
+
+<!-- You can use the fitted parameters for the normal `edgenet` function.  -->
+<!-- In this scenario $\lambda$, $\psi_{gx}$ and $\psi_{gy}$ should be  -->
+<!-- roughly $0$ for three reasons: -->
+
+<!-- * we had enough data and a small number of covariables ($n > p$), so we can  -->
+<!-- find the *BLUE* estimator, -->
+<!-- * we created `X` and `Y` independent of each other, -->
+<!-- * our prior graph `aff.mat` had little weight. -->
+
+<!-- Let's do a scenario where we need to shrink some coefficients, i.e. $n \ll p$. -->
+<!-- We choose a small $p$, such that the computation does not take too long. -->
+
+<!-- ```{r} -->
+<!-- p <- 25 -->
+<!-- X <- matrix(rnorm(10*p), 10) -->
+<!-- Y <- matrix(rnorm(10*p), 10) -->
+<!-- aff.mat <- matrix(rgamma(p * p, 5, 1), p) -->
+<!-- aff.mat <- (t(aff.mat) + aff.mat) -->
+<!-- diag(aff.mat) <- 0 -->
+<!-- cv <- cv.edgenet(X=X, Y=Y, G.X=aff.mat, family="gaussian", maxit=1000) -->
+<!-- print(cv) -->
+<!-- ``` -->
+
+<!-- In the above example $\lambda$ should have changed quite a bit, while -->
+<!-- $\psi_{gy}$ should still be $0$. Since we generated `aff.mat` randomly  -->
+<!-- $\psi_{gx}$ should be roughly (or exact) zero as well. This makes sense  -->
+<!-- intuitively since we did not put any biological relationships into the  -->
+<!-- affinity matrices. -->
+
+
+
+<!-- ## Usage -->
+
+<!-- This section explains how to fit a linear model and do parameter estimation.  -->
+
+<!-- At first we load the library and some data: -->
+
+<!-- ```{r, eval=FALSE} -->
+<!-- > library(netReg) -->
+<!-- > data("yeast") -->
+
+<!-- > ls(yeast) -->
+<!-- [1] "GX" "X" "Y" -->
+
+<!-- > X <- yeast$X[, 1:5] -->
+<!-- > Y <- yeast$Y[, 40:45] -->
+<!-- > GY <- yeast$GY[40:45, 40:45] -->
+<!-- ``` -->
+
+<!-- The *yeast* data $\mathbf{X}$ and $\mathbf{Y}$ set is taken and adopted from [@brem2005genetic], [@storey2005multiple], and [@cheng2014graph]. -->
+<!-- $\mathbf{GY}$ is taken from [BioGRID](https://thebiogrid.org/downloads/archives/Release%20Archive/BIOGRID-3.4.150/BIOGRID-ORGANISM-3.4.150.tab.zip). -->
+<!-- $\mathbf{X}$ is a $(n \times p)$ matrix of genetic markers where $n$ is the number of samples (112) and $p$ is the number of markers. -->
+<!-- $\mathbf{Y}$ is a $(n \times q)$ matrix of expression values for $q$ yeast genes. $n$ is again the numer of samples (112). -->
+<!-- $\mathbf{GY}$ is a $(q \times q)$ adjacency matrix representing protein-protein interactions for the $q$ response variables. -->
+
+<!-- We only use a smaller network in order to be able to print the results here. -->
+
+<!-- ### Model fitting -->
+
+<!-- Fitting a model using edge-based regularization with `netReg` can be done like that: -->
+
+<!-- ```{r, eval=FALSE} -->
+<!-- > fit <- edgenet(X=X, -->
+<!--                  Y=Y,  -->
+<!--                  G.Y=GY, -->
+<!--                  lambda=10, psigy=1, family="gaussian") -->
+<!-- > fit -->
+
+<!-- Call: edgenet.default(X = X, Y = Y, G.Y = GY, lambda = 10, psigy = 1,  -->
+<!--     family = "gaussian") -->
+
+<!-- Coefficients: -->
+<!--                YBL113C   YBR013C YBR014C YBR016W YBR025C YBR028C -->
+<!-- marker_2036 0.18880586 0.0000000       0       0       0       0 -->
+<!-- marker_349  0.32480670 0.1267092       0       0       0       0 -->
+<!-- marker_2596 0.00000000 0.0000000       0       0       0       0 -->
+<!-- marker_2987 0.07526014 0.0000000       0       0       0       0 -->
+<!-- marker_994  0.16888058 0.0000000       0       0       0       0 -->
+
+<!-- Intercept: -->
+<!--             [,1] -->
+<!-- [1,]  0.22068539 -->
+<!-- [2,]  0.17820179 -->
+<!-- [3,] -0.08242679 -->
+<!-- [4,] -0.13699107 -->
+<!-- [5,]  0.09521875 -->
+<!-- [6,]  0.09709554 -->
+
+<!-- Parameters: -->
+<!-- lambda psi_gx psi_gy  -->
+<!--     10      0      1  -->
+
+<!-- Family: -->
+<!-- [1] "gaussian" -->
+<!-- ``` -->
+
+<!-- For the response variables we use an affinity matrix that represents *biological relationships* with $\mathbf{GY}$. -->
+<!-- We promote sparsity by setting $\lambda = 10$ and put a week penalty on similar coefficients by setting $\psi_{gy} = 1$.  -->
+<!-- Other than that we used standard parameters in this case. -->
+
+<!-- The `fit` object contains information about coefficients and intercepts. Having the coefficients estimated we are able to -->
+<!-- predict novel data-sets: -->
+
+<!-- ```{r, eval=FALSE} -->
+<!-- > X.new <- matrix(rnorm(10*ncol(X)), nrow=10) -->
+<!-- > pred  <- predict(fit, X.new) -->
+<!-- > pred -->
+<!--          YBL113C     YBR013C     YBR014C    YBR016W    YBR025C    YBR028C -->
+<!--  [1,]  0.34896146  0.18351965 -0.08242679 -0.1369911 0.09521875 0.09709554 -->
+<!--  [2,]  0.34846254  0.30982988 -0.08242679 -0.1369911 0.09521875 0.09709554 -->
+<!--  [3,]  0.49168654  0.24786801 -0.08242679 -0.1369911 0.09521875 0.09709554 -->
+<!--  [4,]  0.29359257  0.13512114 -0.08242679 -0.1369911 0.09521875 0.09709554 -->
+<!--  [5,] -0.33368500 -0.09395486 -0.08242679 -0.1369911 0.09521875 0.09709554 -->
+<!--  [6,]  0.37459188  0.24592816 -0.08242679 -0.1369911 0.09521875 0.09709554 -->
+<!--  [7,]  0.02020576  0.06307481 -0.08242679 -0.1369911 0.09521875 0.09709554 -->
+<!--  [8,]  0.08688461  0.23227053 -0.08242679 -0.1369911 0.09521875 0.09709554 -->
+<!--  [9,] -0.06616525 -0.06917618 -0.08242679 -0.1369911 0.09521875 0.09709554 -->
+<!-- [10,] -0.44448282  0.09864389 -0.08242679 -0.1369911 0.09521875 0.09709554 -->
+<!-- ``` -->
+
+<!-- The `pred` objects contains the predicted values for the responses. -->
+
+<!-- ### Model selection -->
+
+<!-- In most cases we do not have the optimal shrinkage parameters $\lambda$,  -->
+<!-- $\psi_{gx}$ and $\psi_{gy}$. For these settings you can use `netReg`'s  -->
+<!-- included model selection. We use Powell's *BOBYQA* algorithm  -->
+<!-- [@powell2009bobyqa] for gradient-free optimization that is included in the -->
+<!-- `C++` library `Dlib`. Doing the model selection only requires calling  -->
+<!-- `cv.edgenet`: -->
+
+<!-- ```{r, eval=FALSE} -->
+<!-- > cv <- cv.edgenet(X=X, Y=Y, G.Y=GY, family="gaussian", maxit=1000) -->
+<!-- > cv -->
+
+<!-- Call: cv.edgenet.default(X = X, Y = Y, G.Y = GY, maxit = 1000, family = "gaussian") -->
+
+<!-- Parameters: -->
+<!-- lambda  psigx  psigy  -->
+<!--      0      0      0  -->
+<!-- Family: -->
+<!-- [1] "gaussian" -->
+<!-- ``` -->
+
+<!-- You can use the fitted parameters for the normal `edgenet` function.  -->
+<!-- In this scenario $\lambda$, $\psi_{gx}$ and $\psi_{gy}$ should be  -->
+<!-- roughly $0$ for two reasons: -->
+
+<!-- * we had enough data and a small number of covariables ($n > p$), so we can  -->
+<!-- find the *BLUE* estimator, -->
+<!-- * in this toy example our prior graph $\mathbf{GY}$ had little impact. -->
+
+
+# References

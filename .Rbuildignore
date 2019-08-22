@@ -49,3 +49,5 @@ pkgdown/*
 tests/c++/
 vignettes/netReg_R.Rmd
 vignettes/netReg_commandline.Rmd
+^doc$
+^Meta$

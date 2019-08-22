@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>A sample yeast data set for regression — yeast • netReg</title>
+<title>Predict method for binomial edgenet fits — predict.binomial.edgenet • netReg</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -32,11 +32,11 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="A sample yeast data set for regression — yeast" />
+<meta property="og:title" content="Predict method for binomial edgenet fits — predict.binomial.edgenet" />
 
-<meta property="og:description" content="The yeast data set is a list containing three matrices that
-can be used as an example for using netReg. The data have been taken
-from the references listed below." />
+<meta property="og:description" content="Predicts the estimated Y.hat values for a newdata
+ design matrix X similar to the other predict methods,
+ e.g. from glm and glmnet" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -75,7 +75,7 @@ from the references listed below." />
       <ul class="nav navbar-nav">
         <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Vignettes
+    Vignette
      
     <span class="caret"></span>
   </a>
@@ -124,58 +124,67 @@ from the references listed below." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>A sample yeast data set for regression</h1>
-    <small class="dont-index">Source: <a href='https://github.com/dirmeier/netReg/blob/master/R/data.R'><code>R/data.R</code></a></small>
-    <div class="hidden name"><code>yeast.Rd</code></div>
+    <h1>Predict method for binomial edgenet fits</h1>
+    <small class="dont-index">Source: <a href='https://github.com/dirmeier/netReg/blob/master/R/predict.R'><code>R/predict.R</code></a></small>
+    <div class="hidden name"><code>predict.binomial.edgenet.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>The yeast data set is a <code>list</code> containing three matrices that
-can be used as an example for using <code>netReg</code>. The data have been taken
-from the references listed below.</p>
+    <p>Predicts the estimated Y.hat values for a newdata
+ design matrix X similar to the other predict methods,
+ e.g. from glm and glmnet</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>yeast</span>)</pre>
-        
-    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
-
-    <p>A <code>list</code> containing three matrices</p>
+    <pre class="usage"><span class='co'># S3 method for binomial.edgenet</span>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/predict'>predict</a></span>(<span class='no'>object</span>, <span class='kw'>newdata</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
     
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <ul>
-<li><p><code>X</code>  (112 x 500)-dimensional binary matrix of 500
-      genetic markers for 112 yeast samples</p></li>
-<li><p><code>Y</code>  (112 x 231)-dimensional double matrix of 231
-      gene expression values for 112 yeast samples</p></li>
-<li><p><code>GY</code> (231 x 231)-dimensional adjaceny matrix representing
-      protein-protein interactions for 231 yeast genes</p></li>
-</ul>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>object</th>
+      <td><p>a fitted object of class <em>binomial.edgenet</em></p></td>
+    </tr>
+    <tr>
+      <th>newdata</th>
+      <td><p>a new (<code>m</code> x <code>p</code>)-dimensional design matrix with a
+variable number of observations <code>m</code>, but a constant number
+of co-variables <code>p</code></p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>further arguments</p></td>
+    </tr>
+    </table>
     
-    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Brem, Rachel B., et al. (2005),
- Genetic interactions between polymorphisms that affect gene expression in
- yeast. <br />
- <em>Nature</em> <br /> <br />
- Storey, John D., Joshua M. Akey, and Leonid Kruglyak (2005),
- Multiple locus linkage analysis of genomewide expression in yeast. <br />
- <em>PLoS Biology</em> <br /> <br /></p>
+    <p>A (<code>m</code> x <code>q</code>)-dimensional matrix</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='no'>X</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/matrix'>matrix</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='fl'>100</span>*<span class='fl'>10</span>),<span class='fl'>100</span>,<span class='fl'>10</span>)
+<span class='no'>G.X</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/matrix'>matrix</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Poisson'>rpois</a></span>(<span class='fl'>10</span>*<span class='fl'>10</span>,<span class='fl'>1</span>),<span class='fl'>10</span>)
+<span class='no'>G.X</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/t'>t</a></span>(<span class='no'>G.X</span>) + <span class='no'>G.X</span>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/diag'>diag</a></span>(<span class='no'>G.X</span>) <span class='kw'>&lt;-</span> <span class='fl'>0</span>
+
+<span class='no'>Y</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/matrix'>matrix</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='fl'>100</span>*<span class='fl'>10</span>),<span class='fl'>100</span>,<span class='fl'>10</span>)
+<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='edgenet-methods.html'>edgenet</a></span>(<span class='kw'>X</span><span class='kw'>=</span><span class='no'>X</span>, <span class='kw'>Y</span><span class='kw'>=</span><span class='no'>Y</span>, <span class='kw'>G.X</span><span class='kw'>=</span><span class='no'>G.X</span>, <span class='kw'>family</span><span class='kw'>=</span><span class='st'>"gaussian"</span>)
+<span class='no'>pred</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/predict'>predict</a></span>(<span class='no'>fit</span>, <span class='no'>X</span>)
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#format">Format</a></li>
-
-      <li><a href="#details">Details</a></li>
-
-      <li><a href="#references">References</a></li>
-          </ul>
+      <li><a href="#value">Value</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

@@ -18,7 +18,7 @@
 # along with netReg. If not, see <http://www.gnu.org/licenses/>.
 
 
-#' netReg
+#' The \emph{netReg} package
 #'
 #' \emph{netReg} is a package for generalized linear regression that includes
 #' prior graphs in the models objective function.

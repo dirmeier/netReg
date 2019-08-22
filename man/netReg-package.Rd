@@ -3,15 +3,14 @@
 \docType{package}
 \name{netReg-package}
 \alias{netReg-package}
-\title{netReg}
+\title{The \emph{netReg} package}
 \description{
 \emph{netReg} is a package for generalized linear regression that includes
 prior graphs in the models objective function.
 }
 \details{
-\emph{netReg} uses \emph{Armadillo}, \emph{OpenBLAS},
-\emph{BLAS} and \emph{LAPACK} for fast matrix computations and
-\emph{Dlib} for constrained derivate-free optimization.
+\emph{netReg} uses \emph{Armadillo} and \emph{TensorFlow} for
+fast matrix computations and optimization.
 }
 \references{
 Dirmeier, Simon and Fuchs, Christiane and Mueller, Nikola S and Theis,

@@ -18,37 +18,8 @@
 # along with netReg. If not, see <http://www.gnu.org/licenses/>.
 
 
-#' Predict method for gaussian edgenet fits
-#'
 #' @export
-#'
-#' @description Predicts the estimated Y.hat values for a newdata
-#'  design matrix X similar to the other predict methods,
-#'  e.g. from glm and glmnet
-#'
-#' @importFrom stats coef
-#'
-#' @param object a fitted object of class \emph{gaussian.edgenet}
-#' @param ... further arguments
-#' @param newdata a new (\code{m} x \code{p})-dimensional design matrix with a
-#' variable number of observations \code{m}, but a constant number
-#' of co-variables \code{p}
-#'
-#' @return A (\code{m} x \code{q})-dimensional matrix
-#'
 #' @method predict gaussian.edgenet
-#'
-#' @examples
-#' \dontrun{
-#' X <- matrix(rnorm(100*10),100,10)
-#' G.X <- matrix(rpois(10*10,1),10)
-#' G.X <- t(G.X) + G.X
-#' diag(G.X) <- 0
-#'
-#' Y <- matrix(rnorm(100*10),100,10)
-#' fit <- edgenet(X=X, Y=Y, G.X=G.X, family="gaussian")
-#' pred <- predict(fit, X)
-#' }
 predict.gaussian.edgenet <- function(object, newdata=NULL, ...)
 {
     mean <- function(x) x
@@ -56,37 +27,8 @@ predict.gaussian.edgenet <- function(object, newdata=NULL, ...)
 }
 
 
-#' Predict method for binomial edgenet fits
-#'
 #' @export
-#'
-#' @description Predicts the estimated Y.hat values for a newdata
-#'  design matrix X similar to the other predict methods,
-#'  e.g. from glm and glmnet
-#'
-#' @importFrom stats coef
-#'
-#' @param object a fitted object of class \emph{binomial.edgenet}
-#' @param ... further arguments
-#' @param newdata a new (\code{m} x \code{p})-dimensional design matrix with a
-#' variable number of observations \code{m}, but a constant number
-#' of co-variables \code{p}
-#'
-#' @return A (\code{m} x \code{q})-dimensional matrix
-#'
 #' @method predict binomial.edgenet
-#'
-#' @examples
-#' \dontrun{
-#' X <- matrix(rnorm(100*10),100,10)
-#' G.X <- matrix(rpois(10*10,1),10)
-#' G.X <- t(G.X) + G.X
-#' diag(G.X) <- 0
-#'
-#' Y <- matrix(rnorm(100*10),100,10)
-#' fit <- edgenet(X=X, Y=Y, G.X=G.X, family="gaussian")
-#' pred <- predict(fit, X)
-#' }
 predict.binomial.edgenet <- function(object, newdata=NULL, ...)
 {
     mean <- function(x) 1 / (1 + exp(-x))
@@ -94,6 +36,8 @@ predict.binomial.edgenet <- function(object, newdata=NULL, ...)
 }
 
 
+#' @noRd
+#' @importFrom stats coef
 .predict <- function(object, newdata, mean, ...)
 {
     if(is.null(newdata)) stop("newdata is null")

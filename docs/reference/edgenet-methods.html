@@ -6,7 +6,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Find the optimal shrinkage parameters for edgenet — cv.edgenet • netReg</title>
+<title>Fit a graph-regularized linear regression model using
+ edge-based regularization. — edgenet • netReg</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -32,12 +33,15 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Find the optimal shrinkage parameters for edgenet — cv.edgenet" />
+<meta property="og:title" content="Fit a graph-regularized linear regression model using
+ edge-based regularization. — edgenet" />
 
-<meta property="og:description" content="Finds the optimal shrinkage parameters
- using cross-validation for edgenet. We use the BOBYQA algorithm to
- find the optimial regularization parameters and coordinate
- descent in order to minimize the objective function of the linear model." />
+<meta property="og:description" content="Fit a graph-regularized linear regression model using
+ edge-penalization. The coefficients are computed using graph-prior
+ knowledge in the form of one/two affinity matrices. Graph-regularization is
+ an extension to previously introduced regularization techniques,
+ such as the LASSO. See the vignette for details on the objective function of
+ the model: vignette(&quot;edgenet&quot;, package=&quot;netReg&quot;)" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -125,24 +129,25 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Find the optimal shrinkage parameters for edgenet</h1>
-    <small class="dont-index">Source: <a href='https://github.com/dirmeier/netReg/blob/master/R/edgenet_modelselection.R'><code>R/edgenet_modelselection.R</code></a></small>
-    <div class="hidden name"><code>cv.edgenet.Rd</code></div>
+    <h1>Fit a graph-regularized linear regression model using
+ edge-based regularization.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/dirmeier/netReg/blob/master/R/edgenet.R'><code>R/edgenet.R</code></a></small>
+    <div class="hidden name"><code>edgenet-methods.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Finds the optimal shrinkage parameters
- using cross-validation for edgenet. We use the BOBYQA algorithm to
- find the optimial regularization parameters and coordinate
- descent in order to minimize the objective function of the linear model.</p>
+    <p>Fit a graph-regularized linear regression model using
+ edge-penalization. The coefficients are computed using graph-prior
+ knowledge in the form of one/two affinity matrices. Graph-regularization is
+ an extension to previously introduced regularization techniques,
+ such as the LASSO. See the vignette for details on the objective function of
+ the model: <a href='../doc/edgenet.html'><code><a href='../articles/edgenet.html'>vignette("edgenet", package="netReg")</a></code></a></p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>cv.edgenet</span>(<span class='no'>X</span>, <span class='no'>Y</span>, <span class='kw'>G.X</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>G.Y</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>lambda</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>psigx</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>psigy</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>thresh</span> <span class='kw'>=</span> <span class='fl'>1e-05</span>, <span class='kw'>maxit</span> <span class='kw'>=</span> <span class='fl'>1e+05</span>,
-  <span class='kw'>family</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"gaussian"</span>), <span class='kw'>optim.epsilon</span> <span class='kw'>=</span> <span class='fl'>0.001</span>, <span class='kw'>optim.maxit</span> <span class='kw'>=</span> <span class='fl'>10000</span>,
-  <span class='kw'>nfolds</span> <span class='kw'>=</span> <span class='fl'>10</span>)</pre>
+    <pre class="usage"><span class='fu'>edgenet</span>(<span class='no'>X</span>, <span class='no'>Y</span>, <span class='kw'>G.X</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>G.Y</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>lambda</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>psigx</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>psigy</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>thresh</span> <span class='kw'>=</span> <span class='fl'>1e-05</span>, <span class='kw'>maxit</span> <span class='kw'>=</span> <span class='fl'>1e+05</span>, <span class='kw'>family</span> <span class='kw'>=</span> <span class='no'>gaussian</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -157,88 +162,56 @@ of covariables. Each row is an observation vector.</p></td>
       <th>Y</th>
       <td><p>output matrix, of dimension (<code>n</code> x <code>q</code>)
 where <code>n</code> is the number of observations and <code>q</code> is the number
-of response variables Each row is an observation vector.</p></td>
+of response variables. Each row is an observation vector.</p></td>
     </tr>
     <tr>
       <th>G.X</th>
       <td><p>non-negativ affinity matrix for <code>n</code>, of dimensions
-(<code>p</code> x <code>p</code>) where <code>p</code> is the number of covariables <code>X</code>.
-Providing a graph <code>G.X</code> will optimize the regularization
-parameter <code>psi.gx</code>. If this is not desired just set <code>G.X</code> to
-<code>NULL</code>.</p></td>
+(<code>p</code> x <code>p</code>) where <code>p</code> is the number of covariables <code>X</code></p></td>
     </tr>
     <tr>
       <th>G.Y</th>
       <td><p>non-negativ affinity matrix for <code>n</code>, of dimensions
-(<code>q</code> x <code>q</code>) where <code>q</code> is the number of responses <code>Y</code>.
-Providing a graph <code>G.Y</code> will optimize the regularization
-parameter <code>psi.gy</code>. If this is not desired just set <code>G.Y</code> to
-<code>NULL</code>.</p></td>
+(<code>q</code> x <code>q</code>) where <code>q</code> is the number of responses <code>Y</code></p></td>
     </tr>
     <tr>
       <th>lambda</th>
-      <td><p><code>numerical</code> shrinkage parameter for LASSO. Per default
-this parameter is
- set to <code>NULL</code> which means that <code>lambda</code> is going to be estimated
- using cross-validation. If any <code>numerical</code> value for <code>lambda</code>
- is set, estimation of the optimal parameter will <em>not</em> be conducted.</p></td>
+      <td><p><code>numerical</code> shrinkage parameter for LASSO.</p></td>
     </tr>
     <tr>
       <th>psigx</th>
       <td><p><code>numerical</code> shrinkage parameter for graph-regularization
-of <code>G.X</code>. Per default this parameter is
-set to <code>NULL</code> which means that <code>psigx</code> is going to be estimated
-in the cross-validation. If any <code>numerical</code> value for <code>psigx</code> is
-set, estimation of the optimal parameter will <em>not</em> be conducted.</p></td>
+of <code>G.X</code></p></td>
     </tr>
     <tr>
       <th>psigy</th>
       <td><p><code>numerical</code> shrinkage parameter for graph-regularization
-of <code>G.Y</code>. Per default this parameter is
-set to <code>NULL</code> which means that <code>psigy</code> is going to be estimated
-in the cross-validation. If any <code>numerical</code> value for <code>psigy</code> is
-set, estimation of the optimal parameter will <em>not</em> be conducted.</p></td>
+of <code>G.Y</code></p></td>
     </tr>
     <tr>
       <th>thresh</th>
-      <td><p><code>numerical</code> threshold for coordinate descent</p></td>
+      <td><p><code>numerical</code> threshold for optimizer</p></td>
     </tr>
     <tr>
       <th>maxit</th>
-      <td><p>maximum number of iterations for the coordinate descent
+      <td><p>maximum number of iterations for optimizer
 (<code>integer</code>)</p></td>
     </tr>
     <tr>
       <th>family</th>
-      <td><p>family of response, e.g. <em>gaussian</em></p></td>
-    </tr>
-    <tr>
-      <th>optim.epsilon</th>
-      <td><p><code>numerical</code> threshold criterion for the
-optimization to stop.  Usually 1e-3 is a good choice.</p></td>
-    </tr>
-    <tr>
-      <th>optim.maxit</th>
-      <td><p>the maximum number of iterations for the optimization
-(<code>integer</code>). Usually 1e4 is a good choice.</p></td>
-    </tr>
-    <tr>
-      <th>nfolds</th>
-      <td><p>the number of folds to be used - default is 10
-(minimum 3, maximum <code><a href='https://www.rdocumentation.org/packages/base/topics/nrow'>nrow(X)</a></code>).</p></td>
+      <td><p>family of response, e.g. <em>gaussian</em> or <em>binomial</em></p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>An object of class <code>cv.edgenet</code></p>
-<dt>call </dt><dd><p>the call that produced the object</p></dd>
-<dt>lambda </dt><dd><p>the estimated (<code>p</code> x <code>q</code>)-dimensional
+    <p>An object of class <code>edgenet</code></p>
+<dt>coefficients </dt><dd><p>the estimated (<code>p</code> x <code>q</code>)-dimensional
  coefficient matrix B.hat</p></dd>
-<dt>psigx </dt><dd><p>the estimated (<code>q</code> x <code>1</code>)-dimensional
+<dt>intercept </dt><dd><p>the estimated (<code>q</code> x <code>1</code>)-dimensional
  vector of intercepts</p></dd>
-<dt>psigy </dt><dd><p>the estimated (<code>q</code> x <code>1</code>)-dimensional vector
- of intercepts</p></dd>
+<dt>call </dt><dd><p>the call that produced the object</p></dd>
+<dt>family </dt><dd><p>the family of the response</p></dd>
 
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
@@ -247,34 +220,30 @@ optimization to stop.  Usually 1e-3 is a good choice.</p></td>
  Fabian J (2018),
  netReg: Network-regularized linear models for biological association
  studies. <br />
+ <em>Bioinformatics</em><br /> <br />
  Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007),
  Pathwise coordinate optimization.<br />
  <em>The Annals of Applied Statistics</em><br /> <br />
  Friedman J., Hastie T. and Tibshirani R. (2010),
  Regularization Paths for Generalized Linear Models via
-  Coordinate Descent. <br />
- <em>Journal of Statistical Software</em><br /> <br />
+ Coordinate Descent.<br /> <em>Journal of Statistical Software</em><br /> <br />
  Fu W. J. (1998),  Penalized Regression: The Bridge Versus the Lasso.<br />
  <em>Journal of Computational and Graphical Statistics</em><br /> <br />
- Cheng W. and Wang W. (2014), Graph-regularized dual Lasso for
-  robust eQTL mapping.<br />
- <em>Bioinformatics</em><br /> <br />
- Powell M.J.D. (2009),
- The BOBYQA algorithm for bound constrained optimization without
-  derivatives.<br />
- <a href='http://www.damtp.cam.ac.uk/user/na/NA_papers/NA2009_06.pdf'>http://www.damtp.cam.ac.uk/user/na/NA_papers/NA2009_06.pdf</a></p>
+ Cheng W. and Wang W. (2014), Graph-regularized dual Lasso for robust
+ eQTL mapping.<br />
+ <em>Bioinformatics</em></p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>X</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/matrix'>matrix</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='fl'>100</span>*<span class='fl'>10</span>), <span class='fl'>100</span>, <span class='fl'>10</span>)
 <span class='no'>b</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='fl'>10</span>)
-<span class='no'>G.X</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/matrix'>matrix</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Poisson'>rpois</a></span>(<span class='fl'>10</span>*<span class='fl'>10</span>,<span class='fl'>1</span>),<span class='fl'>10</span>)
+<span class='no'>G.X</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/matrix'>matrix</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Poisson'>rpois</a></span>(<span class='fl'>100</span>,<span class='fl'>1</span>), <span class='fl'>10</span>)
 <span class='no'>G.X</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/t'>t</a></span>(<span class='no'>G.X</span>) + <span class='no'>G.X</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/diag'>diag</a></span>(<span class='no'>G.X</span>) <span class='kw'>&lt;-</span> <span class='fl'>0</span>
 
 <span class='co'># fit a Gaussian model</span>
-<span class='no'>Y</span> <span class='kw'>&lt;-</span> <span class='no'>X</span><span class='kw'>%*%</span><span class='no'>b</span> + <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='fl'>100</span>)
-<span class='no'>cv.edge</span> <span class='kw'>&lt;-</span> <span class='fu'>cv.edgenet</span>(<span class='kw'>X</span><span class='kw'>=</span><span class='no'>X</span>, <span class='kw'>Y</span><span class='kw'>=</span><span class='no'>Y</span>, <span class='kw'>G.X</span><span class='kw'>=</span><span class='no'>G.X</span>, <span class='kw'>family</span><span class='kw'>=</span><span class='st'>"gaussian"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in .cv.edgenet(X = X, Y = Y, G.X = G.X, G.Y = G.Y, lambda = lambda,     psigx = psigx, psigy = psigy, do.lambda = do.lambda, do.psigx = do.psigx,     do.psigy = do.psigy, family = family, thresh = thresh, maxit = maxit,     nfolds = nfolds, foldid = foldid, optim.epsilon = optim.epsilon,     optim.maxit = optim.maxit): object 'cv' not found</span></div></pre>
+<span class='no'>Y</span> <span class='kw'>&lt;-</span> <span class='no'>X</span> <span class='kw'>%*%</span> <span class='no'>b</span> + <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='fl'>100</span>)
+<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>edgenet</span>(<span class='kw'>X</span><span class='kw'>=</span><span class='no'>X</span>, <span class='kw'>Y</span><span class='kw'>=</span><span class='no'>Y</span>, <span class='kw'>G.X</span><span class='kw'>=</span><span class='no'>G.X</span>, <span class='kw'>family</span><span class='kw'>=</span><span class='no'>gaussian</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

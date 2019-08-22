@@ -4,9 +4,10 @@
 \alias{cv.edgenet}
 \title{Find the optimal shrinkage parameters for edgenet}
 \usage{
-cv.edgenet(X, Y, G.X = NULL, G.Y = NULL, lambda = NULL, psigx = NULL,
-  psigy = NULL, thresh = 1e-05, maxit = 1e+05, family = c("gaussian"),
-  optim.epsilon = 0.001, optim.maxit = 10000, nfolds = 10)
+cv.edgenet(X, Y, G.X = NULL, G.Y = NULL, lambda = NULL,
+  psigx = NULL, psigy = NULL, thresh = 1e-05, maxit = 1e+05,
+  family = c("gaussian"), optim.epsilon = 0.001, optim.maxit = 10000,
+  nfolds = 10)
 }
 \arguments{
 \item{X}{input matrix, of dimension (\code{n} x \code{p})

@@ -22,13 +22,15 @@
 #'  edge-based regularization.
 #'
 #' @export
+#' @docType methods
+#' @rdname edgenet-methods
 #'
 #' @description  Fit a graph-regularized linear regression model using
 #'  edge-penalization. The coefficients are computed using graph-prior
 #'  knowledge in the form of one/two affinity matrices. Graph-regularization is
 #'  an extension to previously introduced regularization techniques,
-#'  such as the LASSO. For that reason we are also using coordinate descent
-#'  for minimization of the objective function of the linear model.
+#'  such as the LASSO. See the vignette for details on the objective function of
+#'  the model: \href{../doc/edgenet.html}{\code{vignette("edgenet", package="netReg")}}
 #'
 #' @param X  input matrix, of dimension (\code{n} x \code{p})
 #' where \code{n} is the number of observations and \code{p} is the number
@@ -45,10 +47,10 @@
 #'  of \code{G.X}
 #' @param psigy  \code{numerical} shrinkage parameter for graph-regularization
 #'  of \code{G.Y}
-#' @param thresh  \code{numerical} threshold for coordinate descent
-#' @param maxit  maximum number of iterations for coordinate descent
+#' @param thresh  \code{numerical} threshold for optimizer
+#' @param maxit  maximum number of iterations for optimizer
 #'  (\code{integer})
-#' @param family  family of response, e.g. \emph{gaussian}
+#' @param family  family of response, e.g. \emph{gaussian} or \emph{binomial}
 #'
 #' @return An object of class \code{edgenet}
 #' \item{coefficients }{ the estimated (\code{p} x \code{q})-dimensional
@@ -84,57 +86,76 @@
 #' diag(G.X) <- 0
 #'
 #' # fit a Gaussian model
-#' Y <- X%*%b + rnorm(100)
-#' fit <- edgenet(X=X, Y=Y, G.X=G.X, family="gaussian")
+#' Y <- X %*% b + rnorm(100)
+#' fit <- edgenet(X=X, Y=Y, G.X=G.X, family=gaussian)
+setGeneric(
+    "edgenet",
+    function(X, Y, G.X=NULL, G.Y=NULL,
+             lambda=1, psigx=1, psigy=1,
+             thresh=1e-5, maxit=1e5,
+             family=gaussian)
+    {
+        standardGeneric("edgenet")
+    },
+    package = "netReg"
+)
 
-edgenet <- function(X, Y, G.X=NULL, G.Y=NULL,
-                    lambda=1, psigx=1, psigy=1,
-                    thresh=1e-5, maxit=1e5,
-                    family=gaussian)
-{
-    UseMethod("edgenet")
-}
 
-
-#' @export
-#' @method edgenet default
-edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
-                            lambda=1, psigx=1, psigy=1,
-                            thresh=1e-5, maxit=1e5,
-                            family=gaussian)
-{
-    check.matrices(X, Y)
-    n <- dim(X)[1]
-    p <- dim(X)[2]
-    q <- dim(Y)[2]
-
-    if (is.null(G.X)) psigx <- 0
-    if (is.null(G.Y)) psigy <- 0
-
-    check.graphs(X, Y, G.X, G.Y, psigx, psigy)
-    check.dimensions(X, Y, n, p)
-    lambda <- check.param(lambda, 0, `<`, 0)
-    psigx <- check.param(psigx, 0, `<`, 0)
-    psigy <- check.param(psigy, 0, `<`, 0)
-    maxit <- check.param(maxit, 0, `<`, 1e5)
-    thresh <- check.param(thresh, 0, `<`, 1e-5)
-
-    if (q == 1) {
-        psigy <- 0
-        G.Y <- NULL
+#' @noRd
+setMethod(
+    "edgenet",
+    signature = signature(X="matrix", Y="numeric"),
+    function(X, Y, G.X=NULL, G.Y=NULL,
+             lambda=1, psigx=1, psigy=1,
+             thresh=1e-5, maxit=1e5,
+             family=gaussian)
+    {
+        edgenet(X, as.matrix(Y), G.X, G.Y,
+                lambda, psigx, psigy, thresh, maxit, family)
     }
-    family <- get.family(family)
+)
 
-    # estimate coefficients
-    ret <- .edgenet(X = X, Y = Y,
-                    G.X = G.X, G.Y = G.Y,
-                    lambda = lambda, psigx = psigx, psigy = psigy,
-                    thresh = thresh, maxit = maxit, family = family)
-    ret$call   <- match.call()
-    class(ret) <- c(class(ret), "edgenet")
+#' @noRd
+setMethod(
+    "edgenet",
+    signature = signature(X="matrix", Y="matrix"),
+    function(X, Y, G.X=NULL, G.Y=NULL,
+             lambda=1, psigx=1, psigy=1,
+             thresh=1e-5, maxit=1e5,
+             family=gaussian)
+    {
+        n <- dim(X)[1]
+        p <- dim(X)[2]
+        q <- dim(Y)[2]
 
-    ret
-}
+        if (is.null(G.X)) psigx <- 0
+        if (is.null(G.Y)) psigy <- 0
+
+        check.graphs(X, Y, G.X, G.Y, psigx, psigy)
+        check.dimensions(X, Y, n, p)
+        lambda <- check.param(lambda, 0, `<`, 0)
+        psigx <- check.param(psigx, 0, `<`, 0)
+        psigy <- check.param(psigy, 0, `<`, 0)
+        maxit <- check.param(maxit, 0, `<`, 1e5)
+        thresh <- check.param(thresh, 0, `<`, 1e-5)
+
+        if (q == 1) {
+            psigy <- 0
+            G.Y <- NULL
+        }
+        family <- get.family(family)
+
+        # estimate coefficients
+        ret <- .edgenet(X = X, Y = Y,
+                        G.X = G.X, G.Y = G.Y,
+                        lambda = lambda, psigx = psigx, psigy = psigy,
+                        thresh = thresh, maxit = maxit, family = family)
+        ret$call   <- match.call()
+        class(ret) <- c(class(ret), "edgenet")
+
+        ret
+    }
+)
 
 
 #' @noRd
