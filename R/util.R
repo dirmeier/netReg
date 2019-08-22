@@ -1,6 +1,6 @@
 # netReg: graph-regularized linear regression models.
 #
-# Copyright (C) 2015 - 2016 Simon Dirmeier
+# Copyright (C) 2015 - 2019 Simon Dirmeier
 #
 # This file is part of netReg.
 #
@@ -21,14 +21,14 @@
 #' @noRd
 intercept <- function(Y, X, B, n)
 {
-    ((t(Y - X %*% B) %*% rep(1, n)) / n)
+    (t(Y - X %*% B) %*% rep(1, n)) / n
 }
 
 
 #' @noRd
-intercept.matrix <- function(n, mu)
+intercept.matrix <- function(n, alpha)
 {
-    rep(1, n) %*% t(mu)
+    rep(1, n) %*% t(alpha)
 }
 
 
@@ -80,6 +80,7 @@ is.positive.numeric <- function(d)
     is.numeric(d) && d > 0
 }
 
+
 #' @noRd
 check.param <- function(param, comp, op, replace.with)
 {
@@ -90,6 +91,7 @@ check.param <- function(param, comp, op, replace.with)
 
     param
 }
+
 
 # shamelessly copied from stats::glm
 #' @noRd
@@ -104,4 +106,15 @@ get.family <- function(family)
     }
 
     family
+}
+
+
+#' @noRd
+not.supported.yet <- function(family)
+{
+    err <- sprintf(
+        "family '%s' is not supported yet. choose 'gaussian'/'binomial' please.",
+        family
+    )
+    stop(err, call. =  FALSE)
 }

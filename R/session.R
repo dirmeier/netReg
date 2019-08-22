@@ -20,7 +20,7 @@
 
 #' @noRd
 #' @import tensorflow
-fit <- function(loss, alpha, beta, niter=100000, learning.rate = 0.01, threshold = 1e-7)
+fit <- function(loss, alpha, beta, maxit=1000, learning.rate = 0.01, thresh = 1e-4)
 {
   optimizer <- tf$train$AdamOptimizer(learning_rate = learning.rate)
   objective <- loss(alpha, beta)
@@ -30,11 +30,11 @@ fit <- function(loss, alpha, beta, niter=100000, learning.rate = 0.01, threshold
   sess$run(tf$global_variables_initializer())
 
   target.old <- Inf
-  for (step in seq(niter)) {
+  for (step in seq(maxit)) {
       sess$run(train)
       if (step %% 25 == 0) {
           target <- sess$run(objective)
-          if (sum(abs(target - target.old)) < threshold)
+          if (sum(abs(target - target.old)) < thresh)
               break
           target.old <- target
       }

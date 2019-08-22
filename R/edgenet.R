@@ -1,6 +1,6 @@
 # netReg: graph-regularized linear regression models.
 #
-# Copyright (C) 2015 - 2016 Simon Dirmeier
+# Copyright (C) 2015 - 2019 Simon Dirmeier
 #
 # This file is part of netReg.
 #
@@ -123,7 +123,7 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
         psigy <- 0
         G.Y <- NULL
     }
-    family <- get.family(family)$family
+    family <- get.family(family)
 
     # estimate coefficients
     ret <- .edgenet(X = X, Y = Y,
@@ -157,15 +157,16 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
                 psigx = psigx,
                 psigy = psigy)
 
-    ret$family <- family
-    class(ret) <- paste0(family, ".edgenet")
+
+    ret$family <- family$family
+    class(ret) <- paste0(family$family, ".edgenet")
 
     ret
 }
 
 
 #' @noRd
-#' @import Rcpp tensorflow
+#' @import tensorflow
 .fit.edgenet <- function(
     X, Y, gx, gy,
     lambda, psigx, psigy,
@@ -178,9 +179,9 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
     X <- tf$cast(X, tf$float32)
     Y <- tf$cast(Y, tf$float32)
     if (!is.null(gx))
-        gx <- tf$cast(netReg:::laplacian_(gx), tf$float32)
+        gx <- tf$cast(laplacian_(gx), tf$float32)
     if (!is.null(gy))
-        gy <- tf$cast(netReg:::laplacian_(gy), tf$float32)
+        gy <- tf$cast(laplacian_(gy), tf$float32)
 
     beta  <- tf$Variable(tf$zeros(shape(ncol(X), ncol(Y))))
     alpha <- tf$Variable(tf$zeros(shape(ncol(Y))))
@@ -188,18 +189,22 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
 
     loss  <- .edgenet.loss(alpha, beta, X, Y, gx, gy, ones,
                            lambda, psigx, psigy, family, q)
-    coefs <- fit(loss, alpha, beta)
+    coefs <- fit(loss, alpha, beta, maxit = maxit, thresh = thresh)
     coefs
 }
 
+
+#' @noRd
+#' @import tensorflow
 .edgenet.loss <- function(alpha, beta, x, y, gx, gy, ones,
                           lambda, psigx, psigy, family, q)
 {
+    family <- family$family
     loss.function <- switch(
         family,
         "gaussian" = .edgenet.gaussian.loss,
         "binomial" = .edgenet.binomial.loss,
-        stop('wrong family'))
+         not.supported.yet(family))
 
     loss <- function(alpha, beta) {
         eta <- tf$matmul(x, beta) + ones * tf$transpose(alpha)
@@ -220,12 +225,18 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
     loss
 }
 
+
+#' @noRd
+#' @import tensorflow
 .edgenet.gaussian.loss <- function(y, mean, lambda, ...)
 {
     obj <- tf$reduce_sum(tf$square(y - mean))
     obj
 }
 
+
+#' @noRd
+#' @import tensorflow
 .edgenet.binomial.loss <- function(y, means, lambda, ncol, ...)
 {
     obj <- 0
@@ -237,6 +248,9 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
     -obj
 }
 
+
+#' @noRd
+#' @import tensorflow
 .lasso <- function(lambda, beta) {
     lambda * tf$reduce_sum(tf$abs(beta))
 }

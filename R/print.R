@@ -1,6 +1,6 @@
 # netReg: graph-regularized linear regression models.
 #
-# Copyright (C) 2015 - 2019 Simon Dirmeier
+# Copyright (C) 2015 - 2016 Simon Dirmeier
 #
 # This file is part of netReg.
 #
@@ -30,6 +30,6 @@ print.edgenet <- function(x,...)
 print.cv.edgenet <- function(x, ...)
 {
     cat(sprintf("'%s' object", class(x)[1]))
-    cat("\nOptimal parameters:\n")
+    cat("\noptimal parameters\n")
     print(c(x$lambda, x$psigx, x$psigy))
 }

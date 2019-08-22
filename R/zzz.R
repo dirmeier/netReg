@@ -1,6 +1,6 @@
 # netReg: graph-regularized linear regression models.
 #
-# Copyright (C) 2015 - 2016 Simon Dirmeier
+# Copyright (C) 2015 - 2019 Simon Dirmeier
 #
 # This file is part of netReg.
 #
@@ -17,7 +17,9 @@
 # You should have received a copy of the GNU General Public License
 # along with netReg. If not, see <http://www.gnu.org/licenses/>.
 
+
 tfp <- reticulate::import("tensorflow_probability", delay_load = TRUE)
+
 
 .onLoad <- function(libname, pkgname)
 {
