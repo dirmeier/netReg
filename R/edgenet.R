@@ -123,7 +123,7 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
         psigy <- 0
         G.Y <- NULL
     }
-    family <- get.family(family)
+    family <- get.family(family)$family
 
     # estimate coefficients
     ret <- .edgenet(X = X, Y = Y,
@@ -174,6 +174,7 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
 
     tf$reset_default_graph()
 
+    q <- ncol(Y)
     X <- tf$cast(X, tf$float32)
     Y <- tf$cast(Y, tf$float32)
     if (!is.null(gx))
@@ -186,18 +187,23 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
     ones  <- tf$ones(shape(nrow(Y), 1), tf$float32)
 
     loss  <- .edgenet.loss(alpha, beta, X, Y, gx, gy, ones,
-                           lambda, psigx, psigy, family)
+                           lambda, psigx, psigy, family, q)
     coefs <- fit(loss, alpha, beta)
     coefs
 }
 
-.edgenet.loss <- function(alpha, beta, x, y, gx, gy, ones, lambda, psigx, psigy, family)
+.edgenet.loss <- function(alpha, beta, x, y, gx, gy, ones,
+                          lambda, psigx, psigy, family, q)
 {
-    loss.function <- switch(family, "gaussian" = .edgenet.gaussian.loss)
+    loss.function <- switch(
+        family,
+        "gaussian" = .edgenet.gaussian.loss,
+        "binomial" = .edgenet.binomial.loss,
+        stop('wrong family'))
 
     loss <- function(alpha, beta) {
         eta <- tf$matmul(x, beta) + ones * tf$transpose(alpha)
-        obj <- loss.function(y, eta, lambda) + .lasso(lambda, beta)
+        obj <- loss.function(y, eta, lambda, ncol=q) + .lasso(lambda, beta)
 
         if (!is.null(gx)) {
             x.penalty <- tf$trace(tf$matmul(tf$transpose(beta), tf$matmul(gx, beta)))
@@ -214,20 +220,20 @@ edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
     loss
 }
 
-.edgenet.gaussian.loss <- function(y, mean, lambda)
+.edgenet.gaussian.loss <- function(y, mean, lambda, ...)
 {
-    obj <- tf$reduce_sum(tf$pow(y - mean, 2))
+    obj <- tf$reduce_sum(tf$square(y - mean))
     obj
 }
 
-.edgenet.binomial.loss <- function(y, means, lambda, ncol)
+.edgenet.binomial.loss <- function(y, means, lambda, ncol, ...)
 {
-    obj <-  tf$reduce_sum(
-        sapply(seq(ncol), function(j) {
-            prob <- tfp$distributions$Bernoulli(logits = means[,j])
-            tf$reduce_sum(prob$lob_prob(y[,j]))
-        })
-    )
+    obj <- 0
+    for (j in seq(1, ncol)) {
+        prob <- tfp$distributions$Bernoulli(logits = means[,j])
+        obj <- obj + tf$reduce_sum(prob$log_prob(y[,j]))
+    }
+
     -obj
 }
 

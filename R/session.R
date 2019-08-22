@@ -20,7 +20,7 @@
 
 #' @noRd
 #' @import tensorflow
-fit <- function(loss, alpha, beta, niter=1000, learning.rate = 0.01, threshold = 10e-2)
+fit <- function(loss, alpha, beta, niter=100000, learning.rate = 0.01, threshold = 1e-7)
 {
   optimizer <- tf$train$AdamOptimizer(learning_rate = learning.rate)
   objective <- loss(alpha, beta)
