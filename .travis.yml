@@ -37,36 +37,8 @@ r_packages:
   - testthat
   - lintr
 
-addons:
-  apt:
-    packages:
-      - cmake
-      - cmake-data
-    sources:
-      - kalakris-cmake
-
 bioc_packages:
   - BiocCheck
-
-before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install --only-upgrade autoconf
-  - sudo apt-get install --only-upgrade automake
-  - sudo apt-get install --only-upgrade autotools-dev
-  - sudo apt-get install autoconf-archive
-  - sudo apt-get install libboost-all-dev
-  - sudo apt-get install libopenblas-dev liblapack-dev
-  - sudo apt-get install libarmadillo-dev
-  - sudo apt-get install libhdf5-dev
-
-before_script:
-  - autoreconf -vif
-
-after_script:
-  - mkdir build && cd build
-  - cmake ..
-  - make && make test
-  - ./netReg -h
 
 after_success:
   - tar -C .. -xf $PKG_TARBALL

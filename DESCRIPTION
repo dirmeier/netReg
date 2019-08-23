@@ -30,7 +30,8 @@ Suggests:
     rmarkdown,
     BiocStyle,
     lintr,
-    lassoshooting
+    lassoshooting,
+    glmnet
 VignetteBuilder: knitr
 RoxygenNote: 6.1.1
 SystemRequirements: C++11
@@ -41,5 +42,6 @@ Imports:
     Rcpp,
     stats,
     tensorflow (>= 1.13.0),
-    reticulate
+    reticulate,
+    minqa
 NeedsCompilation: yes

@@ -107,7 +107,7 @@ setMethod(
     signature = signature(X="matrix", Y="numeric"),
     function(X, Y, G.X=NULL, G.Y=NULL,
              lambda=1, psigx=1, psigy=1,
-             thresh=1e-5, maxit=1e5,
+             thresh=1e-5, maxit=1e5, learning.rate=0.01,
              family=gaussian)
     {
         edgenet(X, as.matrix(Y), G.X, G.Y,
@@ -121,35 +121,32 @@ setMethod(
     signature = signature(X="matrix", Y="matrix"),
     function(X, Y, G.X=NULL, G.Y=NULL,
              lambda=1, psigx=1, psigy=1,
-             thresh=1e-5, maxit=1e5,
+             thresh=1e-5, maxit=1e5, learning.rate=0.01,
              family=gaussian)
     {
-        n <- dim(X)[1]
-        p <- dim(X)[2]
-        q <- dim(Y)[2]
-
         if (is.null(G.X)) psigx <- 0
         if (is.null(G.Y)) psigy <- 0
 
         check.graphs(X, Y, G.X, G.Y, psigx, psigy)
-        check.dimensions(X, Y, n, p)
+        check.dimensions(X, Y, n, ncol(X))
         lambda <- check.param(lambda, 0, `<`, 0)
         psigx <- check.param(psigx, 0, `<`, 0)
         psigy <- check.param(psigy, 0, `<`, 0)
         maxit <- check.param(maxit, 0, `<`, 1e5)
         thresh <- check.param(thresh, 0, `<`, 1e-5)
+        family <- get.family(family)
 
-        if (q == 1) {
+        if (ncol(Y) == 1) {
             psigy <- 0
             G.Y <- NULL
         }
-        family <- get.family(family)
 
         # estimate coefficients
-        ret <- .edgenet(X = X, Y = Y,
-                        G.X = G.X, G.Y = G.Y,
+        ret <- .edgenet(x=X, y=Y, gx=G.X, gy=G.Y,
                         lambda = lambda, psigx = psigx, psigy = psigy,
-                        thresh = thresh, maxit = maxit, family = family)
+                        thresh = thresh, maxit = maxit,
+                        learning.rate = learning.rate, family = family)
+
         ret$call   <- match.call()
         class(ret) <- c(class(ret), "edgenet")
 
@@ -160,24 +157,38 @@ setMethod(
 
 #' @noRd
 #' @import Rcpp
-.edgenet <- function(X, Y, G.X, G.Y,
+.edgenet <- function(x, y, gx, gy,
                      lambda, psigx, psigy,
-                     thresh, maxit, family)
+                     thresh, maxit,learning.rate, family)
 {
-    res <- .fit.edgenet(
-        X, Y, G.X, G.Y, lambda, psigx, psigy, maxit, thresh, family)
+    p <- ncol(x)
+    q <- ncol(y)
+
+    x <- cast_float(x)
+    y <- cast_float(y)
+
+    if (!is.null(gx))
+        gx <- cast_float(netReg:::laplacian_(gx))
+    if (!is.null(gy))
+        gy <- cast_float(netReg:::laplacian_(gy))
+
+    alpha <- zero_vector(q)
+    beta  <- zero_matrix(p, q)
+
+     #estimate coefficients
+    loss  <- edgenet.loss(lambda, psigx, psigy, gx, gy, family, q)
+    res <- fit(loss, alpha, beta, x, y, maxit, learning.rate, thresh)
 
     # finalize output
-    beta  <- matrix(res$beta, ncol(X))
+    beta  <- matrix(res$beta, ncol(x))
     alpha <- res$alpha
-    rownames(beta) <- colnames(X)
-    colnames(beta) <- colnames(Y)
+    rownames(beta) <- colnames(x)
+    colnames(beta) <- colnames(y)
     ret <- list(beta = beta,
                 alpha = alpha,
                 lambda = lambda,
                 psigx = psigx,
                 psigy = psigy)
-
 
     ret$family <- family$family
     class(ret) <- paste0(family$family, ".edgenet")
@@ -188,37 +199,7 @@ setMethod(
 
 #' @noRd
 #' @import tensorflow
-.fit.edgenet <- function(
-    X, Y, gx, gy,
-    lambda, psigx, psigy,
-    maxit, thresh, family)
-{
-
-    tf$reset_default_graph()
-
-    q <- ncol(Y)
-    X <- tf$cast(X, tf$float32)
-    Y <- tf$cast(Y, tf$float32)
-    if (!is.null(gx))
-        gx <- tf$cast(laplacian_(gx), tf$float32)
-    if (!is.null(gy))
-        gy <- tf$cast(laplacian_(gy), tf$float32)
-
-    beta  <- tf$Variable(tf$zeros(shape(ncol(X), ncol(Y))))
-    alpha <- tf$Variable(tf$zeros(shape(ncol(Y))))
-    ones  <- tf$ones(shape(nrow(Y), 1), tf$float32)
-
-    loss  <- .edgenet.loss(alpha, beta, X, Y, gx, gy, ones,
-                           lambda, psigx, psigy, family, q)
-    coefs <- fit(loss, alpha, beta, maxit = maxit, thresh = thresh)
-    coefs
-}
-
-
-#' @noRd
-#' @import tensorflow
-.edgenet.loss <- function(alpha, beta, x, y, gx, gy, ones,
-                          lambda, psigx, psigy, family, q)
+edgenet.loss <- function(lambda, psigx, psigy, gx, gy, family, q)
 {
     family <- family$family
     loss.function <- switch(
@@ -227,9 +208,10 @@ setMethod(
         "binomial" = .edgenet.binomial.loss,
          not.supported.yet(family))
 
-    loss <- function(alpha, beta) {
-        eta <- tf$matmul(x, beta) + ones * tf$transpose(alpha)
-        obj <- loss.function(y, eta, lambda, ncol=q) + .lasso(lambda, beta)
+    loss <- function(alpha, beta, x, y)
+    {
+        eta <- tf$matmul(x, beta) + tf$ones(shape(q, 1), tf$float32) * tf$transpose(alpha)
+        obj <- loss.function(y, eta, ncol=q)# + .lasso(lambda, beta)
 
         if (!is.null(gx)) {
             x.penalty <- tf$trace(tf$matmul(tf$transpose(beta), tf$matmul(gx, beta)))
@@ -249,7 +231,7 @@ setMethod(
 
 #' @noRd
 #' @import tensorflow
-.edgenet.gaussian.loss <- function(y, mean, lambda, ...)
+.edgenet.gaussian.loss <- function(y, mean, ...)
 {
     obj <- tf$reduce_sum(tf$square(y - mean))
     obj
@@ -258,7 +240,7 @@ setMethod(
 
 #' @noRd
 #' @import tensorflow
-.edgenet.binomial.loss <- function(y, means, lambda, ncol, ...)
+.edgenet.binomial.loss <- function(y, means, ncol, ...)
 {
     obj <- 0
     for (j in seq(1, ncol)) {

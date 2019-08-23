@@ -18,14 +18,35 @@
 # along with netReg. If not, see <http://www.gnu.org/licenses/>.
 
 
-#' @export
-#' @method coef edgenet
-coef.edgenet <- function(x,...)
+#' @noRd
+#' @import tensorflow
+cast_float <- function(x)
 {
-    alpha <- x$alpha
-    beta  <- x$beta
-    coefs <- rbind(alpha, beta)
-    rownames(coefs) <- c("(Intercept)", sprintf("x[%s]", seq(nrow(beta))))
-    colnames(coefs) <- sprintf("y[%s]", seq(ncol(beta)))
-    coefs
+    tf$cast(x, tf$float32)
+}
+
+
+#' @noRd
+#' @import tensorflow
+constant_float <- function(x)
+{
+    tf$constant(x, tf$float32)
+}
+
+
+#' @noRd
+#' @import tensorflow
+placeholder <- function(m, n)
+{
+    tf$placeholder(tf$float32, shape(m, n))
+}
+
+zero_matrix <- function(m, n)
+{
+    tf$Variable(tf$zeros(shape(m, n)))
+}
+
+zero_vector <- function(m)
+{
+    tf$Variable(tf$zeros(shape(m)))
 }

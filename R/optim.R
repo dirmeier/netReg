@@ -18,14 +18,10 @@
 # along with netReg. If not, see <http://www.gnu.org/licenses/>.
 
 
-#' @export
-#' @method coef edgenet
-coef.edgenet <- function(x,...)
+#' @noRd
+#' @import minqa
+optim <- function(fn, par,  ..., lower=-Inf, upper=Inf)
 {
-    alpha <- x$alpha
-    beta  <- x$beta
-    coefs <- rbind(alpha, beta)
-    rownames(coefs) <- c("(Intercept)", sprintf("x[%s]", seq(nrow(beta))))
-    colnames(coefs) <- sprintf("y[%s]", seq(ncol(beta)))
-    coefs
+    bobele <- minqa::bobyqa(par, fn, lower=lower, upper=upper, ...)
+    bobele
 }
