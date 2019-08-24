@@ -110,138 +110,181 @@
 #' # fit a Gaussian model
 #' Y <- X%*%b + rnorm(100)
 #' cv.edge <- cv.edgenet(X=X, Y=Y, G.X=G.X, family="gaussian")
-cv.edgenet <- function(X, Y, G.X=NULL, G.Y=NULL,
-                       lambda=NULL, psigx=NULL, psigy=NULL,
-                       thresh=1e-5, maxit=1e5,
-                       family=c("gaussian"),
-                       optim.epsilon=1e-3,
-                       optim.maxit=1e4,
-                       nfolds=10)
-{
-    UseMethod("cv.edgenet")
-}
+setGeneric(
+    "cv.edgenet",
+    function(X, Y, G.X=NULL, G.Y=NULL,
+             lambda=NA_real_, psigx=NA_real_, psigy=NA_real_,
+             thresh=1e-5, maxit=1e5, learning.rate=0.01,
+             family=gaussian,
+             optim.maxit=1e2,
+             nfolds=10)
+    {
+        standardGeneric("cv.edgenet")
+    },
+    package = "netReg"
+)
 
-#' @export
-#' @method cv.edgenet default
-cv.edgenet.default <- function(X, Y, G.X=NULL, G.Y=NULL,
-                               lambda=NULL, psigx=NULL, psigy=NULL,
-                               thresh=1e-5, maxit=1e5,
-                               family=c("gaussian"),
-                               optim.epsilon=1e-3,
-                               optim.maxit=1e4,
-                               nfolds=10)
-{
-    stopifnot(is.numeric(nfolds), nfolds > 0,
-              is.numeric(optim.epsilon), is.numeric(10),
-              is.numeric(maxit), is.numeric(thresh))
-    check.matrices(X, Y)
-    n <- dim(X)[1]
-    p <- dim(X)[2]
-    q <- dim(Y)[2]
 
-    do.lambda <- do.psigx <- do.psigy <- TRUE
-    if (is.positive.numeric(lambda)) {
-        do.lambda <- FALSE
-    } else  lambda <- 0
-    if (is.positive.numeric(psigx))  {
-        do.psigx  <- FALSE
-    } else psigx <- 0
-    if (is.positive.numeric(psigy)) {
-        do.psigy  <- FALSE
-    } else psigy <- 0
-
-    if (is.null(G.X)) G.X <- matrix(0, 1, 1)
-    if (is.null(G.Y)) G.Y <- matrix(0, 1, 1)
-    if (all(G.X == 0)) {
-        psigx <- 0
-        do.psigx <- FALSE
+#' @noRd
+setMethod(
+    "cv.edgenet",
+    signature = signature(X="matrix", Y="numeric"),
+    function(X, Y, G.X=NULL, G.Y=NULL,
+             lambda=NA_real_, psigx=NA_real_, psigy=NA_real_,
+             thresh=1e-5, maxit=1e5, learning.rate=0.01,
+             family=gaussian,
+             optim.maxit=1e2,
+             nfolds=10)
+    {
+        cv.edgenet(X, as.matrix(Y), G.X, G.Y,
+                   lambda, psigx, psigy,
+                   thresh, maxit, learning.rate,
+                   family,
+                   optim.maxit,
+                   nfolds)
     }
-    if (all(G.Y == 0)) {
-        psigy <- 0
-        do.psigy <- FALSE
-    }
+)
 
-    check.graphs(X, Y, G.X, G.Y, psigx, psigy)
-    check.dimensions(X, Y, n, p)
-    if (maxit < 0) {
-        warning("maxit < 0, setting to 1e5!")
-        maxit <- 1e5
-    }
-    if (thresh < 0) {
-        warning("thresh < 0, setting to 1e-5!")
-        thresh <- 1e-5
-    }
-    if (optim.epsilon < 0) {
-        warning("epsilon < 0; settint to 1e-3")
-        optim.epsilon <- 1e-3
-    }
-    if (optim.maxit < 0) {
-        warning("approx.maxit < 0; settint to 1e4")
-        optim.maxit <- 1e4
-    }
 
-    foldid <- NULL
-    # check if some parameters have values
-    if (!is.null(foldid) & is.numeric(foldid)) {
-        nfolds <- max(foldid)
-        stopifnot(length(foldid) == n)
+#' @noRd
+setMethod(
+    "cv.edgenet",
+    signature = signature(X="matrix", Y="matrix"),
+    function(X, Y, G.X=NULL, G.Y=NULL,
+             lambda=NA_real_, psigx=NA_real_, psigy=NA_real_,
+             thresh=1e-5, maxit=1e5, learning.rate=0.01,
+             family=gaussian,
+             optim.maxit=1e2,
+             nfolds=10)
+    {
+        n <- dim(X)[1]
+        p <- dim(X)[2]
+
+        if (is.null(G.X)) psigx <- 0
+        if (is.null(G.Y)) psigy <- 0
+
+        check.matrices(X, Y)
+        check.graphs(X, Y, G.X, G.Y, psigx, psigy)
+        check.dimensions(X, Y, n, p)
+        lambda <- check.param(lambda, 0, `<`, 0)
+        psigx <- check.param(psigx, 0, `<`, 0)
+        psigy <- check.param(psigy, 0, `<`, 0)
+        maxit <- check.param(maxit, 0, `<`, 1e5)
+        optim.maxit <- check.param(optim.maxit, 0, `<`, 1e2)
+        thresh <- check.param(thresh, 0, `<`, 1e-5)
+        family <- get.family(family)
+
+        if (ncol(Y) == 1) {
+            psigy <- 0
+            G.Y <- NULL
+        }
+
+        if (n < nfolds) nfolds <- n
+        folds <- sample(rep(seq_len(10), length.out=n))
+
+        # estimate shrinkage parameters
+        ret <- .cv.edgenet(
+            X, Y, G.X, G.Y,
+            lambda, psigx, psigy,
+            family,
+            thresh, maxit, learning.rate
+            nfolds, folds,
+            optim.maxit)
+
+        ret$call   <- match.call()
+        class(ret) <- c(class(ret), "cv.edgenet")
+
+        ret
     }
-    if (is.null(foldid)) foldid <- NA_integer_
-    if (!is.numeric(foldid))
-        stop("Please provide either an integer vector or NULL for foldid")
-    if (q == 1)     psigy  <- 0
-    if (n < nfolds) nfolds <- n
+)
 
-    # set static to avoid memory overload
-    if (n >= 1000 && p >= 500) nfolds <- 5
-    family <- match.arg(family)
-
-    # estimate shrinkage parameters
-    ret <- .cv.edgenet(
-        X=X, Y=Y, G.X=G.X, G.Y=G.Y,
-        lambda=lambda, psigx=psigx, psigy=psigy,
-        do.lambda=do.lambda, do.psigx=do.psigx, do.psigy=do.psigy,
-        family=family, thresh=thresh, maxit=maxit,
-        nfolds=nfolds, foldid=foldid,
-        optim.epsilon=optim.epsilon, optim.maxit=optim.maxit)
-
-    ret$call   <- match.call()
-    class(ret) <- c(class(ret), "cv.edgenet")
-
-    ret
-}
 
 #' @noRd
 #' @import Rcpp
-.cv.edgenet <- function(X, Y, G.X, G.Y,
+.cv.edgenet <- function(x, y, gx, gy,
                         lambda, psigx, psigy,
-                        do.lambda, do.psigx, do.psigy,
-                        family ,thresh, maxit,
-                        nfolds, foldid, optim.maxit, optim.epsilon)
+                        family,
+                        thresh, maxit, learning.rate,
+                        nfolds, folds,
+                        optim.maxit)
 {
-    # cv <- .Call("cv_edgenet_cpp",
-    #             X, Y, G.X, G.Y,
-    #             as.double(lambda),
-    #             as.double(psigx),
-    #             as.double(psigy),
-    #             as.logical(do.lambda),
-    #             as.logical(do.psigx),
-    #             as.logical(do.psigy),
-    #             as.integer(maxit),
-    #             as.double(thresh),
-    #             as.integer(nfolds),
-    #             as.integer(foldid),
-    #             as.integer(length(foldid)),
-    #             as.character(family),
-    #             as.integer(optim.maxit),
-    #             as.double(optim.epsilon))
+    n <- nrow(n)
+    p <- ncol(x)
+    q <- ncol(y)
 
-    ret <- list(lambda=cv$parameters[1],
-                psigx =cv$parameters[2],
-                psigy =cv$parameters[3],
-                folds =cv$folds+1)
-    ret$family <- family
-    class(ret) <- paste0(family, ".cv.edgenet")
+    if (!is.null(gx))
+        gx <- cast_float(netReg:::laplacian_(gx))
+    if (!is.null(gy))
+        gy <- cast_float(netReg:::laplacian_(gy))
+
+    alpha <- zero_vector(q)
+    beta  <- zero_matrix(p, q)
+
+    x.tensor <- tf$placeholder(tf$float32, shape(NULL, p))
+    y.tensor <- tf$placeholder(tf$float32, shape(NULL, q))
+    lambda.tensor <- tf$placeholder(tf$float32, shape(1))
+    psigx.tensor <- tf$placeholder(tf$float32, shape(1))
+    psigy.tensor <- tf$placeholder(tf$float32, shape(1))
+
+    #estimate coefficients
+    loss  <- edgenet.loss(gx, gy, family, q)
+    objective <- loss(alpha, beta,
+                      lambda.tensor, psigx.tensor, psigy.tensor,
+                      x.tensor, y.tensor)
+
+    optimizer <- tf$train$AdamOptimizer(learning_rate = learning.rate)
+    train <- optimizer$minimize(objective)
+
+    fn <- function(params, ..., sess, alpha, beta)
+    {
+        params <- .get.params(params, ...)
+        losses <- vector(mode = "double", length = nfolds)
+        for (fold in seq(nfolds)) {
+            x.train <- x[which(folds != fold), ]
+            y.train <- y[which(folds != fold),,drop=FALSE]
+            x.test  <- x[which(folds == fold), ]
+            y.test  <- y[which(folds == fold),,drop=FALSE]
+
+            sess$run(tf$global_variables_initializer())
+
+            target.old <- Inf
+            for (step in seq(maxit))
+            {
+                sess$run(train, feed_dict = dict(x.tensor = x.train,
+                                                 y.tensor= y.train,
+                                                 lambda.tensor=params[1],
+                                                 psigx.tensor=params[2],
+                                                 psigy.tensor=params[3]))
+                if (step %% 25 == 0) {
+                    target <- sess$run(objective, feed_dict = dict(x.tensor = x.test,
+                                                                   y.tensor = y.test,
+                                                                   lambda.tensor=params[1],
+                                                                   psigx.tensor=params[2],
+                                                                   psigy.tensor=params[3]))
+                    if (sum(abs(target - target.old)) < thresh)
+                        break
+                    target.old <- target
+                }
+            }
+
+            losses[fold] <- sess$run(
+                objective, feed_dict = dict(xtensor = x.test,
+                                            y.tensor=y.test,
+                                            lambda.tensor=params[1],
+                                            psigx.tensor=params[2],
+                                            psigy.tensor=params[3]))
+        }
+
+        sum(losses)
+    }
+
+    with(tf$Session() %as% sess, {
+
+
+    })
+
+    ret$family <- family$family
+    class(ret) <- paste0(family$family, ".cv.edgenet")
 
     ret
 }

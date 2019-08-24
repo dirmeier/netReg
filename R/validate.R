@@ -20,13 +20,12 @@
 
 #' @noRd
 cross.validate <- function(loss.function, nfolds, folds,
-                           x, y, gx, gy, family,
+                           x, y,
                            maxit=1000, thresh=1e-5, learning.rate=0.01)
 {
     fn <- function(params, ..., alpha, beta)
     {
         params <- .get.params(params, ...)
-        loss <- loss.function(params[1], params[2], params[3], gx, gy, family, ncol(y))
         losses <- vector(mode = "double", length = nfolds)
         for (fold in seq(nfolds)) {
             x.train <- x[which(folds != fold), ]
@@ -34,9 +33,9 @@ cross.validate <- function(loss.function, nfolds, folds,
             x.test  <- x[which(folds == fold), ]
             y.test  <- y[which(folds == fold),,drop=FALSE]
 
-            coefs <- fit(loss, alpha, beta, cast_float(x.train), cast_float(y.train), maxit, thresh, learning.rate)
-            losses[fold] <- run(loss(
-                constant_float(coefs$alpha), constant_float(coefs$beta), cast_float(x.test), cast_float(y.test)))
+
+            losses[fold] <- sess$run(
+                objective, feed_dict = dict(xtensor = x.test, y.tensor=y.test, lambda.tensor=params[1], lambda.tensor=params[1]))
         }
 
         sum(losses)

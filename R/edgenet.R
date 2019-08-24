@@ -92,7 +92,7 @@ setGeneric(
     "edgenet",
     function(X, Y, G.X=NULL, G.Y=NULL,
              lambda=1, psigx=1, psigy=1,
-             thresh=1e-5, maxit=1e5,
+             thresh=1e-5, maxit=1e5, learning.rate=0.01,
              family=gaussian)
     {
         standardGeneric("edgenet")
@@ -111,7 +111,9 @@ setMethod(
              family=gaussian)
     {
         edgenet(X, as.matrix(Y), G.X, G.Y,
-                lambda, psigx, psigy, thresh, maxit, family)
+                lambda, psigx, psigy,
+                thresh, maxit, learning.rate,
+                family)
     }
 )
 
@@ -127,8 +129,9 @@ setMethod(
         if (is.null(G.X)) psigx <- 0
         if (is.null(G.Y)) psigy <- 0
 
+        check.matrices(X, Y)
         check.graphs(X, Y, G.X, G.Y, psigx, psigy)
-        check.dimensions(X, Y, n, ncol(X))
+        check.dimensions(X, Y, nrow(X), ncol(X))
         lambda <- check.param(lambda, 0, `<`, 0)
         psigx <- check.param(psigx, 0, `<`, 0)
         psigy <- check.param(psigy, 0, `<`, 0)
@@ -176,8 +179,9 @@ setMethod(
     beta  <- zero_matrix(p, q)
 
      #estimate coefficients
-    loss  <- edgenet.loss(lambda, psigx, psigy, gx, gy, family, q)
-    res <- fit(loss, alpha, beta, x, y, maxit, learning.rate, thresh)
+    loss  <- edgenet.loss(gx, gy, family, q)
+    objective <- loss(alpha, beta, lambda, psigx, psigy, x, y)
+    res <- fit(objective, alpha, beta, maxit, learning.rate, thresh)
 
     # finalize output
     beta  <- matrix(res$beta, ncol(x))
@@ -194,66 +198,4 @@ setMethod(
     class(ret) <- paste0(family$family, ".edgenet")
 
     ret
-}
-
-
-#' @noRd
-#' @import tensorflow
-edgenet.loss <- function(lambda, psigx, psigy, gx, gy, family, q)
-{
-    family <- family$family
-    loss.function <- switch(
-        family,
-        "gaussian" = .edgenet.gaussian.loss,
-        "binomial" = .edgenet.binomial.loss,
-         not.supported.yet(family))
-
-    loss <- function(alpha, beta, x, y)
-    {
-        eta <- tf$matmul(x, beta) + tf$ones(shape(q, 1), tf$float32) * tf$transpose(alpha)
-        obj <- loss.function(y, eta, ncol=q)# + .lasso(lambda, beta)
-
-        if (!is.null(gx)) {
-            x.penalty <- tf$trace(tf$matmul(tf$transpose(beta), tf$matmul(gx, beta)))
-            obj <- obj + psigx * x.penalty
-        }
-        if (!is.null(gy)) {
-            y.penalty <- tf$trace(tf$matmul(beta, tf$matmul(gy, tf$transpose(beta))))
-            obj <- obj + psigy * y.penalty
-        }
-
-        obj
-    }
-
-    loss
-}
-
-
-#' @noRd
-#' @import tensorflow
-.edgenet.gaussian.loss <- function(y, mean, ...)
-{
-    obj <- tf$reduce_sum(tf$square(y - mean))
-    obj
-}
-
-
-#' @noRd
-#' @import tensorflow
-.edgenet.binomial.loss <- function(y, means, ncol, ...)
-{
-    obj <- 0
-    for (j in seq(1, ncol)) {
-        prob <- tfp$distributions$Bernoulli(logits = means[,j])
-        obj <- obj + tf$reduce_sum(prob$log_prob(y[,j]))
-    }
-
-    -obj
-}
-
-
-#' @noRd
-#' @import tensorflow
-.lasso <- function(lambda, beta) {
-    lambda * tf$reduce_sum(tf$abs(beta))
 }

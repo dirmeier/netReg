@@ -20,29 +20,17 @@
 
 #' @noRd
 #' @import tensorflow
-run <- function(exec)
-{
-  with(tf$Session() %as% sess, {
-    res <- sess$run(exec)
-  })
-
-  res
-}
-
-
-#' @noRd
-#' @import tensorflow
-fit <- function(loss, alpha, beta, x, y, maxit=1000, learning.rate = 0.01, thresh = 1e-4)
+fit <- function(objective, alpha, beta, maxit=1000, learning.rate = 0.01, thresh = 1e-4)
 {
     optimizer <- tf$train$AdamOptimizer(learning_rate = learning.rate)
-    objective <- loss(alpha, beta, x, y)
     train <- optimizer$minimize(objective)
 
     with(tf$Session() %as% sess, {
       sess$run(tf$global_variables_initializer())
 
       target.old <- Inf
-      for (step in seq(maxit)) {
+      for (step in seq(maxit))
+      {
           sess$run(train)
           if (step %% 25 == 0) {
               target <- sess$run(objective)
@@ -53,7 +41,7 @@ fit <- function(loss, alpha, beta, x, y, maxit=1000, learning.rate = 0.01, thres
       }
 
       alpha <- sess$run(alpha)
-      beta <- sess$run(beta)
+      beta  <- sess$run(beta)
     })
 
     list(beta=beta, alpha=alpha)
