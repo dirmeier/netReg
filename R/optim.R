@@ -20,8 +20,9 @@
 
 #' @noRd
 #' @import minqa
-optim <- function(fn, par,  ..., lower=-Inf, upper=Inf)
+optim <- function(fn, par,  ..., lower=-Inf, upper=Inf, control=list())
 {
-    bobele <- minqa::bobyqa(par, fn, lower=lower, upper=upper, ...)
+    bobele <- minqa::bobyqa(par, fn, lower=lower, upper=upper,
+                            control=control, ...)
     bobele
 }

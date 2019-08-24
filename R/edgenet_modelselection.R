@@ -187,7 +187,7 @@ setMethod(
             X, Y, G.X, G.Y,
             lambda, psigx, psigy,
             family,
-            thresh, maxit, learning.rate
+            thresh, maxit, learning.rate,
             nfolds, folds,
             optim.maxit)
 
@@ -239,6 +239,7 @@ setMethod(
     {
         params <- .get.params(params, ...)
         losses <- vector(mode = "double", length = nfolds)
+
         for (fold in seq(nfolds)) {
             x.train <- x[which(folds != fold), ]
             y.train <- y[which(folds != fold),,drop=FALSE]
@@ -251,7 +252,7 @@ setMethod(
             for (step in seq(maxit))
             {
                 sess$run(train, feed_dict = dict(x.tensor = x.train,
-                                                 y.tensor= y.train,
+                                                 y.tensor = y.train,
                                                  lambda.tensor=params[1],
                                                  psigx.tensor=params[2],
                                                  psigy.tensor=params[3]))
@@ -278,11 +279,17 @@ setMethod(
         sum(losses)
     }
 
+    reg.params <- list(lambda=lambda, psigx=psigx, psigy=psigy)
+    params <- rep(0, sum(is.na(reg.params)))
+    fixed.params <- Filter(is.finite, reg.params)
+
     with(tf$Session() %as% sess, {
-
-
+        opt <- optim(params, fn, fixed.params,
+                     sess=sess, alpha=alpha, beta=beta,
+                     control=control(maxfun=optim.maxit))
     })
 
+    ret <- opt
     ret$family <- family$family
     class(ret) <- paste0(family$family, ".cv.edgenet")
 

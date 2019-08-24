@@ -19,23 +19,49 @@
 
 
 #' @noRd
-cross.validate <- function(loss.function, nfolds, folds,
-                           x, y,
+cross.validate <- function(loss, nfolds, folds,
+                           x, y, gx, gy, family,
                            maxit=1000, thresh=1e-5, learning.rate=0.01)
 {
-    fn <- function(params, ..., alpha, beta)
+    fn <- function(params, ..., sess, optimizer, alpha, beta)
     {
         params <- .get.params(params, ...)
         losses <- vector(mode = "double", length = nfolds)
-        for (fold in seq(nfolds)) {
+
+        for (fold in seq(nfolds))
+        {
             x.train <- x[which(folds != fold), ]
             y.train <- y[which(folds != fold),,drop=FALSE]
             x.test  <- x[which(folds == fold), ]
             y.test  <- y[which(folds == fold),,drop=FALSE]
 
+            objective <- loss(alpha, beta,
+                              params[1], params[2], params[3],
+                              cast_float(x.train), cast_float(y.train))
+            train <- optimizer$minimize(objective)
 
-            losses[fold] <- sess$run(
-                objective, feed_dict = dict(xtensor = x.test, y.tensor=y.test, lambda.tensor=params[1], lambda.tensor=params[1]))
+            sess$run(tf$global_variables_initializer())
+            target.old <- Inf
+
+            for (step in seq(maxit))
+            {
+                sess$run(train)
+                if (step %% 25 == 0) {
+                    target <- sess$run(objective)
+                    if (sum(abs(target - target.old)) < thresh)
+                        break
+                    target.old <- target
+                }
+            }
+
+            alpha <- sess$run(alpha)
+            beta <- sess$run(beta)
+
+            losses[fold] <- sess$run(loss(
+                constant_float(alpha),
+                constant_float(beta),
+                params[1], params[2], params[3],
+                cast_float(x.test), cast_float(y.test)))
         }
 
         sum(losses)
@@ -45,28 +71,31 @@ cross.validate <- function(loss.function, nfolds, folds,
 }
 
 
-.get.params <- function(params, ...)
+.get.params <- function(params, var.args)
 {
-    var.args <- list(...)
     par.len <- length(params)
     if (length(var.args) + par.len != 3) stop("you provided wrong params")
 
-    lambda <- if (methods::hasArg(lambda)) {
+
+    has.lambda <- "lambda" %in% names(as.list(var.args))
+    has.psigx  <- "psigx" %in% names(as.list(var.args))
+    has.psigy  <- "psigy" %in% names(as.list(var.args))
+
+    lambda <- if (has.lambda) {
         var.args$lambda
     } else params[1]
 
-    psigx  <- if (methods::hasArg(psigx))  {
+    psigx  <- if (has.psigx)  {
         var.args$psigx
-    } else if (methods::hasArg(lambda)) {
+    } else if (has.lambda) {
         params[1]
     } else params[2]
 
-    psigy  <- if (methods::hasArg(psigy)) {
+    psigy  <- if (has.psigy) {
         var.args$psigy
-    } else if (methods::hasArg(lambda) & methods::hasArg(psigx)) {
+    } else if (has.lambda & has.psigx) {
         params[1]
     } else params[2]
 
-    print(c(lambda, psigx, psigy))
     c(lambda, psigx, psigy)
 }
