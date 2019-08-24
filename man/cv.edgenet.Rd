@@ -4,10 +4,10 @@
 \alias{cv.edgenet}
 \title{Find the optimal shrinkage parameters for edgenet}
 \usage{
-cv.edgenet(X, Y, G.X = NULL, G.Y = NULL, lambda = NULL,
-  psigx = NULL, psigy = NULL, thresh = 1e-05, maxit = 1e+05,
-  family = c("gaussian"), optim.epsilon = 0.001, optim.maxit = 10000,
-  nfolds = 10)
+cv.edgenet(X, Y, G.X = NULL, G.Y = NULL, lambda = NA_real_,
+  psigx = NA_real_, psigy = NA_real_, thresh = 1e-05,
+  maxit = 1e+05, learning.rate = 0.01, family = gaussian,
+  optim.maxit = 100, nfolds = 10)
 }
 \arguments{
 \item{X}{input matrix, of dimension (\code{n} x \code{p})
@@ -55,14 +55,14 @@ set, estimation of the optimal parameter will \emph{not} be conducted.}
 
 \item{family}{family of response, e.g. \emph{gaussian}}
 
-\item{optim.epsilon}{\code{numerical} threshold criterion for the
-optimization to stop.  Usually 1e-3 is a good choice.}
-
 \item{optim.maxit}{the maximum number of iterations for the optimization
 (\code{integer}). Usually 1e4 is a good choice.}
 
 \item{nfolds}{the number of folds to be used - default is 10
 (minimum 3, maximum \code{nrow(X)}).}
+
+\item{optim.epsilon}{\code{numerical} threshold criterion for the
+optimization to stop.  Usually 1e-3 is a good choice.}
 }
 \value{
 An object of class \code{cv.edgenet}

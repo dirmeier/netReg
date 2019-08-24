@@ -184,7 +184,7 @@ setMethod(
     res <- fit(objective, alpha, beta, maxit, learning.rate, thresh)
 
     # finalize output
-    beta  <- matrix(res$beta, ncol(x))
+    beta  <- res$beta
     alpha <- res$alpha
     rownames(beta) <- colnames(x)
     colnames(beta) <- colnames(y)
