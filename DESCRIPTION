@@ -43,5 +43,5 @@ Imports:
     stats,
     tensorflow (>= 1.13.0),
     reticulate,
-    minqa
+    nloptr
 NeedsCompilation: yes

@@ -208,7 +208,7 @@ setMethod(
                         nfolds, folds,
                         optim.maxit)
 {
-    n <- nrow(n)
+    n <- nrow(x)
     p <- ncol(x)
     q <- ncol(y)
 
@@ -220,11 +220,11 @@ setMethod(
     alpha <- zero_vector(q)
     beta  <- zero_matrix(p, q)
 
-    x.tensor <- tf$placeholder(tf$float32, shape(NULL, p))
-    y.tensor <- tf$placeholder(tf$float32, shape(NULL, q))
-    lambda.tensor <- tf$placeholder(tf$float32, shape(1))
-    psigx.tensor <- tf$placeholder(tf$float32, shape(1))
-    psigy.tensor <- tf$placeholder(tf$float32, shape(1))
+    x.tensor <- tf$placeholder(tf$float32, shape(NULL, p), name = "x.tensor")
+    y.tensor <- tf$placeholder(tf$float32, shape(NULL, q), name = "y.tensor")
+    lambda.tensor <- tf$placeholder(tf$float32, shape())
+    psigx.tensor <- tf$placeholder(tf$float32, shape())
+    psigy.tensor <- tf$placeholder(tf$float32, shape())
 
     #estimate coefficients
     loss  <- edgenet.loss(gx, gy, family, q)
@@ -238,6 +238,7 @@ setMethod(
     fn <- function(params, ..., sess, alpha, beta)
     {
         params <- .get.params(params, ...)
+        print(params)
         losses <- vector(mode = "double", length = nfolds)
 
         for (fold in seq(nfolds)) {
@@ -269,8 +270,8 @@ setMethod(
             }
 
             losses[fold] <- sess$run(
-                objective, feed_dict = dict(xtensor = x.test,
-                                            y.tensor=y.test,
+                objective, feed_dict = dict(x.tensor = x.test,
+                                            y.tensor = y.test,
                                             lambda.tensor=params[1],
                                             psigx.tensor=params[2],
                                             psigy.tensor=params[3]))
@@ -280,13 +281,17 @@ setMethod(
     }
 
     reg.params <- list(lambda=lambda, psigx=psigx, psigy=psigy)
-    params <- rep(0, sum(is.na(reg.params)))
+    params <- rep(0.1, sum(is.na(reg.params)))
     fixed.params <- Filter(is.finite, reg.params)
 
+    print(params)
+    print(fixed.params)
+
     with(tf$Session() %as% sess, {
-        opt <- optim(params, fn, fixed.params,
+        opt <- optim(fn, params, var.args=fixed.params,
                      sess=sess, alpha=alpha, beta=beta,
-                     control=control(maxfun=optim.maxit))
+                     lower=rep(0, length(params)), upper=rep(100, length(params)),
+                     control=list(maxeval=optim.maxit, xtol_rel = 1e-2))
     })
 
     ret <- opt
