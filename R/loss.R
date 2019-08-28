@@ -1,19 +1,19 @@
 #' @noRd
 #' @import tensorflow
-gaussian.loss <- function(y, mean, ...)
+gaussian.loss <- function(y, eta, ...)
 {
-    obj <- tf$reduce_sum(tf$square(y - mean))
+    obj <- tf$reduce_sum(tf$square(y - eta))
     obj
 }
 
 
 #' @noRd
 #' @import tensorflow
-binomial.loss <- function(y, means, ...)
+binomial.loss <- function(y, eta, ...)
 {
     obj <- 0
     for (j in seq(ncol(y))) {
-        prob <- tfp$distributions$Bernoulli(logits = means[,j])
+        prob <- tfp$distributions$Bernoulli(logits = eta[,j])
         obj <- obj + tf$reduce_sum(prob$log_prob(y[,j]))
     }
 
