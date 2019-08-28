@@ -7,18 +7,16 @@
 [![codecov](https://codecov.io/gh/dirmeier/netReg/branch/master/graph/badge.svg)](https://codecov.io/gh/dirmeier/netReg)
 [![bioc](https://bioconductor.org/shields/years-in-bioc/netReg.svg)](https://bioconductor.org/packages/release/bioc/html/netReg.html)
 
-Network-penalized generalized linear models in `R`. Now with `TensorFlow`.
+Generalized linear models combined with network penalties. Now with `TensorFlow`.
 
 ## Introduction
 
-`netReg` is an R implementation of a network-regularized linear regression model.
-Graph prior knowledge, in the form of biological networks, is being incorporated into the loss function of a linear model
-which allows better estimation of regression coefficients. 
+`netReg` implements generalized linear models that use network penalties for regularization. Network regularization uses graphs or trees to incorporate information about interactions of covariables, or responses, into the loss function of a GLM. Ideally this allows better (i.e., lower variance) estimation of regression coefficients. 
 
 From version `v1.9.0` on, we use `TensorFlow` instead of custom `C++` and `Dlib` which allowed deleting of major parts of the code base.
 Some matrix operations are still done in `RcppArmadillo`. 
 
-For isntance, in R, you could fit a network-regularized model like that:
+For instance, in R, you could fit a network-regularized model like that:
 
 ``` r
 > X <- matrix(rnorm(10*5), 10)
@@ -27,10 +25,10 @@ For isntance, in R, you could fit a network-regularized model like that:
 
 > fit <- edgenet(X=X, Y=Y, G.X=aff.mat, 
                  lambda=1, psigx=1, family="gaussian")
-> print(fit)
+> fit
 
-#>Call: edgenet.default(X = X, Y = Y, G.X = aff.mat, lambda = 1, psigx = 1, 
-#>                      family = "gaussian")
+#>Call: edgenet(X = X, Y = Y, G.X = aff.mat, lambda = 1, psigx = 1, \
+#               family = gaussian)
 
 #>Coefficients:
 #>             [,1]       [,2]       [,3]      [,4]        [,5]

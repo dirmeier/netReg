@@ -48,33 +48,3 @@ edgenet.loss <- function(gx, gy, family, q)
 
     loss
 }
-
-
-#' @noRd
-#' @import tensorflow
-.edgenet.gaussian.loss <- function(y, mean, ...)
-{
-    obj <- tf$reduce_sum(tf$square(y - mean))
-    obj
-}
-
-
-#' @noRd
-#' @import tensorflow
-.edgenet.binomial.loss <- function(y, means, ncol, ...)
-{
-    obj <- 0
-    for (j in seq(1, ncol)) {
-        prob <- tfp$distributions$Bernoulli(logits = means[,j])
-        obj <- obj + tf$reduce_sum(prob$log_prob(y[,j]))
-    }
-
-    -obj
-}
-
-
-#' @noRd
-#' @import tensorflow
-.lasso <- function(lambda, beta) {
-    lambda * tf$reduce_sum(tf$abs(beta))
-}

@@ -19,7 +19,7 @@
 
 
 #' @noRd
-#' @import minqa
+#' @import nloptr
 optim <- function(fn, par, ..., lower=-Inf, upper=Inf, control=list())
 {
     bobele <- nloptr::bobyqa(par, fn, lower=lower, upper=upper,
