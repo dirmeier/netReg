@@ -18,26 +18,25 @@
 # along with netReg. If not, see <http://www.gnu.org/licenses/>.
 
 
-#' @export
-#' @method print edgenet
-summary.edgenet <- function(x,...)
+
+.summary.edgenet <- function(x, parameter.string)
 {
     cat(sprintf("'%s' object", class(x)[1]))
     cat("\n\ncall:\n")
     print(x$call)
-    cat("\nintercept:\n")
-    print(x$alpha)
-    cat("\ncoefficients:\n")
-    print(x$beta)
-
+    cat(sprintf("\n%s:\n", parameter.string))
+    print(x$parameters)
+    cat("\nfamily: ", x$family$family)
+    cat("\nlink: ", x$family$link, "\n")
+    cat(sprintf("\n-> call coef(%s) for coefficients", deparse(substitute(x))))
 }
+
+#' @export
+#' @method summary edgenet
+summary.edgenet <- function(x,...) .summary.edgenet(x, "parameters")
+
 
 
 #' @export
-#' @method print cv.edgenet
-summary.cv.edgenet <- function(x, ...)
-{
-    cat(sprintf("'%s' object", class(x)[1]))
-    cat("\nOptimal parameters:\n")
-    print(c(x$lambda, x$psigx, x$psigy))
-}
+#' @method summary cv.edgenet
+summary.cv.edgenet <- function(x, ...) .summary.edgenet(x, "optimal parameters")

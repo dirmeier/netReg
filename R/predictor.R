@@ -20,9 +20,9 @@
 
 #' @noRd
 #' @import tensorflow
-linear.predictor <- function(alpha, beta, x, q)
+linear.predictor <- function(alpha, beta, x)
 {
-    eta <- tf$matmul(x, beta) +
-        tf$ones(shape(q, 1), tf$float32) * tf$transpose(alpha)
+    #x.nrow <- x$get_shape()[1]$value
+    eta <- tf$matmul(x, beta) + alpha
     eta
 }

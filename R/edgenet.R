@@ -167,6 +167,8 @@ setMethod(
     p <- ncol(x)
     q <- ncol(y)
 
+    reset_graph()
+
     x <- cast_float(x)
     y <- cast_float(y)
 
@@ -179,7 +181,7 @@ setMethod(
     beta  <- zero_matrix(p, q)
 
      #estimate coefficients
-    loss  <- edgenet.loss(gx, gy, family, q)
+    loss  <- edgenet.loss(gx, gy, family)
     objective <- loss(alpha, beta, lambda, psigx, psigy, x, y)
     res <- fit(objective, alpha, beta, maxit, learning.rate, thresh)
 
@@ -190,11 +192,12 @@ setMethod(
     colnames(beta) <- colnames(y)
     ret <- list(beta = beta,
                 alpha = alpha,
+                parameters = c("lambda"=lambda, "psigx"=psigx, "psigy"=psigy),
                 lambda = lambda,
                 psigx = psigx,
                 psigy = psigy)
 
-    ret$family <- family$family
+    ret$family <- family
     class(ret) <- paste0(family$family, ".edgenet")
 
     ret

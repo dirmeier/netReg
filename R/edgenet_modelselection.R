@@ -116,7 +116,7 @@ setGeneric(
              lambda=NA_real_, psigx=NA_real_, psigy=NA_real_,
              thresh=1e-5, maxit=1e5, learning.rate=0.01,
              family=gaussian,
-             optim.maxit=1e2,
+             optim.maxit=1e2, optim.thresh=1e-2,
              nfolds=10)
     {
         standardGeneric("cv.edgenet")
@@ -133,14 +133,14 @@ setMethod(
              lambda=NA_real_, psigx=NA_real_, psigy=NA_real_,
              thresh=1e-5, maxit=1e5, learning.rate=0.01,
              family=gaussian,
-             optim.maxit=1e2,
+             optim.maxit=1e2, optim.thresh=1e-2,
              nfolds=10)
     {
         cv.edgenet(X, as.matrix(Y), G.X, G.Y,
                    lambda, psigx, psigy,
                    thresh, maxit, learning.rate,
                    family,
-                   optim.maxit,
+                   optim.maxit, optim.thresh,
                    nfolds)
     }
 )
@@ -154,7 +154,7 @@ setMethod(
              lambda=NA_real_, psigx=NA_real_, psigy=NA_real_,
              thresh=1e-5, maxit=1e5, learning.rate=0.01,
              family=gaussian,
-             optim.maxit=1e2,
+             optim.maxit=1e2, optim.thresh=1e-2,
              nfolds=10)
     {
         n <- dim(X)[1]
@@ -189,7 +189,11 @@ setMethod(
             family,
             thresh, maxit, learning.rate,
             nfolds, folds,
-            optim.maxit)
+            optim.maxit, optim.thresh)
+
+        ret$fit <- edgenet(X, Y, G.X, G.Y,
+                           ret$lambda, ret$psigx, ret$psigy,
+                           thresh, maxit, learning.rate, family)
 
         ret$call   <- match.call()
         class(ret) <- c(class(ret), "cv.edgenet")
@@ -206,48 +210,57 @@ setMethod(
                         family,
                         thresh, maxit, learning.rate,
                         nfolds, folds,
-                        optim.maxit)
+                        optim.maxit, optim.thresh)
 {
-    n <- nrow(x)
+
+    reg.params <- list(lambda=lambda, psigx=psigx, psigy=psigy)
+    estimatable.params <- Filter(is.na, reg.params)
+    fixed.params <- Filter(is.finite, reg.params)
+
+    init.params <- rep(0.1, length(estimatable.params))
+    if (length(init.params) == 0)
+        stop("please set either of lambda/psigx/psigy to NA_real_", call. = FALSE)
+
     p <- ncol(x)
     q <- ncol(y)
 
+    reset_graph()
+
     if (!is.null(gx))
-        gx <- cast_float(netReg:::laplacian_(gx))
+        gx <- cast_float(laplacian_(gx))
     if (!is.null(gy))
-        gy <- cast_float(netReg:::laplacian_(gy))
+        gy <- cast_float(laplacian_(gy))
 
     alpha <- zero_vector(q)
     beta  <- zero_matrix(p, q)
 
-    x.tensor <- tf$placeholder(tf$float32, shape(NULL, p), name = "x.tensor")
-    y.tensor <- tf$placeholder(tf$float32, shape(NULL, q), name = "y.tensor")
-    lambda.tensor <- tf$placeholder(tf$float32, shape())
-    psigx.tensor <- tf$placeholder(tf$float32, shape())
-    psigy.tensor <- tf$placeholder(tf$float32, shape())
+    x.tensor <- placeholder(shape(NULL, p), name = "x.tensor")
+    y.tensor <- placeholder(shape(NULL, q), name = "y.tensor")
+    lambda.tensor <- placeholder(shape())
+    psigx.tensor  <- placeholder(shape())
+    psigy.tensor  <- placeholder(shape())
 
     #estimate coefficients
-    loss  <- edgenet.loss(gx, gy, family, q)
+    loss  <- edgenet.loss(gx, gy, family)
     objective <- loss(alpha, beta,
                       lambda.tensor, psigx.tensor, psigy.tensor,
                       x.tensor, y.tensor)
 
-    optimizer <- tf$train$AdamOptimizer(learning_rate = learning.rate)
+    optimizer <- adam(learning.rate)
     train <- optimizer$minimize(objective)
 
     fn <- function(params, ..., sess, alpha, beta)
     {
         params <- .get.params(params, ...)
-        print(params)
         losses <- vector(mode = "double", length = nfolds)
 
         for (fold in seq(nfolds)) {
-            x.train <- x[which(folds != fold), ]
+            x.train <- x[which(folds != fold),,drop=FALSE]
             y.train <- y[which(folds != fold),,drop=FALSE]
-            x.test  <- x[which(folds == fold), ]
+            x.test  <- x[which(folds == fold),,drop=FALSE]
             y.test  <- y[which(folds == fold),,drop=FALSE]
 
-            sess$run(tf$global_variables_initializer())
+            sess$run(init_variables())
 
             target.old <- Inf
             for (step in seq(maxit))
@@ -280,23 +293,48 @@ setMethod(
         sum(losses)
     }
 
-    reg.params <- list(lambda=lambda, psigx=psigx, psigy=psigy)
-    params <- rep(0.1, sum(is.na(reg.params)))
-    fixed.params <- Filter(is.finite, reg.params)
-
-    print(params)
-    print(fixed.params)
-
-    with(tf$Session() %as% sess, {
-        opt <- optim(fn, params, var.args=fixed.params,
+    with(session() %as% sess, {
+        opt <- optim(fn, init.params, var.args=fixed.params,
                      sess=sess, alpha=alpha, beta=beta,
-                     lower=rep(0, length(params)), upper=rep(100, length(params)),
-                     control=list(maxeval=optim.maxit, xtol_rel = 1e-2))
+                     lower=rep(0, length(init.params)),
+                     upper=rep(100, length(init.params)),
+                     control=list(maxeval=optim.maxit,
+                                  xtol_rel=optim.thresh,
+                                  ftol_rel=optim.thresh,
+                                  ftol_abs=optim.thresh))
     })
 
-    ret <- opt
-    ret$family <- family$family
+    ret <- .cv.edgenet.post.process(opt, estimatable.params, fixed.params)
+    ret$family <- family
     class(ret) <- paste0(family$family, ".cv.edgenet")
 
     ret
 }
+
+#' @noRd
+.cv.edgenet.post.process <- function(opt, estimatable.params, fixed.params)
+{
+    ret <- list(parameters=c(),
+                "lambda"=NA_real_,
+                "psigx"=NA_real_,
+                "psigy"=NA_real_)
+    for (i in seq(estimatable.params)) {
+        nm <- names(estimatable.params)[i]
+        ret[[ nm ]] <- opt$par[i]
+        ret$estimated.parameters <- c(ret$estimated.parameters, nm)
+    }
+    for (i in seq(fixed.params))
+        ret[[ names(fixed.params)[i] ]] <- as.double(fixed.params[i])
+
+    pars <- c("lambda"=ret$lambda, "psigx"=ret$psigx, "psigy"=ret$psigy)
+    for (i in seq(pars))
+    {
+        if (names(pars)[i] %in% ret$estimated.parameters)
+            names(pars)[i] <- paste(names(pars)[i], "(estimated)")
+        else
+            names(pars)[i] <- paste(names(pars)[i], "(fixed)")
+    }
+    ret$parameters <- pars
+    ret
+}
+

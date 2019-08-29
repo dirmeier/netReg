@@ -22,12 +22,11 @@
 #' @import tensorflow
 fit <- function(objective, alpha, beta, maxit=1000, learning.rate = 0.01, thresh = 1e-4)
 {
-    optimizer <- tf$train$AdamOptimizer(learning_rate = learning.rate)
+    optimizer <- adam(learning.rate)
     train <- optimizer$minimize(objective)
 
-    with(tf$Session() %as% sess, {
-      sess$run(tf$global_variables_initializer())
-
+    with(session() %as% sess, {
+      sess$run(init_variables())
       target.old <- Inf
       for (step in seq(maxit))
       {

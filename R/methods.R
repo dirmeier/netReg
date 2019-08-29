@@ -29,3 +29,11 @@ coef.edgenet <- function(x,...)
     colnames(coefs) <- sprintf("y[%s]", seq(ncol(beta)))
     coefs
 }
+
+
+#' @export
+#' @method coef cv.edgenet
+coef.cv.edgenet <- function(x,...)
+{
+   coef(x$fit)
+}

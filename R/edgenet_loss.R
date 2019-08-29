@@ -20,7 +20,7 @@
 
 #' @noRd
 #' @import tensorflow
-edgenet.loss <- function(gx, gy, family, q)
+edgenet.loss <- function(gx, gy, family)
 {
     family <- family$family
     loss.function <- switch(
@@ -31,7 +31,7 @@ edgenet.loss <- function(gx, gy, family, q)
 
     loss <- function(alpha, beta, lambda, psigx, psigy, x, y)
     {
-        eta <- linear.predictor(alpha, beta, x, q)
+        eta <- linear.predictor(alpha, beta, x)
         obj <- loss.function(y, eta) + lasso(lambda, beta)
 
         if (!is.null(gx)) {
