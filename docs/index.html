@@ -24,7 +24,7 @@
 <![endif]-->
 </head>
 <body>
-    <div class="container template-home">
+    <div class="container template-article">
       <header><div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
@@ -90,65 +90,60 @@
 
       
       </header><div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
+    
+
+    
+    
 <div id="netreg" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#netreg" class="anchor"></a>netReg <img src="https://rawgit.com/dirmeier/netReg/master/inst/sticker/sticker.png" align="right" width="160px">
 </h1></div>
 
-<p>Network-penalized generalized linear models in <code>R</code>. Now with <code>TensorFlow</code>.</p>
+<p>Generalized linear models combined with network penalties. Now with <code>TensorFlow</code>.</p>
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
-<p><code>netReg</code> is an R implementation of a network-regularized linear regression model. Graph prior knowledge, in the form of biological networks, is being incorporated into the loss function of a linear model which allows better estimation of regression coefficients.</p>
+<p><code>netReg</code> implements generalized linear models that use network penalties for regularization. Network regularization uses graphs or trees to incorporate information about interactions of covariables, or responses, into the loss function of a GLM. Ideally this allows better (i.e., lower variance) estimation of regression coefficients.</p>
 <p>From version <code>v1.9.0</code> on, we use <code>TensorFlow</code> instead of custom <code>C++</code> and <code>Dlib</code> which allowed deleting of major parts of the code base. Some matrix operations are still done in <code>RcppArmadillo</code>.</p>
-<p>For isntance, in R, you could fit a network-regularized model like that:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="op">&gt;</span><span class="st"> </span>X &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dv">10</span><span class="op">*</span><span class="dv">5</span>), <span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="op">&gt;</span><span class="st"> </span>Y &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dv">10</span><span class="op">*</span><span class="dv">5</span>), <span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="op">&gt;</span><span class="st"> </span>aff.mat &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/MathFun">abs</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/rWishart">rWishart</a></span>(<span class="dv">1</span>, <span class="dv">10</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/diag">diag</a></span>(<span class="dv">5</span>))[,,<span class="dv">1</span>])</a>
-<a class="sourceLine" id="cb1-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="op">&gt;</span><span class="st"> </span>fit &lt;-<span class="st"> </span><span class="kw"><a href="reference/edgenet-methods.html">edgenet</a></span>(<span class="dt">X=</span>X, <span class="dt">Y=</span>Y, <span class="dt">G.X=</span>aff.mat, </a>
-<a class="sourceLine" id="cb1-6" data-line-number="6">                 <span class="dt">lambda=</span><span class="dv">1</span>, <span class="dt">psigx=</span><span class="dv">1</span>, <span class="dt">family=</span><span class="st">"gaussian"</span>)</a>
-<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="op">&gt;</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(fit)</a>
+<p>For instance, in R, you could fit a network-regularized model like that:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(netReg)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">X &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dv">100</span> <span class="op">*</span><span class="st"> </span><span class="dv">10</span>), <span class="dv">100</span>)</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">Y &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dv">100</span> <span class="op">*</span><span class="st"> </span><span class="dv">10</span>), <span class="dv">100</span>)</a>
+<a class="sourceLine" id="cb1-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb1-6" data-line-number="6">G.X &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/MathFun">abs</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/rWishart">rWishart</a></span>(<span class="dv">1</span>, <span class="dv">10</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/diag">diag</a></span>(<span class="dv">10</span>))[,,<span class="dv">1</span>])</a>
+<a class="sourceLine" id="cb1-7" data-line-number="7">G.Y &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/MathFun">abs</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/rWishart">rWishart</a></span>(<span class="dv">1</span>, <span class="dv">10</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/diag">diag</a></span>(<span class="dv">10</span>))[,,<span class="dv">1</span>])</a>
 <a class="sourceLine" id="cb1-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb1-9" data-line-number="9"><span class="co">#&gt;Call: edgenet.default(X = X, Y = Y, G.X = aff.mat, lambda = 1, psigx = 1, </span></a>
-<a class="sourceLine" id="cb1-10" data-line-number="10"><span class="co">#&gt;                      family = "gaussian")</span></a>
-<a class="sourceLine" id="cb1-11" data-line-number="11"></a>
-<a class="sourceLine" id="cb1-12" data-line-number="12"><span class="co">#&gt;Coefficients:</span></a>
-<a class="sourceLine" id="cb1-13" data-line-number="13"><span class="co">#&gt;             [,1]       [,2]       [,3]      [,4]        [,5]</span></a>
-<a class="sourceLine" id="cb1-14" data-line-number="14"><span class="co">#&gt;[1,]  0.015999757  0.0000000  0.1614923 0.1200417  0.11848110</span></a>
-<a class="sourceLine" id="cb1-15" data-line-number="15"><span class="co">#&gt;[2,]  0.023446755 -0.2021715  0.0000000 0.4316659  0.00000000</span></a>
-<a class="sourceLine" id="cb1-16" data-line-number="16"><span class="co">#&gt;[3,] -0.139861486  0.0000000  0.2917003 0.3362468  0.82524790</span></a>
-<a class="sourceLine" id="cb1-17" data-line-number="17"><span class="co">#&gt;[4,]  0.000000000  0.4495721 -0.2507407 0.3454617 -0.01794482</span></a>
-<a class="sourceLine" id="cb1-18" data-line-number="18"><span class="co">#&gt;[5,] -0.007317568  0.0000000  0.2590443 0.0000000 -0.10663651</span></a>
-<a class="sourceLine" id="cb1-19" data-line-number="19"></a>
-<a class="sourceLine" id="cb1-20" data-line-number="20"><span class="co">#&gt;Intercept:</span></a>
-<a class="sourceLine" id="cb1-21" data-line-number="21">            [,<span class="dv">1</span>]</a>
-<a class="sourceLine" id="cb1-22" data-line-number="22"><span class="co">#&gt;[1,]  0.18825966</span></a>
-<a class="sourceLine" id="cb1-23" data-line-number="23"><span class="co">#&gt;[2,] -0.36970048</span></a>
-<a class="sourceLine" id="cb1-24" data-line-number="24"><span class="co">#&gt;[3,]  0.27555425</span></a>
-<a class="sourceLine" id="cb1-25" data-line-number="25"><span class="co">#&gt;[4,]  0.04295871</span></a>
-<a class="sourceLine" id="cb1-26" data-line-number="26"><span class="co">#&gt;[5,]  0.25898488</span></a>
-<a class="sourceLine" id="cb1-27" data-line-number="27"></a>
-<a class="sourceLine" id="cb1-28" data-line-number="28"><span class="co">#&gt;Parameters:</span></a>
-<a class="sourceLine" id="cb1-29" data-line-number="29"><span class="co">#&gt;lambda psi_gx psi_gy </span></a>
-<a class="sourceLine" id="cb1-30" data-line-number="30"><span class="co">#&gt;     1      1      0 </span></a>
-<a class="sourceLine" id="cb1-31" data-line-number="31"></a>
-<a class="sourceLine" id="cb1-32" data-line-number="32"><span class="co">#&gt;Family:</span></a>
-<a class="sourceLine" id="cb1-33" data-line-number="33"><span class="co">#&gt;[1] "gaussian"</span></a></code></pre></div>
+<a class="sourceLine" id="cb1-9" data-line-number="9">fit &lt;-<span class="st"> </span><span class="kw"><a href="reference/edgenet-methods.html">edgenet</a></span>(X, Y, G.X, G.Y)</a>
+<a class="sourceLine" id="cb1-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb1-11" data-line-number="11"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(fit)</a></code></pre></div>
+<pre><code>## 'gaussian.edgenet' object
+## 
+## call:
+## edgenet(X = X, Y = Y, G.X = G.X, G.Y = G.Y)
+## 
+## parameters:
+## lambda  psigx  psigy 
+##      1      1      1 
+## 
+## family:  gaussian
+## link:  identity 
+## 
+## -&gt; call coef(x) for coefficients</code></pre>
 </div>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>You can install and use <code>netReg</code> either from <a href="https://bioconductor.org/packages/release/bioc/html/netReg.html">Bioconductor</a>, or by downloading the latest <a href="https://github.com/dirmeier/netReg/releases">tarball</a>.</p>
 <p>If you want to use the <strong>recommended way</strong> using Bioconductor just call:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="op">&gt;</span><span class="st"> </span><span class="cf">if</span> (<span class="op">!</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/ns-load">requireNamespace</a></span>(<span class="st">"BiocManager"</span>, <span class="dt">quietly=</span><span class="ot">TRUE</span>))</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="op">&gt;</span><span class="st">   </span><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"BiocManager"</span>)</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="op">&gt;</span><span class="st"> </span>BiocManager<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/BiocManager/topics/install">install</a></span>(<span class="st">"netReg"</span>)</a>
-<a class="sourceLine" id="cb2-4" data-line-number="4">  </a>
-<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="op">&gt;</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(netReg)</a></code></pre></div>
+<pre><code>&gt; if (!requireNamespace("BiocManager", quietly=TRUE))
+&gt;   install.packages("BiocManager")
+&gt; BiocManager::install("netReg")
+  
+&gt; library(netReg)</code></pre>
 <p>nstalling the R package using the downloaded tarball works like this:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb3-1" data-line-number="1">$ <span class="ex">R</span> CMD install <span class="op">&lt;</span>netReg-x.y.z.tar.gz<span class="op">&gt;</span></a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb4-1" data-line-number="1">$ <span class="ex">R</span> CMD install <span class="op">&lt;</span>netReg-x.y.z.tar.gz<span class="op">&gt;</span></a></code></pre></div>
 <p>I <strong>do not</strong> recommend using <code>devtools</code>, but preferring tarballed releases over the most recent commit.</p>
 </div>
 <div id="documentation" class="section level2">
@@ -204,7 +199,7 @@
 </ul>
 </div>
 
-  <div class="dev-status">
+      <div class="dev-status">
 <h2>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="http://www.repostatus.org/#active"><img src="http://www.repostatus.org/badges/latest/active.svg" alt="Project Status"></a></li>
@@ -215,7 +210,9 @@
 </ul>
 </div>
 </div>
+
 </div>
+
 
       <footer><div class="copyright">
   <p>Developed by Simon Dirmeier.</p>
