@@ -60,34 +60,30 @@
 #' \item{call }{ the call that produced the object}
 #' \item{family }{ the family of the response}
 #'
-#' @references
-#'  Dirmeier, Simon and Fuchs, Christiane and Mueller, Nikola S and Theis,
-#'  Fabian J (2018),
-#'  netReg: Network-regularized linear models for biological association
-#'  studies. \cr
-#'  \emph{Bioinformatics}\cr \cr
-#'  Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007),
-#'  Pathwise coordinate optimization.\cr
-#'  \emph{The Annals of Applied Statistics}\cr \cr
-#'  Friedman J., Hastie T. and Tibshirani R. (2010),
-#'  Regularization Paths for Generalized Linear Models via
-#'  Coordinate Descent.\cr \emph{Journal of Statistical Software}\cr \cr
-#'  Fu W. J. (1998),  Penalized Regression: The Bridge Versus the Lasso.\cr
-#'  \emph{Journal of Computational and Graphical Statistics}\cr \cr
-#'  Cheng W. and Wang W. (2014), Graph-regularized dual Lasso for robust
-#'  eQTL mapping.\cr
-#'  \emph{Bioinformatics}
-#'
 #' @examples
 #' X <- matrix(rnorm(100*10), 100, 10)
-#' b <- rnorm(10)
-#' G.X <- matrix(rpois(100,1), 10)
-#' G.X <- t(G.X) + G.X
-#' diag(G.X) <- 0
+#' b <- matrix(rnorm(100), 10)
+#' G.X <-  abs(rWishart(1, 10, diag(10))[,,1])
+#' G.Y <-  abs(rWishart(1, 10, diag(10))[,,1])
+#' diag(G.X) <- diag(G.Y) <- 0
 #'
-#' # fit a Gaussian model
-#' Y <- X %*% b + rnorm(100)
-#' fit <- edgenet(X=X, Y=Y, G.X=G.X, family=gaussian)
+#' # estimate the parameters of a Gaussian model
+#' Y <- X %*% b + matrix(rnorm(100 * 10), 100)
+#'
+#' ## dont use affinity matrices
+#' fit <- edgenet(X=X, Y=Y, family=gaussian, maxit=10)
+#' ## only provide one matrix
+#' fit <- edgenet(X=X, Y=Y, G.X=G.X, psigx=1, family=gaussian, maxit=10)
+#' ## use two matrices
+#' fit <- edgenet(X=X, Y=Y, G.X=G.X, G.Y, family=gaussian, maxit=10)
+#' ## if Y is vectorial, we cannot use an affinity matrix for Y
+#' fit<- edgenet(X=X, Y=Y[, 1], G.X=G.X, family=gaussian, maxit=10)
+#'
+#' # estimation works the same for binomial models
+#' eta <- 1 / (1 + exp(-X %*% b))
+#' Y <- do.call("cbind", lapply(seq(10), function(.) rbinom(n, 1, eta[,.])))
+#' fit <- edgenet(X=X, Y=Y, G.X=G.X, G.Y,
+#'                family=binomial, maxit=10, optim.maxit=1)
 setGeneric(
     "edgenet",
     function(X, Y, G.X=NULL, G.Y=NULL,

@@ -88,9 +88,7 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>edgenet: regularization with pair-wise interactions</h1>
-                        <h4 class="author">Simon Dirmeier</h4>
             
-            <h4 class="date">2019-08-29</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/dirmeier/netReg/blob/master/vignettes/edgenet.Rmd"><code>vignettes/edgenet.Rmd</code></a></small>
       <div class="hidden name"><code>edgenet.Rmd</code></div>
@@ -99,49 +97,52 @@
 
     
     
-<div id="introduction" class="section level1">
-<h1 class="hasAnchor">
-<a href="#introduction" class="anchor"></a>Introduction</h1>
-<p>Modelling biological associations or dependencies using linear regression models is often complicated when the analysed data-sets are high-dimensional and less observations than variables are available (<span class="math inline">\(n \ll p\)</span>). For these scenarios methods utilizing a priori knowledge, e.g. in the form of biological networks, have been proposed, arguing that this information might provide better estimates for regression coefficients. Recently several network-based regularization techniques have been proposed <span class="citation">(Li and Li 2008, <span class="citation">@kim2013network</span>, <span class="citation">@cheng2014graph</span>)</span>.</p>
-<p><code>netReg</code> provides an efficient implementation of a graph-penalized regression model. The model introduces a priori generated biological graph information into generalized linear models yielding sparse or smooth solutions for regression coefficients.</p>
-<p><code>netReg</code> computes coefficients using  as previously introduced <span class="citation">(Fu 1998, <span class="citation">@friedman2007pathwise</span>)</span>, <span class="citation">(Friedman, Hastie, and Tibshirani 2010)</span>. The package is an <code>R</code>-wrapper to an external <code>C++</code> library that uses <code>RcppArmadillo</code> <span class="citation">(Eddelbuettel and Sanderson 2014)</span> for fast matrix calculations and <code>Dlib</code> <span class="citation">(King 2009)</span> for gradient-free convex optimization for model selection.</p>
-</div>
-<div id="edgenet-tutorial" class="section level1">
-<h1 class="hasAnchor">
-<a href="#edgenet-tutorial" class="anchor"></a>Edgenet tutorial</h1>
-<div id="the-gaussian-case" class="section level2">
+<div id="edgenet-tutorial" class="section level2">
 <h2 class="hasAnchor">
-<a href="#the-gaussian-case" class="anchor"></a>The Gaussian case</h2>
-<p>This section explains how to fit a linear model and do parameter estimation using <code>edgenet</code>-regularization. The model is a truncated version from <span class="citation">(Cheng et al. 2014)</span> that is able to introduce prior graphs for the design and response matrices for penalization.</p>
-<p><span class="math inline">\(\ell_1\)</span>-regularized likelihood as: <span class="math display">\[\begin{equation}
-\small
-\begin{split}
-\hat{\mathbf{B}} = \arg \min_{\mathbf{B}} \,
- &amp; \frac{1}{2} || \mathbf{Y} - \mathbf{XB}  ||^2_2  + \lambda ||\mathbf{B} ||_1  \\  &amp; + 
-              \frac{\phi_1}{2}  \sum_{i=1}^p \sum_{j=1}^q
-               || \boldsymbol \beta_{i,*} - \boldsymbol \beta_{j,*} ||_2^2 (\mathbf{G}_X)_{i,j}    \\  &amp; +
- \frac{\phi_2}{2}  \sum_{i=1}^p \sum_{j=1}^q || \boldsymbol \beta_{*,i} - \boldsymbol \beta_{*,j} ||_2^2 (\mathbf{G}_Y)_{i,j} \\
- = \arg \min_{\mathbf{B}} \,
- &amp; \frac{1}{2} || \mathbf{Y} - \mathbf{XB}  ||^2_2  + \lambda ||\mathbf{B} ||_1  \\  &amp; + 
- \phi_1 \text{tr}\left( \mathbf{B}^T \left( \mathbf{D}_{\mathbf{G}_X} - \mathbf{G}_X \right) \mathbf{B}  \right) \\  &amp; + 
- \phi_2 \text{tr}\left( \mathbf{B} \left( \mathbf{D}_{\mathbf{G}_Y} - \mathbf{G}_Y  \right) \mathbf{B}^T  \right)
-\end{split}
-\label{equ:graphreg}
-\end{equation}\]</span></p>
-<p>At first we generate some toy data randomly:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Random">set.seed</a></span>(<span class="dv">23</span>)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2">X &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dv">1000</span><span class="op">*</span><span class="dv">5</span>), <span class="dv">1000</span>)</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3">Y &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dv">1000</span><span class="op">*</span><span class="dv">5</span>), <span class="dv">1000</span>)</a></code></pre></div>
-<p>Then we load the <code>netReg</code> library:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(netReg)</a></code></pre></div>
-<p>For <code>edgenet</code> we need to create an affinity matrix for the co-variables first. We also can create a graph for the responses, but this is not necessary to demonstrate the method. We could create a random graph like this:</p>
+<a href="#edgenet-tutorial" class="anchor"></a>Edgenet tutorial</h2>
+<div id="the-gaussian-case" class="section level3">
+<h3 class="hasAnchor">
+<a href="#the-gaussian-case" class="anchor"></a>The Gaussian case</h3>
+<!-- This section explains how to fit a linear model and do parameter estimation  -->
+<!-- using `edgenet`-regularization. The model is a truncated version from  -->
+<!-- [@cheng2014graph] that is able to introduce prior graphs for the design and  -->
+<!-- response matrices for penalization. -->
+<!-- $\ell_1$-regularized likelihood as: -->
+<!-- \begin{equation} -->
+<!-- \small -->
+<!-- \begin{split} -->
+<!-- \hat{\mathbf{B}} = \arg \min_{\mathbf{B}} \, -->
+<!--  & \frac{1}{2} || \mathbf{Y} - \mathbf{XB}  ||^2_2  + \lambda ||\mathbf{B} ||_1  \\  & +  -->
+<!--              \frac{\phi_1}{2}  \sum_{i=1}^p \sum_{j=1}^q -->
+<!--               || \boldsymbol \beta_{i,*} - \boldsymbol \beta_{j,*} ||_2^2 (\mathbf{G}_X)_{i,j}    \\  & + -->
+<!--  \frac{\phi_2}{2}  \sum_{i=1}^p \sum_{j=1}^q || \boldsymbol \beta_{*,i} - \boldsymbol \beta_{*,j} ||_2^2 (\mathbf{G}_Y)_{i,j} \\ -->
+<!--  = \arg \min_{\mathbf{B}} \, -->
+<!--  & \frac{1}{2} || \mathbf{Y} - \mathbf{XB}  ||^2_2  + \lambda ||\mathbf{B} ||_1  \\  & +  -->
+<!--  \phi_1 \text{tr}\left( \mathbf{B}^T \left( \mathbf{D}_{\mathbf{G}_X} - \mathbf{G}_X \right) \mathbf{B}  \right) \\  & +  -->
+<!--  \phi_2 \text{tr}\left( \mathbf{B} \left( \mathbf{D}_{\mathbf{G}_Y} - \mathbf{G}_Y  \right) \mathbf{B}^T  \right) -->
+<!-- \end{split} -->
+<!-- \label{equ:graphreg} -->
+<!-- \end{equation} -->
+<!-- At first we generate some toy data randomly: -->
+<!-- ```{r} -->
+<!-- set.seed(23) -->
+<!-- X <- matrix(rnorm(1000*5), 1000) -->
+<!-- Y <- matrix(rnorm(1000*5), 1000) -->
+<!-- ``` -->
+<!-- Then we load the `netReg` library: -->
+<!-- ```{r} -->
+<!-- library(netReg) -->
+<!-- ``` -->
+<!-- For `edgenet` we need to create an affinity matrix for the co-variables first.  -->
+<!-- We also can create a graph for the responses, but this is not necessary to -->
+<!-- demonstrate the method. We could create a random graph like this: -->
 <!-- ```{r} -->
 <!-- aff.mat <- matrix(rbeta(25, 1, 5),  5) -->
 <!-- aff.mat <- (t(aff.mat) + aff.mat) / 2 -->
 <!-- diag(aff.mat) <- 0 -->
 <!-- ``` -->
 <!-- We created the affinity matrix absolutely random, although in practice a *real* -->
-<!-- (biological) observed affinity matrix should be used, because in the end the  -->
+<!-- (biological) observed affinity matrix should be used, because in the end the -->
 <!-- affinity matrix decides the shrinkage of the coefficients. -->
 <!-- ## Model fitting -->
 <!-- Fitting a model using edge-based regularization with `netReg` is easy: -->
@@ -150,12 +151,12 @@
 <!-- print(fit) -->
 <!-- ``` -->
 <!-- In this case we used a single affinity matrix `G.X` which represents the -->
-<!-- relationship of the covariables $\mathit{X}$. If the design matrix has $p$  -->
-<!-- variables, `G.X` has to be an $(p \times p)$-dimensional symmetric matrix.  -->
-<!-- We can also include a matrix for the response matrix `Y` with $q$ dependent  -->
-<!-- variables. In that case the affinity matrix `G.Y` has to be  -->
+<!-- relationship of the covariables $\mathit{X}$. If the design matrix has $p$ -->
+<!-- variables, `G.X` has to be an $(p \times p)$-dimensional symmetric matrix. -->
+<!-- We can also include a matrix for the response matrix `Y` with $q$ dependent -->
+<!-- variables. In that case the affinity matrix `G.Y` has to be -->
 <!-- $(q \times q)$-dimensional (and also symmetric). -->
-<!-- The `fit` object contains information about coefficients, intercepts,  -->
+<!-- The `fit` object contains information about coefficients, intercepts, -->
 <!-- residuals, etc. Having the coefficients estimated we are able to -->
 <!-- predict novel data-sets: -->
 <!-- ```{r} -->
@@ -164,20 +165,20 @@
 <!-- ``` -->
 <!-- The `pred` objects contains the predicted values for the responses. -->
 <!-- ## Model selection -->
-<!-- In most cases we do not have the optimal shrinkage parameters $\lambda$,  -->
-<!-- $\psi_{gx}$ and $\psi_{gy}$. For these settings you can use `netReg`'s  -->
-<!-- included model selection. We use Powell's BOBYQA algorithm  -->
+<!-- In most cases we do not have the optimal shrinkage parameters $\lambda$, -->
+<!-- $\psi_{gx}$ and $\psi_{gy}$. For these settings you can use `netReg`'s -->
+<!-- included model selection. We use Powell's BOBYQA algorithm -->
 <!-- ([@powell2009bobyqa]) for gradient-free optimization that is included in the -->
-<!-- `C++` library `Dlib`. Doing the model selection only requires calling  -->
+<!-- `C++` library `Dlib`. Doing the model selection only requires calling -->
 <!-- `cv.edgenet`: -->
 <!-- ```{r} -->
 <!-- cv <- cv.edgenet(X=X, Y=Y, G.X=aff.mat, family="gaussian", maxit=1000) -->
 <!-- print(cv) -->
 <!-- ``` -->
-<!-- You can use the fitted parameters for the normal `edgenet` function.  -->
-<!-- In this scenario $\lambda$, $\psi_{gx}$ and $\psi_{gy}$ should be  -->
+<!-- You can use the fitted parameters for the normal `edgenet` function. -->
+<!-- In this scenario $\lambda$, $\psi_{gx}$ and $\psi_{gy}$ should be -->
 <!-- roughly $0$ for three reasons: -->
-<!-- * we had enough data and a small number of covariables ($n > p$), so we can  -->
+<!-- * we had enough data and a small number of covariables ($n > p$), so we can -->
 <!-- find the *BLUE* estimator, -->
 <!-- * we created `X` and `Y` independent of each other, -->
 <!-- * our prior graph `aff.mat` had little weight. -->
@@ -194,12 +195,12 @@
 <!-- print(cv) -->
 <!-- ``` -->
 <!-- In the above example $\lambda$ should have changed quite a bit, while -->
-<!-- $\psi_{gy}$ should still be $0$. Since we generated `aff.mat` randomly  -->
-<!-- $\psi_{gx}$ should be roughly (or exact) zero as well. This makes sense  -->
-<!-- intuitively since we did not put any biological relationships into the  -->
+<!-- $\psi_{gy}$ should still be $0$. Since we generated `aff.mat` randomly -->
+<!-- $\psi_{gx}$ should be roughly (or exact) zero as well. This makes sense -->
+<!-- intuitively since we did not put any biological relationships into the -->
 <!-- affinity matrices. -->
 <!-- ## Usage -->
-<!-- This section explains how to fit a linear model and do parameter estimation.  -->
+<!-- This section explains how to fit a linear model and do parameter estimation. -->
 <!-- At first we load the library and some data: -->
 <!-- ```{r, eval=FALSE} -->
 <!-- > library(netReg) -->
@@ -220,11 +221,11 @@
 <!-- Fitting a model using edge-based regularization with `netReg` can be done like that: -->
 <!-- ```{r, eval=FALSE} -->
 <!-- > fit <- edgenet(X=X, -->
-<!--                  Y=Y,  -->
+<!--                  Y=Y, -->
 <!--                  G.Y=GY, -->
 <!--                  lambda=10, psigy=1, family="gaussian") -->
 <!-- > fit -->
-<!-- Call: edgenet.default(X = X, Y = Y, G.Y = GY, lambda = 10, psigy = 1,  -->
+<!-- Call: edgenet.default(X = X, Y = Y, G.Y = GY, lambda = 10, psigy = 1, -->
 <!--     family = "gaussian") -->
 <!-- Coefficients: -->
 <!--                YBL113C   YBR013C YBR014C YBR016W YBR025C YBR028C -->
@@ -242,13 +243,13 @@
 <!-- [5,]  0.09521875 -->
 <!-- [6,]  0.09709554 -->
 <!-- Parameters: -->
-<!-- lambda psi_gx psi_gy  -->
-<!--     10      0      1  -->
+<!-- lambda psi_gx psi_gy -->
+<!--     10      0      1 -->
 <!-- Family: -->
 <!-- [1] "gaussian" -->
 <!-- ``` -->
 <!-- For the response variables we use an affinity matrix that represents *biological relationships* with $\mathbf{GY}$. -->
-<!-- We promote sparsity by setting $\lambda = 10$ and put a week penalty on similar coefficients by setting $\psi_{gy} = 1$.  -->
+<!-- We promote sparsity by setting $\lambda = 10$ and put a week penalty on similar coefficients by setting $\psi_{gy} = 1$. -->
 <!-- Other than that we used standard parameters in this case. -->
 <!-- The `fit` object contains information about coefficients and intercepts. Having the coefficients estimated we are able to -->
 <!-- predict novel data-sets: -->
@@ -270,59 +271,33 @@
 <!-- ``` -->
 <!-- The `pred` objects contains the predicted values for the responses. -->
 <!-- ### Model selection -->
-<!-- In most cases we do not have the optimal shrinkage parameters $\lambda$,  -->
-<!-- $\psi_{gx}$ and $\psi_{gy}$. For these settings you can use `netReg`'s  -->
-<!-- included model selection. We use Powell's *BOBYQA* algorithm  -->
+<!-- In most cases we do not have the optimal shrinkage parameters $\lambda$, -->
+<!-- $\psi_{gx}$ and $\psi_{gy}$. For these settings you can use `netReg`'s -->
+<!-- included model selection. We use Powell's *BOBYQA* algorithm -->
 <!-- [@powell2009bobyqa] for gradient-free optimization that is included in the -->
-<!-- `C++` library `Dlib`. Doing the model selection only requires calling  -->
+<!-- `C++` library `Dlib`. Doing the model selection only requires calling -->
 <!-- `cv.edgenet`: -->
 <!-- ```{r, eval=FALSE} -->
 <!-- > cv <- cv.edgenet(X=X, Y=Y, G.Y=GY, family="gaussian", maxit=1000) -->
 <!-- > cv -->
 <!-- Call: cv.edgenet.default(X = X, Y = Y, G.Y = GY, maxit = 1000, family = "gaussian") -->
 <!-- Parameters: -->
-<!-- lambda  psigx  psigy  -->
-<!--      0      0      0  -->
+<!-- lambda  psigx  psigy -->
+<!--      0      0      0 -->
 <!-- Family: -->
 <!-- [1] "gaussian" -->
 <!-- ``` -->
-<!-- You can use the fitted parameters for the normal `edgenet` function.  -->
-<!-- In this scenario $\lambda$, $\psi_{gx}$ and $\psi_{gy}$ should be  -->
+<!-- You can use the fitted parameters for the normal `edgenet` function. -->
+<!-- In this scenario $\lambda$, $\psi_{gx}$ and $\psi_{gy}$ should be -->
 <!-- roughly $0$ for two reasons: -->
-<!-- * we had enough data and a small number of covariables ($n > p$), so we can  -->
+<!-- * we had enough data and a small number of covariables ($n > p$), so we can -->
 <!-- find the *BLUE* estimator, -->
 <!-- * in this toy example our prior graph $\mathbf{GY}$ had little impact. -->
 </div>
 </div>
-<div id="references" class="section level1 unnumbered">
+<div id="references" class="section level1">
 <h1 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h1>
-<div id="refs" class="references">
-<div id="ref-cheng2014graph">
-<p>Cheng, Wei, Xiang Zhang, Zhishan Guo, Yu Shi, and Wei Wang. 2014. “Graph-Regularized Dual Lasso for Robust eQTL Mapping.” <em>Bioinformatics</em> 30 (12). Oxford Univ Press: i139–i148.</p>
-</div>
-<div id="ref-eddelbuettel2014rcpparmadillo">
-<p>Eddelbuettel, Dirk, and Conrad Sanderson. 2014. “RcppArmadillo: Accelerating R with High-Performance C++ Linear Algebra.” <em>Computational Statistics &amp; Data Analysis</em> 71. Elsevier: 1054–63.</p>
-</div>
-<div id="ref-friedman2007pathwise">
-<p>Friedman, Jerome, Trevor Hastie, Holger Höfling, Robert Tibshirani, and others. 2007. “Pathwise Coordinate Optimization.” <em>The Annals of Applied Statistics</em> 1 (2). Institute of Mathematical Statistics: 302–32.</p>
-</div>
-<div id="ref-friedman2010regularization">
-<p>Friedman, Jerome, Trevor Hastie, and Rob Tibshirani. 2010. “Regularization Paths for Generalized Linear Models via Coordinate Descent.” <em>Journal of Statistical Software</em> 33 (1). NIH Public Access: 1.</p>
-</div>
-<div id="ref-fu1998penalized">
-<p>Fu, Wenjiang J. 1998. “Penalized Regressions: The Bridge Versus the Lasso.” <em>Journal of Computational and Graphical Statistics</em> 7 (3). Taylor &amp; Francis: 397–416.</p>
-</div>
-<div id="ref-kim2013network">
-<p>Kim, Sunkyung, Wei Pan, and Xiaotong Shen. 2013. “Network-Based Penalized Regression with Application to Genomic Data.” <em>Biometrics</em> 69 (3). Wiley Online Library: 582–93.</p>
-</div>
-<div id="ref-king2009dlib">
-<p>King, Davis E. 2009. “Dlib-Ml: A Machine Learning Toolkit.” <em>Journal of Machine Learning Research</em> 10 (Jul): 1755–8.</p>
-</div>
-<div id="ref-li2008network">
-<p>Li, Caiyan, and Hongzhe Li. 2008. “Network-Constrained Regularization and Variable Selection for Analysis of Genomic Data.” <em>Bioinformatics</em> 24 (9). Oxford Univ Press: 1175–82.</p>
-</div>
-</div>
 </div>
   </div>
 
@@ -331,12 +306,7 @@
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-<li><a href="#introduction">Introduction</a></li>
-      <li>
-<a href="#edgenet-tutorial">Edgenet tutorial</a><ul class="nav nav-pills nav-stacked">
-<li><a href="#the-gaussian-case">The Gaussian case</a></li>
-      </ul>
-</li>
+<li><a href="#edgenet-tutorial">Edgenet tutorial</a></li>
       <li><a href="#references">References</a></li>
       </ul>
 </div>

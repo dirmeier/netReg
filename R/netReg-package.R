@@ -39,20 +39,14 @@
 #'  netReg: Network-regularized linear models for biological association
 #'  studies. \cr
 #'  \emph{Bioinformatics}\cr \cr
-#'  Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007),
-#'  Pathwise coordinate optimization.\cr
-#'  \emph{The Annals of Applied Statistics}\cr \cr
-#'  Friedman J., Hastie T. and Tibshirani R. (2010),
-#'  Regularization Paths for Generalized Linear Models
-#'   via Coordinate Descent. \cr
-#'  \emph{Journal of Statistical Software}\cr \cr
-#'  Fu W. J. (1998),  Penalized Regression: The Bridge Versus the Lasso.\cr
-#'  \emph{Journal of Computational and Graphical Statistics}\cr \cr
-#'  Cheng W. and Wang W. (2014), Graph-regularized dual Lasso
-#'   for robust eQTL mapping.\cr
-#'  \emph{Bioinformatics}\cr \cr
+#'  Abadi, Martín et al. (2016),
+#'  Tensorflow: A system for large-scale machine learning. \cr
+#'  \emph{12th USENIX Symposium on Operating Systems Design and Implementation (OSDI 16)}\cr \cr
 #'  Powell M.J.D. (2009),
 #'  The BOBYQA algorithm for bound constrained optimization
 #'   without derivatives.\cr
 #'  \url{http://www.damtp.cam.ac.uk/user/na/NA_papers/NA2009_06.pdf}
+#'  Eddelbuettel, Dirk and Sanderson, Conrad (2014),
+#'  RcppArmadillo: Accelerating R with high-performance C++ linear algebra.
+#'  \emph{Computational Statistics & Data Analysis}
 NULL

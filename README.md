@@ -8,12 +8,15 @@
 
 Network-regularized generalized linear regression models in `R`. Now with `TensorFlow`.
 
-## Introduction
+## About
 
-`netReg` implements generalized linear models that use network penalties for regularization. Network regularization uses graphs or trees to incorporate information about interactions of covariables, or responses, into the loss function of a GLM. Ideally this allows better (i.e., lower variance) estimation of regression coefficients. 
-
-From version `v1.9.0` on, we use `TensorFlow` instead of custom `C++` and `Dlib`. This allowed deleting of major parts of the code base.
-Some matrix operations are still done in `RcppArmadillo`. 
+Modelling dependencies using linear regression models is often complicated when the 
+analysed data-sets are high-dimensional and less observations than variables 
+are available ($n \ll p$). `netReg` implements generalized linear models 
+that use network penalties for regularization. Network regularization uses graphs
+or trees to incorporate information about interactions of covariables, 
+or responses, into the loss function of a GLM. Ideally this allows better (i.e., lower variance)
+estimation of regression coefficients. 
 
 For instance, in `R`, you could fit a network-regularized model like that:
 
@@ -43,6 +46,15 @@ For instance, in `R`, you could fit a network-regularized model like that:
 #>-> call coef(x) for coefficients
 ```
 
+From version `v1.9.0` on, we use `TensorFlow`, instead of custom `C++` and `Dlib`, for
+estimation of regression coefficients replacing a custom *cyclic coordinate descent*. This allowed deleting of major parts of the code base.
+`netReg` still uses some `RcppArmadillo` for fast matrix algebra.
+
+In order to estimate the optimal hyperparameters, i.e., the regularization parameters
+of the network models, we use Powell's BOBYQA algorithm in a standard cross-validation framework.
+
+For more details, please check out the respective vignettes of the single models.
+
 ## Installation
 
 You can install and use `netReg` either from [Bioconductor](https://bioconductor.org/packages/release/bioc/html/netReg.html),
@@ -64,12 +76,12 @@ nstalling the R package using the downloaded tarball works like this:
 $ R CMD install <netReg-x.y.z.tar.gz>
 ```
 
-I **do not** recommend using `devtools`, but preferring tarballed releases over the most recent commit.
+I **do not** recommend using `devtools`, so please prefer tarballed releases over installing from the main branch.
 
 ## Documentation
 
-* For the R package: load the package using `library(netReg)`. We provide a vignette for the package that can be called using: `vignette("netReg")`. 
-* For the command-line tool: You can also use the online [vignette](https://dirmeier.github.io/netReg/articles/netReg.html).
+* Load the package using `library(netReg)`. We provide vignettes for the package that can be called using: `vignette(package="netReg")`. 
+* You can also use the online [vignette](https://dirmeier.github.io/netReg).
 
 ## Citation
 

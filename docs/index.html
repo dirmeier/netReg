@@ -24,7 +24,7 @@
 <![endif]-->
 </head>
 <body>
-    <div class="container template-article">
+    <div class="container template-home">
       <header><div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
@@ -90,47 +90,44 @@
 
       
       </header><div class="row">
-  <div class="col-md-9 contents">
-    
-
-    
-    
+  <div class="contents col-md-9">
 <div id="netreg" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#netreg" class="anchor"></a>netReg <img src="https://rawgit.com/dirmeier/netReg/master/inst/sticker/sticker.png" align="right" width="160px">
 </h1></div>
 
-<p>Generalized linear models combined with network penalties. Now with <code>TensorFlow</code>.</p>
-<div id="introduction" class="section level2">
+<p>Network-regularized generalized linear regression models in <code>R</code>. Now with <code>TensorFlow</code>.</p>
+<div id="about" class="section level2">
 <h2 class="hasAnchor">
-<a href="#introduction" class="anchor"></a>Introduction</h2>
-<p><code>netReg</code> implements generalized linear models that use network penalties for regularization. Network regularization uses graphs or trees to incorporate information about interactions of covariables, or responses, into the loss function of a GLM. Ideally this allows better (i.e., lower variance) estimation of regression coefficients.</p>
-<p>From version <code>v1.9.0</code> on, we use <code>TensorFlow</code> instead of custom <code>C++</code> and <code>Dlib</code> which allowed deleting of major parts of the code base. Some matrix operations are still done in <code>RcppArmadillo</code>.</p>
-<p>For instance, in R, you could fit a network-regularized model like that:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(netReg)</a>
+<a href="#about" class="anchor"></a>About</h2>
+<p>Modelling dependencies using linear regression models is often complicated when the analysed data-sets are high-dimensional and less observations than variables are available ($n \ll p$). <code>netReg</code> implements generalized linear models that use network penalties for regularization. Network regularization uses graphs or trees to incorporate information about interactions of covariables, or responses, into the loss function of a GLM. Ideally this allows better (i.e., lower variance) estimation of regression coefficients.</p>
+<p>For instance, in <code>R</code>, you could fit a network-regularized model like that:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="op">&gt;</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(netReg)</a>
 <a class="sourceLine" id="cb1-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb1-3" data-line-number="3">X &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dv">100</span> <span class="op">*</span><span class="st"> </span><span class="dv">10</span>), <span class="dv">100</span>)</a>
-<a class="sourceLine" id="cb1-4" data-line-number="4">Y &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dv">100</span> <span class="op">*</span><span class="st"> </span><span class="dv">10</span>), <span class="dv">100</span>)</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="op">&gt;</span><span class="st"> </span>X &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dv">100</span> <span class="op">*</span><span class="st"> </span><span class="dv">10</span>), <span class="dv">100</span>)</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="op">&gt;</span><span class="st"> </span>Y &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dv">100</span> <span class="op">*</span><span class="st"> </span><span class="dv">10</span>), <span class="dv">100</span>)</a>
 <a class="sourceLine" id="cb1-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb1-6" data-line-number="6">G.X &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/MathFun">abs</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/rWishart">rWishart</a></span>(<span class="dv">1</span>, <span class="dv">10</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/diag">diag</a></span>(<span class="dv">10</span>))[,,<span class="dv">1</span>])</a>
-<a class="sourceLine" id="cb1-7" data-line-number="7">G.Y &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/MathFun">abs</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/rWishart">rWishart</a></span>(<span class="dv">1</span>, <span class="dv">10</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/diag">diag</a></span>(<span class="dv">10</span>))[,,<span class="dv">1</span>])</a>
+<a class="sourceLine" id="cb1-6" data-line-number="6"><span class="op">&gt;</span><span class="st"> </span>G.X &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/MathFun">abs</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/rWishart">rWishart</a></span>(<span class="dv">1</span>, <span class="dv">10</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/diag">diag</a></span>(<span class="dv">10</span>))[,,<span class="dv">1</span>])</a>
+<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="op">&gt;</span><span class="st"> </span>G.Y &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/MathFun">abs</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/rWishart">rWishart</a></span>(<span class="dv">1</span>, <span class="dv">10</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/diag">diag</a></span>(<span class="dv">10</span>))[,,<span class="dv">1</span>])</a>
 <a class="sourceLine" id="cb1-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb1-9" data-line-number="9">fit &lt;-<span class="st"> </span><span class="kw"><a href="reference/edgenet-methods.html">edgenet</a></span>(X, Y, G.X, G.Y)</a>
+<a class="sourceLine" id="cb1-9" data-line-number="9"><span class="op">&gt;</span><span class="st"> </span>fit &lt;-<span class="st"> </span><span class="kw"><a href="reference/edgenet-methods.html">edgenet</a></span>(X, Y, G.X, G.Y)</a>
 <a class="sourceLine" id="cb1-10" data-line-number="10"></a>
-<a class="sourceLine" id="cb1-11" data-line-number="11"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(fit)</a></code></pre></div>
-<pre><code>## 'gaussian.edgenet' object
-## 
-## call:
-## edgenet(X = X, Y = Y, G.X = G.X, G.Y = G.Y)
-## 
-## parameters:
-## lambda  psigx  psigy 
-##      1      1      1 
-## 
-## family:  gaussian
-## link:  identity 
-## 
-## -&gt; call coef(x) for coefficients</code></pre>
+<a class="sourceLine" id="cb1-11" data-line-number="11"><span class="op">&gt;</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(fit)</a>
+<a class="sourceLine" id="cb1-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb1-13" data-line-number="13"><span class="co">#&gt;call:</span></a>
+<a class="sourceLine" id="cb1-14" data-line-number="14"><span class="co">#&gt;edgenet(X = X, Y = Y, G.X = G.X, G.Y = G.Y)</span></a>
+<a class="sourceLine" id="cb1-15" data-line-number="15"></a>
+<a class="sourceLine" id="cb1-16" data-line-number="16"><span class="co">#&gt;parameters:</span></a>
+<a class="sourceLine" id="cb1-17" data-line-number="17"><span class="co">#&gt;lambda  psigx  psigy </span></a>
+<a class="sourceLine" id="cb1-18" data-line-number="18"><span class="co">#&gt;     1      1      1 </span></a>
+<a class="sourceLine" id="cb1-19" data-line-number="19"></a>
+<a class="sourceLine" id="cb1-20" data-line-number="20"><span class="co">#&gt;family:  gaussian</span></a>
+<a class="sourceLine" id="cb1-21" data-line-number="21"><span class="co">#&gt;link:  identity </span></a>
+<a class="sourceLine" id="cb1-22" data-line-number="22"></a>
+<a class="sourceLine" id="cb1-23" data-line-number="23"><span class="co">#&gt;-&gt; call coef(x) for coefficients</span></a></code></pre></div>
+<p>From version <code>v1.9.0</code> on, we use <code>TensorFlow</code>, instead of custom <code>C++</code> and <code>Dlib</code>, for estimation of regression coefficients replacing a custom <em>cyclic coordinate descent</em>. This allowed deleting of major parts of the code base. <code>netReg</code> still uses some <code>RcppArmadillo</code> for fast matrix algebra.</p>
+<p>In order to estimate the optimal hyperparameters, i.e., the regularization parameters of the network models, we use Powell’s BOBYQA algorithm in a standard cross-validation framework.</p>
+<p>For more details, please check out the respective vignettes of the single models.</p>
 </div>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
@@ -143,7 +140,7 @@
   
 &gt; library(netReg)</code></pre>
 <p>nstalling the R package using the downloaded tarball works like this:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb4-1" data-line-number="1">$ <span class="ex">R</span> CMD install <span class="op">&lt;</span>netReg-x.y.z.tar.gz<span class="op">&gt;</span></a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb3-1" data-line-number="1">$ <span class="ex">R</span> CMD install <span class="op">&lt;</span>netReg-x.y.z.tar.gz<span class="op">&gt;</span></a></code></pre></div>
 <p>I <strong>do not</strong> recommend using <code>devtools</code>, but preferring tarballed releases over the most recent commit.</p>
 </div>
 <div id="documentation" class="section level2">
@@ -199,7 +196,7 @@
 </ul>
 </div>
 
-      <div class="dev-status">
+  <div class="dev-status">
 <h2>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="http://www.repostatus.org/#active"><img src="http://www.repostatus.org/badges/latest/active.svg" alt="Project Status"></a></li>
@@ -210,9 +207,7 @@
 </ul>
 </div>
 </div>
-
 </div>
-
 
       <footer><div class="copyright">
   <p>Developed by Simon Dirmeier.</p>
