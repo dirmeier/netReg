@@ -157,6 +157,10 @@ setMethod(
              optim.maxit=1e2, optim.thresh=1e-2,
              nfolds=10)
     {
+        stopifnot(is.numeric(nfolds), nfolds > 0, is.numeric(learning.rate),
+                  is.numeric(optim.maxit), is.numeric(optim.thresh),
+                  is.numeric(maxit), is.numeric(thresh))
+
         n <- dim(X)[1]
         p <- dim(X)[2]
 
@@ -172,6 +176,7 @@ setMethod(
         maxit <- check.param(maxit, 0, `<`, 1e5)
         optim.maxit <- check.param(optim.maxit, 0, `<`, 1e2)
         thresh <- check.param(thresh, 0, `<`, 1e-5)
+        optim.thresh <- check.param(optim.thresh, 0, `<`, 1e-2)
         family <- get.family(family)
 
         if (ncol(Y) == 1) {
@@ -218,6 +223,9 @@ setMethod(
     fixed.params <- Filter(is.finite, reg.params)
 
     init.params <- rep(0.1, length(estimatable.params))
+    if (is.null(gx) & is.null(gy) & !is.na(lambda))
+        stop("you didn't set graphs and lambda != NA_real_.
+             got nothing to estimate", call. = FALSE)
     if (length(init.params) == 0)
         stop("please set either of lambda/psigx/psigy to NA_real_", call. = FALSE)
 

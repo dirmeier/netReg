@@ -18,7 +18,7 @@
 # along with netReg. If not, see <http://www.gnu.org/licenses/>.
 
 
-context("netReg edgenet modelselection")
+context("edgenet modelselection")
 
 n   <- 100
 p   <- 5
@@ -32,7 +32,7 @@ X   <- matrix(rnorm(n * p), n, p)
 B   <- matrix(rnorm(p * q), p, q)
 Y   <- X %*% B + matrix(rnorm(n * q), n)
 
-ecv <- cv.edgenet(X, Y, lambda=1, maxit=1000, thresh=1e-5)
+ecv <- cv.edgenet(X, Y, maxit=1, thresh=1, optim.maxit = 1)
 
 test_that("gaussian edgenet modelselection returns s3 class", {
     testthat::expect_s3_class(ecv, "gaussian.cv.edgenet")
@@ -40,37 +40,30 @@ test_that("gaussian edgenet modelselection returns s3 class", {
 })
 
 test_that("gaussian edgenet modelselection throws at wrong X", {
-    testthat::expect_error(cv.edgenet(X="s", Y, maxit=1000, thresh=1e-5))
+    testthat::expect_error(cv.edgenet(X="s", Y, maxit=1, thresh=1))
 })
 
 test_that("gaussian edgenet modelselection throws at wrong Y", {
-    testthat::expect_error(cv.edgenet(X, Y="s", maxit=1000, thresh=1e-5))
+    testthat::expect_error(cv.edgenet(X, Y="s", maxit=1, thresh=1))
 })
 
 test_that("gaussian edgenet modelselection throws at wrong fold", {
-    testthat::expect_error(cv.edgenet(X, Y, maxit=1000, thresh=1e-5, nfolds="s"))
+    testthat::expect_error(cv.edgenet(X, Y, maxit=1, thresh=1, nfolds="s"))
 })
 
 test_that("gaussian edgenet modelselection warngs at maxit < 0 ", {
-    testthat::expect_warning(cv.edgenet(X, Y, thresh=1e-5, maxit=-1))
+    testthat::expect_warning(cv.edgenet(X, Y, thresh=1, maxit=-1))
 })
 
 test_that("gaussian edgenet modelselection warngs at thresh < 0 ", {
-    testthat::expect_warning(cv.edgenet(X, Y, maxit=100, thresh=-1))
+    testthat::expect_warning(cv.edgenet(X, Y, maxit=1, thresh=-1))
 })
 
 test_that("gaussian edgenet modelselection warngs at epsilon < 0 ", {
-    testthat::expect_warning(cv.edgenet(X, Y, maxit=100, thresh=1e-5, optim.epsilon=-1))
+    testthat::expect_warning(cv.edgenet(X, Y, maxit=1, thresh=1, optim.thresh = -1))
 })
 
 test_that("gaussian edgenet modelselection warngs at approx.maxit < 0 ", {
-    testthat::expect_warning(cv.edgenet(X, Y, maxit=100, thresh=1e-5, optim.maxit=-1))
+    testthat::expect_warning(cv.edgenet(X, Y, maxit=1, thresh=1, optim.maxit=-1))
 })
 
-test_that("gaussian edgenet modelselection throws at epsilin != numeric ", {
-    testthat::expect_error(cv.edgenet(X, Y, maxit=100, thresh=1e-5, epsilon="s"))
-})
-
-test_that("gaussian edgenet modelselection throws at approx.maxit != numeric ", {
-    testthat::expect_error(cv.edgenet(X, Y, maxit=100, thresh=1e-5, approx.maxit="s"))
-})

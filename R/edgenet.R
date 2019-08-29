@@ -126,6 +126,9 @@ setMethod(
              thresh=1e-5, maxit=1e5, learning.rate=0.01,
              family=gaussian)
     {
+        stopifnot(is.numeric(maxit), is.numeric(thresh),
+                  is.numeric(learning.rate))
+
         if (is.null(G.X)) psigx <- 0
         if (is.null(G.Y)) psigy <- 0
 

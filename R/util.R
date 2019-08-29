@@ -85,7 +85,7 @@ is.positive.numeric <- function(d)
 check.param <- function(param, comp, op, replace.with)
 {
     if (!is.na(param) & op(param, comp)) {
-        warning(sprintf("%s < 0, setting to 0!", substitute(param)))
+        warning(sprintf("%s < 0, setting to 0!", deparse(substitute(param))))
         param <- replace.with
     }
 
