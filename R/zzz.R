@@ -18,9 +18,13 @@
 # along with netReg. If not, see <http://www.gnu.org/licenses/>.
 
 
+#' @importFrom reticulate import
 tfp <- reticulate::import("tensorflow_probability", delay_load = TRUE)
 
-.onAttach <- function(libname, pkgname)
+
+#' @importFrom reticulate py_module_available
+#' @importFrom tensorflow install_tensorflow
+.onLoad <- function(libname, pkgname)
 {
     if (!reticulate::py_module_available("tensorflow") |
         !reticulate::py_module_available("tensorflow_probability"))
@@ -28,7 +32,6 @@ tfp <- reticulate::import("tensorflow_probability", delay_load = TRUE)
             extra_packages = "tensorflow-probability")
 
     Sys.setenv(TF_CPP_MIN_LOG_LEVEL = 2)
-    library(tensorflow)
     options(tensorflow.one_based_extract = TRUE)
 }
 

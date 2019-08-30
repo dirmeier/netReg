@@ -1,7 +1,7 @@
 ## Version 1.9.x
   - Modernizes code base to use TensorFlow instead of custom C++ and DLib.
   - Drops large part of code base.
-  - Adds binomial, Poisson, gamma families
+  - Adds binomial family
 
 ## Version 1.3.0 - 1.8.0
   - Modernizes C base and adds more abstractions,

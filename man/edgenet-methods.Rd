@@ -42,12 +42,16 @@ of \code{G.Y}}
 }
 \value{
 An object of class \code{edgenet}
-\item{coefficients }{ the estimated (\code{p} x \code{q})-dimensional
+\item{beta }{ the estimated (\code{p} x \code{q})-dimensional
  coefficient matrix B.hat}
-\item{intercept }{ the estimated (\code{q} x \code{1})-dimensional
+\item{alpha }{ the estimated (\code{q} x \code{1})-dimensional
  vector of intercepts}
-\item{call }{ the call that produced the object}
+\item{parameters }{ regularization parameters}
+\item{lambda }{ regularization parameter lambda)}
+\item{psigx }{ regularization parameter psigx}
+\item{psigy }{ regularization parameter psigy}
 \item{family }{ the family of the response}
+\item{call }{ the call that produced the object}
 }
 \description{
 Fit a graph-regularized linear regression model using

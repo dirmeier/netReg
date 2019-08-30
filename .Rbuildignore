@@ -44,6 +44,8 @@ data/Y.tsv
 data/Y_test*
 data/Y_train*
 docs/*
+examples/*
+LICENSE
 ^NEWS.md
 pkgdown/*
 tests/c++/

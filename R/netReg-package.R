@@ -32,6 +32,7 @@
 #' @keywords package
 #'
 #' @useDynLib netReg, .registration = TRUE
+#' @importFrom tensorflow tf
 #'
 #' @references
 #'  Dirmeier, Simon and Fuchs, Christiane and Mueller, Nikola S and Theis,

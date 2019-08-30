@@ -41,7 +41,7 @@ LinkingTo:
 Imports:
     Rcpp,
     stats,
-    tensorflow (>= 1.13.0),
+    tensorflow (>= 1.14.0),
     reticulate,
     nloptr
 NeedsCompilation: yes

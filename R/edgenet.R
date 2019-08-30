@@ -25,6 +25,8 @@
 #' @docType methods
 #' @rdname edgenet-methods
 #'
+#' @importFrom stats gaussian binomial
+#'
 #' @description  Fit a graph-regularized linear regression model using
 #'  edge-penalization. The coefficients are computed using graph-prior
 #'  knowledge in the form of one/two affinity matrices. Graph-regularization is
@@ -53,12 +55,16 @@
 #' @param family  family of response, e.g. \emph{gaussian} or \emph{binomial}
 #'
 #' @return An object of class \code{edgenet}
-#' \item{coefficients }{ the estimated (\code{p} x \code{q})-dimensional
+#' \item{beta }{ the estimated (\code{p} x \code{q})-dimensional
 #'  coefficient matrix B.hat}
-#' \item{intercept }{ the estimated (\code{q} x \code{1})-dimensional
+#' \item{alpha }{ the estimated (\code{q} x \code{1})-dimensional
 #'  vector of intercepts}
-#' \item{call }{ the call that produced the object}
+#' \item{parameters }{ regularization parameters}
+#' \item{lambda }{ regularization parameter lambda)}
+#' \item{psigx }{ regularization parameter psigx}
+#' \item{psigy }{ regularization parameter psigy}
 #' \item{family }{ the family of the response}
+#' \item{call }{ the call that produced the object}
 #'
 #' @examples
 #' X <- matrix(rnorm(100*10), 100, 10)
@@ -97,7 +103,7 @@ setGeneric(
 )
 
 
-#' @noRd
+#'  @rdname edgenet-methods
 setMethod(
     "edgenet",
     signature = signature(X="matrix", Y="numeric"),
@@ -113,7 +119,8 @@ setMethod(
     }
 )
 
-#' @noRd
+
+#'  @rdname edgenet-methods
 setMethod(
     "edgenet",
     signature = signature(X="matrix", Y="matrix"),
@@ -158,7 +165,6 @@ setMethod(
 
 
 #' @noRd
-#' @import Rcpp
 .edgenet <- function(x, y, gx, gy,
                      lambda, psigx, psigy,
                      thresh, maxit,learning.rate, family)
@@ -172,9 +178,9 @@ setMethod(
     y <- cast_float(y)
 
     if (!is.null(gx))
-        gx <- cast_float(netReg:::laplacian_(gx))
+        gx <- cast_float(laplacian_(gx))
     if (!is.null(gy))
-        gy <- cast_float(netReg:::laplacian_(gy))
+        gy <- cast_float(laplacian_(gy))
 
     alpha <- zero_vector(q)
     beta  <- zero_matrix(p, q)

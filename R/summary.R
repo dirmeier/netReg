@@ -31,12 +31,14 @@
     cat(sprintf("\n-> call coef(%s) for coefficients", deparse(substitute(x))))
 }
 
+
 #' @export
 #' @method summary edgenet
-summary.edgenet <- function(x,...) .summary.edgenet(x, "parameters")
+summary.edgenet <- function(object, ...) .summary.edgenet(object, "parameters")
 
 
 
 #' @export
 #' @method summary cv.edgenet
-summary.cv.edgenet <- function(x, ...) .summary.edgenet(x, "optimal parameters")
+summary.cv.edgenet <- function(object, ...)
+    .summary.edgenet(object, "optimal parameters")

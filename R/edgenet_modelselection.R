@@ -21,11 +21,14 @@
 #' Find the optimal shrinkage parameters for edgenet
 #'
 #' @export
+#' @docType methods
+#' @rdname cvedgenet-methods
 #'
-#' @description Finds the optimal shrinkage parameters
+#' @importFrom stats gaussian binomial
+#'
+#' @description Finds the optimal regulariztion parameters
 #'  using cross-validation for edgenet. We use the BOBYQA algorithm to
-#'  find the optimial regularization parameters and coordinate
-#'  descent in order to minimize the objective function of the linear model.
+#'  find the optimial regularization parameters in a cross-validation framework.
 #'
 #' @param X  input matrix, of dimension (\code{n} x \code{p})
 #'  where \code{n} is the number of observations and \code{p} is the number
@@ -45,38 +48,43 @@
 #'  \code{NULL}.
 #' @param lambda  \code{numerical} shrinkage parameter for LASSO. Per default
 #' this parameter is
-#'  set to \code{NULL} which means that \code{lambda} is going to be estimated
+#'  set to \code{NA_real_} which means that \code{lambda} is going to be estimated
 #'  using cross-validation. If any \code{numerical} value for \code{lambda}
 #'  is set, estimation of the optimal parameter will \emph{not} be conducted.
 #' @param psigx  \code{numerical} shrinkage parameter for graph-regularization
 #'  of \code{G.X}. Per default this parameter is
-#'  set to \code{NULL} which means that \code{psigx} is going to be estimated
+#'  set to \code{NA_real_} which means that \code{psigx} is going to be estimated
 #'  in the cross-validation. If any \code{numerical} value for \code{psigx} is
 #'  set, estimation of the optimal parameter will \emph{not} be conducted.
 #' @param psigy  \code{numerical} shrinkage parameter for graph-regularization
 #'  of \code{G.Y}. Per default this parameter is
-#'  set to \code{NULL} which means that \code{psigy} is going to be estimated
+#'  set to \code{NA_real_} which means that \code{psigy} is going to be estimated
 #'  in the cross-validation. If any \code{numerical} value for \code{psigy} is
 #'  set, estimation of the optimal parameter will \emph{not} be conducted.
-#' @param thresh  \code{numerical} threshold for coordinate descent
-#' @param maxit  maximum number of iterations for the coordinate descent
+#' @param thresh  \code{numerical} threshold for the optimizer
+#' @param maxit  maximum number of iterations for the optimizer
 #'  (\code{integer})
-#' @param family  family of response, e.g. \emph{gaussian}
-#' @param optim.epsilon  \code{numerical} threshold criterion for the
+#' @param learning.rate  step size for Adam optimizer (\code{numerical} )
+#' @param family  family of response, e.g. \emph{gaussian} or \emph{binomial}
+#' @param optim.thresh  \code{numerical} threshold criterion for the
 #'  optimization to stop.  Usually 1e-3 is a good choice.
 #' @param optim.maxit  the maximum number of iterations for the optimization
 #'   (\code{integer}). Usually 1e4 is a good choice.
 #' @param nfolds  the number of folds to be used - default is 10
-#'  (minimum 3, maximum \code{nrow(X)}).
 #'
 #' @return An object of class \code{cv.edgenet}
+#' \item{parameters }{ the estimated, optimal regularization parameters}
+#' \item{lambda }{ optimal estimated value for regularization parameter lambda
+#'   (or, if provided as argument, the value of the parameter)}
+#' \item{psigx }{ optimal estimated value for regularization parameter psigx
+#'   (or, if provided as argument, the value of the parameter)}
+#' \item{psigy }{ optimal estimated value for regularization parameter psigy
+#'   (or, if provided as argument, the value of the parameter)}
+#' \item{estimated.parameters }{ names of parameters that were estimated}
+#' \item{family }{ family used for estimated}
+#' \item{fit }{ an \code{edgenet} object fitted with the optimal, estimated
+#'  paramters}
 #' \item{call }{ the call that produced the object}
-#' \item{lambda }{ the estimated (\code{p} x \code{q})-dimensional
-#'  coefficient matrix B.hat}
-#' \item{psigx }{ the estimated (\code{q} x \code{1})-dimensional
-#'  vector of intercepts}
-#' \item{psigy }{ the estimated (\code{q} x \code{1})-dimensional vector
-#'  of intercepts}
 #'
 #' @examples
 #' X <- matrix(rnorm(100*10), 100, 10)
@@ -127,7 +135,7 @@ setGeneric(
 )
 
 
-#' @noRd
+#' @rdname cvedgenet-methods
 setMethod(
     "cv.edgenet",
     signature = signature(X="matrix", Y="numeric"),
@@ -148,7 +156,7 @@ setMethod(
 )
 
 
-#' @noRd
+#' @rdname cvedgenet-methods
 setMethod(
     "cv.edgenet",
     signature = signature(X="matrix", Y="matrix"),

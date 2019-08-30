@@ -20,10 +20,10 @@
 
 #' @export
 #' @method coef edgenet
-coef.edgenet <- function(x,...)
+coef.edgenet <- function(object, ...)
 {
-    alpha <- x$alpha
-    beta  <- x$beta
+    alpha <- object$alpha
+    beta  <- object$beta
     coefs <- rbind(alpha, beta)
     rownames(coefs) <- c("(Intercept)", sprintf("x[%s]", seq(nrow(beta))))
     colnames(coefs) <- sprintf("y[%s]", seq(ncol(beta)))
@@ -33,7 +33,7 @@ coef.edgenet <- function(x,...)
 
 #' @export
 #' @method coef cv.edgenet
-coef.cv.edgenet <- function(x,...)
+coef.cv.edgenet <- function(object, ...)
 {
-   coef(x$fit)
+   coef(object$fit)
 }
