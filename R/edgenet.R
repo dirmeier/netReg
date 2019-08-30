@@ -81,7 +81,7 @@
 #'
 #' # estimation works the same for binomial models
 #' eta <- 1 / (1 + exp(-X %*% b))
-#' Y <- do.call("cbind", lapply(seq(10), function(.) rbinom(n, 1, eta[,.])))
+#' Y <- do.call("cbind", lapply(seq(10), function(.) rbinom(100, 1, eta[,.])))
 #' fit <- edgenet(X=X, Y=Y, G.X=G.X, G.Y,
 #'                family=binomial, maxit=10, optim.maxit=1)
 setGeneric(

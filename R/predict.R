@@ -19,6 +19,14 @@
 
 
 #' @export
+#' @method predict cv.edgenet
+predict.cv.edgenet <- function(object, newdata=NULL, ...)
+{
+    predict(object$fit, newdata, ...)
+}
+
+
+#' @export
 #' @method predict gaussian.edgenet
 predict.gaussian.edgenet <- function(object, newdata=NULL, ...)
 {
@@ -40,7 +48,7 @@ predict.binomial.edgenet <- function(object, newdata=NULL, ...)
 #' @importFrom stats coef
 .predict <- function(object, newdata, mean, ...)
 {
-    if(is.null(newdata)) stop("newdata is null")
+    if (is.null(newdata)) stop("newdata is null")
     X <- newdata
     n <- dim(X)[1]
     p <- dim(X)[2]

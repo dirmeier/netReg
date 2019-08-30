@@ -20,7 +20,8 @@
 
 #' @noRd
 #' @import tensorflow
-fit <- function(objective, alpha, beta, maxit=1000, learning.rate = 0.01, thresh = 1e-4)
+fit <- function(objective, alpha, beta,
+                maxit=1000, learning.rate = 0.01, thresh = 1e-4)
 {
     optimizer <- adam(learning.rate)
     train <- optimizer$minimize(objective)
