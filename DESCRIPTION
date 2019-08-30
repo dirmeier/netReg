@@ -25,11 +25,12 @@ biocViews:
 License: GPL-3
 Encoding: UTF-8
 Suggests:
+    BiocStyle,
     testthat,
     knitr,
     rmarkdown,
-    BiocStyle,
     lintr,
+    styler,
     lassoshooting,
     glmnet
 VignetteBuilder: knitr
@@ -43,5 +44,6 @@ Imports:
     stats,
     tensorflow (>= 1.14.0),
     reticulate,
-    nloptr
+    nloptr,
+    methods
 NeedsCompilation: yes

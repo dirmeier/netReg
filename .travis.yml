@@ -36,6 +36,7 @@ r_packages:
   - covr
   - testthat
   - lintr
+  - styler
 
 bioc_packages:
   - BiocCheck

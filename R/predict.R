@@ -20,6 +20,7 @@
 
 #' @export
 #' @method predict cv.edgenet
+#' @importFrom stats predict
 predict.cv.edgenet <- function(object, newdata=NULL, ...)
 {
     predict(object$fit, newdata, ...)

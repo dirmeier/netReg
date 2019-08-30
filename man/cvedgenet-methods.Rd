@@ -68,7 +68,7 @@ set, estimation of the optimal parameter will \emph{not} be conducted.}
 \item{maxit}{maximum number of iterations for the optimizer
 (\code{integer})}
 
-\item{learning.rate}{step size for Adam optimizer (\code{numerical} )}
+\item{learning.rate}{step size for Adam optimizer (\code{numerical})}
 
 \item{family}{family of response, e.g. \emph{gaussian} or \emph{binomial}}
 

@@ -64,7 +64,7 @@
 #' @param thresh  \code{numerical} threshold for the optimizer
 #' @param maxit  maximum number of iterations for the optimizer
 #'  (\code{integer})
-#' @param learning.rate  step size for Adam optimizer (\code{numerical} )
+#' @param learning.rate  step size for Adam optimizer (\code{numerical})
 #' @param family  family of response, e.g. \emph{gaussian} or \emph{binomial}
 #' @param optim.thresh  \code{numerical} threshold criterion for the
 #'  optimization to stop.  Usually 1e-3 is a good choice.
@@ -237,7 +237,8 @@ setMethod(
         stop("you didn't set graphs and lambda != NA_real_.
              got nothing to estimate", call. = FALSE)
     if (length(init.params) == 0)
-        stop("please set either of lambda/psigx/psigy to NA_real_", call. = FALSE)
+        stop("please set either of lambda/psigx/psigy to NA_real_",
+             call. = FALSE)
 
     p <- ncol(x)
     q <- ncol(y)
@@ -289,11 +290,12 @@ setMethod(
                                                  psigx.tensor=params[2],
                                                  psigy.tensor=params[3]))
                 if (step %% 25 == 0) {
-                    target <- sess$run(objective, feed_dict = dict(x.tensor = x.test,
-                                                                   y.tensor = y.test,
-                                                                   lambda.tensor=params[1],
-                                                                   psigx.tensor=params[2],
-                                                                   psigy.tensor=params[3]))
+                    target <- sess$run(objective,
+                                       feed_dict = dict(x.tensor = x.test,
+                                                        y.tensor = y.test,
+                                                        lambda.tensor=params[1],
+                                                        psigx.tensor=params[2],
+                                                        psigy.tensor=params[3]))
                     if (sum(abs(target - target.old)) < thresh)
                         break
                     target.old <- target

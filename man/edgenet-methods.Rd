@@ -3,12 +3,22 @@
 \docType{methods}
 \name{edgenet}
 \alias{edgenet}
+\alias{edgenet,matrix,numeric-method}
+\alias{edgenet,matrix,matrix-method}
 \title{Fit a graph-regularized linear regression model using
  edge-based regularization.}
 \usage{
 edgenet(X, Y, G.X = NULL, G.Y = NULL, lambda = 1, psigx = 1,
   psigy = 1, thresh = 1e-05, maxit = 1e+05, learning.rate = 0.01,
   family = gaussian)
+
+\S4method{edgenet}{matrix,numeric}(X, Y, G.X = NULL, G.Y = NULL,
+  lambda = 1, psigx = 1, psigy = 1, thresh = 1e-05,
+  maxit = 1e+05, learning.rate = 0.01, family = gaussian)
+
+\S4method{edgenet}{matrix,matrix}(X, Y, G.X = NULL, G.Y = NULL,
+  lambda = 1, psigx = 1, psigy = 1, thresh = 1e-05,
+  maxit = 1e+05, learning.rate = 0.01, family = gaussian)
 }
 \arguments{
 \item{X}{input matrix, of dimension (\code{n} x \code{p})
@@ -37,6 +47,8 @@ of \code{G.Y}}
 
 \item{maxit}{maximum number of iterations for optimizer
 (\code{integer})}
+
+\item{learning.rate}{step size for Adam optimizer (\code{numerical})}
 
 \item{family}{family of response, e.g. \emph{gaussian} or \emph{binomial}}
 }
@@ -83,6 +95,5 @@ fit<- edgenet(X=X, Y=Y[, 1], G.X=G.X, family=gaussian, maxit=10)
 # estimation works the same for binomial models
 eta <- 1 / (1 + exp(-X \%*\% b))
 Y <- do.call("cbind", lapply(seq(10), function(.) rbinom(100, 1, eta[,.])))
-fit <- edgenet(X=X, Y=Y, G.X=G.X, G.Y,
-               family=binomial, maxit=10, optim.maxit=1)
+fit <- edgenet(X=X, Y=Y, G.X=G.X, G.Y, family=binomial, maxit=10)
 }

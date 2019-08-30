@@ -112,8 +112,9 @@ get.family <- function(family)
 #' @noRd
 not.supported.yet <- function(family)
 {
+    fam <-
     err <- sprintf(
-        "family '%s' is not supported yet. choose 'gaussian'/'binomial' please.",
+        "family '%s' not supported yet. choose 'gaussian'/'binomial' please.",
         family
     )
     stop(err, call. =  FALSE)

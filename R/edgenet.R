@@ -18,7 +18,7 @@
 # along with netReg. If not, see <http://www.gnu.org/licenses/>.
 
 
-#' Fit a graph-regularized linear regression model using
+#' @title Fit a graph-regularized linear regression model using
 #'  edge-based regularization.
 #'
 #' @export
@@ -52,6 +52,7 @@
 #' @param thresh  \code{numerical} threshold for optimizer
 #' @param maxit  maximum number of iterations for optimizer
 #'  (\code{integer})
+#' @param learning.rate   step size for Adam optimizer (\code{numerical})
 #' @param family  family of response, e.g. \emph{gaussian} or \emph{binomial}
 #'
 #' @return An object of class \code{edgenet}
@@ -88,8 +89,7 @@
 #' # estimation works the same for binomial models
 #' eta <- 1 / (1 + exp(-X %*% b))
 #' Y <- do.call("cbind", lapply(seq(10), function(.) rbinom(100, 1, eta[,.])))
-#' fit <- edgenet(X=X, Y=Y, G.X=G.X, G.Y,
-#'                family=binomial, maxit=10, optim.maxit=1)
+#' fit <- edgenet(X=X, Y=Y, G.X=G.X, G.Y, family=binomial, maxit=10)
 setGeneric(
     "edgenet",
     function(X, Y, G.X=NULL, G.Y=NULL,
@@ -103,7 +103,7 @@ setGeneric(
 )
 
 
-#'  @rdname edgenet-methods
+#' @rdname edgenet-methods
 setMethod(
     "edgenet",
     signature = signature(X="matrix", Y="numeric"),
@@ -120,7 +120,7 @@ setMethod(
 )
 
 
-#'  @rdname edgenet-methods
+#' @rdname edgenet-methods
 setMethod(
     "edgenet",
     signature = signature(X="matrix", Y="matrix"),
