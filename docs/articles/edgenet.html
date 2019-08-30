@@ -199,27 +199,27 @@
 ## -&gt; call coef(object) for coefficients</code></pre>
 <p>The <code>fit</code> object contains information about coefficients, intercepts etc.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/coef">coef</a></span>(fit)[,<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]</a></code></pre></div>
-<pre><code>##                    y[1]        y[2]        y[3]        y[4]        y[5]
-## (Intercept) -0.09363303  0.01618209  0.01412645  0.09190313  0.09308841
-## x[1]         0.01451730 -0.09922586 -0.09946920  0.09964271  0.09804004
-## x[2]        -0.09951717  0.09615180 -0.09917723  0.09914105 -0.09847970
-## x[3]        -0.09942053 -0.09777132  0.09973940  0.09945296  0.09958091
-## x[4]        -0.09736211 -0.09965016  0.09982078  0.09949128  0.09737746
-## x[5]         0.09946543  0.09985436  0.09953905 -0.09905633 -0.09869140
-## x[6]         0.09972839 -0.09857188 -0.09951503  0.09957726  0.08956972
-## x[7]         0.09971260  0.09978427 -0.09468149 -0.09964791 -0.09958778
-## x[8]         0.09824327 -0.09963906  0.09935475  0.09925610 -0.09874859
-## x[9]         0.09959661  0.09970687 -0.09947836  0.06788049 -0.09955937
-## x[10]        0.09966867 -0.09955265 -0.02470558 -0.09916351 -0.09946147</code></pre>
+<pre><code>##                    y[1]         y[2]        y[3]        y[4]        y[5]
+## (Intercept)  0.09775292 -0.046413850  0.09451848 -0.08906243 -0.09749828
+## x[1]        -0.09947069  0.099312276 -0.09731767  0.09948157 -0.09858435
+## x[2]        -0.09908058 -0.099113204 -0.09940057 -0.09757634  0.09941397
+## x[3]        -0.09964143  0.099654585  0.09972820  0.09972442 -0.09918731
+## x[4]        -0.09405525 -0.099878401  0.06004934 -0.09973663 -0.09956642
+## x[5]        -0.09987300 -0.099310830  0.09964536  0.09939830  0.09977801
+## x[6]        -0.09963483 -0.007338114 -0.09801380  0.09785607  0.09901024
+## x[7]        -0.09973991  0.098804176  0.09932242  0.09842920 -0.09967411
+## x[8]         0.09878647 -0.089764692 -0.09675330  0.09948532 -0.09981484
+## x[9]        -0.09913483  0.099584058 -0.09980090 -0.09974577  0.09961649
+## x[10]        0.09602787 -0.099786244 -0.09059796 -0.05775912  0.09964988</code></pre>
 <p>Having the coefficients estimated we are able to predict novel data-sets:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">pred  &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/predict">predict</a></span>(fit, X)</a>
 <a class="sourceLine" id="cb7-2" data-line-number="2">pred[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]</a></code></pre></div>
-<pre><code>##             [,1]        [,2]        [,3]        [,4]        [,5]
-## [1,] -0.52086194 -0.69064344 -0.20652997  0.88551505 0.671524169
-## [2,]  0.15064083  0.17181267  0.02221273 -0.06343665 0.002273621
-## [3,] -0.81858211  0.09193496  0.12059276  0.17546755 0.449024381
-## [4,]  0.05818809  0.21147211 -0.59275392  0.04765883 0.070598414
-## [5,] -0.32189239  0.10512388 -0.01857580 -0.27998407 0.267829790</code></pre>
+<pre><code>##            [,1]       [,2]        [,3]        [,4]       [,5]
+## [1,]  0.3155366 -0.3891151  0.09649641  0.23908437 -0.2381836
+## [2,]  0.3254230 -0.5626774 -0.18921025 -0.04181051  0.6265335
+## [3,]  0.5002090  0.2351538 -0.56823980  0.36727517 -0.1699353
+## [4,]  0.2195096  0.3320205  0.33626326  0.22751219 -0.3541395
+## [5,] -0.2322120  0.1057999  0.27906980 -0.31292430  0.1777195</code></pre>
 <p>The binomial case is the same only with a different <code>family</code> argument:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="co"># data</span></a>
 <a class="sourceLine" id="cb9-2" data-line-number="2">X &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(n <span class="op">*</span><span class="st"> </span>p), n)</a>
@@ -308,27 +308,27 @@
 ## -&gt; call coef(object) for coefficients</code></pre>
 <p>You can obtain the coefficients like this:</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/coef">coef</a></span>(cv)[,<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]</a></code></pre></div>
-<pre><code>##                    y[1]        y[2]        y[3]        y[4]        y[5]
-## (Intercept) -0.09383562  0.03858671 -0.05276618  0.08192639  0.09646033
-## x[1]        -0.02103290  0.09889559 -0.09788950  0.05301372 -0.09693367
-## x[2]        -0.09922989 -0.09931803  0.09170476  0.09928311  0.09874658
-## x[3]         0.09616986  0.09782978 -0.09588584 -0.07413241  0.09848659
-## x[4]        -0.09838223  0.09781129 -0.09609818 -0.09597892 -0.08323049
-## x[5]        -0.03519893 -0.09441622 -0.09899858  0.09861624  0.09253053
-## x[6]         0.09917812 -0.09695102  0.09499606 -0.04662310 -0.09119003
-## x[7]         0.09690845  0.09850448 -0.09654822  0.09658346 -0.08464661
-## x[8]        -0.09710290 -0.05449146  0.07912987  0.04771411  0.09776442
-## x[9]         0.09704653  0.09943188 -0.08803029 -0.09893559 -0.09795842
-## x[10]        0.09849934  0.09958937  0.08629338 -0.09950574 -0.09921771</code></pre>
+<pre><code>##                    y[1]         y[2]        y[3]         y[4]        y[5]
+## (Intercept)  0.09914648 -0.023863755  0.09719609 -0.078716278 -0.09618463
+## x[1]         0.09915434  0.099119030  0.09900284  0.096972257 -0.09913968
+## x[2]        -0.09600241 -0.008820630 -0.08850481  0.086481579 -0.09094848
+## x[3]         0.09930439  0.039475620  0.05427464 -0.078411825  0.09008566
+## x[4]         0.07243343  0.097300105 -0.09734321 -0.094970390  0.00557446
+## x[5]         0.03999567  0.091118507 -0.02956912 -0.099241771  0.09582645
+## x[6]         0.08147326 -0.099446304  0.09849704  0.004103978  0.09948399
+## x[7]        -0.09919338 -0.093476638  0.06187079  0.095264211  0.03466934
+## x[8]         0.09818231  0.009679984  0.09550744  0.096138313 -0.09821155
+## x[9]        -0.09603973  0.096191913 -0.00547953  0.097822055  0.07331168
+## x[10]        0.09852777 -0.098732226  0.09717003  0.095297545  0.02405711</code></pre>
 <p>Furthermore, you can also directly predict using a <code>cv.edgenet</code> object:</p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1">pred  &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/predict">predict</a></span>(cv, X)</a>
 <a class="sourceLine" id="cb19-2" data-line-number="2">pred[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]</a></code></pre></div>
-<pre><code>##             [,1]        [,2]       [,3]       [,4]        [,5]
-## [1,]  0.13831271 -0.24677281 0.14023122  0.5251311  0.70270770
-## [2,] -0.43355940 -0.20729238 0.42462780 -0.1498658  0.18610516
-## [3,] -0.40604176 -0.03470157 0.02807559  0.4854716  0.30573240
-## [4,]  0.08509545 -0.08331861 0.08263264  0.2468325 -0.03420809
-## [5,] -0.09477749  0.07871291 0.07382536 -0.1479032  0.01878472</code></pre>
+<pre><code>##              [,1]        [,2]       [,3]       [,4]       [,5]
+## [1,]  0.303341587  0.25287525  0.1138433  0.0398755 -0.1580890
+## [2,]  0.208966439  0.08503225 -0.1669608 -0.3211360  0.3606087
+## [3,]  0.444936466 -0.22003824  0.3396557  0.1419966 -0.4095245
+## [4,] -0.009281506  0.26820676 -0.1141533 -0.2694597 -0.1163422
+## [5,] -0.137696223 -0.31372165 -0.1034966 -0.4041822 -0.1049832</code></pre>
 </div>
 <div id="a-biological-example" class="section level3">
 <h3 class="hasAnchor">
@@ -367,17 +367,17 @@
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1">X.new &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dv">10</span> <span class="op">*</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/nrow">ncol</a></span>(X)), <span class="dv">10</span>)</a>
 <a class="sourceLine" id="cb24-2" data-line-number="2">pred  &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/predict">predict</a></span>(fit, X.new)</a>
 <a class="sourceLine" id="cb24-3" data-line-number="3">pred[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]</a></code></pre></div>
-<pre><code>##              [,1]        [,2]         [,3]        [,4]        [,5]
-##  [1,] -0.21086988  0.23700234  0.128741870 -0.39086287  0.05340104
-##  [2,]  0.28726377  0.21952999 -0.060897867 -0.08049358 -0.37371839
-##  [3,] -0.23946060  0.19053361  0.004639993 -0.01540546  0.25202968
-##  [4,] -0.37631900 -0.25382182  0.304451351  0.08306922 -0.10153426
-##  [5,] -0.62238569  0.06014826 -0.171035063  0.04624069  0.16234275
-##  [6,]  0.18337912  0.61469939 -0.246355503 -0.19721371 -0.09863876
-##  [7,]  0.12117529  0.49260689 -0.147906137 -0.33491239 -0.35747789
-##  [8,]  0.06358954  0.47303938 -0.358044102 -0.17753197 -0.29570956
-##  [9,] -0.11912270  0.12230554 -0.070907162  0.35487086 -0.03960310
-## [10,] -0.07071728 -0.12923755 -0.162708011  0.40426514 -0.02526637</code></pre>
+<pre><code>##              [,1]        [,2]        [,3]        [,4]        [,5]
+##  [1,]  0.38107174 -0.33294021  0.37572126  0.02398537 -0.20999459
+##  [2,] -0.51277334 -0.12303940 -0.20123927  0.28677842 -0.37782369
+##  [3,] -0.28291746 -0.08316139  0.13662754  0.24502480 -0.37082844
+##  [4,] -0.31215105 -0.28212781 -0.07746080 -0.04950033 -0.28221627
+##  [5,]  0.04304204 -0.08690566  0.25716492  0.05112431  0.07003413
+##  [6,]  0.13537801 -0.05182615  0.22632057 -0.07679439 -0.06820635
+##  [7,]  0.12656274 -0.21288667  0.11580072 -0.18558086 -0.13449041
+##  [8,]  0.28074518  0.03862624  0.03619957 -0.40659853 -0.11847568
+##  [9,]  0.32015869 -0.10899278  0.08193995 -0.34200752  0.07399114
+## [10,]  0.13476039  0.06387708  0.16400017  0.14211790 -0.07287152</code></pre>
 </div>
 </div>
 <div id="references" class="section level2 unnumbered">

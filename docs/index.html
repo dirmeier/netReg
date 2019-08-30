@@ -100,7 +100,7 @@
 <div id="about" class="section level2">
 <h2 class="hasAnchor">
 <a href="#about" class="anchor"></a>About</h2>
-<p>Modelling dependencies using linear regression models is often complicated when the analysed data-sets are high-dimensional and less observations than variables are available ($n \ll p$). <code>netReg</code> implements generalized linear models that use network penalties for regularization. Network regularization uses graphs or trees to incorporate information about interactions of covariables, or responses, into the loss function of a GLM. Ideally this allows better (i.e., lower variance) estimation of regression coefficients.</p>
+<p>Modelling dependencies using linear regression models is often complicated when the analysed data-sets are high-dimensional and less observations than variables are available (n &lt;&lt; p). <code>netReg</code> implements generalized linear models that utilize network penalties for regularization. Network regularization uses graphs or trees to incorporate information about interactions of covariables, or responses, into the loss function of a GLM. Ideally this allows better (i.e., lower variance) estimation of regression coefficients.</p>
 <p>For instance, in <code>R</code>, you could fit a network-regularized model like that:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="op">&gt;</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(netReg)</a>
 <a class="sourceLine" id="cb1-2" data-line-number="2"></a>
@@ -134,12 +134,12 @@
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>You can install and use <code>netReg</code> either from <a href="https://bioconductor.org/packages/release/bioc/html/netReg.html">Bioconductor</a>, or by downloading the latest <a href="https://github.com/dirmeier/netReg/releases">tarball</a>.</p>
 <p>If you want to use the <strong>recommended way</strong> using Bioconductor just call:</p>
-<pre><code>&gt; if (!requireNamespace("BiocManager", quietly=TRUE))
-&gt;   install.packages("BiocManager")
-&gt; BiocManager::install("netReg")
-  
-&gt; library(netReg)</code></pre>
-<p>nstalling the R package using the downloaded tarball works like this:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="op">&gt;</span><span class="st"> </span><span class="cf">if</span> (<span class="op">!</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/ns-load">requireNamespace</a></span>(<span class="st">"BiocManager"</span>, <span class="dt">quietly=</span><span class="ot">TRUE</span>))</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="op">&gt;</span><span class="st">   </span><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"BiocManager"</span>)</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="op">&gt;</span><span class="st"> </span>BiocManager<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/BiocManager/topics/install">install</a></span>(<span class="st">"netReg"</span>)</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">  </a>
+<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="op">&gt;</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(netReg)</a></code></pre></div>
+<p>Installing the R package using the downloaded tarball works like this:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb3-1" data-line-number="1">$ <span class="ex">R</span> CMD install <span class="op">&lt;</span>netReg-x.y.z.tar.gz<span class="op">&gt;</span></a></code></pre></div>
 <p>I <strong>do not</strong> recommend using <code>devtools</code>, so please prefer tarballed releases over installing from the main branch.</p>
 </div>
@@ -154,8 +154,18 @@
 <div id="citation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#citation" class="anchor"></a>Citation</h2>
-<p>It would be great if you cited <code>netReg</code> like this:</p>
-<p>Simon Dirmeier, Christiane Fuchs, Nikola S Mueller, Fabian J Theis; netReg: network-regularized linear models for biological association studies, <em>Bioinformatics</em>, Volume 34, Issue 5, 1 March 2018, Pages 896–898, <a href="https://doi.org/10.1093/bioinformatics/btx677" class="uri">https://doi.org/10.1093/bioinformatics/btx677</a></p>
+<p>If <code>netReg</code> was useful for you or your work, it would be great if you cited it like this:</p>
+<pre><code>@article{,
+  title={netReg: network-regularized linear models for biological association studies},
+  author={Dirmeier, Simon and Fuchs, Christiane and Mueller, Nikola S and Theis, Fabian J},
+  journal={Bioinformatics},
+  volume={34},
+  number={5},
+  pages={896--898},
+  year={2017},
+  publisher={Oxford University Press}
+}
+</code></pre>
 </div>
 <div id="author" class="section level2">
 <h2 class="hasAnchor">

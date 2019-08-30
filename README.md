@@ -12,8 +12,8 @@ Network-regularized generalized linear regression models in `R`. Now with `Tenso
 
 Modelling dependencies using linear regression models is often complicated when the 
 analysed data-sets are high-dimensional and less observations than variables 
-are available ($n \ll p$). `netReg` implements generalized linear models 
-that use network penalties for regularization. Network regularization uses graphs
+are available (n << p). `netReg` implements generalized linear models 
+that utilize network penalties for regularization. Network regularization uses graphs
 or trees to incorporate information about interactions of covariables, 
 or responses, into the loss function of a GLM. Ideally this allows better (i.e., lower variance)
 estimation of regression coefficients. 
@@ -62,7 +62,7 @@ or by downloading the latest [tarball](https://github.com/dirmeier/netReg/releas
 
 If you want to use the **recommended way** using Bioconductor just call:
 
-```
+```r
 > if (!requireNamespace("BiocManager", quietly=TRUE))
 >   install.packages("BiocManager")
 > BiocManager::install("netReg")
@@ -70,7 +70,7 @@ If you want to use the **recommended way** using Bioconductor just call:
 > library(netReg)
 ```
  
-nstalling the R package using the downloaded tarball works like this:
+Installing the R package using the downloaded tarball works like this:
 
 ```bash
 $ R CMD install <netReg-x.y.z.tar.gz>
@@ -85,11 +85,21 @@ I **do not** recommend using `devtools`, so please prefer tarballed releases ove
 
 ## Citation
 
-It would be great if you cited `netReg` like this:
+If `netReg` was useful for you or your work, it would be great if you cited it like this:
 
-Simon Dirmeier, Christiane Fuchs, Nikola S Mueller, Fabian J Theis; 
-netReg: network-regularized linear models for biological association studies, 
-*Bioinformatics*, Volume 34, Issue 5, 1 March 2018, Pages 896–898, https://doi.org/10.1093/bioinformatics/btx677
+```
+@article{,
+  title={netReg: network-regularized linear models for biological association studies},
+  author={Dirmeier, Simon and Fuchs, Christiane and Mueller, Nikola S and Theis, Fabian J},
+  journal={Bioinformatics},
+  volume={34},
+  number={5},
+  pages={896--898},
+  year={2017},
+  publisher={Oxford University Press}
+}
+
+```
 
 ## Author
 
