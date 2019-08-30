@@ -19,7 +19,7 @@
 
 
 #' @noRd
-#' @import tensorflow
+#' @importFrom tensorflow tf
 gaussian.loss <- function(y, eta, ...)
 {
     obj <- tf$reduce_sum(tf$square(y - eta))
@@ -28,12 +28,12 @@ gaussian.loss <- function(y, eta, ...)
 
 
 #' @noRd
-#' @import tensorflow
+#' @importFrom tensorflow tf
 binomial.loss <- function(y, eta, ...)
 {
     obj <- 0
     for (j in seq(ncol(y))) {
-        prob <- tfp$distributions$Bernoulli(logits = eta[,j])
+        prob <- tfp$distributions$Bernoulli(logits = eta[ ,j])
         obj <- obj + tf$reduce_sum(prob$log_prob(y[,j]))
     }
 
@@ -42,7 +42,21 @@ binomial.loss <- function(y, eta, ...)
 
 
 #' @noRd
-#' @import tensorflow
+#' @importFrom tensorflow tf
+poisson.loss <- function(y, eta, ...)
+{
+    obj <- 0
+    for (j in seq(ncol(y))) {
+        prob <- tfp$distributions$Poisson(log_rate = eta[ ,j])
+        obj <- obj + tf$reduce_sum(prob$log_prob(y[,j]))
+    }
+
+    -obj
+}
+
+
+#' @noRd
+#' @importFrom tensorflow tf
 lasso <- function(lambda, beta)
 {
     lambda * tf$reduce_sum(tf$abs(beta))
@@ -50,7 +64,7 @@ lasso <- function(lambda, beta)
 
 
 #' @noRd
-#' @import tensorflow
+#' @importFrom tensorflow tf
 ridge<- function(lambda, beta)
 {
     lambda * tf$reduce_sum(tf$square(beta))
@@ -58,7 +72,6 @@ ridge<- function(lambda, beta)
 
 
 #' @noRd
-#' @import tensorflow
 elastic <- function(alpha, lambda, beta)
 {
     lambda * (ridge((1 - alpha) / 2, beta) +

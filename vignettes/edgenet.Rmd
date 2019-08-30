@@ -69,6 +69,17 @@ In the multivariate Binomial case, the log-likelihood $\ell$ factorizes as:
 
 where $h$ is inverse of a link function, such as the logit or probit.
 
+### The Poisson case {-}
+
+In the multivariate Poisson case, the log-likelihood $\ell$ factorizes as:
+
+\begin{equation}
+\small
+\ell(\mathbf{B}) = \sum_{j}^q \sum_i^n \log \ \text{Pois}\left({y}_{i, j} \mid h\left(\mathbf{x}_{i,*} \cdot \beta_{*,j}\right)\right),
+\end{equation}
+
+where $h$ is inverse of a link function, such as the logarithm.
+
 ### Fitting a model to data
 
 The following section shows how we use `edgenet`. To fit a model, we first need load the library:
@@ -132,6 +143,21 @@ Y.binom <- do.call("cbind", lapply(seq(10), function(.) rbinom(n, 1, eta[,.])))
 fit <- edgenet(X=X, Y=Y, G.X=G.X, G.Y=G.Y, family=binomial)
 summary(fit)
 ```
+
+The Poisson case of course works analogously:
+
+```{r}
+# data
+X <- matrix(rnorm(n * p), n)
+B <- matrix(rnorm(p * q), p)
+
+eta <- 1 / (1 + exp(-X %*% B))
+Y.pois <- do.call("cbind", lapply(seq(10), function(.) rpois(n, eta[,.])))
+
+fit <- edgenet(X=X, Y=Y, G.X=G.X, G.Y=G.Y, family=poisson)
+summary(fit)
+```
+
 
 ### Model selection
 

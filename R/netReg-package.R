@@ -32,6 +32,8 @@
 #' @keywords package
 #'
 #' @useDynLib netReg, .registration = TRUE
+#'
+#' @import tensorflow
 #' @importFrom tensorflow tf
 #'
 #' @references

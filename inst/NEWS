@@ -1,7 +1,12 @@
-## Version 1.9.x
+## Version 1.9.2
+  - Adds Poisson family
+
+## Version 1.9.1
+  - Adds Binomial family
+
+## Version 1.9.0
   - Modernizes code base to use TensorFlow instead of custom C++ and DLib.
   - Drops large part of code base.
-  - Adds binomial family
 
 ## Version 1.3.0 - 1.8.0
   - Modernizes C base and adds more abstractions,

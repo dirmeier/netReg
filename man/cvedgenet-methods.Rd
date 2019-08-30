@@ -112,26 +112,32 @@ Y <- X \%*\% b + matrix(rnorm(100 * 10), 100)
 
 ## dont use affinity matrices and estimate lambda
 fit <- cv.edgenet(X=X, Y=Y, family=gaussian,
-                  maxit=10, optim.maxit=1)
+                  maxit=1, optim.maxit=1)
 ## only provide one matrix and estimate lambda
 fit <- cv.edgenet(X=X, Y=Y, G.X=G.X, psigx=1, family=gaussian,
-                  maxit=10, optim.maxit=1)
+                  maxit=1, optim.maxit=1)
 ## estimate only lambda with two matrices
 fit <- cv.edgenet(X=X, Y=Y, G.X=G.X, G.Y, psigx=1, psigy=1,
-                  family=gaussian, maxit=10, optim.maxit=1)
+                  family=gaussian, maxit=1, optim.maxit=1)
 ## estimate only psigx
 fit <- cv.edgenet(X=X, Y=Y, G.X=G.X, G.Y, lambda=1, psigy=1,
-                  family=gaussian, maxit=10, optim.maxit=1)
+                  family=gaussian, maxit=1, optim.maxit=1)
 ## estimate all parameters
 fit<- cv.edgenet(X=X, Y=Y, G.X=G.X, G.Y,
-                 family=gaussian, maxit=10, optim.maxit=1)
+                 family=gaussian, maxit=1, optim.maxit=1)
 ## if Y is vectorial, we cannot use an affinity matrix for Y
 fit<- cv.edgenet(X=X, Y=Y[, 1], G.X=G.X,
-                 family=gaussian, maxit=10, optim.maxit=1)
+                 family=gaussian, maxit=1, optim.maxit=1)
 
-# estimation works the same for binomial models
+# estimation for binomial models
 eta <- 1 / (1 + exp(-X \%*\% b))
 Y <- do.call("cbind", lapply(seq(10), function(.) rbinom(100, 1, eta[,.])))
 fit <- cv.edgenet(X=X, Y=Y, G.X=G.X, G.Y,
-                  family=binomial, maxit=10, optim.maxit=1)
+                  family=binomial, maxit=1, optim.maxit=1)
+
+# estimation for Poisson models
+eta <- exp(-X \%*\% b)
+Y <- do.call("cbind", lapply(seq(10), function(.) rpois(100, eta[,.])))
+fit <- cv.edgenet(X=X, Y=Y, G.X=G.X, G.Y,
+                  family=poisson, maxit=1, optim.maxit=1)
 }
