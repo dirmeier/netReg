@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">netReg</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.2</span>
       </span>
     </div>
 
@@ -148,7 +148,17 @@
 
     <pre class="usage"><span class='fu'>edgenet</span>(<span class='no'>X</span>, <span class='no'>Y</span>, <span class='kw'>G.X</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>G.Y</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>lambda</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>psigx</span> <span class='kw'>=</span> <span class='fl'>1</span>,
   <span class='kw'>psigy</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>thresh</span> <span class='kw'>=</span> <span class='fl'>1e-05</span>, <span class='kw'>maxit</span> <span class='kw'>=</span> <span class='fl'>1e+05</span>, <span class='kw'>learning.rate</span> <span class='kw'>=</span> <span class='fl'>0.01</span>,
-  <span class='kw'>family</span> <span class='kw'>=</span> <span class='no'>gaussian</span>)</pre>
+  <span class='kw'>family</span> <span class='kw'>=</span> <span class='no'>gaussian</span>)
+
+<span class='co'># S4 method for matrix,numeric</span>
+<span class='fu'>edgenet</span>(<span class='no'>X</span>, <span class='no'>Y</span>, <span class='kw'>G.X</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>G.Y</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>lambda</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>psigx</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>psigy</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>thresh</span> <span class='kw'>=</span> <span class='fl'>1e-05</span>,
+  <span class='kw'>maxit</span> <span class='kw'>=</span> <span class='fl'>1e+05</span>, <span class='kw'>learning.rate</span> <span class='kw'>=</span> <span class='fl'>0.01</span>, <span class='kw'>family</span> <span class='kw'>=</span> <span class='no'>gaussian</span>)
+
+<span class='co'># S4 method for matrix,matrix</span>
+<span class='fu'>edgenet</span>(<span class='no'>X</span>, <span class='no'>Y</span>, <span class='kw'>G.X</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>G.Y</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>lambda</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>psigx</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>psigy</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>thresh</span> <span class='kw'>=</span> <span class='fl'>1e-05</span>,
+  <span class='kw'>maxit</span> <span class='kw'>=</span> <span class='fl'>1e+05</span>, <span class='kw'>learning.rate</span> <span class='kw'>=</span> <span class='fl'>0.01</span>, <span class='kw'>family</span> <span class='kw'>=</span> <span class='no'>gaussian</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -167,13 +177,13 @@ of response variables. Each row is an observation vector.</p></td>
     </tr>
     <tr>
       <th>G.X</th>
-      <td><p>non-negativ affinity matrix for <code>n</code>, of dimensions
-(<code>p</code> x <code>p</code>) where <code>p</code> is the number of covariables <code>X</code></p></td>
+      <td><p>non-negativ affinity matrix for <code>X</code>, of dimensions
+(<code>p</code> x <code>p</code>) where <code>p</code> is the number of covariables</p></td>
     </tr>
     <tr>
       <th>G.Y</th>
-      <td><p>non-negativ affinity matrix for <code>n</code>, of dimensions
-(<code>q</code> x <code>q</code>) where <code>q</code> is the number of responses <code>Y</code></p></td>
+      <td><p>non-negativ affinity matrix for <code>Y</code>, of dimensions
+(<code>q</code> x <code>q</code>) where <code>q</code> is the number of responses</p></td>
     </tr>
     <tr>
       <th>lambda</th>
@@ -199,6 +209,10 @@ of <code>G.Y</code></p></td>
 (<code>integer</code>)</p></td>
     </tr>
     <tr>
+      <th>learning.rate</th>
+      <td><p>step size for Adam optimizer (<code>numerical</code>)</p></td>
+    </tr>
+    <tr>
       <th>family</th>
       <td><p>family of response, e.g. <em>gaussian</em> or <em>binomial</em></p></td>
     </tr>
@@ -207,12 +221,16 @@ of <code>G.Y</code></p></td>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>An object of class <code>edgenet</code></p>
-<dt>coefficients </dt><dd><p>the estimated (<code>p</code> x <code>q</code>)-dimensional
+<dt>beta </dt><dd><p>the estimated (<code>p</code> x <code>q</code>)-dimensional
  coefficient matrix B.hat</p></dd>
-<dt>intercept </dt><dd><p>the estimated (<code>q</code> x <code>1</code>)-dimensional
+<dt>alpha </dt><dd><p>the estimated (<code>q</code> x <code>1</code>)-dimensional
  vector of intercepts</p></dd>
-<dt>call </dt><dd><p>the call that produced the object</p></dd>
+<dt>parameters </dt><dd><p>regularization parameters</p></dd>
+<dt>lambda </dt><dd><p>regularization parameter lambda)</p></dd>
+<dt>psigx </dt><dd><p>regularization parameter psigx</p></dd>
+<dt>psigy </dt><dd><p>regularization parameter psigy</p></dd>
 <dt>family </dt><dd><p>the family of the response</p></dd>
+<dt>call </dt><dd><p>the call that produced the object</p></dd>
 
     
 
@@ -225,7 +243,6 @@ of <code>G.Y</code></p></td>
 
 <span class='co'># estimate the parameters of a Gaussian model</span>
 <span class='no'>Y</span> <span class='kw'>&lt;-</span> <span class='no'>X</span> <span class='kw'>%*%</span> <span class='no'>b</span> + <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/matrix'>matrix</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='fl'>100</span> * <span class='fl'>10</span>), <span class='fl'>100</span>)
-
 <span class='co'>## dont use affinity matrices</span>
 <span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>edgenet</span>(<span class='kw'>X</span><span class='kw'>=</span><span class='no'>X</span>, <span class='kw'>Y</span><span class='kw'>=</span><span class='no'>Y</span>, <span class='kw'>family</span><span class='kw'>=</span><span class='no'>gaussian</span>, <span class='kw'>maxit</span><span class='kw'>=</span><span class='fl'>10</span>)
 <span class='co'>## only provide one matrix</span>
@@ -235,11 +252,15 @@ of <code>G.Y</code></p></td>
 <span class='co'>## if Y is vectorial, we cannot use an affinity matrix for Y</span>
 <span class='no'>fit</span><span class='kw'>&lt;-</span> <span class='fu'>edgenet</span>(<span class='kw'>X</span><span class='kw'>=</span><span class='no'>X</span>, <span class='kw'>Y</span><span class='kw'>=</span><span class='no'>Y</span>[, <span class='fl'>1</span>], <span class='kw'>G.X</span><span class='kw'>=</span><span class='no'>G.X</span>, <span class='kw'>family</span><span class='kw'>=</span><span class='no'>gaussian</span>, <span class='kw'>maxit</span><span class='kw'>=</span><span class='fl'>10</span>)
 
-<span class='co'># estimation works the same for binomial models</span>
+<span class='co'># estimation for binomial models</span>
 <span class='no'>eta</span> <span class='kw'>&lt;-</span> <span class='fl'>1</span> / (<span class='fl'>1</span> + <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Log'>exp</a></span>(-<span class='no'>X</span> <span class='kw'>%*%</span> <span class='no'>b</span>))
 <span class='no'>Y</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/do.call'>do.call</a></span>(<span class='st'>"cbind"</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/lapply'>lapply</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq</a></span>(<span class='fl'>10</span>), <span class='kw'>function</span>(<span class='no'>.</span>) <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Binomial'>rbinom</a></span>(<span class='fl'>100</span>, <span class='fl'>1</span>, <span class='no'>eta</span>[,<span class='no'>.</span>])))
-<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>edgenet</span>(<span class='kw'>X</span><span class='kw'>=</span><span class='no'>X</span>, <span class='kw'>Y</span><span class='kw'>=</span><span class='no'>Y</span>, <span class='kw'>G.X</span><span class='kw'>=</span><span class='no'>G.X</span>, <span class='no'>G.Y</span>,
-               <span class='kw'>family</span><span class='kw'>=</span><span class='no'>binomial</span>, <span class='kw'>maxit</span><span class='kw'>=</span><span class='fl'>10</span>, <span class='kw'>optim.maxit</span><span class='kw'>=</span><span class='fl'>1</span>)</div><div class='output co'>#&gt; <span class='error'>Error in edgenet(X = X, Y = Y, G.X = G.X, G.Y, family = binomial, maxit = 10,     optim.maxit = 1): unused argument (optim.maxit = 1)</span></div></pre>
+<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>edgenet</span>(<span class='kw'>X</span><span class='kw'>=</span><span class='no'>X</span>, <span class='kw'>Y</span><span class='kw'>=</span><span class='no'>Y</span>, <span class='kw'>G.X</span><span class='kw'>=</span><span class='no'>G.X</span>, <span class='no'>G.Y</span>, <span class='kw'>family</span><span class='kw'>=</span><span class='no'>binomial</span>, <span class='kw'>maxit</span><span class='kw'>=</span><span class='fl'>1</span>)
+
+<span class='co'># estimation for Poisson models</span>
+<span class='no'>eta</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Log'>exp</a></span>(-<span class='no'>X</span> <span class='kw'>%*%</span> <span class='no'>b</span>)
+<span class='no'>Y</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/do.call'>do.call</a></span>(<span class='st'>"cbind"</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/lapply'>lapply</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq</a></span>(<span class='fl'>10</span>), <span class='kw'>function</span>(<span class='no'>.</span>) <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Poisson'>rpois</a></span>(<span class='fl'>100</span>, <span class='no'>eta</span>[,<span class='no'>.</span>])))
+<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>edgenet</span>(<span class='kw'>X</span><span class='kw'>=</span><span class='no'>X</span>, <span class='kw'>Y</span><span class='kw'>=</span><span class='no'>Y</span>, <span class='kw'>G.X</span><span class='kw'>=</span><span class='no'>G.X</span>, <span class='no'>G.Y</span>, <span class='kw'>family</span><span class='kw'>=</span><span class='no'>poisson</span>, <span class='kw'>maxit</span><span class='kw'>=</span><span class='fl'>1</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

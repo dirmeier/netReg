@@ -29,11 +29,11 @@ of covariables. Each row is an observation vector.}
 where \code{n} is the number of observations and \code{q} is the number
 of response variables. Each row is an observation vector.}
 
-\item{G.X}{non-negativ affinity matrix for \code{n}, of dimensions
-(\code{p} x \code{p}) where \code{p} is the number of covariables \code{X}}
+\item{G.X}{non-negativ affinity matrix for \code{X}, of dimensions
+(\code{p} x \code{p}) where \code{p} is the number of covariables}
 
-\item{G.Y}{non-negativ affinity matrix for \code{n}, of dimensions
-(\code{q} x \code{q}) where \code{q} is the number of responses \code{Y}}
+\item{G.Y}{non-negativ affinity matrix for \code{Y}, of dimensions
+(\code{q} x \code{q}) where \code{q} is the number of responses}
 
 \item{lambda}{\code{numerical} shrinkage parameter for LASSO.}
 

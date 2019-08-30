@@ -3,7 +3,7 @@ title: "edgenet: regularization with pair-wise interactions"
 output: 
     BiocStyle::html_document:
         toc: true
-        toc_depth: 2
+        toc_depth: 5
         toc_float: true
         number_sections: no
         theme: lumen
@@ -16,8 +16,7 @@ bibliography: netReg.bib
 
 ## Edgenet tutorial {-}
 
-This vignette covers penalization using `edgenet` as introduced in @dirmeier2018netreg. The model is a truncated version from @cheng2014graph. 
-`edgenet` uses networks to model pair-wise interactions of covariables and responses in generalized linear regression models. More specifically, `edgenet`
+This vignette covers penalization using `edgenet` as introduced in @dirmeier2018netreg. `edgenet` uses networks to model pair-wise interactions of covariables and responses in generalized linear regression models. More specifically, `edgenet`
 uses a $(p \times p)$-dimensional affinity matrix $\mathbf{G}_X \in \mathbb{R}_+^{p \times p}$ to model the interaction of $p$
 covariables in $\mathbf{X} \in \mathbb{R}^{n \times p}$ and analogously a matrix $\mathbf{G}_Y \in \mathbb{R}_+^{q \times q}$
 to model interactions of $q$ response variables in $\mathbf{Y} \in \mathbb{R}^{n \times q}$. The affinity matrices
@@ -49,7 +48,15 @@ Vectors $\boldsymbol \beta_{i, *}$ and $\boldsymbol \beta_{*, i}$ are the $i$-th
 
 The matrices $\mathbf{D}_{\mathbf{G}} - \mathbf{G}$ are the combinatorial (or normalized) graph Laplacians of an affinity matrix $\mathbf{G}$ [@chung1997spectral].
 
-### The Gaussian case {-}
+### Families
+
+So far `edgenet` supports the following families:
+
+- Gaussian,
+- Binomial,
+- Poisson.
+
+##### The Gaussian case {-}
 
 In the multivariate Gaussian case, the log-likelihood $\ell$ factorizes as:
 
@@ -58,7 +65,7 @@ In the multivariate Gaussian case, the log-likelihood $\ell$ factorizes as:
 \ell(\mathbf{B}) = \sum_{j}^q \sum_i^n \log \ \mathcal{N}({y}_{i, j} \mid \mathbf{x}_{i,*} \cdot \beta_{*,j}, \sigma_j^2)
 \end{equation}
 
-### The Binomial case {-}
+#### The Binomial case {-}
 
 In the multivariate Binomial case, the log-likelihood $\ell$ factorizes as:
 
@@ -67,9 +74,9 @@ In the multivariate Binomial case, the log-likelihood $\ell$ factorizes as:
 \ell(\mathbf{B}) = \sum_{j}^q \sum_i^n \log \ \text{Bernoulli}\left({y}_{i, j} \mid h\left(\mathbf{x}_{i,*} \cdot \beta_{*,j}\right)\right),
 \end{equation}
 
-where $h$ is inverse of a link function, such as the logit or probit.
+where $h$ is the inverse of a link function, such as the logit or probit.
 
-### The Poisson case {-}
+#### The Poisson case {-}
 
 In the multivariate Poisson case, the log-likelihood $\ell$ factorizes as:
 
@@ -78,7 +85,7 @@ In the multivariate Poisson case, the log-likelihood $\ell$ factorizes as:
 \ell(\mathbf{B}) = \sum_{j}^q \sum_i^n \log \ \text{Pois}\left({y}_{i, j} \mid h\left(\mathbf{x}_{i,*} \cdot \beta_{*,j}\right)\right),
 \end{equation}
 
-where $h$ is inverse of a link function, such as the logarithm.
+where $h$ is the inverse of a link function, such as the logarithm.
 
 ### Fitting a model to data
 
@@ -113,7 +120,7 @@ X <- matrix(rnorm(n * p), n)
 B <- matrix(rnorm(p * q), p)
 Y <- X %*% B + matrix(rnorm(n * q, 0, 0.1), n)
 
-fit <- edgenet(X=X, Y=Y, G.X=G.X, G.Y=G.Y, family=gaussian)
+fit <- edgenet(X=X, Y=Y, G.X=G.X, G.Y=G.Y, family=gaussian, maxit=10)
 summary(fit)
 ```
 
@@ -140,7 +147,7 @@ B <- matrix(rnorm(p * q), p)
 eta <- 1 / (1 + exp(-X %*% B))
 Y.binom <- do.call("cbind", lapply(seq(10), function(.) rbinom(n, 1, eta[,.])))
 
-fit <- edgenet(X=X, Y=Y, G.X=G.X, G.Y=G.Y, family=binomial)
+fit <- edgenet(X=X, Y=Y, G.X=G.X, G.Y=G.Y, family=binomial, maxit=10)
 summary(fit)
 ```
 
@@ -151,10 +158,10 @@ The Poisson case of course works analogously:
 X <- matrix(rnorm(n * p), n)
 B <- matrix(rnorm(p * q), p)
 
-eta <- 1 / (1 + exp(-X %*% B))
+eta <- exp(-X %*% B)
 Y.pois <- do.call("cbind", lapply(seq(10), function(.) rpois(n, eta[,.])))
 
-fit <- edgenet(X=X, Y=Y, G.X=G.X, G.Y=G.Y, family=poisson)
+fit <- edgenet(X=X, Y=Y.pois, G.X=G.X, G.Y=G.Y, family=poisson, maxit=10)
 summary(fit)
 ```
 
@@ -168,7 +175,7 @@ included model selection. We use Powell's BOBYQA algorithm
 Doing the model selection only requires calling `cv.edgenet`:
 
 ```{r}
-cv <- cv.edgenet(X=X, Y=Y, G.X=G.Y, G.Y, family=gaussian, optim.maxit=10)
+cv <- cv.edgenet(X=X, Y=Y, G.X=G.Y, G.Y, family=gaussian, optim.maxit=10, maxit=10)
 summary(cv)
 ```
 
@@ -223,7 +230,7 @@ $\mathbf{GY}$ is a $(q \times q)$ adjacency matrix representing protein-protein 
 We only use a smaller network in order to be able to print the results here.
 
 ```{r}
-fit <- edgenet(X=X, Y=Y, G.Y=G.Y, lambda=5, family=gaussian, maxit=100, thresh=1e-3)
+fit <- edgenet(X=X, Y=Y, G.Y=G.Y, lambda=5, family=gaussian, maxit=10, thresh=1e-3)
 summary(fit)
 ```
 

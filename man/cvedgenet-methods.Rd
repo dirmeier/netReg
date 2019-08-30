@@ -33,13 +33,13 @@ of covariables. Each row is an observation vector.}
 where \code{n} is the number of observations and \code{q} is the number
 of response variables Each row is an observation vector.}
 
-\item{G.X}{non-negativ affinity matrix for \code{n}, of dimensions
-(\code{p} x \code{p}) where \code{p} is the number of covariables \code{X}.
-Providing a graph \code{G.X} will optimize the regularization
-parameter \code{psi.gx}. If this is not desired just set \code{G.X} to
-\code{NULL}.}
+\item{G.X}{non-negativ affinity matrix for \code{X}, of dimensions
+(\code{p} x \code{p}) where \code{p} is the number of covariables.
+ Providing a graph \code{G.X} will optimize the regularization
+ parameter \code{psi.gx}. If this is not desired just set \code{G.X} to
+ \code{NULL}.}
 
-\item{G.Y}{non-negativ affinity matrix for \code{n}, of dimensions
+\item{G.Y}{non-negativ affinity matrix for \code{Y}, of dimensions
 (\code{q} x \code{q}) where \code{q} is the number of responses \code{Y}.
 Providing a graph \code{G.Y} will optimize the regularization
 parameter \code{psi.gy}. If this is not desired just set \code{G.Y} to
