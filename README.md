@@ -6,7 +6,7 @@
 [![codecov](https://codecov.io/gh/dirmeier/netReg/branch/master/graph/badge.svg)](https://codecov.io/gh/dirmeier/netReg)
 [![bioc](https://bioconductor.org/shields/years-in-bioc/netReg.svg)](https://bioconductor.org/packages/release/bioc/html/netReg.html)
 
-Network-regularized generalized linear regression models in `R`. Now with `TensorFlow`.
+Generalized linear regression models with network-regularization in `R`. Now with `TensorFlow`.
 
 ## About
 

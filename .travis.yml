@@ -6,24 +6,16 @@ cache: packages
 
 matrix:
   include:
-    - compiler: gcc
-      r: bioc-devel
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-5
-      env: COMPILER=g++-5
-    - compiler: gcc
-      r: bioc-release
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-5
-      env: COMPILER=g++-5
+    - r: bioc-devel 
+      compiler: gcc
+    - r: bioc-devel 
+      compiler: clang
+      os: osx
+    - r: bioc-release      
+      compiler: gcc
+    - r: bioc-release
+      compiler: clang
+      os: osx
 
 env:
   global:
