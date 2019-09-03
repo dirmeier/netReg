@@ -7,15 +7,9 @@ cache: packages
 matrix:
   include:
     - r: bioc-devel
-      compiler: gcc
-    - r: bioc-devel
-      compiler: clang
-      os: osx
+      compiler: gcc    
     - r: bioc-release
-      compiler: gcc
-    - r: bioc-release
-      compiler: clang
-      os: osx
+      compiler: gcc    
 
 env:
   global:
@@ -23,14 +17,15 @@ env:
     - R_CHECK_ARGS="--no-build-vignettes --no-manual --as-cran"
     - LINTR_COMMENT_BOT=false
 
-before_install:
-  - pip install --user numpy
-  - pip install --user scipy
-  - pip install --user 'tensorflow==1.14.0'
-  - pip install --user 'tensorflow-probability==0.5.0'
-
+before_script:
+  - sudo apt-get update
+  - sudo apt-get install python3
+  - pip install --upgrade --ignore-installed --user travis virtualenv  
+  - R -e 'tensorflow::install_tensorflow(extra_packages = "tensorflow-probability")'
+  - R -e 'tensorflow::tf_config()'
 
 r_packages:
+  - tensorflow
   - devtools
   - covr
   - testthat
