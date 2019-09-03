@@ -36,7 +36,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">netReg</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.3</span>
       </span>
     </div>
 
@@ -96,7 +96,7 @@
 <a href="#netreg" class="anchor"></a>netReg <img src="https://rawgit.com/dirmeier/netReg/master/inst/sticker/sticker.png" align="right" width="160px">
 </h1></div>
 
-<p>Network-regularized generalized linear regression models in <code>R</code>. Now with <code>TensorFlow</code>.</p>
+<p>Generalized linear regression models with network-regularization in <code>R</code>. Now with <code>TensorFlow</code>.</p>
 <div id="about" class="section level2">
 <h2 class="hasAnchor">
 <a href="#about" class="anchor"></a>About</h2>
@@ -132,15 +132,24 @@
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
+<p>Before installing the package, make sure to have these Python dependencies installed:</p>
+<ul>
+<li>
+<code>tensorflow==1.14.0</code>,</li>
+<li><code>tensorflow-probabiltiy==0.5.0</code></li>
+</ul>
+<p>The easiest way is probably to install <code>TensorFlow</code> from with <code>R</code> and then call:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">tensorflow<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/tensorflow/topics/install_tensorflow">install_tensorflow</a></span>(<span class="dt">extra_packages =</span> <span class="st">"tensorflow-probability"</span>)</a></code></pre></div>
+<p>That creates a <code>conda</code> environment (in case you use it) called <code>r-tensorflow</code> and installs the Python dependencies automatically.</p>
 <p>You can install and use <code>netReg</code> either from <a href="https://bioconductor.org/packages/release/bioc/html/netReg.html">Bioconductor</a>, or by downloading the latest <a href="https://github.com/dirmeier/netReg/releases">tarball</a>.</p>
 <p>If you want to use the <strong>recommended way</strong> using Bioconductor just call:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="op">&gt;</span><span class="st"> </span><span class="cf">if</span> (<span class="op">!</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/ns-load">requireNamespace</a></span>(<span class="st">"BiocManager"</span>, <span class="dt">quietly=</span><span class="ot">TRUE</span>))</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="op">&gt;</span><span class="st">   </span><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"BiocManager"</span>)</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="op">&gt;</span><span class="st"> </span>BiocManager<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/BiocManager/topics/install">install</a></span>(<span class="st">"netReg"</span>)</a>
-<a class="sourceLine" id="cb2-4" data-line-number="4">  </a>
-<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="op">&gt;</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(netReg)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="op">&gt;</span><span class="st"> </span><span class="cf">if</span> (<span class="op">!</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/ns-load">requireNamespace</a></span>(<span class="st">"BiocManager"</span>, <span class="dt">quietly=</span><span class="ot">TRUE</span>))</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="op">&gt;</span><span class="st">   </span><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"BiocManager"</span>)</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="op">&gt;</span><span class="st"> </span>BiocManager<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/BiocManager/topics/install">install</a></span>(<span class="st">"netReg"</span>)</a>
+<a class="sourceLine" id="cb3-4" data-line-number="4">  </a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="op">&gt;</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(netReg)</a></code></pre></div>
 <p>Installing the R package using the downloaded tarball works like this:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb3-1" data-line-number="1">$ <span class="ex">R</span> CMD install <span class="op">&lt;</span>netReg-x.y.z.tar.gz<span class="op">&gt;</span></a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><a class="sourceLine" id="cb4-1" data-line-number="1">$ <span class="ex">R</span> CMD install <span class="op">&lt;</span>netReg-x.y.z.tar.gz<span class="op">&gt;</span></a></code></pre></div>
 <p>I <strong>do not</strong> recommend using <code>devtools</code>, so please prefer tarballed releases over installing from the main branch.</p>
 </div>
 <div id="documentation" class="section level2">

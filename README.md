@@ -64,7 +64,7 @@ Before installing the package, make sure to have these Python dependencies insta
 
 The easiest way is probably to install `TensorFlow` from with `R` and then call:
 
-```{r}
+```r
 tensorflow::install_tensorflow(extra_packages = "tensorflow-probability")
 ```
 
@@ -85,7 +85,7 @@ If you want to use the **recommended way** using Bioconductor just call:
  
 Installing the R package using the downloaded tarball works like this:
 
-```bash
+```sh
 $ R CMD install <netReg-x.y.z.tar.gz>
 ```
 

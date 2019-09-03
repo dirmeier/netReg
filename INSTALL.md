@@ -30,7 +30,7 @@ or by downloading the latest [tarball](https://github.com/dirmeier/netReg/releas
 
 If you want to use the **recommended way** using Bioconductor just call:
 
-```r
+```{r}
 > if (!requireNamespace("BiocManager", quietly=TRUE))
 >   install.packages("BiocManager")
 > BiocManager::install("netReg")
@@ -40,6 +40,6 @@ If you want to use the **recommended way** using Bioconductor just call:
 
 Installing the R package using the downloaded tarball works like this:
 
-```bash
+```{bash}
 $ R CMD install <netReg-x.y.z.tar.gz>
 ```
