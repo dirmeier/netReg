@@ -6,12 +6,12 @@ cache: packages
 
 matrix:
   include:
-    - r: bioc-devel 
+    - r: bioc-devel
       compiler: gcc
-    - r: bioc-devel 
+    - r: bioc-devel
       compiler: clang
       os: osx
-    - r: bioc-release      
+    - r: bioc-release
       compiler: gcc
     - r: bioc-release
       compiler: clang
@@ -22,6 +22,13 @@ env:
     - R_BUILD_ARGS="--no-build-vignettes --no-manual"
     - R_CHECK_ARGS="--no-build-vignettes --no-manual --as-cran"
     - LINTR_COMMENT_BOT=false
+
+before_install:
+  - pip install --user numpy
+  - pip install --user scipy
+  - pip install --user 'tensorflow==1.14.0'
+  - pip install --user 'tensorflow-probability==0.5.0'
+
 
 r_packages:
   - devtools

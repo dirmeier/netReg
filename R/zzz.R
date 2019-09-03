@@ -26,11 +26,10 @@ tfp <- reticulate::import("tensorflow_probability", delay_load = TRUE)
 #' @importFrom tensorflow install_tensorflow
 .onLoad <- function(libname, pkgname)
 {
-    if (!reticulate::py_module_available("tensorflow") |
-        !reticulate::py_module_available("tensorflow_probability"))
-        tensorflow::install_tensorflow(
-            extra_packages = "tensorflow-probability")
-
+    if (!reticulate::py_module_available("tensorflow"))
+        warning("Coult not find tensorflow installation")
+    if (!reticulate::py_module_available("tensorflow_probability"))
+        warning("Coult not find tensorflow-probability installation")
     Sys.setenv(TF_CPP_MIN_LOG_LEVEL = 2)
     options(tensorflow.one_based_extract = TRUE)
 }
