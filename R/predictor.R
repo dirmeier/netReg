@@ -22,7 +22,6 @@
 #' @import tensorflow
 linear.predictor <- function(alpha, beta, x)
 {
-    #x.nrow <- x$get_shape()[1]$value
     eta <- tf$matmul(x, beta) + alpha
     eta
 }

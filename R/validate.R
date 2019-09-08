@@ -19,49 +19,53 @@
 
 
 #' @noRd
-cross.validate <- function(loss, nfolds, folds,
-                           x, y, gx, gy, family,
+cross.validate <- function(objective, train,
+                           x, y,
+                           x.tensor, y.tensor,
+                           lambda.tensor, psigx.tensor, psigy.tensor,
+                           nfolds, folds,
                            maxit=1000, thresh=1e-5, learning.rate=0.01)
 {
-    fn <- function(params, ..., sess, optimizer, alpha, beta)
+    fn <- function(params, ..., sess, alpha, beta)
     {
         params <- .get.params(params, ...)
         losses <- vector(mode = "double", length = nfolds)
 
-        for (fold in seq(nfolds))
-        {
-            x.train <- x[which(folds != fold), ]
+        for (fold in seq(nfolds)) {
+            x.train <- x[which(folds != fold),,drop=FALSE]
             y.train <- y[which(folds != fold),,drop=FALSE]
-            x.test  <- x[which(folds == fold), ]
+            x.test  <- x[which(folds == fold),,drop=FALSE]
             y.test  <- y[which(folds == fold),,drop=FALSE]
 
-            objective <- loss(alpha, beta,
-                              params[1], params[2], params[3],
-                              cast_float(x.train), cast_float(y.train))
-            train <- optimizer$minimize(objective)
+            sess$run(init_variables())
 
-            sess$run(tf$global_variables_initializer())
             target.old <- Inf
-
             for (step in seq(maxit))
             {
-                sess$run(train)
+                sess$run(train, feed_dict = dict(x.tensor = x.train,
+                                                 y.tensor = y.train,
+                                                 lambda.tensor=params[1],
+                                                 psigx.tensor=params[2],
+                                                 psigy.tensor=params[3]))
                 if (step %% 25 == 0) {
-                    target <- sess$run(objective)
+                    target <- sess$run(objective,
+                                       feed_dict = dict(x.tensor = x.test,
+                                                        y.tensor = y.test,
+                                                        lambda.tensor=params[1],
+                                                        psigx.tensor=params[2],
+                                                        psigy.tensor=params[3]))
                     if (sum(abs(target - target.old)) < thresh)
                         break
                     target.old <- target
                 }
             }
 
-            alpha <- sess$run(alpha)
-            beta <- sess$run(beta)
-
-            losses[fold] <- sess$run(loss(
-                constant_float(alpha),
-                constant_float(beta),
-                params[1], params[2], params[3],
-                cast_float(x.test), cast_float(y.test)))
+            losses[fold] <- sess$run(
+                objective, feed_dict = dict(x.tensor = x.test,
+                                            y.tensor = y.test,
+                                            lambda.tensor=params[1],
+                                            psigx.tensor=params[2],
+                                            psigy.tensor=params[3]))
         }
 
         sum(losses)

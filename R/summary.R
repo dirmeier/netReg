@@ -19,26 +19,30 @@
 
 
 
-.summary.edgenet <- function(x, parameter.string)
+.summary.edgenet <- function(x, obj.name)
 {
     cat(sprintf("'%s' object", class(x)[1]))
     cat("\n\ncall:\n")
     print(x$call)
-    cat(sprintf("\n%s:\n", parameter.string))
+    prmstr <- "parameters"
+    if (class(x)[-1] == "cv.edgenet")
+        prmstr <- paste("optimal", prmstr)
+    cat(sprintf("\n%s:\n", prmstr))
     print(x$parameters)
     cat("\nfamily: ", x$family$family)
     cat("\nlink: ", x$family$link, "\n")
-    cat(sprintf("\n-> call coef(%s) for coefficients", deparse(substitute(x))))
+    cat(sprintf("\n-> call coef(%s) for coefficients", obj.name))
 }
 
 
 #' @export
 #' @method summary edgenet
-summary.edgenet <- function(object, ...) .summary.edgenet(object, "parameters")
+summary.edgenet <- function(object, ...)
+    .summary.edgenet(object, deparse(substitute(object)))
 
 
 
 #' @export
 #' @method summary cv.edgenet
 summary.cv.edgenet <- function(object, ...)
-    .summary.edgenet(object, "optimal parameters")
+    .summary.edgenet(object, deparse(substitute(object)))

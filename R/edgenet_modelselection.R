@@ -203,7 +203,6 @@ setMethod(
         if (n < nfolds) nfolds <- n
         folds <- sample(rep(seq_len(10), length.out=n))
 
-        # estimate shrinkage parameters
         ret <- .cv.edgenet(
             X, Y, G.X, G.Y,
             lambda, psigx, psigy,
@@ -265,7 +264,6 @@ setMethod(
     psigx.tensor  <- placeholder(shape())
     psigy.tensor  <- placeholder(shape())
 
-    #estimate coefficients
     loss  <- edgenet.loss(gx, gy, family)
     objective <- loss(alpha, beta,
                       lambda.tensor, psigx.tensor, psigy.tensor,
@@ -273,51 +271,12 @@ setMethod(
 
     optimizer <- adam(learning.rate)
     train <- optimizer$minimize(objective)
-
-    fn <- function(params, ..., sess, alpha, beta)
-    {
-        params <- .get.params(params, ...)
-        losses <- vector(mode = "double", length = nfolds)
-
-        for (fold in seq(nfolds)) {
-            x.train <- x[which(folds != fold),,drop=FALSE]
-            y.train <- y[which(folds != fold),,drop=FALSE]
-            x.test  <- x[which(folds == fold),,drop=FALSE]
-            y.test  <- y[which(folds == fold),,drop=FALSE]
-
-            sess$run(init_variables())
-
-            target.old <- Inf
-            for (step in seq(maxit))
-            {
-                sess$run(train, feed_dict = dict(x.tensor = x.train,
-                                                 y.tensor = y.train,
-                                                 lambda.tensor=params[1],
-                                                 psigx.tensor=params[2],
-                                                 psigy.tensor=params[3]))
-                if (step %% 25 == 0) {
-                    target <- sess$run(objective,
-                                       feed_dict = dict(x.tensor = x.test,
-                                                        y.tensor = y.test,
-                                                        lambda.tensor=params[1],
-                                                        psigx.tensor=params[2],
-                                                        psigy.tensor=params[3]))
-                    if (sum(abs(target - target.old)) < thresh)
-                        break
-                    target.old <- target
-                }
-            }
-
-            losses[fold] <- sess$run(
-                objective, feed_dict = dict(x.tensor = x.test,
-                                            y.tensor = y.test,
-                                            lambda.tensor=params[1],
-                                            psigx.tensor=params[2],
-                                            psigy.tensor=params[3]))
-        }
-
-        sum(losses)
-    }
+    fn <- cross.validate(objective, train,
+                         x, y,
+                         x.tensor, y.tensor,
+                         lambda.tensor, psigx.tensor, psigy.tensor,
+                         nfolds, folds,
+                         maxit, thresh, learning.rate)
 
     with(session() %as% sess, {
         opt <- optim(fn, init.params, var.args=fixed.params,
@@ -337,6 +296,7 @@ setMethod(
     ret
 }
 
+
 #' @noRd
 .cv.edgenet.post.process <- function(opt, estimatable.params, fixed.params)
 {
@@ -344,6 +304,7 @@ setMethod(
                 "lambda"=NA_real_,
                 "psigx"=NA_real_,
                 "psigy"=NA_real_)
+
     for (i in seq(estimatable.params)) {
         nm <- names(estimatable.params)[i]
         ret[[ nm ]] <- opt$par[i]
@@ -360,6 +321,7 @@ setMethod(
         else
             names(pars)[i] <- paste(names(pars)[i], "(fixed)")
     }
+
     ret$parameters <- pars
     ret
 }
