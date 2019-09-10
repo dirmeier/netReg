@@ -8,10 +8,10 @@ test_that("gaussian without regularization reproduces stats::glm", {
     p <- 10 # covariate count
     q <- 1 # response count
 
-    X <- matrix(rnorm(n * p), n)
-    B <- matrix(rnorm(p * q), p)
+    X <- matrix(rnorm(n * p), n, p)
+    B <- matrix(rnorm(p * q), p, q)
 
-    Y <- X %*% B + matrix(rnorm(n * q, 0, 0.1), n)
+    Y <- X %*% B + matrix(rnorm(n * q, 0, 0.1), n, q)
 
     # fit glm
     fit.glm <- glm(Y ~ X, family=gaussian())
@@ -37,8 +37,8 @@ test_that("inverse gaussian without regularization reproduces stats::glm", {
     p <- 3 # covariate count
     q <- 1 # response count
 
-    X <- matrix(rnorm(n * p, 10), n)
-    B <- matrix(rnorm(p * q, 5), p) #matrix(c(1, 2, 3), p)
+    X <- matrix(rnorm(n * p, 10), n, p)
+    B <- matrix(rnorm(p * q, 5), p, q)
 
     mu <- 1 / sqrt(X %*% B)
     Y <- statmod::rinvgauss(n, mean=mu, shape=1)
