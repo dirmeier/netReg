@@ -186,11 +186,12 @@ setMethod(
     if (!is.null(gy))
         gy <- cast_float(laplacian_(gy))
 
+    # TODO: think about this
     alpha <- zero_vector(q) + 1
     beta  <- zero_matrix(p, q) + 1
 
-     #estimate coefficients
-    loss  <- edgenet.loss(gx, gy, family)
+    # estimate coefficients
+    loss <- edgenet.loss(gx, gy, family)
     objective <- loss(alpha, beta, lambda, psigx, psigy, x, y)
     res <- fit(objective, alpha, beta, maxit, learning.rate, thresh)
 
