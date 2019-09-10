@@ -27,6 +27,7 @@ edgenet.loss <- function(gx, gy, family) {
     "gaussian" = gaussian.loss,
     "binomial" = binomial.loss,
     "poisson" = poisson.loss,
+    "inverse.gaussian" = inverse.gaussian.loss,
     not.supported.yet(family)
   )
 

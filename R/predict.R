@@ -54,6 +54,15 @@ predict.poisson.edgenet <- function(object, newdata=NULL, ...)
 }
 
 
+#' @export
+#' @method predict inverse.gaussian.edgenet
+predict.inverse.gaussian.edgenet <- function(object, newdata=NULL, ...)
+{
+    mean <- function(x) 1 / sqrt(x)
+    .predict(object, newdata, mean, ...)
+}
+
+
 #' @noRd
 #' @importFrom stats coef
 .predict <- function(object, newdata, mean, ...)

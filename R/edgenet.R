@@ -186,8 +186,8 @@ setMethod(
     if (!is.null(gy))
         gy <- cast_float(laplacian_(gy))
 
-    alpha <- zero_vector(q)
-    beta  <- zero_matrix(p, q)
+    alpha <- zero_vector(q) + 1
+    beta  <- zero_matrix(p, q) + 1
 
      #estimate coefficients
     loss  <- edgenet.loss(gx, gy, family)

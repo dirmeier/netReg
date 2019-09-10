@@ -57,6 +57,24 @@ poisson.loss <- function(y, eta, ...)
 
 #' @noRd
 #' @importFrom tensorflow tf
+inverse.gaussian.loss <- function(y, eta, ...)
+{
+    obj <- 0
+
+    for (j in seq(ncol(y))) {
+        # loc := mu
+        # concentration := lambda (shape)
+        prob <- tfp$distributions$InverseGaussian(validate_args=TRUE,
+            loc = 1 / sqrt(eta[ ,j]), concentration = 1)
+        obj <- obj + tf$reduce_sum(prob$log_prob(y[,j]))
+    }
+
+    -obj
+}
+
+
+#' @noRd
+#' @importFrom tensorflow tf
 lasso <- function(lambda, beta)
 {
     lambda * tf$reduce_sum(tf$abs(beta))
@@ -77,6 +95,3 @@ elastic <- function(alpha, lambda, beta)
     lambda * (ridge((1 - alpha) / 2, beta) +
               lasso(alpha, beta))
 }
-
-
-
