@@ -55,6 +55,15 @@ predict.poisson.edgenet <- function(object, newdata=NULL, ...)
 
 
 #' @export
+#' @method predict beta.edgenet
+predict.beta.edgenet <- function(object, newdata=NULL, ...)
+{
+    mean <- function(x) 1 / (1 + exp(-x))
+    .predict(object, newdata, mean, ...)
+}
+
+
+#' @export
 #' @method predict inverse.gaussian.edgenet
 predict.inverse.gaussian.edgenet <- function(object, newdata=NULL, ...)
 {

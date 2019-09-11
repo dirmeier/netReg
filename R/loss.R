@@ -57,6 +57,31 @@ poisson.loss <- function(y, eta, ...)
 
 #' @noRd
 #' @importFrom tensorflow tf
+beta.loss <- function(y, eta, ...)
+{
+    obj <- 0
+    for (j in seq(ncol(y))) {
+        # concentration1 := p (alpha) = mean * phi
+        # concentration0 := q (beta) = (1. - mean) * phi
+        mu <- 1 / (1 + exp(-eta[ ,j]))
+        phi <- 1 # TODO: can this be estimated?
+
+        # reparametrize
+        p <- mu * phi
+        q <- (1 - mu) * phi
+
+        # compute loss
+        prob <- tfp$distributions$Beta(validate_args=TRUE,
+            concentration1 = p, concentration0 = q)
+        obj <- obj + tf$reduce_sum(prob$log_prob(y[,j]))
+    }
+
+    -obj
+}
+
+
+#' @noRd
+#' @importFrom tensorflow tf
 inverse.gaussian.loss <- function(y, eta, ...)
 {
     obj <- 0

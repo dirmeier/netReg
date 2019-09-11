@@ -27,6 +27,7 @@ edgenet.loss <- function(gx, gy, family) {
     "gaussian" = gaussian.loss,
     "binomial" = binomial.loss,
     "poisson" = poisson.loss,
+    "Beta regression" = beta.loss, # mgcv::betar()
     "inverse.gaussian" = inverse.gaussian.loss,
     not.supported.yet(family)
   )

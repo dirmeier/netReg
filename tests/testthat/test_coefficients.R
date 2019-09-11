@@ -58,3 +58,45 @@ test_that("inverse gaussian without regularization reproduces stats::glm", {
 
     testthat::expect_equal(coef.glm, coef.nr, tolerance=1)
 })
+
+test_that("beta without regularization reproduces betareg::betareg", {
+    # generate data
+    set.seed(1)
+
+    n <- 200
+    p <- 5
+    q <- 1
+
+    X <- matrix(rnorm(n * p), n, p)
+    B <- matrix(rnorm(p * q), p, q)
+
+    mu.prior <- mgcv::betar(theta=1, link="logit")$linkinv(X %*% B)
+    phi.prior <- 1
+
+    p.beta <- mu.prior * phi.prior
+    q.beta <- (1 - mu.prior) * phi.prior
+
+    Y <- matrix(sapply(1:length(p.beta), function(i) { rbeta(1, p.beta[i], q.beta[i]) }), n)
+
+    # truncate reponse to circumvent stability problems
+    eps <- .Machine$double.eps * 1e9 # see ?mgcv::betar  5
+    Y[Y > 1-eps] <- 1 - eps
+    Y[Y < eps] <- eps
+
+    # fit betareg
+    fit.br <- betareg::betareg(Y ~ X, link="logit")
+
+    # fit edgenet
+    fit.nr <- edgenet(
+        X, Y,
+        lambda=0, psigx=0, psigy=0,
+        family=mgcv::betar(theta=1, link="logit"))
+
+    # compare results
+    coef.br <- unname(coef(fit.br))
+    coef.nr <- unname(coef(fit.nr)[,'y[1]'])
+
+    coef.br <- coef.br[-length(coef.br)] # remove phi estimate
+
+    testthat::expect_equal(coef.br, coef.nr, tolerance=1)
+})
