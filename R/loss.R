@@ -64,7 +64,7 @@ inverse.gaussian.loss <- function(y, eta, ...)
     for (j in seq(ncol(y))) {
         # loc := mu
         # concentration := lambda (shape)
-        prob <- tfp$distributions$InverseGaussian(validate_args=TRUE,
+        prob <- tfp$distributions$InverseGaussian(
             loc = 1 / sqrt(eta[ ,j]), concentration = 1)
         obj <- obj + tf$reduce_sum(prob$log_prob(y[,j]))
     }
