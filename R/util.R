@@ -1,6 +1,6 @@
 # netReg: graph-regularized linear regression models.
 #
-# Copyright (C) 2015 - 2019 Simon Dirmeier
+# Copyright (C) 2015 - 2016 Simon Dirmeier
 #
 # This file is part of netReg.
 #
@@ -19,16 +19,16 @@
 
 
 #' @noRd
-intercept <- function(Y, X, B, n)
+intercept <-function(Y, X, B, n)
 {
-    (t(Y - X %*% B) %*% rep(1, n)) / n
+    ((t(Y - X %*% B) %*% rep(1, n)) / n)
 }
 
 
 #' @noRd
-intercept.matrix <- function(n, alpha)
+intercept.matrix <- function(n, mu)
 {
-    rep(1, n) %*% t(alpha)
+    rep(1, n) %*% t(mu)
 }
 
 
@@ -49,13 +49,14 @@ check.matrices <- function(X, Y)
 #' @noRd
 check.graphs <- function(X, Y, G.X, G.Y, psigx, psigy)
 {
+    stopifnot(is.matrix(G.X), is.matrix(G.Y))
     if (psigx != 0 & any(dim(G.X) != dim(X)[2]))
         stop("ncol(X) and dim(G.X) do not fit!")
     if (psigy != 0 & any(dim(G.Y) != dim(Y)[2]))
         stop("ncol(Y) and dim(G.Y) do not fit!")
-    if (is.matrix(G.X) & any(G.X < 0))
+    if (any(G.X < 0))
         stop("Some elements G.X<0; please use non-negative matrix!")
-    if (is.matrix(G.Y) & any(G.Y < 0))
+    if (any(G.Y < 0))
         stop("Some elements G.Y<0; please use non-negative matrix!")
 }
 
@@ -78,44 +79,4 @@ check.dimensions <- function(X, Y, n, p)
 is.positive.numeric <- function(d)
 {
     is.numeric(d) && d > 0
-}
-
-
-#' @noRd
-check.param <- function(param, comp, op, replace.with)
-{
-    if (!is.na(param) & op(param, comp)) {
-        warning(sprintf("%s < 0, setting to 0!", deparse(substitute(param))))
-        param <- replace.with
-    }
-
-    param
-}
-
-
-# shamelessly copied from stats::glm
-#' @noRd
-get.family <- function(family)
-{
-    if (is.character(family))
-        family <- get(family, mode = "function")
-    if (is.function(family))
-        family <- family()
-    if (is.null(family$family)) {
-        stop("'family' not recognized", call. = FALSE)
-    }
-
-    family
-}
-
-
-#' @noRd
-not.supported.yet <- function(family)
-{
-    fam <-
-    err <- sprintf(
-        "family '%s' not supported yet. choose 'gaussian'/'binomial' please.",
-        family
-    )
-    stop(err, call. =  FALSE)
 }

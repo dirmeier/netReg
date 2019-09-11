@@ -18,7 +18,7 @@
 # along with netReg. If not, see <http://www.gnu.org/licenses/>.
 
 
-context("edgenet")
+context("netReg edgenet")
 
 n   <- 100
 p   <- 10
@@ -92,12 +92,12 @@ if (requireNamespace("lassoshooting", quietly = TRUE)) {
     test_that("gaussian edgenet correct output with lambda 1", {
         l <- lassoshooting::lassoshooting(
             X, Y[,1], lambda=1, maxit=1000, thr=1e-5)$coefficients
-        testthat::expect_equal(l, e$beta[ ,1], 0.1)
+        testthat::expect_equal(l, e$coefficients[ ,1], 0.01)
     })
 
     test_that("gaussian edgenet correct output with lambda 0", {
         l <- lassoshooting::lassoshooting(
             X, Y[,1], lambda=0, maxit=1000, thr=1e-5)$coefficients
-        testthat::expect_equal(l, e0$beta[ ,1], 0.1)
+        testthat::expect_equal(l, e0$coefficients[ ,1], 0.01)
     })
 }

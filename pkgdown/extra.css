@@ -1,7 +1,7 @@
 /**
  * netReg: graph-regularized linear regression models.
  * <p>
- * Copyright (C) 2015 - 2019 Simon Dirmeier
+ * Copyright (C) 2015 - 2016 Simon Dirmeier
  * <p>
  * This file is part of netReg.
  * <p>
@@ -29,11 +29,6 @@
     margin-top: 30px;
     margin-bottom: 30px;
 }
-
-.page-header h1 {
-    margin-top: 30px;
-}
-
 
 code,pre {
   font-family:  "Inconsolata";

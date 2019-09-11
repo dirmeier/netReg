@@ -78,5 +78,3 @@ nbbuild/
 nbdist/
 nbactions.xml
 .Rproj.user
-doc
-Meta

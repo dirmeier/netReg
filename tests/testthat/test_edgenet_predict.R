@@ -18,7 +18,7 @@
 # along with netReg. If not, see <http://www.gnu.org/licenses/>.
 
 
-context("edgenet predict")
+context("netReg edgenet predict")
 
 n   <- 100
 p   <- 10

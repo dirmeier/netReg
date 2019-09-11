@@ -6,10 +6,24 @@ cache: packages
 
 matrix:
   include:
-    - r: bioc-devel
-      compiler: gcc    
-    - r: bioc-release
-      compiler: gcc    
+    - compiler: gcc
+      r: bioc-devel
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-5
+      env: COMPILER=g++-5
+    - compiler: gcc
+      r: bioc-release
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-5
+      env: COMPILER=g++-5
 
 env:
   global:
@@ -17,23 +31,42 @@ env:
     - R_CHECK_ARGS="--no-build-vignettes --no-manual --as-cran"
     - LINTR_COMMENT_BOT=false
 
-before_script:
-  - sudo apt-get update
-  - sudo apt-get install python3
-  - pip install --upgrade --ignore-installed --user travis virtualenv  
-  - R -e 'tensorflow::install_tensorflow(extra_packages = "tensorflow-probability")'
-  - R -e 'tensorflow::tf_config()'
-
 r_packages:
-  - tensorflow
   - devtools
   - covr
   - testthat
   - lintr
-  - styler
+
+addons:
+  apt:
+    packages:
+      - cmake
+      - cmake-data
+    sources:
+      - kalakris-cmake
 
 bioc_packages:
   - BiocCheck
+
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install --only-upgrade autoconf
+  - sudo apt-get install --only-upgrade automake
+  - sudo apt-get install --only-upgrade autotools-dev
+  - sudo apt-get install autoconf-archive
+  - sudo apt-get install libboost-all-dev
+  - sudo apt-get install libopenblas-dev liblapack-dev
+  - sudo apt-get install libarmadillo-dev
+  - sudo apt-get install libhdf5-dev
+
+before_script:
+  - autoreconf -vif
+
+after_script:
+  - mkdir build && cd build
+  - cmake ..
+  - make && make test
+  - ./netReg -h
 
 after_success:
   - tar -C .. -xf $PKG_TARBALL
