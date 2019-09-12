@@ -20,43 +20,41 @@
 
 #' @noRd
 #' @import tensorflow
-edgenet.loss <- function(gx, gy, family) {
-  family <- family$family
-  loss.function <- switch(
-    family,
-    "gaussian" = gaussian.loss,
-    "binomial" = binomial.loss,
-    "poisson" = poisson.loss,
-    not.supported.yet(family)
-  )
+edgenet.loss <- function(gx, gy, family)
+{
+    invlink <- family$linkinv
+    loss.function <- family$loss
 
-  loss <- function(alpha, beta, lambda, psigx, psigy, x, y) {
-    eta <- linear.predictor(alpha, beta, x)
-    obj <- loss.function(y, eta) + lasso(lambda, beta)
+    loss <- function(alpha, beta, lambda, psigx, psigy, x, y)
+    {
+        eta <- linear.predictor(alpha, beta, x)
+        obj <- loss.function(y, eta, invlink) + lasso(lambda, beta)
 
-    if (!is.null(gx)) {
-      obj <- obj + psigx * .edgenet.x.penalty(gx, beta)
+        if (!is.null(gx)) {
+            obj <- obj + psigx * .edgenet.x.penalty(gx, beta)
+        }
+        if (!is.null(gy)) {
+            obj <- obj + psigy * .edgenet.y.penalty(gy, beta)
+        }
+
+        obj
     }
-    if (!is.null(gy)) {
-      obj <- obj + psigy * .edgenet.y.penalty(gy, beta)
-    }
 
-    obj
-  }
-
-  loss
+    loss
 }
 
 
 #' @noRd
 #' @import tensorflow
-.edgenet.x.penalty <- function(gx, beta) {
-  tf$linalg$trace(tf$matmul(tf$transpose(beta), tf$matmul(gx, beta)))
+.edgenet.x.penalty <- function(gx, beta)
+{
+    tf$linalg$trace(tf$matmul(tf$transpose(beta), tf$matmul(gx, beta)))
 }
 
 
 #' @noRd
 #' @import tensorflow
-.edgenet.y.penalty <- function(gy, beta) {
-  tf$linalg$trace(tf$matmul(beta, tf$matmul(gy, tf$transpose(beta))))
+.edgenet.y.penalty <- function(gy, beta)
+{
+    tf$linalg$trace(tf$matmul(beta, tf$matmul(gy, tf$transpose(beta))))
 }

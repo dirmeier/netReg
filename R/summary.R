@@ -46,3 +46,9 @@ summary.edgenet <- function(object, ...)
 #' @method summary cv.edgenet
 summary.cv.edgenet <- function(object, ...)
     .summary.edgenet(object, deparse(substitute(object)))
+
+
+#' @export
+#' @method summary netReg.family
+summary.netReg.family <- function(object, ...) print(object)
+

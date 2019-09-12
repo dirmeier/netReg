@@ -45,6 +45,7 @@ data/Y_test*
 data/Y_train*
 docs/*
 examples/*
+INSTALL.md
 LICENSE
 ^NEWS.md
 pkgdown/*

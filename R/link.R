@@ -18,29 +18,37 @@
 # along with netReg. If not, see <http://www.gnu.org/licenses/>.
 
 
-#' @export
-#' @method print edgenet
-print.edgenet <- function(x,...)
+#' @noRd
+identity <- function(x) x
+
+<<<<<<< HEAD
+
+=======
+>>>>>>> 2ced4bf... Add family and link functions
+#' @noRd
+#' @importFrom tensorflow tf
+exp <- function(x) tf$maximum(tf$exp(x), tf$float32$min)
+
+<<<<<<< HEAD
+
+#' @noRd
+#' @importFrom tensorflow tf
+inverse <- function(x) 1 / x
+
+
+#' @noRd
+#' @importFrom tensorflow tf
+logistic <- function(x) 1 / (1 + tf$exp(-x))
+
+
+#' @noRd
+gcdf <- function(x)
 {
-    cat(sprintf("'%s' object", class(x)[1]))
+    std <- tfp$distributions$Normal(0, 1)
+    std$cdf(x)
 }
-
-
-#' @export
-#' @method print cv.edgenet
-print.cv.edgenet <- function(x, ...)
-{
-    cat(sprintf("'%s' object", class(x)[1]))
-    cat("\n\noptimal parameters:\n")
-    print(x$parameters)
-}
-
-
-#' @export
-#' @method print netReg.family
-print.netReg.family <- function(x, ...)
-{
-    cat(sprintf("family: %s\n", x$family))
-    cat(sprintf("link: %s\n", x$link))
-}
-
+=======
+#' @noRd
+#' @importFrom tensorflow tf
+inverse <- function(x) 1 / x
+>>>>>>> 2ced4bf... Add family and link functions
