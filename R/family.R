@@ -52,6 +52,9 @@ family.cv.edgenet <- function(object, ...) family.edgenet(object, ...)
 #'  See also \code{\link[stats:family]{stats::family}} for more details.
 #'
 #' @param link  name of the link function
+#' @param object  the function \code{family} accesses the family objects
+#'  which are stored within objects created by modelling functions
+#'   (e.g., \code{\link{edgenet}} or \code{\link{cv.edgenet}})
 #'
 #' @return An object of class \code{netReg.family}
 #'  \item{family }{ name of the family}
@@ -132,11 +135,7 @@ gamma <- function()  stop("not implemented")
 
 =======
 #'
-family <- function()
-{
-
-}
-
+family.edgenet <- function(object, ...)
 
 #' @rdname family-methods
 gaussian <- function(link = c("identity", "log", "inverse"))
