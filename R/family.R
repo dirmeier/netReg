@@ -19,6 +19,7 @@
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #' @method family cv.edgenet
 family.edgenet <- function(object, ...) object$family
 
@@ -29,6 +30,10 @@ family.cv.edgenet <- function(object, ...) family.edgenet(object, ...)
 
 =======
 >>>>>>> 2ced4bf... Add family and link functions
+=======
+
+
+>>>>>>> bc8280c... Add binomial
 #' @title Family objects for models
 #'
 #' @export
@@ -127,18 +132,58 @@ gamma <- function()  stop("not implemented")
 
 =======
 #'
+family <- function()
+{
+
+}
+
+
+#' @rdname family-methods
 gaussian <- function(link = c("identity", "log", "inverse"))
 {
     link <- match.arg(link)
-    linkinv <- switch(link,
+    linkinv <- switch(
+        link,
         "identity"=identity,
         "log"=exp,
         "inverse"=inverse,
         stop("did not recognize link function", call. = FALSE)
     )
 
+    .as.family(as.character(match.call()[[1]]), link, linkinv)
+}
+
+
+#' @rdname family-methods
+binomial <- function(link=c("logit", "probit", "log"))
+{
+    link <- match.arg(link)
+    linkinv <- switch(
+        link,
+        "logit"=logistic,
+        "log"=exp,
+        "probit"=gcdf,
+        stop("did not recognize link function", call. = FALSE)
+    )
+
+    .as.family(as.character(match.call()[[1]]), link, linkinv)
+}
+
+
+inverse.gaussian <- function() stop("not implemented")
+beta <- function()  stop("not implemented")
+poisson <- function()  stop("not implemented")
+gamma <- function()  stop("not implemented")
+<<<<<<< HEAD
+>>>>>>> 2ced4bf... Add family and link functions
+=======
+
+
+#' @noRd
+.as.family <- function(family, link, linkinv)
+{
     structure(
-        list(family="gaussian",
+        list(family=family,
              link=link,
              linkinv=linkinv),
         class="netReg.family"
@@ -146,12 +191,4 @@ gaussian <- function(link = c("identity", "log", "inverse"))
 }
 
 
-#' @rdname family-methods
-binomial <- function(link=c("logit", "probit", "log")) stop("not implemented")
-
-
-inverse.gaussian <- function() stop("not implemented")
-beta <- function()  stop("not implemented")
-poisson <- function()  stop("not implemented")
-gamma <- function()  stop("not implemented")
->>>>>>> 2ced4bf... Add family and link functions
+>>>>>>> bc8280c... Add binomial
