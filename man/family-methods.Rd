@@ -5,6 +5,7 @@
 \alias{gaussian}
 \alias{binomial}
 <<<<<<< HEAD
+<<<<<<< HEAD
 \alias{poisson}
 \title{Family objects for models}
 \usage{
@@ -14,15 +15,27 @@ binomial(link = c("logit", "probit", "log"))
 
 poisson(link = c("log"))
 =======
+=======
+\alias{poisson}
+>>>>>>> 6b5ee09... Replace old loss with family class
 \title{Family objects for models}
 \usage{
-gaussian(link = c("identity", "log", "inverse"))
+gaussian(link = c("identity"))
 
 binomial(link = c("logit", "probit", "log"))
+<<<<<<< HEAD
 >>>>>>> 2ced4bf... Add family and link functions
+=======
+
+poisson(link = c("log"))
+>>>>>>> 6b5ee09... Replace old loss with family class
 }
 \arguments{
 \item{link}{name of the link function}
+
+\item{object}{the function \code{family} accesses the family objects
+which are stored within objects created by modelling functions
+ (e.g., \code{\link{edgenet}} or \code{\link{cv.edgenet}})}
 }
 \value{
 An object of class \code{netReg.family}
@@ -39,6 +52,12 @@ Family objects provide a convenient way to specify the details
 =======
 }
 \description{
+<<<<<<< HEAD
 Family objects for models
 >>>>>>> 2ced4bf... Add family and link functions
+=======
+Family objects provide a convenient way to specify the details
+ of the models used by \code{netReg}.
+ See also \code{\link[stats:family]{stats::family}} for more details.
+>>>>>>> 6b5ee09... Replace old loss with family class
 }

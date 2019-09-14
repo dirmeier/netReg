@@ -20,8 +20,17 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 #' @method family cv.edgenet
 family.edgenet <- function(object, ...) object$family
+=======
+#' @method family cv.edgenet
+family.edgenet <- function(object, ...) object$family
+
+
+#' @method family cv.edgenet
+family.cv.edgenet <- function(object, ...) family.edgenet(object, ...)
+>>>>>>> 6b5ee09... Replace old loss with family class
 
 
 #' @method family cv.edgenet
@@ -41,6 +50,7 @@ family.cv.edgenet <- function(object, ...) family.edgenet(object, ...)
 #' @rdname family-methods
 #'
 <<<<<<< HEAD
+<<<<<<< HEAD
 #' @description Family objects provide a convenient way to specify the details
 #'  of the models used by \code{netReg}.
 =======
@@ -49,6 +59,10 @@ family.cv.edgenet <- function(object, ...) family.edgenet(object, ...)
 #' @description Family objects provide a convenient way to specify the details
 #'  of the models used by \code{netReg}}.
 >>>>>>> 2ced4bf... Add family and link functions
+=======
+#' @description Family objects provide a convenient way to specify the details
+#'  of the models used by \code{netReg}.
+>>>>>>> 6b5ee09... Replace old loss with family class
 #'  See also \code{\link[stats:family]{stats::family}} for more details.
 #'
 #' @param link  name of the link function
@@ -60,6 +74,7 @@ family.cv.edgenet <- function(object, ...) family.edgenet(object, ...)
 #'  \item{family }{ name of the family}
 #'  \item{link }{ name of the link function}
 #'  \item{linkinv }{ inverse link function}
+<<<<<<< HEAD
 <<<<<<< HEAD
 #'  \item{loss }{ loss function}
 gaussian <- function(link = c("identity"))
@@ -139,20 +154,25 @@ family.edgenet <- function(object, ...)
 
 #' @rdname family-methods
 gaussian <- function(link = c("identity", "log", "inverse"))
+=======
+gaussian <- function(link = c("identity"))
+>>>>>>> 6b5ee09... Replace old loss with family class
 {
     link <- match.arg(link)
     linkinv <- switch(
         link,
         "identity"=identity,
-        "log"=exp,
-        "inverse"=inverse,
         stop("did not recognize link function", call. = FALSE)
     )
 
-    .as.family(as.character(match.call()[[1]]), link, linkinv)
+    .as.family("gaussian",
+               link,
+               linkinv,
+               gaussian.loss)
 }
 
 
+#' @export
 #' @rdname family-methods
 binomial <- function(link=c("logit", "probit", "log"))
 {
@@ -165,13 +185,32 @@ binomial <- function(link=c("logit", "probit", "log"))
         stop("did not recognize link function", call. = FALSE)
     )
 
-    .as.family(as.character(match.call()[[1]]), link, linkinv)
+    .as.family("binomial",
+               link,
+               linkinv,
+               binomial.loss)
 }
 
 
+#' @export
+#' @rdname family-methods
+poisson <- function(link=c("log"))
+{
+    link <- match.arg(link)
+    linkinv <- switch(
+        link,
+        "log"=exp,
+        stop("did not recognize link function", call. = FALSE)
+    )
+
+    .as.family("poisson",
+               link,
+               linkinv,
+               poisson.loss)
+}
+
 inverse.gaussian <- function() stop("not implemented")
 beta <- function()  stop("not implemented")
-poisson <- function()  stop("not implemented")
 gamma <- function()  stop("not implemented")
 <<<<<<< HEAD
 >>>>>>> 2ced4bf... Add family and link functions
@@ -179,12 +218,13 @@ gamma <- function()  stop("not implemented")
 
 
 #' @noRd
-.as.family <- function(family, link, linkinv)
+.as.family <- function(family, link, linkinv, loss)
 {
     structure(
         list(family=family,
              link=link,
-             linkinv=linkinv),
+             linkinv=linkinv,
+             loss=loss),
         class="netReg.family"
     )
 }

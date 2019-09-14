@@ -13,16 +13,22 @@ S3method(summary,cv.edgenet)
 S3method(summary,edgenet)
 S3method(summary,netReg.family)
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 6b5ee09... Replace old loss with family class
 export(binomial)
 export(cv.edgenet)
 export(edgenet)
 export(gaussian)
 export(poisson)
+<<<<<<< HEAD
 =======
 export(cv.edgenet)
 export(edgenet)
 export(gaussian)
 >>>>>>> 2ced4bf... Add family and link functions
+=======
+>>>>>>> 6b5ee09... Replace old loss with family class
 import(Rcpp)
 import(nloptr)
 import(tensorflow)
