@@ -32,16 +32,13 @@ poisson(link = c("log"))
 }
 \arguments{
 \item{link}{name of the link function}
-
-\item{object}{the function \code{family} accesses the family objects
-which are stored within objects created by modelling functions
- (e.g., \code{\link{edgenet}} or \code{\link{cv.edgenet}})}
 }
 \value{
 An object of class \code{netReg.family}
  \item{family }{ name of the family}
  \item{link }{ name of the link function}
  \item{linkinv }{ inverse link function}
+<<<<<<< HEAD
 <<<<<<< HEAD
  \item{loss }{ loss function}
 }
@@ -50,6 +47,9 @@ Family objects provide a convenient way to specify the details
  of the models used by \code{netReg}.
  See also \code{\link[stats:family]{stats::family}} for more details.
 =======
+=======
+ \item{loss }{ loss function}
+>>>>>>> eb0409e... Remove object from family documentation and add INSTALL.md to biuldignore
 }
 \description{
 <<<<<<< HEAD
