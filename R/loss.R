@@ -71,7 +71,7 @@ beta.loss <- function(y, eta, ...)
         q <- (1 - mu) * phi
 
         # compute loss
-        prob <- tfp$distributions$Beta(validate_args=TRUE,
+        prob <- tfp$distributions$Beta(
             concentration1 = p, concentration0 = q)
         obj <- obj + tf$reduce_sum(prob$log_prob(y[,j]))
     }
