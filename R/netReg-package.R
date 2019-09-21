@@ -1,6 +1,6 @@
 # netReg: graph-regularized linear regression models.
 #
-# Copyright (C) 2015 - 2016 Simon Dirmeier
+# Copyright (C) 2015 - 2019 Simon Dirmeier
 #
 # This file is part of netReg.
 #
@@ -18,14 +18,13 @@
 # along with netReg. If not, see <http://www.gnu.org/licenses/>.
 
 
-#' netReg
+#' The \emph{netReg} package
 #'
 #' \emph{netReg} is a package for generalized linear regression that includes
 #' prior graphs in the models objective function.
 #'
-#' \emph{netReg} uses \emph{Armadillo}, \emph{OpenBLAS},
-#' \emph{BLAS} and \emph{LAPACK} for fast matrix computations and
-#' \emph{Dlib} for constrained derivate-free optimization.
+#' \emph{netReg} uses \emph{Armadillo} and \emph{TensorFlow} for
+#' fast matrix computations and optimization.
 #'
 #' @name netReg-package
 #' @author Simon Dirmeier | \email{simon.dirmeier@@gmx.de}
@@ -34,26 +33,26 @@
 #'
 #' @useDynLib netReg, .registration = TRUE
 #'
+#' @import tensorflow
+#' @importFrom tensorflow tf
+#'
 #' @references
 #'  Dirmeier, Simon and Fuchs, Christiane and Mueller, Nikola S and Theis,
 #'  Fabian J (2018),
 #'  netReg: Network-regularized linear models for biological association
 #'  studies. \cr
 #'  \emph{Bioinformatics}\cr \cr
-#'  Friedman J., Hastie T., Hoefling H. and Tibshirani R. (2007),
-#'  Pathwise coordinate optimization.\cr
-#'  \emph{The Annals of Applied Statistics}\cr \cr
-#'  Friedman J., Hastie T. and Tibshirani R. (2010),
-#'  Regularization Paths for Generalized Linear Models
-#'   via Coordinate Descent. \cr
-#'  \emph{Journal of Statistical Software}\cr \cr
-#'  Fu W. J. (1998),  Penalized Regression: The Bridge Versus the Lasso.\cr
-#'  \emph{Journal of Computational and Graphical Statistics}\cr \cr
-#'  Cheng W. and Wang W. (2014), Graph-regularized dual Lasso
-#'   for robust eQTL mapping.\cr
-#'  \emph{Bioinformatics}\cr \cr
+#'  Abadi, Martín et al. (2016),
+#'  Tensorflow: A system for large-scale machine learning. \cr
+#'  \emph{12th USENIX Symposium on Operating Systems Design and Implementation (OSDI 16)}\cr \cr
 #'  Powell M.J.D. (2009),
 #'  The BOBYQA algorithm for bound constrained optimization
 #'   without derivatives.\cr
 #'  \url{http://www.damtp.cam.ac.uk/user/na/NA_papers/NA2009_06.pdf}
+#'  Eddelbuettel, Dirk and Sanderson, Conrad (2014),
+#'  RcppArmadillo: Accelerating R with high-performance C++ linear algebra.
+#'  \emph{Computational Statistics & Data Analysis}
 NULL
+
+#' @importFrom utils globalVariables
+utils::globalVariables("sess")

@@ -18,7 +18,7 @@
 # along with netReg. If not, see <http://www.gnu.org/licenses/>.
 
 
-context("netReg utility")
+context("utility")
 
 Y <- matrix(1 + 1 : 10, 10, 1)
 X <- matrix(1 : 10, 10, 1)

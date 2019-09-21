@@ -2,10 +2,12 @@ navbar:
   title: "netReg"
   type: inverse
   left:
-    - text: "R"
-      href: articles/netReg_R.html
-    - text: "C++"
-      href: articles/netReg_commandline.html
+    - text: "Vignettes"
+      menu:
+        - text: "Edgenet"
+          href: articles/edgenet.html
+    - text: "Reference"
+      href: reference/index.html
     - text: "News"
       href: news/index.html
   right:

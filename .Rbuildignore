@@ -44,8 +44,12 @@ data/Y.tsv
 data/Y_test*
 data/Y_train*
 docs/*
+examples/*
+LICENSE
 ^NEWS.md
 pkgdown/*
 tests/c++/
 vignettes/netReg_R.Rmd
 vignettes/netReg_commandline.Rmd
+^doc$
+^Meta$

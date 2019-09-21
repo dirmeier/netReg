@@ -1,0 +1,250 @@
+---
+title: "edgenet: regularization with pair-wise interactions"
+output: 
+    BiocStyle::html_document:
+        toc: true
+        toc_depth: 5
+        toc_float: true
+        number_sections: no
+        theme: lumen
+vignette: >
+ %\VignetteIndexEntry{edgenet}
+ %\VignetteEngine{knitr::rmarkdown}
+ %\usepackage[utf8]{inputenc}
+bibliography: netReg.bib
+---
+
+## Edgenet tutorial {-}
+
+This vignette covers penalization using `edgenet` as introduced in @dirmeier2018netreg. `edgenet` uses networks to model pair-wise interactions of covariables and responses in generalized linear regression models. More specifically, `edgenet`
+uses a $(p \times p)$-dimensional affinity matrix $\mathbf{G}_X \in \mathbb{R}_+^{p \times p}$ to model the interaction of $p$
+covariables in $\mathbf{X} \in \mathbb{R}^{n \times p}$ and analogously a matrix $\mathbf{G}_Y \in \mathbb{R}_+^{q \times q}$
+to model interactions of $q$ response variables in $\mathbf{Y} \in \mathbb{R}^{n \times q}$. The affinity matrices
+are used for regularization of regression coefficients like this:
+
+\begin{equation}
+\small
+\begin{split}
+\hat{\mathbf{B}} = \arg \min_{\mathbf{B}} \,
+ & -\ell(\mathbf{B}) + \lambda ||\mathbf{B} ||_1  \\  & +
+      		  \frac{\psi_1}{2}  \sum_{i=1}^p \sum_{j=1}^q
+      		   || \boldsymbol \beta_{i,*} - \boldsymbol \beta_{j,*} ||_2^2 (\mathbf{G}_X)_{i,j}    \\  & +
+ \frac{\psi_2}{2}  \sum_{i=1}^p \sum_{j=1}^q || \boldsymbol \beta_{*,i} - \boldsymbol \beta_{*,j} ||_2^2 (\mathbf{G}_Y)_{i,j} \\
+ = \arg \min_{\mathbf{B}} \,
+ &  -\ell(\mathbf{B})  + \lambda ||\mathbf{B} ||_1  \\  & +
+ \psi_1 \text{tr}\left( \mathbf{B}^T \left( \mathbf{D}_{\mathbf{G}_X} - \mathbf{G}_X \right) \mathbf{B}  \right) \\  & +
+ \psi_2 \text{tr}\left( \mathbf{B} \left( \mathbf{D}_{\mathbf{G}_Y} - \mathbf{G}_Y  \right) \mathbf{B}^T  \right)
+\end{split}
+\label{equ:graphreg}
+\end{equation}
+
+Matrix $\mathbf{B} \in \mathbb{R}^{(p + 1) \times q}$ is the matrix of regression coefficients to be estimated (including an intercept).
+Vectors $\boldsymbol \beta_{i, *}$ and $\boldsymbol \beta_{*, i}$ are the $i$-th row or column of $\mathbf{B}$, respectively. Shrinkage $\lambda$, $\psi_1$ and $\psi_2$ are fixed or need to be estimated (e.g., using cross-validation). The log-likelihood function $\ell(\mathbf{B})$ over $q$ exponential family response variables is defined as:
+
+\begin{equation}
+\small
+\ell(\mathbf{B}) = \sum_{j}^q \sum_i^n \log \ f_{\beta_{*,j}}({y}_{i, j} \mid \mathbf{x}_{i,*})
+\end{equation}
+
+The matrices $\mathbf{D}_{\mathbf{G}} - \mathbf{G}$ are the combinatorial (or normalized) graph Laplacians of an affinity matrix $\mathbf{G}$ [@chung1997spectral].
+
+### Families
+
+So far `edgenet` supports the following families:
+
+- Gaussian,
+- Binomial,
+- Poisson.
+
+##### The Gaussian case {-}
+
+In the multivariate Gaussian case, the log-likelihood $\ell$ factorizes as:
+
+\begin{equation}
+\small
+\ell(\mathbf{B}) = \sum_{j}^q \sum_i^n \log \ \mathcal{N}({y}_{i, j} \mid \mathbf{x}_{i,*} \cdot \beta_{*,j}, \sigma_j^2)
+\end{equation}
+
+#### The Binomial case {-}
+
+In the multivariate Binomial case, the log-likelihood $\ell$ factorizes as:
+
+\begin{equation}
+\small
+\ell(\mathbf{B}) = \sum_{j}^q \sum_i^n \log \ \text{Bernoulli}\left({y}_{i, j} \mid h\left(\mathbf{x}_{i,*} \cdot \beta_{*,j}\right)\right),
+\end{equation}
+
+where $h$ is the inverse of a link function, such as the logit or probit.
+
+#### The Poisson case {-}
+
+In the multivariate Poisson case, the log-likelihood $\ell$ factorizes as:
+
+\begin{equation}
+\small
+\ell(\mathbf{B}) = \sum_{j}^q \sum_i^n \log \ \text{Pois}\left({y}_{i, j} \mid h\left(\mathbf{x}_{i,*} \cdot \beta_{*,j}\right)\right),
+\end{equation}
+
+where $h$ is the inverse of a link function, such as the logarithm.
+
+### Fitting a model to data
+
+The following section shows how we use `edgenet`. To fit a model, we first need load the library:
+
+```{r}
+library(netReg)
+```
+
+Set some parameters and create affinity matrices:
+
+```{r}
+# parameters
+n <- 100
+p <- 10
+q <- 10
+
+# affinity matrices
+G.X <- abs(rWishart(1, 10, diag(p))[,,1])
+G.Y <- abs(rWishart(1, 10, diag(q))[,,1])
+```
+
+We created the affinity matrix absolutely random, although in practice a *real*
+(biological) observed affinity matrix should be used, because in the end the
+affinity matrix decides the shrinkage of the coefficients.
+
+The actual fit is straightforward. We create Gaussian data first and then fit the model:
+
+```{r}
+# data
+X <- matrix(rnorm(n * p), n)
+B <- matrix(rnorm(p * q), p)
+Y <- X %*% B + matrix(rnorm(n * q, 0, 0.1), n)
+
+fit <- edgenet(X=X, Y=Y, G.X=G.X, G.Y=G.Y, family=gaussian, maxit=10)
+summary(fit)
+```
+
+The `fit` object contains information about coefficients, intercepts etc.
+
+```{r}
+coef(fit)[,1:5]
+```
+
+Having the coefficients estimated we are able to predict novel data-sets:
+
+```{r}
+pred  <- predict(fit, X)
+pred[1:5, 1:5]
+```
+
+The binomial case is the same only with a different `family` argument:
+
+```{r}
+# data
+X <- matrix(rnorm(n * p), n)
+B <- matrix(rnorm(p * q), p)
+
+eta <- 1 / (1 + exp(-X %*% B))
+Y.binom <- do.call("cbind", lapply(seq(10), function(.) rbinom(n, 1, eta[,.])))
+
+fit <- edgenet(X=X, Y=Y, G.X=G.X, G.Y=G.Y, family=binomial, maxit=10)
+summary(fit)
+```
+
+The Poisson case of course works analogously:
+
+```{r}
+# data
+X <- matrix(rnorm(n * p), n)
+B <- matrix(rnorm(p * q), p)
+
+eta <- exp(-X %*% B)
+Y.pois <- do.call("cbind", lapply(seq(10), function(.) rpois(n, eta[,.])))
+
+fit <- edgenet(X=X, Y=Y.pois, G.X=G.X, G.Y=G.Y, family=poisson, maxit=10)
+summary(fit)
+```
+
+
+### Model selection
+
+In most cases we do not have the optimal shrinkage parameters $\lambda$,
+$\psi_{1}$ and $\psi_{2}$. For these settings you can use `netReg`'s
+included model selection. We use Powell's BOBYQA algorithm
+[@powell2009bobyqa] for gradient-free optimization in a coss-validation framework.
+Doing the model selection only requires calling `cv.edgenet`:
+
+```{r}
+cv <- cv.edgenet(X=X, Y=Y, G.X=G.Y, G.Y, family=gaussian, optim.maxit=10, maxit=10)
+summary(cv)
+```
+
+The cross-validation and BOBYQA is quite computationally intensive, so we set `optim.maxit` to $10$.
+I recommend using `TensorFlow` on a GPU for that, since `edgenet` 
+needs to compute many matrix multiplications.
+
+The `cv.edgenet` object also contains a fit with the optimal parameters.
+
+```{r}
+summary(cv$fit)
+```
+
+You can obtain the coefficients like this:
+
+```{r}
+coef(cv)[,1:5]
+```
+
+Furthermore, you can also directly predict using a `cv.edgenet` object:
+
+```{r}
+pred  <- predict(cv, X)
+pred[1:5, 1:5]
+```
+
+
+### A biological example
+
+This section explains how to fit a linear model and do parameter estimation.
+
+At first we load the library and some data:
+
+```{r, eval=FALSE}
+library(netReg)
+data("yeast")
+
+ls(yeast)
+
+X <- yeast$X
+Y <- yeast$Y
+G.Y <- yeast$GY
+```
+
+The *yeast* data $\mathbf{X}$ and $\mathbf{Y}$ set is taken and adopted from [@brem2005genetic], [@storey2005multiple], and [@cheng2014graph].
+$\mathbf{GY}$ is taken from [BioGRID](https://thebiogrid.org/downloads/archives/Release%20Archive/BIOGRID-3.4.150/BIOGRID-ORGANISM-3.4.150.tab.zip).
+
+$\mathbf{X}$ is a $(n \times p)$ matrix of genetic markers where $n$ is the number of samples (112) and $p$ is the number of markers.
+$\mathbf{Y}$ is a $(n \times q)$ matrix of expression values for $q$ yeast genes. $n$ is again the numer of samples (112).
+$\mathbf{GY}$ is a $(q \times q)$ adjacency matrix representing protein-protein interactions for the $q$ response variables.
+
+We only use a smaller network in order to be able to print the results here.
+
+```{r}
+fit <- edgenet(X=X, Y=Y, G.Y=G.Y, lambda=5, family=gaussian, maxit=10, thresh=1e-3)
+summary(fit)
+```
+
+For the response variables we use an affinity matrix that represents *biological relationships* with $\mathbf{GY}$.
+We promote sparsity by setting $\lambda = 5$ and put a weak (default) penalty on similar coefficients by setting $\psi_{gy} = 1$.
+Other than that we used standard parameters in this case.
+
+The `fit` object contains information about coefficients and intercepts. Having the coefficients estimated we are able to
+predict novel data-sets:
+
+```{r}
+X.new <- matrix(rnorm(10 * ncol(X)), 10)
+pred  <- predict(fit, X.new)
+pred[1:10, 1:5]
+```
+
+## References

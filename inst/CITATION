@@ -1,20 +1,21 @@
 bibentry(
-  bibtype = "Article",
-  title        = "netReg: Network-regularized linear models for biological association studies",
-  author       = personList(as.person("Simon Dirmeier"),
-                            as.person("Christiane Fuchs"),
-                            as.person("Nikola S Mueller"),
-                            as.person("Fabian J Theis")),
+  bibtype = "article",
+  title        = "netReg: network-regularized linear models for biological association studies",
+  author       = personList(person("Simon", "Dirmeier"),
+                            person("Christiane", "Fuchs"),
+                            person("Nikola S", "Mueller"),
+                            person("Fabian J", "Theis")),
   journal      = "Bioinformatics",
-  year         = "2018",
+  year         = "2017",
   volume       = "34",
   number       = "5",
   pages        = "896–-898",
   doi          = "10.1093/bioinformatics/btx677",
   header       = "To cite netReg in publications please use:",
   textVersion  =
-  paste("Dirmeier, Simon and Fuchs, Christiane and Mueller, Nikola S and Theis, Fabian J (2018).",
-        "netReg: Network-regularized linear models for biological association studies.",
+  paste("Dirmeier, Simon and Fuchs, Christiane and Mueller, Nikola S and Theis, Fabian J (2017).",
+        "netReg: network-regularized linear models for biological association studies.",
         "Bioinformatics, 34(5), 896-898.",
         "10.1093/bioinformatics/btx677.")
 )
+

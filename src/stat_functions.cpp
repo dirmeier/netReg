@@ -22,18 +22,27 @@
  * @email: simon.dirmeier@gmx.de
  */
 
-#include "stat_functions.hpp"
 
-namespace netreg
+// [[Rcpp::depends(RcppArmadillo)]]
+#include <RcppArmadillo.h>
+// [[Rcpp::plugins(cpp11)]]
+
+//' Compute the estimated intercept of a linear model
+//'
+//' @noRd
+//' @param x matrix of covariates
+//' @param y matrix of responses
+//' @param y matrix of estimated coefficients (without intercept)
+//' @return returns a matrix
+// [[Rcpp::interfaces(r, cpp)]]
+// [[Rcpp::export]]
+arma::Col<double> intercept_(arma::Mat<double>& X,
+                            arma::Mat<double>& Y,
+                            arma::Mat<double>& B)
 {
-    arma::Col<double> intercept(arma::Mat<double>& X,
-                                arma::Mat<double>& Y,
-                                arma::Mat<double>& B)
-    {
-        arma::Mat<double> terr = (Y - (X * B)).t();
-        arma::Col<double> rep(Y.n_rows, arma::fill::ones);
-        arma::Col<double> intr = (terr * rep) / Y.n_rows;
+    arma::Mat<double> terr = (Y - (X * B)).t();
+    arma::Col<double> rep(Y.n_rows, arma::fill::ones);
+    arma::Col<double> intr = (terr * rep) / Y.n_rows;
 
-        return intr;
-    }
+    return intr;
 }
