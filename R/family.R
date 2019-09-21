@@ -18,51 +18,24 @@
 # along with netReg. If not, see <http://www.gnu.org/licenses/>.
 
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-#' @method family cv.edgenet
-family.edgenet <- function(object, ...) object$family
-=======
 #' @method family cv.edgenet
 family.edgenet <- function(object, ...) object$family
 
 
 #' @method family cv.edgenet
-family.cv.edgenet <- function(object, ...) family.edgenet(object, ...)
->>>>>>> 6b5ee09... Replace old loss with family class
-
 
 #' @method family cv.edgenet
 family.cv.edgenet <- function(object, ...) family.edgenet(object, ...)
 
 
-=======
->>>>>>> 2ced4bf... Add family and link functions
-=======
-
-
->>>>>>> bc8280c... Add binomial
 #' @title Family objects for models
 #'
 #' @export
 #' @docType methods
 #' @rdname family-methods
 #'
-<<<<<<< HEAD
-<<<<<<< HEAD
 #' @description Family objects provide a convenient way to specify the details
 #'  of the models used by \code{netReg}.
-=======
-#' @export
-#'
-#' @description Family objects provide a convenient way to specify the details
-#'  of the models used by \code{netReg}}.
->>>>>>> 2ced4bf... Add family and link functions
-=======
-#' @description Family objects provide a convenient way to specify the details
-#'  of the models used by \code{netReg}.
->>>>>>> 6b5ee09... Replace old loss with family class
 #'  See also \code{\link[stats:family]{stats::family}} for more details.
 #'
 #' @param link  name of the link function
@@ -71,9 +44,6 @@ family.cv.edgenet <- function(object, ...) family.edgenet(object, ...)
 #'  \item{family }{ name of the family}
 #'  \item{link }{ name of the link function}
 #'  \item{linkinv }{ inverse link function}
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 #'  \item{loss }{ loss function}
 gaussian <- function(link = c("identity"))
 {
@@ -144,91 +114,3 @@ gamma <- function()  stop("not implemented")
         class="netReg.family"
     )
 }
-
-
-=======
-#'
-family.edgenet <- function(object, ...)
-
-#' @rdname family-methods
-gaussian <- function(link = c("identity", "log", "inverse"))
-=======
-=======
-#'  \item{loss }{ loss function}
->>>>>>> eb0409e... Remove object from family documentation and add INSTALL.md to biuldignore
-gaussian <- function(link = c("identity"))
->>>>>>> 6b5ee09... Replace old loss with family class
-{
-    link <- match.arg(link)
-    linkinv <- switch(
-        link,
-        "identity"=identity,
-        stop("did not recognize link function", call. = FALSE)
-    )
-
-    .as.family("gaussian",
-               link,
-               linkinv,
-               gaussian.loss)
-}
-
-
-#' @export
-#' @rdname family-methods
-binomial <- function(link=c("logit", "probit", "log"))
-{
-    link <- match.arg(link)
-    linkinv <- switch(
-        link,
-        "logit"=logistic,
-        "log"=exp,
-        "probit"=gcdf,
-        stop("did not recognize link function", call. = FALSE)
-    )
-
-    .as.family("binomial",
-               link,
-               linkinv,
-               binomial.loss)
-}
-
-
-#' @export
-#' @rdname family-methods
-poisson <- function(link=c("log"))
-{
-    link <- match.arg(link)
-    linkinv <- switch(
-        link,
-        "log"=exp,
-        stop("did not recognize link function", call. = FALSE)
-    )
-
-    .as.family("poisson",
-               link,
-               linkinv,
-               poisson.loss)
-}
-
-inverse.gaussian <- function() stop("not implemented")
-beta <- function()  stop("not implemented")
-gamma <- function()  stop("not implemented")
-<<<<<<< HEAD
->>>>>>> 2ced4bf... Add family and link functions
-=======
-
-
-#' @noRd
-.as.family <- function(family, link, linkinv, loss)
-{
-    structure(
-        list(family=family,
-             link=link,
-             linkinv=linkinv,
-             loss=loss),
-        class="netReg.family"
-    )
-}
-
-
->>>>>>> bc8280c... Add binomial

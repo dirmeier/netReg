@@ -21,20 +21,11 @@
 #' @noRd
 identity <- function(x) x
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-=======
->>>>>>> 2ced4bf... Add family and link functions
-=======
-
->>>>>>> bc8280c... Add binomial
 #' @noRd
 #' @importFrom tensorflow tf
 exp <- function(x) tf$maximum(tf$exp(x), tf$float32$min)
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 
 #' @noRd
 #' @importFrom tensorflow tf
@@ -52,27 +43,4 @@ gcdf <- function(x)
     std <- tfp$distributions$Normal(0, 1)
     std$cdf(x)
 }
-=======
-#' @noRd
-#' @importFrom tensorflow tf
-inverse <- function(x) 1 / x
->>>>>>> 2ced4bf... Add family and link functions
-=======
 
-#' @noRd
-#' @importFrom tensorflow tf
-inverse <- function(x) 1 / x
-
-
-#' @noRd
-#' @importFrom tensorflow tf
-logistic <- function(x) 1 / (1 + tf$exp(-x))
-
-
-#' @noRd
-gcdf <- function(x)
-{
-    std <- tfp$distributions$Normal(0, 1)
-    std$cdf(x)
-}
->>>>>>> bc8280c... Add binomial

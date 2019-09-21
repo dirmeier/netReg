@@ -4,8 +4,6 @@
 \name{gaussian}
 \alias{gaussian}
 \alias{binomial}
-<<<<<<< HEAD
-<<<<<<< HEAD
 \alias{poisson}
 \title{Family objects for models}
 \usage{
@@ -14,21 +12,6 @@ gaussian(link = c("identity"))
 binomial(link = c("logit", "probit", "log"))
 
 poisson(link = c("log"))
-=======
-=======
-\alias{poisson}
->>>>>>> 6b5ee09... Replace old loss with family class
-\title{Family objects for models}
-\usage{
-gaussian(link = c("identity"))
-
-binomial(link = c("logit", "probit", "log"))
-<<<<<<< HEAD
->>>>>>> 2ced4bf... Add family and link functions
-=======
-
-poisson(link = c("log"))
->>>>>>> 6b5ee09... Replace old loss with family class
 }
 \arguments{
 \item{link}{name of the link function}
@@ -38,26 +21,10 @@ An object of class \code{netReg.family}
  \item{family }{ name of the family}
  \item{link }{ name of the link function}
  \item{linkinv }{ inverse link function}
-<<<<<<< HEAD
-<<<<<<< HEAD
  \item{loss }{ loss function}
 }
 \description{
 Family objects provide a convenient way to specify the details
  of the models used by \code{netReg}.
  See also \code{\link[stats:family]{stats::family}} for more details.
-=======
-=======
- \item{loss }{ loss function}
->>>>>>> eb0409e... Remove object from family documentation and add INSTALL.md to biuldignore
-}
-\description{
-<<<<<<< HEAD
-Family objects for models
->>>>>>> 2ced4bf... Add family and link functions
-=======
-Family objects provide a convenient way to specify the details
- of the models used by \code{netReg}.
- See also \code{\link[stats:family]{stats::family}} for more details.
->>>>>>> 6b5ee09... Replace old loss with family class
 }
