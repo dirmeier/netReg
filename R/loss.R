@@ -70,9 +70,14 @@ beta.loss <- function(y, eta, ...)
         p <- mu * phi
         q <- (1 - mu) * phi
 
+        # deal with numerical instabilities
+        eps <- .Machine$double.eps * 1e9
+        p.trans <- tf$math$maximum(p, eps)
+        q.trans <- tf$math$maximum(q, eps)
+
         # compute loss
         prob <- tfp$distributions$Beta(
-            concentration1 = p, concentration0 = q)
+            concentration1 = p.trans, concentration0 = q.trans)
         obj <- obj + tf$reduce_sum(prob$log_prob(y[,j]))
     }
 
