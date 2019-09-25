@@ -27,9 +27,9 @@ are used for regularization of regression coefficients like this:
 \begin{split}
 \hat{\mathbf{B}} = \arg \min_{\mathbf{B}} \,
  & -\ell(\mathbf{B}) + \lambda ||\mathbf{B} ||_1  \\  & +
-      		  \frac{\psi_1}{2}  \sum_{i=1}^p \sum_{j=1}^q
+      		  \frac{\psi_1}{2}  \sum_{i=1}^p \sum_{j=1}^p
       		   || \boldsymbol \beta_{i,*} - \boldsymbol \beta_{j,*} ||_2^2 (\mathbf{G}_X)_{i,j}    \\  & +
- \frac{\psi_2}{2}  \sum_{i=1}^p \sum_{j=1}^q || \boldsymbol \beta_{*,i} - \boldsymbol \beta_{*,j} ||_2^2 (\mathbf{G}_Y)_{i,j} \\
+ \frac{\psi_2}{2}  \sum_{i=1}^q \sum_{j=1}^q || \boldsymbol \beta_{*,i} - \boldsymbol \beta_{*,j} ||_2^2 (\mathbf{G}_Y)_{i,j} \\
  = \arg \min_{\mathbf{B}} \,
  &  -\ell(\mathbf{B})  + \lambda ||\mathbf{B} ||_1  \\  & +
  \psi_1 \text{tr}\left( \mathbf{B}^T \left( \mathbf{D}_{\mathbf{G}_X} - \mathbf{G}_X \right) \mathbf{B}  \right) \\  & +
