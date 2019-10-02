@@ -26,7 +26,8 @@ test_that("gaussian without regularization reproduces stats::glm", {
     coef.glm <- unname(coef(fit.glm))
     coef.nr <- unname(coef(fit.nr)[,'y[1]'])
 
-    testthat::expect_equal(coef.glm, coef.nr, tolerance=.1)
+    testthat::expect_equal(c(0, B), coef.glm, tolerance=0.1)
+    testthat::expect_equal(coef.glm, coef.nr, tolerance=0.1)
 })
 
 test_that("inverse gaussian without regularization reproduces stats::glm", {
@@ -37,11 +38,11 @@ test_that("inverse gaussian without regularization reproduces stats::glm", {
     p <- 3 # covariate count
     q <- 1 # response count
 
-    X <- matrix(rnorm(n * p, 10), n, p)
-    B <- matrix(rnorm(p * q, 5), p, q)
+    X <- matrix(rnorm(n * p, 10, 4), n, p)
+    B <- matrix(rnorm(p * q, 10, 5), p, q)
 
-    mu <- 1 / sqrt(X %*% B)
-    Y <- statmod::rinvgauss(n, mean=mu, shape=1)
+    mu.prior <- inverse.gaussian()$linkinv(X %*% B)
+    Y <- statmod::rinvgauss(n, mean=mu.prior, shape=1)
 
     # fit glm
     fit.glm <- glm(Y ~ X, family=inverse.gaussian())
@@ -56,7 +57,12 @@ test_that("inverse gaussian without regularization reproduces stats::glm", {
     coef.glm <- unname(coef(fit.glm))
     coef.nr <- unname(coef(fit.nr)[,'y[1]'])
 
-    testthat::expect_equal(coef.glm, coef.nr, tolerance=1)
+    testthat::expect_equal(
+        mu.prior,
+        inverse.gaussian()$linkinv(X %*% coef.glm[-1]),
+        tolerance=0.1
+    )
+    testthat::expect_equal(coef.glm, coef.nr, tolerance=0.1)
 })
 
 test_that("beta without regularization reproduces betareg::betareg", {
@@ -98,5 +104,10 @@ test_that("beta without regularization reproduces betareg::betareg", {
 
     coef.br <- coef.br[-length(coef.br)] # remove phi estimate
 
-    testthat::expect_equal(coef.br, coef.nr, tolerance=1)
+    testthat::expect_equal(
+        mu.prior,
+        mgcv::betar(theta=1, link="logit")$linkinv(X %*% coef.br[-1]),
+        tolerance=0.1
+    )
+    testthat::expect_equal(coef.br, coef.nr, tolerance=0.1)
 })
