@@ -6,24 +6,10 @@ cache: packages
 
 matrix:
   include:
-    - compiler: gcc
-      r: bioc-devel
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-5
-      env: COMPILER=g++-5
-    - compiler: gcc
-      r: bioc-release
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-5
-      env: COMPILER=g++-5
+    - r: bioc-devel
+      compiler: gcc    
+    - r: bioc-release
+      compiler: gcc    
 
 env:
   global:
@@ -31,7 +17,15 @@ env:
     - R_CHECK_ARGS="--no-build-vignettes --no-manual --as-cran"
     - LINTR_COMMENT_BOT=false
 
+before_script:
+  - sudo apt-get update
+  - sudo apt-get install python3
+  - pip install --upgrade --ignore-installed --user travis virtualenv  
+  - R -e 'tensorflow::install_tensorflow(extra_packages = "tensorflow-probability")'
+  - R -e 'tensorflow::tf_config()'
+
 r_packages:
+  - tensorflow
   - devtools
   - covr
   - testthat

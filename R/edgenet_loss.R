@@ -39,26 +39,22 @@ edgenet.loss <- function(gx, gy, family) {
     if (!is.null(gx)) {
       obj <- obj + psigx * .edgenet.x.penalty(gx, beta)
     }
-    if (!is.null(gy)) {
-      obj <- obj + psigy * .edgenet.y.penalty(gy, beta)
-    }
 
-    obj
-  }
-
-  loss
+    loss
 }
 
 
 #' @noRd
 #' @import tensorflow
-.edgenet.x.penalty <- function(gx, beta) {
-  tf$linalg$trace(tf$matmul(tf$transpose(beta), tf$matmul(gx, beta)))
+.edgenet.x.penalty <- function(gx, beta)
+{
+    tf$linalg$trace(tf$matmul(tf$transpose(beta), tf$matmul(gx, beta)))
 }
 
 
 #' @noRd
 #' @import tensorflow
-.edgenet.y.penalty <- function(gy, beta) {
-  tf$linalg$trace(tf$matmul(beta, tf$matmul(gy, tf$transpose(beta))))
+.edgenet.y.penalty <- function(gy, beta)
+{
+    tf$linalg$trace(tf$matmul(beta, tf$matmul(gy, tf$transpose(beta))))
 }

@@ -34,3 +34,13 @@ print.cv.edgenet <- function(x, ...)
     cat("\n\noptimal parameters:\n")
     print(x$parameters)
 }
+
+
+#' @export
+#' @method print netReg.family
+print.netReg.family <- function(x, ...)
+{
+    cat(sprintf("family: %s\n", x$family))
+    cat(sprintf("link: %s\n", x$link))
+}
+

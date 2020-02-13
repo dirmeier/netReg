@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Articles • netReg</title>
+<title>Family objects for models — gaussian • netReg</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -32,7 +32,12 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Articles" />
+<meta property="og:title" content="Family objects for models — gaussian" />
+
+<meta property="og:description" content="Family objects provide a convenient way to specify the details
+ of the models used by netReg.
+ See also stats::family for more details." />
+<meta name="twitter:card" content="summary" />
 
 
 
@@ -49,7 +54,7 @@
   </head>
 
   <body>
-    <div class="container template-article-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
@@ -119,17 +124,53 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Articles</h1>
+    <h1>Family objects for models</h1>
+    <small class="dont-index">Source: <a href='https://github.com/dirmeier/netReg/blob/master/R/family.R'><code>R/family.R</code></a></small>
+    <div class="hidden name"><code>family-methods.Rd</code></div>
     </div>
 
-    <div class="section ">
-      <h3>All vignettes</h3>
-      <p class="section-desc"></p>
-
-      <ul>
-        <li><a href="edgenet.html">edgenet: regularization with pair-wise interactions</a></li>
-      </ul>
+    <div class="ref-description">
+    
+    <p>Family objects provide a convenient way to specify the details
+ of the models used by <code>netReg</code>.
+ See also <code><a href='https://www.rdocumentation.org/packages/stats/topics/family'>stats::family</a></code> for more details.</p>
+    
     </div>
+
+    <pre class="usage"><span class='fu'>gaussian</span>(<span class='kw'>link</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"identity"</span>))
+
+<span class='fu'>binomial</span>(<span class='kw'>link</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"logit"</span>, <span class='st'>"probit"</span>, <span class='st'>"log"</span>))
+
+<span class='fu'>poisson</span>(<span class='kw'>link</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"log"</span>))</pre>
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>link</th>
+      <td><p>name of the link function</p></td>
+    </tr>
+    </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>An object of class <code>netReg.family</code></p>
+<dt>family </dt><dd><p>name of the family</p></dd>
+ <dt>link </dt><dd><p>name of the link function</p></dd>
+ <dt>linkinv </dt><dd><p>inverse link function</p></dd>
+ <dt>loss </dt><dd><p>loss function</p></dd>
+
+    
+
+  </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+    <h2>Contents</h2>
+    <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
+      
+      <li><a href="#value">Value</a></li>
+          </ul>
+
   </div>
 </div>
 

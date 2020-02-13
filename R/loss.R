@@ -29,11 +29,11 @@ gaussian.loss <- function(y, eta, ...)
 
 #' @noRd
 #' @importFrom tensorflow tf
-binomial.loss <- function(y, eta, ...)
+binomial.loss <- function(y, eta, invlink, ...)
 {
     obj <- 0
     for (j in seq(ncol(y))) {
-        prob <- tfp$distributions$Bernoulli(logits = eta[ ,j])
+        prob <- tfp$distributions$Bernoulli(probs = invlink(eta[ ,j]))
         obj <- obj + tf$reduce_sum(prob$log_prob(y[,j]))
     }
 
@@ -43,11 +43,11 @@ binomial.loss <- function(y, eta, ...)
 
 #' @noRd
 #' @importFrom tensorflow tf
-poisson.loss <- function(y, eta, ...)
+poisson.loss <- function(y, eta, invlink, ...)
 {
     obj <- 0
     for (j in seq(ncol(y))) {
-        prob <- tfp$distributions$Poisson(log_rate = eta[ ,j])
+        prob <- tfp$distributions$Poisson(rate = invlink(eta[ ,j]))
         obj <- obj + tf$reduce_sum(prob$log_prob(y[,j]))
     }
 

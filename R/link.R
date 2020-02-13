@@ -19,9 +19,28 @@
 
 
 #' @noRd
-#' @import tensorflow
-linear.predictor <- function(alpha, beta, x)
+identity <- function(x) x
+
+
+#' @noRd
+#' @importFrom tensorflow tf
+exp <- function(x) tf$maximum(tf$exp(x), tf$float32$min)
+
+
+#' @noRd
+#' @importFrom tensorflow tf
+inverse <- function(x) 1 / x
+
+
+#' @noRd
+#' @importFrom tensorflow tf
+logistic <- function(x) 1 / (1 + tf$exp(-x))
+
+
+#' @noRd
+gcdf <- function(x)
 {
-    eta <- tf$matmul(x, beta) + alpha
-    eta
+    std <- tfp$distributions$Normal(0, 1)
+    std$cdf(x)
 }
+

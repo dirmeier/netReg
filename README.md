@@ -6,7 +6,7 @@
 [![codecov](https://codecov.io/gh/dirmeier/netReg/branch/master/graph/badge.svg)](https://codecov.io/gh/dirmeier/netReg)
 [![bioc](https://bioconductor.org/shields/years-in-bioc/netReg.svg)](https://bioconductor.org/packages/release/bioc/html/netReg.html)
 
-Network-regularized generalized linear regression models in `R`. Now with `TensorFlow`.
+Generalized linear regression models with network-regularization in `R`. Now with `TensorFlow`.
 
 ## About
 
@@ -57,6 +57,19 @@ For more details, please check out the respective vignettes of the single models
 
 ## Installation
 
+Before installing the package, make sure to have these Python dependencies installed:
+
+* `tensorflow==1.14.0`,
+* `tensorflow-probabiltiy==0.5.0`
+
+The easiest way is probably to install `TensorFlow` from with `R` and then call:
+
+```r
+tensorflow::install_tensorflow(extra_packages = "tensorflow-probability")
+```
+
+That creates a `conda` environment (in case you use it) called `r-tensorflow` and installs the Python dependencies automatically.
+
 You can install and use `netReg` either from [Bioconductor](https://bioconductor.org/packages/release/bioc/html/netReg.html),
 or by downloading the latest [tarball](https://github.com/dirmeier/netReg/releases).
 
@@ -72,7 +85,7 @@ If you want to use the **recommended way** using Bioconductor just call:
  
 Installing the R package using the downloaded tarball works like this:
 
-```bash
+```sh
 $ R CMD install <netReg-x.y.z.tar.gz>
 ```
 

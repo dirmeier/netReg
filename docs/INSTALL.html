@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Articles • netReg</title>
+<title>Installation • netReg</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -25,14 +25,14 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
-<link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script>
+<link href="pkgdown.css" rel="stylesheet">
+<script src="pkgdown.js"></script>
 
 
 
-  <link href="../extra.css" rel="stylesheet">
+  <link href="extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Articles" />
+<meta property="og:title" content="Installation" />
 
 
 
@@ -49,7 +49,7 @@
   </head>
 
   <body>
-    <div class="container template-article-index">
+    <div class="container template-title-body">
       <header>
       <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
@@ -61,7 +61,7 @@
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">netReg</a>
+        <a class="navbar-link" href="index.html">netReg</a>
         <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.4</span>
       </span>
     </div>
@@ -76,15 +76,15 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/edgenet.html">Edgenet</a>
+      <a href="articles/edgenet.html">Edgenet</a>
     </li>
   </ul>
 </li>
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="reference/index.html">Reference</a>
 </li>
 <li>
-  <a href="../news/index.html">News</a>
+  <a href="news/index.html">News</a>
 </li>
       </ul>
       
@@ -117,21 +117,49 @@
       </header>
 
 <div class="row">
-  <div class="col-md-9 contents">
+  <div class="contents col-md-9">
     <div class="page-header">
-      <h1>Articles</h1>
+      <h1>Installation</h1>
     </div>
 
-    <div class="section ">
-      <h3>All vignettes</h3>
-      <p class="section-desc"></p>
+<div id="installation" class="section level1">
 
-      <ul>
-        <li><a href="edgenet.html">edgenet: regularization with pair-wise interactions</a></li>
-      </ul>
-    </div>
-  </div>
+<div id="dependencies" class="section level2">
+<h2 class="hasAnchor">
+<a href="#dependencies" class="anchor"></a>Dependencies</h2>
+<p>Before installing the package, make sure to have these Python dependencies installed:</p>
+<ul>
+<li>
+<code>tensorflow==1.14.0</code>,</li>
+<li><code>tensorflow-probabiltiy==0.5.0</code></li>
+</ul>
+<p>The easiest way is probably to install <code>TensorFlow</code> from with <code>R</code> and then call:</p>
+<pre class="{r}"><code><a href="https://www.rdocumentation.org/packages/tensorflow/topics/install_tensorflow">tensorflow::install_tensorflow(extra_packages = "tensorflow-probability")</a></code></pre>
+<p>That creates a <code>conda</code> environment (in case you use it) called <code>r-tensorflow</code> and installs the Python dependencies automatically.</p>
+<p>If this does not work for you, try this approach on the command line:</p>
+<pre class="{r}"><code>conda create -n r-tensorflow python=3.6
+source activate r-tensorflow
+conda install tensorflow==1.14.0 tensorflow-probability==0.5.0</code></pre>
 </div>
+<div id="netreg" class="section level2">
+<h2 class="hasAnchor">
+<a href="#netreg" class="anchor"></a>netReg</h2>
+<p>You can install and use <code>netReg</code> either from <a href="https://bioconductor.org/packages/release/bioc/html/netReg.html">Bioconductor</a>, or by downloading the latest <a href="https://github.com/dirmeier/netReg/releases">tarball</a>.</p>
+<p>If you want to use the <strong>recommended way</strong> using Bioconductor just call:</p>
+<pre class="{r}"><code>&gt; if (!requireNamespace("BiocManager", quietly=TRUE))
+&gt;   install.packages("BiocManager")
+&gt; BiocManager::install("netReg")
+
+&gt; library(netReg)</code></pre>
+<p>Installing the R package using the downloaded tarball works like this:</p>
+<pre class="{bash}"><code>$ R CMD install &lt;netReg-x.y.z.tar.gz&gt;</code></pre>
+</div>
+</div>
+
+  </div>
+
+</div>
+
 
       <footer>
       <div class="copyright">
