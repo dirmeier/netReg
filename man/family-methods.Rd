@@ -5,6 +5,9 @@
 \alias{gaussian}
 \alias{binomial}
 \alias{poisson}
+\alias{gamma}
+\alias{beta}
+\alias{inverse.gaussian}
 \title{Family objects for models}
 \usage{
 gaussian(link = c("identity"))
@@ -12,6 +15,12 @@ gaussian(link = c("identity"))
 binomial(link = c("logit", "probit", "log"))
 
 poisson(link = c("log"))
+
+gamma(link = c("inverse"))
+
+beta(link = c("logit", "probit", "log"))
+
+inverse.gaussian(link = c("1/mu^2"))
 }
 \arguments{
 \item{link}{name of the link function}

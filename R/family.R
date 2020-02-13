@@ -98,9 +98,65 @@ poisson <- function(link=c("log"))
                poisson.loss)
 }
 
-inverse.gaussian <- function() stop("not implemented")
-beta <- function()  stop("not implemented")
-gamma <- function()  stop("not implemented")
+
+#' @export
+#' @rdname family-methods
+gamma <- function(link=c("inverse"))
+{
+    warn.experimental("gamma")
+    link <- match.arg(link)
+    linkinv <- switch(
+        link,
+        "inverse"=inverse,
+        stop("did not recognize link function", call. = FALSE)
+    )
+
+    .as.family("gamma",
+               link,
+               linkinv,
+               exp,
+               gamma.loss)
+}
+
+
+#' @export
+#' @rdname family-methods
+beta <- function(link=c("logit", "probit", "log"))
+{
+    warn.experimental("beta")
+    link <- match.arg(link)
+    linkinv <- switch(
+        link,
+        "logit"=logistic,
+        "log"=exp,
+        "probit"=gcdf,
+        stop("did not recognize link function", call. = FALSE)
+    )
+
+    .as.family("beta",
+               link,
+               linkinv,
+               beta.loss)
+}
+
+
+#' @export
+#' @rdname family-methods
+inverse.gaussian <- function(link=c("1/mu^2"))
+{
+    warn.experimental("inverse.gaussian")
+    link <- match.arg(link)
+    linkinv <- switch(
+        link,
+        "1/mu^2"=inverse.sqrt,
+        stop("did not recognize link function", call. = FALSE)
+    )
+
+    .as.family("inverse.gaussian",
+               link,
+               linkinv,
+               inverse.gaussian.loss)
+}
 
 
 #' @noRd
