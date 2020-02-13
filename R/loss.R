@@ -57,6 +57,54 @@ poisson.loss <- function(y, eta, invlink, ...)
 
 #' @noRd
 #' @importFrom tensorflow tf
+beta.loss <- function(y, eta, ...)
+{
+    obj <- 0
+    for (j in seq(ncol(y))) {
+        # concentration1 := p (alpha) = mean * phi
+        # concentration0 := q (beta) = (1. - mean) * phi
+        mu <- 1 / (1 + exp(-eta[ ,j]))
+        phi <- 1 # TODO: can this be estimated?
+
+        # reparametrize
+        p <- mu * phi
+        q <- (1 - mu) * phi
+
+        # deal with numerical instabilities
+        eps <- .Machine$double.eps * 1e9
+        p.trans <- tf$math$maximum(p, eps)
+        q.trans <- tf$math$maximum(q, eps)
+
+        # compute loss
+        prob <- tfp$distributions$Beta(
+            concentration1 = p.trans, concentration0 = q.trans)
+        obj <- obj + tf$reduce_sum(prob$log_prob(y[,j]))
+    }
+
+    -obj
+}
+
+
+#' @noRd
+#' @importFrom tensorflow tf
+inverse.gaussian.loss <- function(y, eta, ...)
+{
+    obj <- 0
+
+    for (j in seq(ncol(y))) {
+        # loc := mu
+        # concentration := lambda (shape)
+        prob <- tfp$distributions$InverseGaussian(
+            loc = 1 / sqrt(eta[ ,j]), concentration = 1)
+        obj <- obj + tf$reduce_sum(prob$log_prob(y[,j]))
+    }
+
+    -obj
+}
+
+
+#' @noRd
+#' @importFrom tensorflow tf
 lasso <- function(lambda, beta)
 {
     lambda * tf$reduce_sum(tf$abs(beta))
@@ -77,6 +125,3 @@ elastic <- function(alpha, lambda, beta)
     lambda * (ridge((1 - alpha) / 2, beta) +
               lasso(alpha, beta))
 }
-
-
-

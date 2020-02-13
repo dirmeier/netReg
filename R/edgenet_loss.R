@@ -20,24 +20,24 @@
 
 #' @noRd
 #' @import tensorflow
-edgenet.loss <- function(gx, gy, family)
-{
-    invlink <- family$linkinv
-    loss.function <- family$loss
+edgenet.loss <- function(gx, gy, family) {
+  family <- family$family
+  loss.function <- switch(
+    family,
+    "gaussian" = gaussian.loss,
+    "binomial" = binomial.loss,
+    "poisson" = poisson.loss,
+    "Beta regression" = beta.loss, # mgcv::betar()
+    "inverse.gaussian" = inverse.gaussian.loss,
+    not.supported.yet(family)
+  )
 
-    loss <- function(alpha, beta, lambda, psigx, psigy, x, y)
-    {
-        eta <- linear.predictor(alpha, beta, x)
-        obj <- loss.function(y, eta, invlink) + lasso(lambda, beta)
+  loss <- function(alpha, beta, lambda, psigx, psigy, x, y) {
+    eta <- linear.predictor(alpha, beta, x)
+    obj <- loss.function(y, eta) + lasso(lambda, beta)
 
-        if (!is.null(gx)) {
-            obj <- obj + psigx * .edgenet.x.penalty(gx, beta)
-        }
-        if (!is.null(gy)) {
-            obj <- obj + psigy * .edgenet.y.penalty(gy, beta)
-        }
-
-        obj
+    if (!is.null(gx)) {
+      obj <- obj + psigx * .edgenet.x.penalty(gx, beta)
     }
 
     loss
