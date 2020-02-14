@@ -18,16 +18,6 @@
 # along with netReg. If not, see <http://www.gnu.org/licenses/>.
 
 
-#' @method family cv.edgenet
-family.edgenet <- function(object, ...) object$family
-
-
-#' @method family cv.edgenet
-
-#' @method family cv.edgenet
-family.cv.edgenet <- function(object, ...) family.edgenet(object, ...)
-
-
 #' @title Family objects for models
 #'
 #' @export
@@ -38,13 +28,40 @@ family.cv.edgenet <- function(object, ...) family.edgenet(object, ...)
 #'  of the models used by \code{netReg}.
 #'  See also \code{\link[stats:family]{stats::family}} for more details.
 #'
-#' @param link  name of the link function
+#' @param link  name of a link function
+#' @param object  a object for which the family shoulr be retured
+#'  (e.g. \code{edgenet})
+#' @param ... further arguments passed to methods
 #'
 #' @return An object of class \code{netReg.family}
 #'  \item{family }{ name of the family}
 #'  \item{link }{ name of the link function}
 #'  \item{linkinv }{ inverse link function}
 #'  \item{loss }{ loss function}
+#' @examples
+#'  gaussian()
+#'  binomial("probit")$link
+#'  poisson()$linkinv
+#'  gamma()$linkinv
+#'  beta()$loss
+#'  inverse.gaussian()$loss
+family <- function(object, ...) UseMethod("family")
+
+
+#' @export
+#' @noRd
+#' @method family edgenet
+family.edgenet <- function(object, ...) object$family
+
+
+#' @export
+#' @noRd
+#' @method family cv.edgenet
+family.cv.edgenet <- function(object, ...) family.edgenet(object, ...)
+
+
+#' @export
+#' @rdname family-methods
 gaussian <- function(link = c("identity"))
 {
     link <- match.arg(link)
@@ -114,7 +131,6 @@ gamma <- function(link=c("inverse"))
     .as.family("gamma",
                link,
                linkinv,
-               exp,
                gamma.loss)
 }
 

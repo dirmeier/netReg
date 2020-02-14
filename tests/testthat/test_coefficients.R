@@ -1,3 +1,23 @@
+# netReg: graph-regularized linear regression models.
+#
+# Copyright (C) 2015 - 2016 Simon Dirmeier
+#
+# This file is part of netReg.
+#
+# netReg is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# netReg is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with netReg. If not, see <http://www.gnu.org/licenses/>.
+#
+
 context("coefficients")
 
 test_that("gaussian without regularization reproduces stats::glm", {
@@ -29,6 +49,7 @@ test_that("gaussian without regularization reproduces stats::glm", {
     testthat::expect_equal(c(0, B), coef.glm, tolerance=0.1)
     testthat::expect_equal(coef.glm, coef.nr, tolerance=0.1)
 })
+
 
 test_that("inverse gaussian without regularization reproduces stats::glm", {
     # generate data

@@ -61,8 +61,6 @@ gamma.loss <- function(y, eta, invlink, ...)
 {
     obj <- 0
     for (j in seq(ncol(y))) {
-        # loc := mu
-        # concentration := lambda (shape)
         prob <- tfp$distributions$Gamma(
             loc = invlink(eta[ ,j]), concentration = 1)
         obj <- obj + tf$reduce_sum(prob$log_prob(y[,j]))
@@ -79,13 +77,13 @@ beta.loss <- function(y, eta, invlink, ...)
     obj <- 0
     eps <- .Machine$double.eps * 1e9
     for (j in seq(ncol(y))) {
-        # concentration1 := p (alpha) = mean * phi
-        # concentration0 := q (beta) = (1. - mean) * phi
         mu <- invlink(eta[ ,j])
-        phi <- 1 # TODO: can this be estimated?
+        phi <- 1 # TODO: replace this with tf$variable
 
         # reparametrize
+        # concentration1 := alpha = mu * phi
         p <- mu * phi
+        # concentration0 := beta = (1. - mu) * phi
         q <- (1 - mu) * phi
 
         # deal with numerical instabilities

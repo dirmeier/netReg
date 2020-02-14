@@ -62,7 +62,9 @@ An object of class \code{edgenet}
 \item{lambda }{ regularization parameter lambda)}
 \item{psigx }{ regularization parameter psigx}
 \item{psigy }{ regularization parameter psigy}
-\item{family }{ the family of the response}
+\item{family }{ a description of the error distribution and link function
+   to be used. Can a \code{\link{netReg::family}} function or a character string
+   naming a family function, e.g. \code{gaussian} or "gaussian".}
 \item{call }{ the call that produced the object}
 }
 \description{
@@ -89,7 +91,7 @@ fit <- edgenet(X=X, Y=Y, G.X=G.X, psigx=1, family=gaussian, maxit=10)
 ## use two matrices
 fit <- edgenet(X=X, Y=Y, G.X=G.X, G.Y, family=gaussian, maxit=10)
 ## if Y is vectorial, we cannot use an affinity matrix for Y
-fit<- edgenet(X=X, Y=Y[, 1], G.X=G.X, family=gaussian, maxit=10)
+fit <- edgenet(X=X, Y=Y[, 1], G.X=G.X, family=gaussian, maxit=10)
 
 # estimation for binomial models
 eta <- 1 / (1 + exp(-X \%*\% b))

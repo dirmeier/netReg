@@ -120,4 +120,5 @@ not.supported.yet <- function(family)
 }
 
 warn.experimental <- function(family)
-    warning(paste("family", family, "is still experimental. enjoy with care"))
+    warning(paste("family", family, "is still experimental. enjoy with care."),
+            call. = FALSE)
