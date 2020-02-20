@@ -20,7 +20,7 @@
 
 context("edgenet inference")
 
-set.seed(23)
+set.seed(42)
 n   <- 100
 p   <- 10
 q   <- 1
@@ -30,8 +30,8 @@ G.X <- t(G.X) + G.X
 G.Y <- matrix(rbeta(q * q, 1, 1), q, q)
 G.Y <- t(G.Y) + G.Y
 diag(G.X) <- diag(G.Y) <- 0
-X   <- matrix(rnorm(n * p), n, p)
-B   <- rnorm(p)
+X   <- matrix(rnorm(n * p, 0, 0.1), n, p)
+B   <- rnorm(p, 0, .1)
 
 
 test_that("predict throws at NULL", {
@@ -64,14 +64,15 @@ test_that("gaussian without regularization reproduces stats::glm", {
 test_that("binomial without regularization reproduces stats::glm", {
     eta <- 1 / (1 + base::exp(-X %*% B))
     Y <- rbinom(n, 1, eta)
-    fit.glm <- glm(Y ~ X, family=stats::binomial)
-    fit.nr <- edgenet(X, Y, lambda=0, psigx=0, psigy=0, family="binomial")
+    for (link in c("logit", "probit")) {
+        fit.glm <- glm(Y ~ X, family=stats::binomial(link))
+        fit.nr <- edgenet(X, Y, lambda=0, psigx=0, psigy=0, family=binomial(link))
+        coef.glm <- unname(coef(fit.glm))
+        coef.nr <- unname(coef(fit.nr)[,'y[1]'])
 
-    coef.glm <- unname(coef(fit.glm))
-    coef.nr <- unname(coef(fit.nr)[,'y[1]'])
-
-    testthat::expect_equal(coef.glm, coef.nr, tolerance=0.1)
-    testthat::expect_visible(predict(fit.nr, X))
+        testthat::expect_equal(coef.glm, coef.nr, tolerance=0.1)
+        testthat::expect_visible(predict(fit.nr, X))
+    }
 })
 
 
