@@ -40,7 +40,7 @@ predict.gaussian.edgenet <- function(object, newdata=NULL, ...)
 #' @method predict binomial.edgenet
 predict.binomial.edgenet <- function(object, newdata=NULL, ...)
 {
-    mean <- function(x) 1 / (1 + exp(-x))
+    mean <- function(x) 1 / (1 + base::exp(-x))
     .predict(object, newdata, mean, ...)
 }
 
@@ -49,7 +49,7 @@ predict.binomial.edgenet <- function(object, newdata=NULL, ...)
 #' @method predict poisson.edgenet
 predict.poisson.edgenet <- function(object, newdata=NULL, ...)
 {
-    mean <- function(x) exp(x)
+    mean <- function(x) base::exp(x)
     .predict(object, newdata, mean, ...)
 }
 
@@ -58,7 +58,7 @@ predict.poisson.edgenet <- function(object, newdata=NULL, ...)
 #' @method predict beta.edgenet
 predict.beta.edgenet <- function(object, newdata=NULL, ...)
 {
-    mean <- function(x) 1 / (1 + exp(-x))
+    mean <- function(x) 1 / (1 + base::exp(-x))
     .predict(object, newdata, mean, ...)
 }
 
@@ -67,7 +67,7 @@ predict.beta.edgenet <- function(object, newdata=NULL, ...)
 #' @method predict inverse.gaussian.edgenet
 predict.inverse.gaussian.edgenet <- function(object, newdata=NULL, ...)
 {
-    mean <- function(x) 1 / sqrt(x)
+    mean <- function(x) 1 / base::sqrt(x)
     .predict(object, newdata, mean, ...)
 }
 

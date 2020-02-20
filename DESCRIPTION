@@ -32,7 +32,8 @@ Suggests:
     lintr,
     styler,
     lassoshooting,
-    glmnet
+    glmnet,
+    LaplacesDemon
 VignetteBuilder: knitr
 RoxygenNote: 6.1.1
 SystemRequirements: C++11

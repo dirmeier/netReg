@@ -46,8 +46,10 @@ Family objects provide a convenient way to specify the details
  See also \code{\link[stats:family]{stats::family}} for more details.
 }
 \examples{
- print(gaussian())
- binomial("probit")
- poisson()$link
+ gaussian()
+ binomial("probit")$link
+ poisson()$linkinv
  gamma()$linkinv
+ beta()$loss
+ inverse.gaussian()$loss
 }

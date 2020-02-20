@@ -66,4 +66,3 @@ test_that("gaussian edgenet modelselection warngs at epsilon < 0 ", {
 test_that("gaussian edgenet modelselection warngs at approx.maxit < 0 ", {
     testthat::expect_warning(cv.edgenet(X, Y, maxit=1, thresh=1, optim.maxit=-1))
 })
-

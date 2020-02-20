@@ -62,7 +62,7 @@ gamma.loss <- function(y, eta, invlink, ...)
     obj <- 0
     for (j in seq(ncol(y))) {
         prob <- tfp$distributions$Gamma(
-            loc = invlink(eta[ ,j]), concentration = 1)
+            rate = invlink(tf$exp(eta[ ,j])), concentration = 1)
         obj <- obj + tf$reduce_sum(prob$log_prob(y[,j]))
     }
 
@@ -108,7 +108,7 @@ inverse.gaussian.loss <- function(y, eta, invlink, ...)
         # loc := mu
         # concentration := lambda (shape)
         prob <- tfp$distributions$InverseGaussian(
-            loc = invlink(eta[ ,j]), concentration = 1)
+            loc = invlink(tf$exp(eta[ ,j])), concentration = 1)
         obj <- obj + tf$reduce_sum(prob$log_prob(y[,j]))
     }
 
