@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Family objects for models — gaussian • netReg</title>
+<title>Family objects for models — family • netReg</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -32,7 +32,7 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Family objects for models — gaussian" />
+<meta property="og:title" content="Family objects for models — family" />
 
 <meta property="og:description" content="Family objects provide a convenient way to specify the details
  of the models used by netReg.
@@ -67,7 +67,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">netReg</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.11.1</span>
       </span>
     </div>
 
@@ -137,18 +137,35 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>gaussian</span>(<span class='kw'>link</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"identity"</span>))
+    <pre class="usage"><span class='fu'>family</span>(<span class='no'>object</span>, <span class='no'>...</span>)
+
+<span class='fu'>gaussian</span>(<span class='kw'>link</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"identity"</span>))
 
 <span class='fu'>binomial</span>(<span class='kw'>link</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"logit"</span>, <span class='st'>"probit"</span>, <span class='st'>"log"</span>))
 
-<span class='fu'>poisson</span>(<span class='kw'>link</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"log"</span>))</pre>
+<span class='fu'>poisson</span>(<span class='kw'>link</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"log"</span>))
+
+<span class='fu'>gamma</span>(<span class='kw'>link</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"inverse"</span>))
+
+<span class='fu'>beta</span>(<span class='kw'>link</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"logit"</span>, <span class='st'>"probit"</span>, <span class='st'>"log"</span>))
+
+<span class='fu'>inverse.gaussian</span>(<span class='kw'>link</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"1/mu^2"</span>))</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
+      <th>object</th>
+      <td><p>a object for which the family shoulr be retured
+(e.g. <code>edgenet</code>)</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>further arguments passed to methods</p></td>
+    </tr>
+    <tr>
       <th>link</th>
-      <td><p>name of the link function</p></td>
+      <td><p>name of a link function</p></td>
     </tr>
     </table>
     
@@ -162,6 +179,49 @@
 
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'> <span class='fu'>gaussian</span>()</div><div class='output co'>#&gt; family: gaussian
+#&gt; link: identity</div><div class='input'> <span class='fu'>binomial</span>(<span class='st'>"probit"</span>)$<span class='no'>link</span></div><div class='output co'>#&gt; [1] "probit"</div><div class='input'> <span class='fu'>poisson</span>()$<span class='no'>linkinv</span></div><div class='output co'>#&gt; function(x) tf$maximum(tf$exp(x), tf$float32$min)
+#&gt; &lt;environment: namespace:netReg&gt;</div><div class='input'> <span class='fu'>gamma</span>()$<span class='no'>linkinv</span></div><div class='output co'>#&gt; <span class='warning'>Warning: family gamma is still experimental. enjoy with care.</span></div><div class='output co'>#&gt; function(x) 1 / x
+#&gt; &lt;environment: namespace:netReg&gt;</div><div class='input'> <span class='fu'>beta</span>()$<span class='no'>loss</span></div><div class='output co'>#&gt; <span class='warning'>Warning: family beta is still experimental. enjoy with care.</span></div><div class='output co'>#&gt; function(y, eta, invlink, ...)
+#&gt; {
+#&gt;     obj &lt;- 0
+#&gt;     eps &lt;- .Machine$double.eps * 1e9
+#&gt;     for (j in seq(ncol(y))) {
+#&gt;         mu &lt;- invlink(eta[ ,j])
+#&gt;         phi &lt;- 1 # TODO: replace this with tf$variable
+#&gt; 
+#&gt;         # reparametrize
+#&gt;         # concentration1 := alpha = mu * phi
+#&gt;         p &lt;- mu * phi
+#&gt;         # concentration0 := beta = (1. - mu) * phi
+#&gt;         q &lt;- (1 - mu) * phi
+#&gt; 
+#&gt;         # deal with numerical instabilities
+#&gt;         p.trans &lt;- tf$math$maximum(p, eps)
+#&gt;         q.trans &lt;- tf$math$maximum(q, eps)
+#&gt; 
+#&gt;         prob &lt;- tfp$distributions$Beta(
+#&gt;             concentration1 = p.trans, concentration0 = q.trans)
+#&gt;         obj &lt;- obj + tf$reduce_sum(prob$log_prob(y[,j]))
+#&gt;     }
+#&gt; 
+#&gt;     -obj
+#&gt; }
+#&gt; &lt;environment: namespace:netReg&gt;</div><div class='input'> <span class='fu'>inverse.gaussian</span>()$<span class='no'>loss</span></div><div class='output co'>#&gt; <span class='warning'>Warning: family inverse.gaussian is still experimental. enjoy with care.</span></div><div class='output co'>#&gt; function(y, eta, invlink, ...)
+#&gt; {
+#&gt;     obj &lt;- 0
+#&gt;     for (j in seq(ncol(y))) {
+#&gt;         # loc := mu
+#&gt;         # concentration := lambda (shape)
+#&gt;         prob &lt;- tfp$distributions$InverseGaussian(
+#&gt;             loc = invlink(tf$exp(eta[ ,j])), concentration = 1)
+#&gt;         obj &lt;- obj + tf$reduce_sum(prob$log_prob(y[,j]))
+#&gt;     }
+#&gt; 
+#&gt;     -obj
+#&gt; }
+#&gt; &lt;environment: namespace:netReg&gt;</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -169,7 +229,9 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

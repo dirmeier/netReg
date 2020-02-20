@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">netReg</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.11.1</span>
       </span>
     </div>
 
@@ -229,7 +229,9 @@ of <code>G.Y</code></p></td>
 <dt>lambda </dt><dd><p>regularization parameter lambda)</p></dd>
 <dt>psigx </dt><dd><p>regularization parameter psigx</p></dd>
 <dt>psigy </dt><dd><p>regularization parameter psigy</p></dd>
-<dt>family </dt><dd><p>the family of the response</p></dd>
+<dt>family </dt><dd><p>a description of the error distribution and link function
+   to be used. Can a <code><a href='family-methods.html'>netReg::family</a></code> function or a character string
+   naming a family function, e.g. <code>gaussian</code> or "gaussian".</p></dd>
 <dt>call </dt><dd><p>the call that produced the object</p></dd>
 
     
@@ -250,7 +252,7 @@ of <code>G.Y</code></p></td>
 <span class='co'>## use two matrices</span>
 <span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>edgenet</span>(<span class='kw'>X</span><span class='kw'>=</span><span class='no'>X</span>, <span class='kw'>Y</span><span class='kw'>=</span><span class='no'>Y</span>, <span class='kw'>G.X</span><span class='kw'>=</span><span class='no'>G.X</span>, <span class='no'>G.Y</span>, <span class='kw'>family</span><span class='kw'>=</span><span class='no'>gaussian</span>, <span class='kw'>maxit</span><span class='kw'>=</span><span class='fl'>10</span>)
 <span class='co'>## if Y is vectorial, we cannot use an affinity matrix for Y</span>
-<span class='no'>fit</span><span class='kw'>&lt;-</span> <span class='fu'>edgenet</span>(<span class='kw'>X</span><span class='kw'>=</span><span class='no'>X</span>, <span class='kw'>Y</span><span class='kw'>=</span><span class='no'>Y</span>[, <span class='fl'>1</span>], <span class='kw'>G.X</span><span class='kw'>=</span><span class='no'>G.X</span>, <span class='kw'>family</span><span class='kw'>=</span><span class='no'>gaussian</span>, <span class='kw'>maxit</span><span class='kw'>=</span><span class='fl'>10</span>)
+<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>edgenet</span>(<span class='kw'>X</span><span class='kw'>=</span><span class='no'>X</span>, <span class='kw'>Y</span><span class='kw'>=</span><span class='no'>Y</span>[, <span class='fl'>1</span>], <span class='kw'>G.X</span><span class='kw'>=</span><span class='no'>G.X</span>, <span class='kw'>family</span><span class='kw'>=</span><span class='no'>gaussian</span>, <span class='kw'>maxit</span><span class='kw'>=</span><span class='fl'>10</span>)
 
 <span class='co'># estimation for binomial models</span>
 <span class='no'>eta</span> <span class='kw'>&lt;-</span> <span class='fl'>1</span> / (<span class='fl'>1</span> + <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Log'>exp</a></span>(-<span class='no'>X</span> <span class='kw'>%*%</span> <span class='no'>b</span>))

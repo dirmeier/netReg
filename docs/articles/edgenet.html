@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">netReg</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.11.1</span>
       </span>
     </div>
 
@@ -170,25 +170,28 @@
 ## Attaching package: 'netReg'</code></pre>
 <pre><code>## The following objects are masked from 'package:stats':
 ## 
-##     binomial, gaussian, poisson</code></pre>
+##     binomial, family, gaussian, inverse.gaussian, poisson</code></pre>
+<pre><code>## The following objects are masked from 'package:base':
+## 
+##     beta, gamma</code></pre>
 <p>Set some parameters and create affinity matrices:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co"># parameters</span></a>
-<a class="sourceLine" id="cb4-2" data-line-number="2">n &lt;-<span class="st"> </span><span class="dv">100</span></a>
-<a class="sourceLine" id="cb4-3" data-line-number="3">p &lt;-<span class="st"> </span><span class="dv">10</span></a>
-<a class="sourceLine" id="cb4-4" data-line-number="4">q &lt;-<span class="st"> </span><span class="dv">10</span></a>
-<a class="sourceLine" id="cb4-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb4-6" data-line-number="6"><span class="co"># affinity matrices</span></a>
-<a class="sourceLine" id="cb4-7" data-line-number="7">G.X &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/MathFun">abs</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/rWishart">rWishart</a></span>(<span class="dv">1</span>, <span class="dv">10</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/diag">diag</a></span>(p))[,,<span class="dv">1</span>])</a>
-<a class="sourceLine" id="cb4-8" data-line-number="8">G.Y &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/MathFun">abs</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/rWishart">rWishart</a></span>(<span class="dv">1</span>, <span class="dv">10</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/diag">diag</a></span>(q))[,,<span class="dv">1</span>])</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co"># parameters</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">n &lt;-<span class="st"> </span><span class="dv">100</span></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">p &lt;-<span class="st"> </span><span class="dv">10</span></a>
+<a class="sourceLine" id="cb5-4" data-line-number="4">q &lt;-<span class="st"> </span><span class="dv">10</span></a>
+<a class="sourceLine" id="cb5-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb5-6" data-line-number="6"><span class="co"># affinity matrices</span></a>
+<a class="sourceLine" id="cb5-7" data-line-number="7">G.X &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/MathFun">abs</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/rWishart">rWishart</a></span>(<span class="dv">1</span>, <span class="dv">10</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/diag">diag</a></span>(p))[,,<span class="dv">1</span>])</a>
+<a class="sourceLine" id="cb5-8" data-line-number="8">G.Y &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/MathFun">abs</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/rWishart">rWishart</a></span>(<span class="dv">1</span>, <span class="dv">10</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/diag">diag</a></span>(q))[,,<span class="dv">1</span>])</a></code></pre></div>
 <p>We created the affinity matrix absolutely random, although in practice a <em>real</em> (biological) observed affinity matrix should be used, because in the end the affinity matrix decides the shrinkage of the coefficients.</p>
 <p>The actual fit is straightforward. We create Gaussian data first and then fit the model:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co"># data</span></a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">X &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(n <span class="op">*</span><span class="st"> </span>p), n)</a>
-<a class="sourceLine" id="cb5-3" data-line-number="3">B &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(p <span class="op">*</span><span class="st"> </span>q), p)</a>
-<a class="sourceLine" id="cb5-4" data-line-number="4">Y &lt;-<span class="st"> </span>X <span class="op">%*%</span><span class="st"> </span>B <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(n <span class="op">*</span><span class="st"> </span>q, <span class="dv">0</span>, <span class="fl">0.1</span>), n)</a>
-<a class="sourceLine" id="cb5-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb5-6" data-line-number="6">fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/edgenet-methods.html">edgenet</a></span>(<span class="dt">X=</span>X, <span class="dt">Y=</span>Y, <span class="dt">G.X=</span>G.X, <span class="dt">G.Y=</span>G.Y, <span class="dt">family=</span>gaussian, <span class="dt">maxit=</span><span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb5-7" data-line-number="7"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(fit)</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="co"># data</span></a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">X &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(n <span class="op">*</span><span class="st"> </span>p), n)</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3">B &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(p <span class="op">*</span><span class="st"> </span>q), p)</a>
+<a class="sourceLine" id="cb6-4" data-line-number="4">Y &lt;-<span class="st"> </span>X <span class="op">%*%</span><span class="st"> </span>B <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(n <span class="op">*</span><span class="st"> </span>q, <span class="dv">0</span>, <span class="fl">0.1</span>), n)</a>
+<a class="sourceLine" id="cb6-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb6-6" data-line-number="6">fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/edgenet-methods.html">edgenet</a></span>(<span class="dt">X=</span>X, <span class="dt">Y=</span>Y, <span class="dt">G.X=</span>G.X, <span class="dt">G.Y=</span>G.Y, <span class="dt">family=</span>gaussian, <span class="dt">maxit=</span><span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb6-7" data-line-number="7"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(fit)</a></code></pre></div>
 <pre><code>## 'gaussian.edgenet' object
 ## 
 ## call:
@@ -203,38 +206,38 @@
 ## 
 ## -&gt; call coef(fit) for coefficients</code></pre>
 <p>The <code>fit</code> object contains information about coefficients, intercepts etc.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/coef">coef</a></span>(fit)[,<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]</a></code></pre></div>
-<pre><code>##                     y[1]        y[2]        y[3]        y[4]        y[5]
-## (Intercept)  0.083037019 -0.09917109  0.00295681 -0.09885743  0.09783184
-## x[1]         0.097964466 -0.09966286  0.09517892  0.09907481 -0.09961310
-## x[2]         0.098752268 -0.09974825 -0.09911743 -0.09463442 -0.09874384
-## x[3]        -0.096491270 -0.09629209 -0.09970053  0.09912351  0.09967384
-## x[4]         0.099409357  0.09967581  0.09980591  0.09957311 -0.09944408
-## x[5]         0.096728429 -0.09954892 -0.09307277 -0.09982590 -0.09972435
-## x[6]         0.099802792 -0.09847325  0.09973577  0.09958599 -0.09982577
-## x[7]         0.006257129  0.09976747  0.09956640 -0.09961203  0.09977716
-## x[8]        -0.099090070  0.09971370  0.09963538 -0.09784774 -0.09762153
-## x[9]         0.097800583  0.09929026 -0.09893826  0.09944689 -0.09921572
-## x[10]       -0.025769591 -0.09801751 -0.09927169  0.09962492 -0.09976362</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/coef">coef</a></span>(fit)[,<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]</a></code></pre></div>
+<pre><code>##                  y[1]      y[2]      y[3]      y[4]      y[5]
+## (Intercept) 0.9003567 0.9003829 0.9003120 0.9002066 0.9003463
+## x[1]        0.9002273 0.9002372 1.0996169 0.9001074 0.9004163
+## x[2]        0.9006475 0.9010343 1.0994906 0.9022833 0.9007675
+## x[3]        1.0996490 0.9002360 0.9002746 0.9001336 0.9006982
+## x[4]        0.9001578 0.9002684 0.9063749 0.9021673 0.9001877
+## x[5]        0.9056488 1.0991423 0.9003448 0.9006447 0.9007891
+## x[6]        0.9012993 0.9019507 0.9001886 0.9007923 0.9002187
+## x[7]        0.9007698 0.9009798 1.0982603 1.0988039 1.0982139
+## x[8]        0.9383100 0.9004335 0.9003744 0.9006745 0.9001517
+## x[9]        0.9005579 0.9003015 0.9002422 0.9004556 0.9003394
+## x[10]       1.0996001 1.0995895 0.9002583 1.0996617 0.9008908</code></pre>
 <p>Having the coefficients estimated we are able to predict novel data-sets:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">pred  &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/predict">predict</a></span>(fit, X)</a>
-<a class="sourceLine" id="cb9-2" data-line-number="2">pred[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]</a></code></pre></div>
-<pre><code>##             [,1]         [,2]        [,3]       [,4]        [,5]
-## [1,]  0.21137095  0.154727733 -0.04422877  0.0640093 -0.06731285
-## [2,]  0.15913851  0.108809462  0.13111308  0.2118414  0.28408319
-## [3,]  0.56117033  0.009153069  0.33623755  0.1845033  0.04669668
-## [4,] -0.07325584 -0.154268669 -0.26291487 -0.2271094  0.36502629
-## [5,]  0.24491784 -0.137579758  0.32169553  0.5275316 -0.05010085</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">pred  &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/predict">predict</a></span>(fit, X)</a>
+<a class="sourceLine" id="cb10-2" data-line-number="2">pred[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]</a></code></pre></div>
+<pre><code>##            [,1]      [,2]       [,3]        [,4]       [,5]
+## [1,]  1.4492133  1.329955  0.6271177  1.07578802 1.06648163
+## [2,]  0.9663546  1.499443  1.0397122  1.24714198 1.15415416
+## [3,]  1.9908291  1.935616  2.5117548  2.37106225 2.56071533
+## [4,]  5.2396438  5.111284  6.2007282  5.11137390 5.44285744
+## [5,] -0.1095857 -0.415109 -0.2209881 -0.07265518 0.06788154</code></pre>
 <p>The binomial case is the same only with a different <code>family</code> argument:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="co"># data</span></a>
-<a class="sourceLine" id="cb11-2" data-line-number="2">X &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(n <span class="op">*</span><span class="st"> </span>p), n)</a>
-<a class="sourceLine" id="cb11-3" data-line-number="3">B &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(p <span class="op">*</span><span class="st"> </span>q), p)</a>
-<a class="sourceLine" id="cb11-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb11-5" data-line-number="5">eta &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">/</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">exp</a></span>(<span class="op">-</span>X <span class="op">%*%</span><span class="st"> </span>B))</a>
-<a class="sourceLine" id="cb11-6" data-line-number="6">Y.binom &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/do.call">do.call</a></span>(<span class="st">"cbind"</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">10</span>), <span class="cf">function</span>(.) <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Binomial">rbinom</a></span>(n, <span class="dv">1</span>, eta[,.])))</a>
-<a class="sourceLine" id="cb11-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb11-8" data-line-number="8">fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/edgenet-methods.html">edgenet</a></span>(<span class="dt">X=</span>X, <span class="dt">Y=</span>Y, <span class="dt">G.X=</span>G.X, <span class="dt">G.Y=</span>G.Y, <span class="dt">family=</span>binomial, <span class="dt">maxit=</span><span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb11-9" data-line-number="9"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(fit)</a></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="co"># data</span></a>
+<a class="sourceLine" id="cb12-2" data-line-number="2">X &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(n <span class="op">*</span><span class="st"> </span>p), n)</a>
+<a class="sourceLine" id="cb12-3" data-line-number="3">B &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(p <span class="op">*</span><span class="st"> </span>q), p)</a>
+<a class="sourceLine" id="cb12-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb12-5" data-line-number="5">eta &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">/</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">exp</a></span>(<span class="op">-</span>X <span class="op">%*%</span><span class="st"> </span>B))</a>
+<a class="sourceLine" id="cb12-6" data-line-number="6">Y.binom &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/do.call">do.call</a></span>(<span class="st">"cbind"</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">10</span>), <span class="cf">function</span>(.) <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Binomial">rbinom</a></span>(n, <span class="dv">1</span>, eta[,.])))</a>
+<a class="sourceLine" id="cb12-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb12-8" data-line-number="8">fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/edgenet-methods.html">edgenet</a></span>(<span class="dt">X=</span>X, <span class="dt">Y=</span>Y, <span class="dt">G.X=</span>G.X, <span class="dt">G.Y=</span>G.Y, <span class="dt">family=</span>binomial, <span class="dt">maxit=</span><span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb12-9" data-line-number="9"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(fit)</a></code></pre></div>
 <pre><code>## 'binomial.edgenet' object
 ## 
 ## call:
@@ -249,15 +252,15 @@
 ## 
 ## -&gt; call coef(fit) for coefficients</code></pre>
 <p>The Poisson case of course works analogously:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="co"># data</span></a>
-<a class="sourceLine" id="cb13-2" data-line-number="2">X &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(n <span class="op">*</span><span class="st"> </span>p), n)</a>
-<a class="sourceLine" id="cb13-3" data-line-number="3">B &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(p <span class="op">*</span><span class="st"> </span>q), p)</a>
-<a class="sourceLine" id="cb13-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb13-5" data-line-number="5">eta &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">exp</a></span>(<span class="op">-</span>X <span class="op">%*%</span><span class="st"> </span>B)</a>
-<a class="sourceLine" id="cb13-6" data-line-number="6">Y.pois &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/do.call">do.call</a></span>(<span class="st">"cbind"</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">10</span>), <span class="cf">function</span>(.) <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Poisson">rpois</a></span>(n, eta[,.])))</a>
-<a class="sourceLine" id="cb13-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb13-8" data-line-number="8">fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/edgenet-methods.html">edgenet</a></span>(<span class="dt">X=</span>X, <span class="dt">Y=</span>Y.pois, <span class="dt">G.X=</span>G.X, <span class="dt">G.Y=</span>G.Y, <span class="dt">family=</span>poisson, <span class="dt">maxit=</span><span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb13-9" data-line-number="9"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(fit)</a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="co"># data</span></a>
+<a class="sourceLine" id="cb14-2" data-line-number="2">X &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(n <span class="op">*</span><span class="st"> </span>p), n)</a>
+<a class="sourceLine" id="cb14-3" data-line-number="3">B &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(p <span class="op">*</span><span class="st"> </span>q), p)</a>
+<a class="sourceLine" id="cb14-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb14-5" data-line-number="5">eta &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">exp</a></span>(<span class="op">-</span>X <span class="op">%*%</span><span class="st"> </span>B)</a>
+<a class="sourceLine" id="cb14-6" data-line-number="6">Y.pois &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/do.call">do.call</a></span>(<span class="st">"cbind"</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">10</span>), <span class="cf">function</span>(.) <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Poisson">rpois</a></span>(n, eta[,.])))</a>
+<a class="sourceLine" id="cb14-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb14-8" data-line-number="8">fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/edgenet-methods.html">edgenet</a></span>(<span class="dt">X=</span>X, <span class="dt">Y=</span>Y.pois, <span class="dt">G.X=</span>G.X, <span class="dt">G.Y=</span>G.Y, <span class="dt">family=</span>poisson, <span class="dt">maxit=</span><span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb14-9" data-line-number="9"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(fit)</a></code></pre></div>
 <pre><code>## 'poisson.edgenet' object
 ## 
 ## call:
@@ -277,8 +280,8 @@
 <h3 class="hasAnchor">
 <a href="#model-selection" class="anchor"></a>Model selection</h3>
 <p>In most cases we do not have the optimal shrinkage parameters <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(\psi_{1}\)</span> and <span class="math inline">\(\psi_{2}\)</span>. For these settings you can use <code>netReg</code>’s included model selection. We use Powell’s BOBYQA algorithm <span class="citation">(Powell 2009)</span> for gradient-free optimization in a coss-validation framework. Doing the model selection only requires calling <code>cv.edgenet</code>:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1">cv &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cvedgenet-methods.html">cv.edgenet</a></span>(<span class="dt">X=</span>X, <span class="dt">Y=</span>Y, <span class="dt">G.X=</span>G.Y, G.Y, <span class="dt">family=</span>gaussian, <span class="dt">optim.maxit=</span><span class="dv">10</span>, <span class="dt">maxit=</span><span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb15-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(cv)</a></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1">cv &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cvedgenet-methods.html">cv.edgenet</a></span>(<span class="dt">X=</span>X, <span class="dt">Y=</span>Y, <span class="dt">G.X=</span>G.Y, G.Y, <span class="dt">family=</span>gaussian, <span class="dt">optim.maxit=</span><span class="dv">10</span>, <span class="dt">maxit=</span><span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb16-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(cv)</a></code></pre></div>
 <pre><code>## 'gaussian.cv.edgenet' object
 ## 
 ## call:
@@ -295,7 +298,7 @@
 ## -&gt; call coef(cv) for coefficients</code></pre>
 <p>The cross-validation and BOBYQA is quite computationally intensive, so we set <code>optim.maxit</code> to <span class="math inline">\(10\)</span>. I recommend using <code>TensorFlow</code> on a GPU for that, since <code>edgenet</code> needs to compute many matrix multiplications.</p>
 <p>The <code>cv.edgenet</code> object also contains a fit with the optimal parameters.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(cv<span class="op">$</span>fit)</a></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(cv<span class="op">$</span>fit)</a></code></pre></div>
 <pre><code>## 'gaussian.edgenet' object
 ## 
 ## call:
@@ -312,47 +315,47 @@
 ## 
 ## -&gt; call coef(cv$fit) for coefficients</code></pre>
 <p>You can obtain the coefficients like this:</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/coef">coef</a></span>(cv)[,<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]</a></code></pre></div>
-<pre><code>##                    y[1]        y[2]        y[3]        y[4]        y[5]
-## (Intercept)  0.08916913 -0.09907784 -0.00835097 -0.09940753  0.09790114
-## x[1]         0.09354597 -0.06919014  0.09758573 -0.09663711  0.09051557
-## x[2]         0.09899577  0.09376785  0.09876553  0.09818357 -0.09896908
-## x[3]         0.09829337 -0.09812506 -0.03901690  0.09895898  0.09556314
-## x[4]         0.09845562  0.09805401  0.09910314  0.09862912 -0.09925639
-## x[5]         0.06105113  0.09855235 -0.09304333  0.09663733  0.09758998
-## x[6]        -0.09750740 -0.04739987 -0.09590533 -0.09763966  0.09961602
-## x[7]         0.09661483  0.09924888  0.09934835  0.09163690  0.09944286
-## x[8]        -0.09852684  0.09776846 -0.09481524 -0.09899158  0.09209749
-## x[9]        -0.09929769  0.09947788 -0.09396688 -0.09832968  0.09859553
-## x[10]        0.09631800 -0.09860425  0.09761003  0.07103110 -0.09881239</code></pre>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/coef">coef</a></span>(cv)[,<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]</a></code></pre></div>
+<pre><code>##                  y[1]      y[2]      y[3]      y[4]      y[5]
+## (Intercept) 0.9003022 0.9003109 0.9003357 0.9002512 0.9003797
+## x[1]        0.9003770 0.9004253 0.9003255 0.9004640 0.9003642
+## x[2]        0.9003659 0.9003244 0.9004520 0.9004127 0.9003683
+## x[3]        0.9005399 0.9004351 0.9002484 0.9004454 0.9003146
+## x[4]        0.9002989 0.9003041 0.9004574 0.9004608 0.9003270
+## x[5]        0.9003553 0.9003905 0.9004829 0.9003624 0.9004826
+## x[6]        0.9016979 0.9009241 0.9002509 0.9006585 0.9003376
+## x[7]        0.9005997 0.9009412 0.9002198 0.9017729 0.9005366
+## x[8]        0.9005347 0.9003763 0.9003918 0.9003374 0.9004546
+## x[9]        0.9007616 0.9003509 0.9003669 0.9002401 0.9003268
+## x[10]       0.9006305 0.9017265 0.9001973 0.9019073 0.9002485</code></pre>
 <p>Furthermore, you can also directly predict using a <code>cv.edgenet</code> object:</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1">pred  &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/predict">predict</a></span>(cv, X)</a>
-<a class="sourceLine" id="cb21-2" data-line-number="2">pred[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]</a></code></pre></div>
-<pre><code>##             [,1]       [,2]        [,3]       [,4]        [,5]
-## [1,]  0.48010323 -0.2904664  0.21398568  0.1060001  0.33347898
-## [2,] -0.02874577 -0.3354925 -0.14570731 -0.3465245  0.33280346
-## [3,]  0.41768836  0.4725363  0.14886521  0.3006336  0.09550334
-## [4,]  0.02919874  0.0192849  0.10799311 -0.2099566  0.27058731
-## [5,]  0.04083138 -0.3138958 -0.05223447  0.1199545 -0.21588471</code></pre>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1">pred  &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/predict">predict</a></span>(cv, X)</a>
+<a class="sourceLine" id="cb22-2" data-line-number="2">pred[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]</a></code></pre></div>
+<pre><code>##             [,1]        [,2]        [,3]        [,4]        [,5]
+## [1,]  2.61235412  2.61375459  2.61228128  2.61446516  2.61254287
+## [2,] -0.07524288 -0.07389706 -0.07414461 -0.07459006 -0.07442647
+## [3,]  1.39466527  1.39543944  1.39464965  1.39418459  1.39441324
+## [4,]  1.94471879  1.94350577  1.94451071  1.94445160  1.94510785
+## [5,]  5.64740243  5.64910908  5.64743100  5.65057062  5.64806896</code></pre>
 </div>
 <div id="a-biological-example" class="section level3">
 <h3 class="hasAnchor">
 <a href="#a-biological-example" class="anchor"></a>A biological example</h3>
 <p>This section explains how to fit a linear model and do parameter estimation.</p>
 <p>At first we load the library and some data:</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(netReg)</a>
-<a class="sourceLine" id="cb23-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(<span class="st">"yeast"</span>)</a>
-<a class="sourceLine" id="cb23-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb23-4" data-line-number="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/ls">ls</a></span>(yeast)</a>
-<a class="sourceLine" id="cb23-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb23-6" data-line-number="6">X &lt;-<span class="st"> </span>yeast<span class="op">$</span>X</a>
-<a class="sourceLine" id="cb23-7" data-line-number="7">Y &lt;-<span class="st"> </span>yeast<span class="op">$</span>Y</a>
-<a class="sourceLine" id="cb23-8" data-line-number="8">G.Y &lt;-<span class="st"> </span>yeast<span class="op">$</span>GY</a></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(netReg)</a>
+<a class="sourceLine" id="cb24-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(<span class="st">"yeast"</span>)</a>
+<a class="sourceLine" id="cb24-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb24-4" data-line-number="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/ls">ls</a></span>(yeast)</a>
+<a class="sourceLine" id="cb24-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb24-6" data-line-number="6">X &lt;-<span class="st"> </span>yeast<span class="op">$</span>X</a>
+<a class="sourceLine" id="cb24-7" data-line-number="7">Y &lt;-<span class="st"> </span>yeast<span class="op">$</span>Y</a>
+<a class="sourceLine" id="cb24-8" data-line-number="8">G.Y &lt;-<span class="st"> </span>yeast<span class="op">$</span>GY</a></code></pre></div>
 <p>The <em>yeast</em> data <span class="math inline">\(\mathbf{X}\)</span> and <span class="math inline">\(\mathbf{Y}\)</span> set is taken and adopted from <span class="citation">(Brem et al. 2005)</span>, <span class="citation">(Storey, Akey, and Kruglyak 2005)</span>, and <span class="citation">(Cheng et al. 2014)</span>. <span class="math inline">\(\mathbf{GY}\)</span> is taken from <a href="https://thebiogrid.org/downloads/archives/Release%20Archive/BIOGRID-3.4.150/BIOGRID-ORGANISM-3.4.150.tab.zip">BioGRID</a>.</p>
 <p><span class="math inline">\(\mathbf{X}\)</span> is a <span class="math inline">\((n \times p)\)</span> matrix of genetic markers where <span class="math inline">\(n\)</span> is the number of samples (112) and <span class="math inline">\(p\)</span> is the number of markers. <span class="math inline">\(\mathbf{Y}\)</span> is a <span class="math inline">\((n \times q)\)</span> matrix of expression values for <span class="math inline">\(q\)</span> yeast genes. <span class="math inline">\(n\)</span> is again the numer of samples (112). <span class="math inline">\(\mathbf{GY}\)</span> is a <span class="math inline">\((q \times q)\)</span> adjacency matrix representing protein-protein interactions for the <span class="math inline">\(q\)</span> response variables.</p>
 <p>We only use a smaller network in order to be able to print the results here.</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1">fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/edgenet-methods.html">edgenet</a></span>(<span class="dt">X=</span>X, <span class="dt">Y=</span>Y, <span class="dt">G.Y=</span>G.Y, <span class="dt">lambda=</span><span class="dv">5</span>, <span class="dt">family=</span>gaussian, <span class="dt">maxit=</span><span class="dv">10</span>, <span class="dt">thresh=</span><span class="fl">1e-3</span>)</a>
-<a class="sourceLine" id="cb24-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(fit)</a></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1">fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/edgenet-methods.html">edgenet</a></span>(<span class="dt">X=</span>X, <span class="dt">Y=</span>Y, <span class="dt">G.Y=</span>G.Y, <span class="dt">lambda=</span><span class="dv">5</span>, <span class="dt">family=</span>gaussian, <span class="dt">maxit=</span><span class="dv">10</span>, <span class="dt">thresh=</span><span class="fl">1e-3</span>)</a>
+<a class="sourceLine" id="cb25-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(fit)</a></code></pre></div>
 <pre><code>## 'gaussian.edgenet' object
 ## 
 ## call:
@@ -369,20 +372,20 @@
 ## -&gt; call coef(fit) for coefficients</code></pre>
 <p>For the response variables we use an affinity matrix that represents <em>biological relationships</em> with <span class="math inline">\(\mathbf{GY}\)</span>. We promote sparsity by setting <span class="math inline">\(\lambda = 5\)</span> and put a weak (default) penalty on similar coefficients by setting <span class="math inline">\(\psi_{gy} = 1\)</span>. Other than that we used standard parameters in this case.</p>
 <p>The <code>fit</code> object contains information about coefficients and intercepts. Having the coefficients estimated we are able to predict novel data-sets:</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1">X.new &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dv">10</span> <span class="op">*</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/nrow">ncol</a></span>(X)), <span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb26-2" data-line-number="2">pred  &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/predict">predict</a></span>(fit, X.new)</a>
-<a class="sourceLine" id="cb26-3" data-line-number="3">pred[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]</a></code></pre></div>
-<pre><code>##                [,1]        [,2]        [,3]        [,4]         [,5]
-##  [1,] -0.0914877945  0.22058983 -0.07726871 -0.35484517 -0.006731701
-##  [2,]  0.1953411689  0.05843477  0.01245840  0.01178126  0.277875732
-##  [3,] -0.1336547048 -0.33417337 -0.25812693 -0.11552773  0.006066994
-##  [4,] -0.3004199079 -0.23592525 -0.30216580 -0.28525019 -0.096749034
-##  [5,]  0.3448897458 -0.34252108  0.41181161 -0.35811120 -0.096045855
-##  [6,] -0.0018242763 -0.39078397 -0.27565273 -0.02570694 -0.058074642
-##  [7,]  0.0196530703 -0.19614880  0.13746636 -0.44387661 -0.124987221
-##  [8,]  0.0006829139 -0.19546169  0.01382474 -0.11252501 -0.058157357
-##  [9,] -0.2106520808 -0.21408955 -0.41989763 -0.45649735  0.770123556
-## [10,] -0.0850444439  0.10411313 -0.25219230 -0.04887185  0.013194422</code></pre>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1">X.new &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dv">10</span> <span class="op">*</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/nrow">ncol</a></span>(X)), <span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb27-2" data-line-number="2">pred  &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/predict">predict</a></span>(fit, X.new)</a>
+<a class="sourceLine" id="cb27-3" data-line-number="3">pred[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]</a></code></pre></div>
+<pre><code>##             [,1]       [,2]       [,3]       [,4]       [,5]
+##  [1,]  4.1744776  4.1751662  4.1744079  4.1754934  4.1743196
+##  [2,]  1.8105405  1.8122698  1.8111227  1.8135863  1.8113476
+##  [3,]  1.8887596  1.8892567  1.8879708  1.8891502  1.8881457
+##  [4,] -0.9665237 -0.9665011 -0.9677862 -0.9670347 -0.9673493
+##  [5,]  6.2822988  6.2822908  6.2817507  6.2817011  6.2813731
+##  [6,]  3.3963463  3.3961869  3.3966142  3.3960405  3.3965931
+##  [7,]  5.3429670  5.3397246  5.3409361  5.3385110  5.3405420
+##  [8,]  4.4231556  4.4209189  4.4189715  4.4203318  4.4195920
+##  [9,]  2.9276149  2.9294643  2.9274470  2.9300377  2.9278901
+## [10,]  1.4565552  1.4549309  1.4558023  1.4547471  1.4557673</code></pre>
 </div>
 </div>
 <div id="references" class="section level2 unnumbered">

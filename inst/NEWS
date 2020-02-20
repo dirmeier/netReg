@@ -1,3 +1,7 @@
+## Version 1.11.1
+  - Adds experimental families for inverse Gaussian, Beta and Gamma.
+  - Add some test cases.
+
 ## Version 1.9.2
   - Adds Poisson family
 
