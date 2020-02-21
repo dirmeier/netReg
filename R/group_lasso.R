@@ -56,138 +56,134 @@
 #' \item{call }{ the call that produced the object}
 #'
 #' @examples
-#' X <- matrix(rnorm(100*10), 100, 5)
-#' b <- matrix(rnorm(100), 5)
+#' X <- matrix(rnorm(100 * 10), 100, 5)
+#' b <- rnorm(5)
 #' grps <- c(NA, 1, 1, 2, 2)
 #'
 #' # estimate the parameters of a Gaussian model
 #' Y <- X %*% b + rnorm(100)
-#' fit <- group.lasso(X=X, Y=Y, grps=grps, family=gaussian, maxit=10)
+#' fit <- group.lasso(X = X, Y = Y, grps = grps, family = gaussian, maxit = 10)
 #'
 #' # estimation for binomial models
 #' eta <- 1 / (1 + exp(-X %*% b))
-#' Y <- do.call("cbind", lapply(seq(10), function(.) rbinom(100, 1, eta[,.])))
-#' fit <- edgenet(X=X, Y=Y, G.X=G.X, G.Y, family=binomial, maxit=1)
+#' Y <- rbinom(100, 1, eta)
+#' fit <- group.lasso(X = X, Y = Y, grps = grps, family = binomial, maxit = 10)
 #'
 #' # estimation for Poisson models
 #' eta <- exp(-X %*% b)
-#' Y <- do.call("cbind", lapply(seq(10), function(.) rpois(100, eta[,.])))
-#' fit <- edgenet(X=X, Y=Y, G.X=G.X, G.Y, family=poisson, maxit=1)
+#' Y <- rpois(100, eta)
+#' fit <- group.lasso(X = X, Y = Y, G.X = G.X, G.Y, family = poisson, maxit = 1)
 setGeneric(
-    "edgenet",
-    function(X, Y, G.X=NULL, G.Y=NULL,
-             lambda=1, psigx=1, psigy=1,
-             thresh=1e-5, maxit=1e5, learning.rate=0.01,
-             family=gaussian)
-    {
-        standardGeneric("edgenet")
-    },
-    package = "netReg"
+  "group.lasso",
+  function(X, Y, grps = NULL,
+           lambda = 1,
+           thresh = 1e-5, maxit = 1e5, learning.rate = 0.01,
+           family = gaussian) {
+    standardGeneric("group.lasso")
+  },
+  package = "netReg"
 )
 
 
-#' @rdname edgenet-methods
+#' @rdname grouplasso-methods
 setMethod(
-    "edgenet",
-    signature = signature(X="matrix", Y="numeric"),
-    function(X, Y, G.X=NULL, G.Y=NULL,
-             lambda=1, psigx=1, psigy=1,
-             thresh=1e-5, maxit=1e5, learning.rate=0.01,
-             family=gaussian)
-    {
-        edgenet(X, as.matrix(Y), G.X, G.Y,
-                lambda, psigx, psigy,
-                thresh, maxit, learning.rate,
-                family)
-    }
+  "group.lasso",
+  signature = signature(X = "matrix", Y = "numeric"),
+  function(X, Y, grps = NULL,
+           lambda = 1,
+           thresh = 1e-5, maxit = 1e5, learning.rate = 0.01,
+           family = gaussian) {
+    group.lasso(
+      X, as.matrix(Y), G.X, G.Y,
+      lambda,
+      thresh, maxit, learning.rate,
+      family
+    )
+  }
 )
 
 
-#' @rdname edgenet-methods
+#' @rdname grouplasso-methods
 setMethod(
-    "edgenet",
-    signature = signature(X="matrix", Y="matrix"),
-    function(X, Y, G.X=NULL, G.Y=NULL,
-             lambda=1, psigx=1, psigy=1,
-             thresh=1e-5, maxit=1e5, learning.rate=0.01,
-             family=gaussian)
-    {
-        stopifnot(is.numeric(maxit), is.numeric(thresh),
-                  is.numeric(learning.rate))
+  "group.lasso",
+  signature = signature(X = "matrix", Y = "matrix"),
+  function(X, Y, grps = NULL,
+           lambda = 1,
+           thresh = 1e-5, maxit = 1e5, learning.rate = 0.01,
+           family = gaussian) {
+    stopifnot(
+      is.numeric(maxit), is.numeric(thresh),
+      is.numeric(learning.rate)
+    )
+    stopifnot(all(is.integer(grps)), max(grps) > ncol(X), min(grps) < 1)
 
-        if (is.null(G.X)) psigx <- 0
-        if (is.null(G.Y)) psigy <- 0
+    check.matrices(X, Y)
+    check.dimensions(X, Y, nrow(X), ncol(X))
+    lambda <- check.param(lambda, 0, `<`, 0)
+    maxit <- check.param(maxit, 0, `<`, 1e5)
+    thresh <- check.param(thresh, 0, `<`, 1e-5)
+    family <- get.family(family)
 
-        check.matrices(X, Y)
-        check.graphs(X, Y, G.X, G.Y, psigx, psigy)
-        check.dimensions(X, Y, nrow(X), ncol(X))
-        lambda <- check.param(lambda, 0, `<`, 0)
-        psigx <- check.param(psigx, 0, `<`, 0)
-        psigy <- check.param(psigy, 0, `<`, 0)
-        maxit <- check.param(maxit, 0, `<`, 1e5)
-        thresh <- check.param(thresh, 0, `<`, 1e-5)
-        family <- get.family(family)
+    # estimate coefficients
+    ret <- .group.lasso(
+      x = X, y = Y, grps = grps,
+      lambda = lambda,
+      thresh = thresh, maxit = maxit,
+      learning.rate = learning.rate, family = family
+    )
 
-        if (ncol(Y) == 1) {
-            psigy <- 0
-            G.Y <- NULL
-        }
+    ret$call <- match.call()
+    class(ret) <- c(class(ret), "edgenet")
 
-        # estimate coefficients
-        ret <- .edgenet(x=X, y=Y, gx=G.X, gy=G.Y,
-                        lambda = lambda, psigx = psigx, psigy = psigy,
-                        thresh = thresh, maxit = maxit,
-                        learning.rate = learning.rate, family = family)
-
-        ret$call   <- match.call()
-        class(ret) <- c(class(ret), "edgenet")
-
-        ret
-    }
+    ret
+  }
 )
 
 
 #' @noRd
-.edgenet <- function(x, y, gx, gy,
-                     lambda, psigx, psigy,
-                     thresh, maxit,learning.rate, family)
-{
-    p <- ncol(x)
-    q <- ncol(y)
+.group.lasso <- function(x, y, grps,
+                         lambda,
+                         thresh, maxit, learning.rate, family) {
+  p <- ncol(x)
+  q <- ncol(y)
 
-    reset_graph()
+  reset_graph()
 
-    x <- cast_float(x)
-    y <- cast_float(y)
+  x <- cast_float(x)
+  y <- cast_float(y)
 
-    if (!is.null(gx))
-        gx <- cast_float(laplacian_(gx))
-    if (!is.null(gy))
-        gy <- cast_float(laplacian_(gy))
+  if (!is.null(gx)) {
+    gx <- cast_float(laplacian_(gx))
+  }
+  if (!is.null(gy)) {
+    gy <- cast_float(laplacian_(gy))
+  }
 
-    # TODO: think about this
-    alpha <- zero_vector(q) + 1
-    beta  <- zero_matrix(p, q) + 1
+  # TODO: think about this
+  alpha <- zero_vector(q) + 1
+  beta <- zero_matrix(p, q) + 1
 
-    # estimate coefficients
-    loss <- edgenet.loss(gx, gy, family)
-    objective <- loss(alpha, beta, lambda, psigx, psigy, x, y)
-    res <- fit(objective, alpha, beta, maxit, learning.rate, thresh)
+  # estimate coefficients
+  loss <- edgenet.loss(gx, gy, family)
+  objective <- loss(alpha, beta, lambda, psigx, psigy, x, y)
+  res <- fit(objective, alpha, beta, maxit, learning.rate, thresh)
 
-    # finalize output
-    beta  <- res$beta
-    alpha <- res$alpha
-    rownames(beta) <- colnames(x)
-    colnames(beta) <- colnames(y)
-    ret <- list(beta = beta,
-                alpha = alpha,
-                parameters = c("lambda"=lambda, "psigx"=psigx, "psigy"=psigy),
-                lambda = lambda,
-                psigx = psigx,
-                psigy = psigy)
+  # finalize output
+  beta <- res$beta
+  alpha <- res$alpha
+  rownames(beta) <- colnames(x)
+  colnames(beta) <- colnames(y)
+  ret <- list(
+    beta = beta,
+    alpha = alpha,
+    parameters = c("lambda" = lambda, "psigx" = psigx, "psigy" = psigy),
+    lambda = lambda,
+    psigx = psigx,
+    psigy = psigy
+  )
 
-    ret$family <- family
-    class(ret) <- paste0(family$family, ".edgenet")
+  ret$family <- family
+  class(ret) <- paste0(family$family, ".edgenet")
 
-    ret
+  ret
 }

@@ -22,7 +22,7 @@
 #' @import tensorflow
 init_variables <- function()
 {
-    tf$compat$v1$global_variables_initializer()
+    #tf$a
 }
 
 
@@ -30,15 +30,7 @@ init_variables <- function()
 #' @import tensorflow
 adam <- function(learning.rate)
 {
-    tf$compat$v1$train$AdamOptimizer(learning_rate = learning.rate)
-}
-
-
-#' @noRd
-#' @import tensorflow
-session <- function()
-{
-    tf$compat$v1$Session()
+    tf$keras$optimizers$Adam(learning_rate = learning.rate)
 }
 
 
@@ -46,7 +38,7 @@ session <- function()
 #' @import tensorflow
 reset_graph <- function()
 {
-    tensorflow::tf$compat$v1$reset_default_graph()
+    tensorflow::tf$keras$backend$clear_session()
 }
 
 
@@ -71,10 +63,10 @@ constant_float <- function(x)
 placeholder <- function(shape, name=NULL)
 {
     if (!is.null(name))
-        tensorflow::tf$compat$v1$placeholder(
+        tensorflow::tf$keras$backend$placeholder(
             tensorflow::tf$float32, shape, name=name)
     else
-        tensorflow::tf$compat$v1$placeholder(
+        tensorflow::tf$keras$backend$placeholder(
             tensorflow::tf$float32, shape)
 }
 
