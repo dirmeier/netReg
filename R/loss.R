@@ -1,6 +1,6 @@
 # netReg: graph-regularized linear regression models.
 #
-# Copyright (C) 2015 - 2019 Simon Dirmeier
+# Copyright (C) 2015 - 2020 Simon Dirmeier
 #
 # This file is part of netReg.
 #
@@ -19,130 +19,70 @@
 
 
 #' @noRd
-#' @importFrom tensorflow tf
-gaussian.loss <- function(y, eta, ...)
+#' @import tensorflow
+edgenet.loss <- function(gx, gy, family)
 {
-    obj <- tf$reduce_sum(tf$square(y - eta))
-    obj
-}
+    invlink <- family$linkinv
+    loss.function <- family$loss
 
+    loss <- function(alpha, beta, lambda, psigx, psigy, x, y)
+    {
+        eta <- linear.predictor(alpha, beta, x)
+        obj <- loss.function(y, eta, invlink) + .lasso.penalty(lambda, beta)
 
-#' @noRd
-#' @importFrom tensorflow tf
-binomial.loss <- function(y, eta, invlink, ...)
-{
-    obj <- 0
-    for (j in seq(ncol(y))) {
-        prob <- tfp$distributions$Bernoulli(probs = invlink(eta[ ,j]))
-        obj <- obj + tf$reduce_sum(prob$log_prob(y[,j]))
+        if (!is.null(gx)) {
+            obj <- obj + psigx * .edgenet.x.penalty(gx, beta)
+        }
+        if (!is.null(gy)) {
+            obj <- obj + psigy * .edgenet.y.penalty(gy, beta)
+        }
+
+        obj
     }
 
-    -obj
+    loss
 }
 
 
 #' @noRd
-#' @importFrom tensorflow tf
-poisson.loss <- function(y, eta, invlink, ...)
+#' @import tensorflow
+.edgenet.x.penalty <- function(gx, beta)
 {
-    obj <- 0
-    for (j in seq(ncol(y))) {
-        prob <- tfp$distributions$Poisson(rate = invlink(eta[ ,j]))
-        obj <- obj + tf$reduce_sum(prob$log_prob(y[,j]))
+    tf$linalg$trace(tf$matmul(tf$transpose(beta), tf$matmul(gx, beta)))
+}
+
+
+#' @noRd
+#' @import tensorflow
+.edgenet.y.penalty <- function(gy, beta)
+{
+    tf$linalg$trace(tf$matmul(beta, tf$matmul(gy, tf$transpose(beta))))
+}
+
+
+#' @noRd
+#' @import tensorflow
+group.lasso.loss <- function(grps, family)
+{
+    invlink <- family$linkinv
+    loss.function <- family$loss
+
+    loss <- function(alpha, beta, lambda, x, y)
+    {
+        eta <- linear.predictor(alpha, beta, x)
+        obj <- loss.function(y, eta, invlink) +
+            .group.lasso.penalty(lambda, beta, grps)
+
+        obj
     }
 
-    -obj
+    loss
 }
 
 
 #' @noRd
 #' @importFrom tensorflow tf
-gamma.loss <- function(y, eta, invlink, ...)
-{
-    obj <- 0
-    for (j in seq(ncol(y))) {
-        prob <- tfp$distributions$Gamma(
-            rate = invlink(tf$exp(eta[ ,j])), concentration = 1)
-        obj <- obj + tf$reduce_sum(prob$log_prob(y[,j]))
-    }
-
-    -obj
-}
-
-
-#' @noRd
-#' @importFrom tensorflow tf
-beta.loss <- function(y, eta, invlink, ...)
-{
-    obj <- 0
-    eps <- .Machine$double.eps * 1e9
-    for (j in seq(ncol(y))) {
-        mu <- invlink(eta[ ,j])
-        phi <- 1 # TODO: replace this with tf$variable
-
-        # reparametrize
-        # concentration1 := alpha = mu * phi
-        p <- mu * phi
-        # concentration0 := beta = (1. - mu) * phi
-        q <- (1 - mu) * phi
-
-        # deal with numerical instabilities
-        p.trans <- tf$math$maximum(p, eps)
-        q.trans <- tf$math$maximum(q, eps)
-
-        prob <- tfp$distributions$Beta(
-            concentration1 = p.trans, concentration0 = q.trans)
-        obj <- obj + tf$reduce_sum(prob$log_prob(y[,j]))
-    }
-
-    -obj
-}
-
-
-#' @noRd
-#' @importFrom tensorflow tf
-inverse.gaussian.loss <- function(y, eta, invlink, ...)
-{
-    obj <- 0
-    for (j in seq(ncol(y))) {
-        # loc := mu
-        # concentration := lambda (shape)
-        prob <- tfp$distributions$InverseGaussian(
-            loc = invlink(tf$exp(eta[ ,j])), concentration = 1)
-        obj <- obj + tf$reduce_sum(prob$log_prob(y[,j]))
-    }
-
-    -obj
-}
-
-
-#' @noRd
-#' @importFrom tensorflow tf
-lasso.penalty <- function(lambda, beta)
-{
-    lambda * tf$reduce_sum(tf$abs(beta))
-}
-
-
-#' @noRd
-#' @importFrom tensorflow tf
-ridge.penalty <- function(lambda, beta)
-{
-    lambda * tf$reduce_sum(tf$square(beta))
-}
-
-
-#' @noRd
-elastic.penalty <- function(alpha, lambda, beta)
-{
-    lambda * (ridge.penalty((1 - alpha) / 2, beta) +
-              lasso.penalty(alpha, beta))
-}
-
-
-#' @noRd
-#' @importFrom tensorflow tf
-group.lasso.penalty <- function(lambda, beta, grps) {
+.group.lasso.penalty <- function(lambda, beta, grps) {
     pen <- 0
     for (el in unique(grps)) {
         idxs <- which(grps == el)
@@ -152,4 +92,27 @@ group.lasso.penalty <- function(lambda, beta, grps) {
     lambda * pen
 }
 
+
+#' @noRd
+#' @importFrom tensorflow tf
+.lasso.penalty <- function(lambda, beta)
+{
+    lambda * tf$reduce_sum(tf$abs(beta))
+}
+
+
+#' @noRd
+#' @importFrom tensorflow tf
+.ridge.penalty <- function(lambda, beta)
+{
+    lambda * tf$reduce_sum(tf$square(beta))
+}
+
+
+#' @noRd
+.elastic.penalty <- function(alpha, lambda, beta)
+{
+    lambda * (.ridge.penalty((1 - alpha) / 2, beta) +
+              .lasso.penalty(alpha, beta))
+}
 
