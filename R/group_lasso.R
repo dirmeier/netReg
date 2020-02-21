@@ -111,10 +111,14 @@ setMethod(
            lambda = 1,
            thresh = 1e-5, maxit = 1e5, learning.rate = 0.01,
            family = gaussian) {
+
     stopifnot(
       is.numeric(maxit), is.numeric(thresh),
       is.numeric(learning.rate)
     )
+
+    if (!is.null(grps))
+        grps <- rep(1L, ncol(X))
     stopifnot(all(is.integer(grps)), max(grps) > ncol(X), min(grps) < 1)
 
     check.matrices(X, Y)
@@ -152,20 +156,12 @@ setMethod(
   x <- cast_float(x)
   y <- cast_float(y)
 
-  if (!is.null(gx)) {
-    gx <- cast_float(laplacian_(gx))
-  }
-  if (!is.null(gy)) {
-    gy <- cast_float(laplacian_(gy))
-  }
-
-  # TODO: think about this
   alpha <- zero_vector(q) + 1
   beta <- zero_matrix(p, q) + 1
 
   # estimate coefficients
-  loss <- edgenet.loss(gx, gy, family)
-  objective <- loss(alpha, beta, lambda, psigx, psigy, x, y)
+  loss <- group.lasso.loss(grps, family)
+  objective <- loss(alpha, beta, lambda, x, y)
   res <- fit(objective, alpha, beta, maxit, learning.rate, thresh)
 
   # finalize output
@@ -183,7 +179,7 @@ setMethod(
   )
 
   ret$family <- family
-  class(ret) <- paste0(family$family, ".edgenet")
+  class(ret) <- paste0(family$family, ".group.lasso")
 
   ret
 }

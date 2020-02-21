@@ -1,6 +1,6 @@
 # netReg: graph-regularized linear regression models.
 #
-# Copyright (C) 2015 - 2020 Simon Dirmeier
+# Copyright (C) 2015 - 2019 Simon Dirmeier
 #
 # This file is part of netReg.
 #
@@ -16,3 +16,23 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with netReg. If not, see <http://www.gnu.org/licenses/>.
+
+
+#' @noRd
+#' @import tensorflow
+group.lasso.loss <- function(grps, family)
+{
+    invlink <- family$linkinv
+    loss.function <- family$loss
+
+    loss <- function(alpha, beta, lambda, x, y)
+    {
+        eta <- linear.predictor(alpha, beta, x)
+        obj <- loss.function(y, eta, invlink) +
+            group.lasso.penalty(lambda, beta, grps)
+
+        obj
+    }
+
+    loss
+}

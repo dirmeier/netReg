@@ -45,7 +45,7 @@ edgenet.loss <- function(gx, gy, family)
   loss <- function(alpha, beta, lambda, psigx, psigy, x, y)
   {
     eta <- linear.predictor(alpha, beta, x)
-    obj <- loss.function(y, eta, invlink) + lasso(lambda, beta)
+    obj <- loss.function(y, eta, invlink) + lasso.penalty(lambda, beta)
 
     if (!is.null(gx)) {
       obj <- obj + psigx * .edgenet.x.penalty(gx, beta)

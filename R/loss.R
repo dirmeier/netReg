@@ -115,9 +115,10 @@ inverse.gaussian.loss <- function(y, eta, invlink, ...)
     -obj
 }
 
+
 #' @noRd
 #' @importFrom tensorflow tf
-lasso <- function(lambda, beta)
+lasso.penalty <- function(lambda, beta)
 {
     lambda * tf$reduce_sum(tf$abs(beta))
 }
@@ -125,18 +126,30 @@ lasso <- function(lambda, beta)
 
 #' @noRd
 #' @importFrom tensorflow tf
-ridge <- function(lambda, beta)
+ridge.penalty <- function(lambda, beta)
 {
     lambda * tf$reduce_sum(tf$square(beta))
 }
 
 
 #' @noRd
-elastic <- function(alpha, lambda, beta)
+elastic.penalty <- function(alpha, lambda, beta)
 {
-    lambda * (ridge((1 - alpha) / 2, beta) +
-              lasso(alpha, beta))
+    lambda * (ridge.penalty((1 - alpha) / 2, beta) +
+              lasso.penalty(alpha, beta))
 }
 
+
+#' @noRd
+#' @importFrom tensorflow tf
+group.lasso.penalty <- function(lambda, beta, grps) {
+    pen <- 0
+    for (el in unique(grps)) {
+        idxs <- which(grps == el)
+        grp.pen <- length(idxs)
+        pen <- pen + tf$sqrt(grp.pen)  * tf$reduce_euclidean_norm(beta[idxs])
+    }
+    lambda * pen
+}
 
 
