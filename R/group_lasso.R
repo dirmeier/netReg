@@ -67,7 +67,7 @@
 #' # estimation for binomial models
 #' eta <- 1 / (1 + exp(-X %*% b))
 #' Y <- rbinom(100, 1, eta)
-#' fit <- group.lasso(X = X, Y = Y, grps = grps, family = binomial, maxit = 10)
+#' fit <- group.lasso(X = X, Y = Y, grps = grps, family = binomial, maxit = 1)
 #'
 #' # estimation for Poisson models
 #' eta <- exp(-X %*% b)
@@ -120,8 +120,8 @@ setMethod(
     if (!is.null(grps))
         grps <- rep(1L, ncol(X))
     stopifnot(all(is.integer(grps)),
-              max(grps, na.rm = TRUE) > ncol(X),
-              min(grps, na.rm = TRUE) < 1)
+              max(grps, na.rm = TRUE) <= ncol(X),
+              min(grps, na.rm = TRUE) >= 1)
 
     check.matrices(X, Y)
     check.dimensions(X, Y, nrow(X), ncol(X))
