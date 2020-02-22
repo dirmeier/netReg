@@ -94,7 +94,7 @@ setMethod(
            thresh = 1e-5, maxit = 1e5, learning.rate = 0.01,
            family = gaussian) {
     group.lasso(
-      X, as.matrix(Y), G.X, G.Y,
+      X, as.matrix(Y), grps,
       lambda,
       thresh, maxit, learning.rate,
       family
@@ -119,7 +119,9 @@ setMethod(
 
     if (!is.null(grps))
         grps <- rep(1L, ncol(X))
-    stopifnot(all(is.integer(grps)), max(grps) > ncol(X), min(grps) < 1)
+    stopifnot(all(is.integer(grps)),
+              max(grps, na.rm = TRUE) > ncol(X),
+              min(grps, na.rm = TRUE) < 1)
 
     check.matrices(X, Y)
     check.dimensions(X, Y, nrow(X), ncol(X))
@@ -172,10 +174,8 @@ setMethod(
   ret <- list(
     beta = beta,
     alpha = alpha,
-    parameters = c("lambda" = lambda, "psigx" = psigx, "psigy" = psigy),
-    lambda = lambda,
-    psigx = psigx,
-    psigy = psigy
+    parameters = c("lambda" = lambda),
+    lambda = lambda
   )
 
   ret$family <- family

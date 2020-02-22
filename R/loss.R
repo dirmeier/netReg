@@ -84,7 +84,8 @@ group.lasso.loss <- function(grps, family)
 #' @importFrom tensorflow tf
 .group.lasso.penalty <- function(lambda, beta, grps) {
     pen <- 0
-    for (el in unique(grps)) {
+    iter <- unique(grps[!is.na(grps)])
+    for (el in iter) {
         idxs <- which(grps == el)
         grp.pen <- length(idxs)
         pen <- pen + tf$sqrt(grp.pen)  * tf$reduce_euclidean_norm(beta[idxs])

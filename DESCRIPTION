@@ -35,7 +35,7 @@ Suggests:
     glmnet,
     LaplacesDemon
 VignetteBuilder: knitr
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
 SystemRequirements: C++11
 LinkingTo:
     Rcpp,
@@ -44,6 +44,7 @@ Imports:
     Rcpp,
     stats,
     tensorflow (>= 1.14.0),
+    tfprobability (>= 0.7.0),
     reticulate,
     nloptr,
     methods

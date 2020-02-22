@@ -60,7 +60,7 @@ For more details, please check out the respective vignettes of the single models
 Before installing the package, make sure to have these Python dependencies installed:
 
 * `tensorflow==1.14.0`,
-* `tensorflow-probabiltiy==0.5.0`
+* `tensorflow-probabiltiy==0.7.0`
 
 The easiest way is probably to install `TensorFlow` from with `R` and then call:
 

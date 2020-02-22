@@ -7,22 +7,56 @@
 \alias{cv.edgenet,matrix,matrix-method}
 \title{Find the optimal shrinkage parameters for edgenet}
 \usage{
-cv.edgenet(X, Y, G.X = NULL, G.Y = NULL, lambda = NA_real_,
-  psigx = NA_real_, psigy = NA_real_, thresh = 1e-05,
-  maxit = 1e+05, learning.rate = 0.01, family = gaussian,
-  optim.maxit = 100, optim.thresh = 0.01, nfolds = 10)
+cv.edgenet(
+  X,
+  Y,
+  G.X = NULL,
+  G.Y = NULL,
+  lambda = NA_real_,
+  psigx = NA_real_,
+  psigy = NA_real_,
+  thresh = 1e-05,
+  maxit = 1e+05,
+  learning.rate = 0.01,
+  family = gaussian,
+  optim.maxit = 100,
+  optim.thresh = 0.01,
+  nfolds = 10
+)
 
-\S4method{cv.edgenet}{matrix,numeric}(X, Y, G.X = NULL, G.Y = NULL,
-  lambda = NA_real_, psigx = NA_real_, psigy = NA_real_,
-  thresh = 1e-05, maxit = 1e+05, learning.rate = 0.01,
-  family = gaussian, optim.maxit = 100, optim.thresh = 0.01,
-  nfolds = 10)
+\S4method{cv.edgenet}{matrix,numeric}(
+  X,
+  Y,
+  G.X = NULL,
+  G.Y = NULL,
+  lambda = NA_real_,
+  psigx = NA_real_,
+  psigy = NA_real_,
+  thresh = 1e-05,
+  maxit = 1e+05,
+  learning.rate = 0.01,
+  family = gaussian,
+  optim.maxit = 100,
+  optim.thresh = 0.01,
+  nfolds = 10
+)
 
-\S4method{cv.edgenet}{matrix,matrix}(X, Y, G.X = NULL, G.Y = NULL,
-  lambda = NA_real_, psigx = NA_real_, psigy = NA_real_,
-  thresh = 1e-05, maxit = 1e+05, learning.rate = 0.01,
-  family = gaussian, optim.maxit = 100, optim.thresh = 0.01,
-  nfolds = 10)
+\S4method{cv.edgenet}{matrix,matrix}(
+  X,
+  Y,
+  G.X = NULL,
+  G.Y = NULL,
+  lambda = NA_real_,
+  psigx = NA_real_,
+  psigy = NA_real_,
+  thresh = 1e-05,
+  maxit = 1e+05,
+  learning.rate = 0.01,
+  family = gaussian,
+  optim.maxit = 100,
+  optim.thresh = 0.01,
+  nfolds = 10
+)
 }
 \arguments{
 \item{X}{input matrix, of dimension (\code{n} x \code{p})

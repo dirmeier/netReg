@@ -1,6 +1,6 @@
 # netReg: graph-regularized linear regression models.
 #
-# Copyright (C) 2015 - 2019 Simon Dirmeier
+# Copyright (C) 2015 - 202 0Simon Dirmeier
 #
 # This file is part of netReg.
 #
@@ -22,7 +22,7 @@
 #' @import tensorflow
 init_variables <- function()
 {
-    #tf$a
+    tf$compat$v1$global_variables_initializer()
 }
 
 
@@ -30,7 +30,15 @@ init_variables <- function()
 #' @import tensorflow
 adam <- function(learning.rate)
 {
-    tf$keras$optimizers$Adam(learning_rate = learning.rate)
+    tf$compat$v1$train$AdamOptimizer(learning_rate = learning.rate)
+}
+
+
+#' @noRd
+#' @import tensorflow
+session <- function()
+{
+    tf$compat$v1$Session()
 }
 
 
@@ -38,7 +46,7 @@ adam <- function(learning.rate)
 #' @import tensorflow
 reset_graph <- function()
 {
-    tensorflow::tf$keras$backend$clear_session()
+    tensorflow::tf$compat$v1$reset_default_graph()
 }
 
 
@@ -63,10 +71,10 @@ constant_float <- function(x)
 placeholder <- function(shape, name=NULL)
 {
     if (!is.null(name))
-        tensorflow::tf$keras$backend$placeholder(
+        tensorflow::tf$compat$v1$placeholder(
             tensorflow::tf$float32, shape, name=name)
     else
-        tensorflow::tf$keras$backend$placeholder(
+        tensorflow::tf$compat$v1$placeholder(
             tensorflow::tf$float32, shape)
 }
 

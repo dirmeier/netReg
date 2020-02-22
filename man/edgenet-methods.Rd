@@ -8,17 +8,47 @@
 \title{Fit a graph-regularized linear regression model using
  edge-based regularization.}
 \usage{
-edgenet(X, Y, G.X = NULL, G.Y = NULL, lambda = 1, psigx = 1,
-  psigy = 1, thresh = 1e-05, maxit = 1e+05, learning.rate = 0.01,
-  family = gaussian)
+edgenet(
+  X,
+  Y,
+  G.X = NULL,
+  G.Y = NULL,
+  lambda = 1,
+  psigx = 1,
+  psigy = 1,
+  thresh = 1e-05,
+  maxit = 1e+05,
+  learning.rate = 0.01,
+  family = gaussian
+)
 
-\S4method{edgenet}{matrix,numeric}(X, Y, G.X = NULL, G.Y = NULL,
-  lambda = 1, psigx = 1, psigy = 1, thresh = 1e-05,
-  maxit = 1e+05, learning.rate = 0.01, family = gaussian)
+\S4method{edgenet}{matrix,numeric}(
+  X,
+  Y,
+  G.X = NULL,
+  G.Y = NULL,
+  lambda = 1,
+  psigx = 1,
+  psigy = 1,
+  thresh = 1e-05,
+  maxit = 1e+05,
+  learning.rate = 0.01,
+  family = gaussian
+)
 
-\S4method{edgenet}{matrix,matrix}(X, Y, G.X = NULL, G.Y = NULL,
-  lambda = 1, psigx = 1, psigy = 1, thresh = 1e-05,
-  maxit = 1e+05, learning.rate = 0.01, family = gaussian)
+\S4method{edgenet}{matrix,matrix}(
+  X,
+  Y,
+  G.X = NULL,
+  G.Y = NULL,
+  lambda = 1,
+  psigx = 1,
+  psigy = 1,
+  thresh = 1e-05,
+  maxit = 1e+05,
+  learning.rate = 0.01,
+  family = gaussian
+)
 }
 \arguments{
 \item{X}{input matrix, of dimension (\code{n} x \code{p})
