@@ -29,30 +29,36 @@ B <- rnorm(p)
 Y <- rbinom(n, 1, 1 / (1 + exp(-X %*% B)))
 
 test_that("gaussian group.lasso returns s3 class", {
-  e <- group.lasso(X, Y, lambda = 1, maxit = 1, thresh = 1e-5)
+  e <- group.lasso(X, Y, grps, lambda = 1, maxit = 1, thresh = 1e-5)
   testthat::expect_s3_class(e, "group.lasso")
   testthat::expect_s3_class(e, "gaussian.group.lasso")
 })
+
 
 test_that("gaussian group.lasso throws at wrong X", {
   testthat::expect_error(group.lasso(X = "s", Y, grps))
 })
 
+
 test_that("gaussian group.lasso throws at wrong Y", {
   testthat::expect_error(group.lasso(X, Y = "s", grps))
 })
+
 
 test_that("gaussian group.lasso warns at lambda<0", {
   testthat::expect_warning(group.lasso(X, Y, grps, lambda = -1, maxit = 1))
 })
 
+
 test_that("gaussian group.lasso warns at maxit<0", {
   testthat::expect_warning(group.lasso(X, Y, grps, maxit = -1))
 })
 
+
 test_that("gaussian group.lasso warns at thresh<0", {
   testthat::expect_warning(group.lasso(X, Y, grps, thresh = -1, maxit = 1))
 })
+
 
 test_that("gaussian group.lasso throws at wrong grps", {
   grps <- c(rep(1L, p - 1), p + 1L)
@@ -62,62 +68,3 @@ test_that("gaussian group.lasso throws at wrong grps", {
   grps <- abs(rnorm(p))
   testthat::expect_error(group.lasso(X, Y, grps, thresh = -1, maxit = 1))
 })
-
-if (requireNamespace("grplasso", quietly = TRUE)) {
-  test_that("gaussian group lasso correct output", {
-    Y <- rnorm(n, X %*% B, .1)
-    for (lam in c(0, 1)) {
-      e0 <- group.lasso(
-        X, Y,
-        grps = grps, lambda = lam,
-        maxit = 500, thresh = 5 * 10^-8, family = netReg::gaussian
-      )
-      e1 <- grplasso::grplasso(
-        cbind(1, X),
-        y = Y, index = c(NA, grps), lambda = lam,
-        model = grplasso::LinReg(),
-        center = FALSE, standardize = FALSE
-      )
-
-      testthat::expect_equal(coef(e0), coef(e1), 0.1)
-    }
-  })
-
-  test_that("binomial group lasso correct output", {
-    Y <- rbinom(n, 1, 1 / (1 + exp(-X %*% B)))
-    for (lam in c(0, 1)) {
-      e0 <- group.lasso(
-        X, Y,
-        grps = grps, lambda = lam,
-        maxit = 500, thresh = 5 * 10^-8, family = netReg::binomial
-      )
-      e1 <- grplasso::grplasso(
-        cbind(1, X),
-        y = Y, index = c(NA, grps), lambda = lam,
-        model = grplasso::LogReg(),
-        center = FALSE, standardize = FALSE
-      )
-
-      testthat::expect_equal(coef(e0), coef(e1), 0.1)
-    }
-  })
-
-  test_that("poisson group lasso correct output", {
-    Y <- rpois(n, exp(-X %*% B))
-    for (lam in c(0, 1)) {
-      e0 <- group.lasso(
-        X, Y,
-        grps = grps, lambda = lam,
-        maxit = 500, thresh = 5 * 10^-8, family = netReg::poisson
-      )
-      e1 <- grplasso::grplasso(
-        cbind(1, X),
-        y = Y, index = c(NA, grps), lambda = lam,
-        model = grplasso::PoissReg(),
-        center = FALSE, standardize = FALSE
-      )
-
-      testthat::expect_equal(coef(e0), coef(e1), 0.1)
-    }
-  })
-}

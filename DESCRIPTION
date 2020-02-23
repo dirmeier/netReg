@@ -14,7 +14,9 @@ Description: netReg fits linear regression models using network-penalization.
 URL: https://github.com/dirmeier/netReg
 BugReports: https://github.com/dirmeier/netReg/issues
 Depends: 
-    R(>= 3.4)
+    R (>= 3.4),
+    tensorflow (>= 1.14.0),
+    tfprobability (>= 0.7.0)
 biocViews:
     Software,
     StatisticalMethod,
@@ -44,8 +46,6 @@ LinkingTo:
 Imports:
     Rcpp,
     stats,
-    tensorflow (>= 1.14.0),
-    tfprobability (>= 0.7.0),
     reticulate,
     nloptr,
     methods

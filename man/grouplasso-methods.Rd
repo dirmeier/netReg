@@ -91,7 +91,7 @@ fit <- group.lasso(X = X, Y = Y, grps = grps, family = gaussian, maxit = 10)
 # estimation for binomial models
 eta <- 1 / (1 + exp(-X \%*\% b))
 Y <- rbinom(100, 1, eta)
-fit <- group.lasso(X = X, Y = Y, grps = grps, family = binomial, maxit = 10)
+fit <- group.lasso(X = X, Y = Y, grps = grps, family = binomial, maxit = 1)
 
 # estimation for Poisson models
 eta <- exp(-X \%*\% b)

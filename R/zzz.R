@@ -28,6 +28,9 @@
         warning("Could not find tensorflow-probability installation")
     Sys.setenv(TF_CPP_MIN_LOG_LEVEL = 2)
     options(tensorflow.one_based_extract = TRUE)
+
+    library(tensorflow)
+    library(tfprobability)
 }
 
 

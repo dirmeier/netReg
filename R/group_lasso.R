@@ -117,8 +117,8 @@ setMethod(
       is.numeric(learning.rate)
     )
 
-    if (!is.null(grps))
-        grps <- rep(1L, ncol(X))
+    if (is.null(grps))
+        grps <- rep(NA_integer_, ncol(X))
     stopifnot(all(is.integer(grps)),
               max(grps, na.rm = TRUE) <= ncol(X),
               min(grps, na.rm = TRUE) >= 1)
@@ -139,7 +139,7 @@ setMethod(
     )
 
     ret$call <- match.call()
-    class(ret) <- c(class(ret), "edgenet")
+    class(ret) <- c(class(ret), "group.lasso")
 
     ret
   }

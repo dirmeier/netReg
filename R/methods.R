@@ -37,3 +37,19 @@ coef.cv.edgenet <- function(object, ...)
 {
    coef(object$fit)
 }
+
+
+#' @export
+#' @method coef group.lasso
+coef.group.lasso <- function(object, ...)
+{
+    coef.edgenet(object, ...)
+}
+
+
+#' @export
+#' @method coef cv.group.lasso
+coef.cv.group.lasso <- function(object, ...)
+{
+    coef(object$fit)
+}

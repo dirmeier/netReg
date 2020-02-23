@@ -22,7 +22,7 @@
 #' @importFrom tensorflow tf
 gaussian.loss <- function(y, eta, ...)
 {
-    obj <- tf$reduce_sum(tf$square(y - eta)) / (nrow(Y) * ncol(Y))
+    obj <- tf$reduce_mean(tf$square(y - eta))
     obj
 }
 
