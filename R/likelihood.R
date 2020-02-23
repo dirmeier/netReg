@@ -22,18 +22,19 @@
 #' @importFrom tensorflow tf
 gaussian.loss <- function(y, eta, ...)
 {
-    obj <- tf$reduce_sum(tf$square(y - eta))
+    obj <- tf$reduce_sum(tf$square(y - eta)) / (nrow(Y) * ncol(Y))
     obj
 }
 
 
 #' @noRd
 #' @importFrom tensorflow tf
+#' @importFrom tfprobability tfd_bernoulli
 binomial.loss <- function(y, eta, invlink, ...)
 {
     obj <- 0
     for (j in seq(ncol(y))) {
-        prob <- tfp$distributions$Bernoulli(probs = invlink(eta[ ,j]))
+        prob <- tfprobability::tfd_bernoulli(probs = invlink(eta[ ,j]))
         obj <- obj + tf$reduce_sum(prob$log_prob(y[,j]))
     }
 
@@ -43,11 +44,12 @@ binomial.loss <- function(y, eta, invlink, ...)
 
 #' @noRd
 #' @importFrom tensorflow tf
+#' @importFrom tfprobability tfd_poisson
 poisson.loss <- function(y, eta, invlink, ...)
 {
     obj <- 0
     for (j in seq(ncol(y))) {
-        prob <- tfp$distributions$Poisson(rate = invlink(eta[ ,j]))
+        prob <- tfprobability::tfd_poisson(rate = invlink(eta[ ,j]))
         obj <- obj + tf$reduce_sum(prob$log_prob(y[,j]))
     }
 
@@ -57,11 +59,12 @@ poisson.loss <- function(y, eta, invlink, ...)
 
 #' @noRd
 #' @importFrom tensorflow tf
+#' @importFrom tfprobability tfd_gamma
 gamma.loss <- function(y, eta, invlink, ...)
 {
     obj <- 0
     for (j in seq(ncol(y))) {
-        prob <- tfp$distributions$Gamma(
+        prob <- tfprobability::tfd_gamma(
             rate = invlink(tf$exp(eta[ ,j])), concentration = 1)
         obj <- obj + tf$reduce_sum(prob$log_prob(y[,j]))
     }
@@ -72,6 +75,7 @@ gamma.loss <- function(y, eta, invlink, ...)
 
 #' @noRd
 #' @importFrom tensorflow tf
+#' @importFrom tfprobability tfd_beta
 beta.loss <- function(y, eta, invlink, ...)
 {
     obj <- 0
@@ -90,7 +94,7 @@ beta.loss <- function(y, eta, invlink, ...)
         p.trans <- tf$math$maximum(p, eps)
         q.trans <- tf$math$maximum(q, eps)
 
-        prob <- tfp$distributions$Beta(
+        prob <- tfprobability::tfd_beta(
             concentration1 = p.trans, concentration0 = q.trans)
         obj <- obj + tf$reduce_sum(prob$log_prob(y[,j]))
     }
@@ -101,13 +105,14 @@ beta.loss <- function(y, eta, invlink, ...)
 
 #' @noRd
 #' @importFrom tensorflow tf
+#' @importFrom tfprobability tfd_inverse_gaussian
 inverse.gaussian.loss <- function(y, eta, invlink, ...)
 {
     obj <- 0
     for (j in seq(ncol(y))) {
         # loc := mu
         # concentration := lambda (shape)
-        prob <- tfp$distributions$InverseGaussian(
+        prob <- tfprobability::tfd_inverse_gaussian(
             loc = invlink(tf$exp(eta[ ,j])), concentration = 1)
         obj <- obj + tf$reduce_sum(prob$log_prob(y[,j]))
     }

@@ -148,8 +148,7 @@ setMethod(
 
 #' @noRd
 .group.lasso <- function(x, y, grps,
-                         lambda,
-                         thresh, maxit, learning.rate, family) {
+                         lambda, thresh, maxit, learning.rate, family) {
   p <- ncol(x)
   q <- ncol(y)
 

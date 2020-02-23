@@ -87,9 +87,9 @@ group.lasso.loss <- function(grps, family)
     iter <- unique(grps[!is.na(grps)])
     for (el in iter) {
         idxs <- which(grps == el)
-        grp.pen <-  tf$sqrt(cast_float(length(idxs)))
+        grp.pen <- tf$sqrt(cast_float(length(idxs)))
         for (j in seq(ncol(beta))) {
-            pen <- pen + grp.pen * tf$math$reduce_euclidean_norm(beta[idxs, j])
+            pen <- pen + grp.pen * tf$sqrt(tf$reduce_sum(tf$square(beta[idxs, j])))
         }
     }
     lambda * pen

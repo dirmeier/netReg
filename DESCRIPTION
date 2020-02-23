@@ -33,7 +33,8 @@ Suggests:
     styler,
     lassoshooting,
     glmnet,
-    LaplacesDemon
+    LaplacesDemon,
+    grplasso
 VignetteBuilder: knitr
 RoxygenNote: 7.0.2
 SystemRequirements: C++11
