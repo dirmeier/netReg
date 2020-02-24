@@ -20,76 +20,71 @@
 
 #' @noRd
 #' @import tensorflow
-init_variables <- function()
-{
-    tf$compat$v1$global_variables_initializer()
+init_variables <- function() {
+  tf$compat$v1$global_variables_initializer()
 }
 
 
 #' @noRd
 #' @import tensorflow
-adam <- function(learning.rate)
-{
-    tf$compat$v1$train$AdamOptimizer(learning_rate = learning.rate)
+adam <- function(learning.rate) {
+  tf$compat$v1$train$AdamOptimizer(learning_rate = learning.rate)
 }
 
 
 #' @noRd
 #' @import tensorflow
-session <- function()
-{
-    tf$compat$v1$Session()
+session <- function() {
+  tf$compat$v1$Session()
 }
 
 
 #' @noRd
 #' @import tensorflow
-reset_graph <- function()
-{
-    tensorflow::tf$compat$v1$reset_default_graph()
+reset_graph <- function() {
+  tensorflow::tf$compat$v1$reset_default_graph()
 }
 
 
 #' @noRd
 #' @import tensorflow
-cast_float <- function(x)
-{
-    tensorflow::tf$cast(x, tensorflow::tf$float32)
+cast_float <- function(x) {
+  tensorflow::tf$cast(x, tensorflow::tf$float32)
 }
 
 
 #' @noRd
 #' @import tensorflow
-constant_float <- function(x)
-{
-    tensorflow::tf$constant(x, tensorflow::tf$float32)
+constant_float <- function(x) {
+  tensorflow::tf$constant(x, tensorflow::tf$float32)
 }
 
 
 #' @noRd
 #' @import tensorflow
-placeholder <- function(shape, name=NULL)
-{
-    if (!is.null(name))
-        tensorflow::tf$compat$v1$placeholder(
-            tensorflow::tf$float32, shape, name=name)
-    else
-        tensorflow::tf$compat$v1$placeholder(
-            tensorflow::tf$float32, shape)
+placeholder <- function(shape, name = NULL) {
+  if (!is.null(name)) {
+    tensorflow::tf$compat$v1$placeholder(
+      tensorflow::tf$float32, shape,
+      name = name
+    )
+  } else {
+    tensorflow::tf$compat$v1$placeholder(
+      tensorflow::tf$float32, shape
+    )
+  }
 }
 
 
 #' @noRd
 #' @import tensorflow
-zero_matrix <- function(m, n)
-{
-    tensorflow::tf$Variable(tensorflow::tf$zeros(shape(m, n)))
+zero_matrix <- function(m, n) {
+  tensorflow::tf$Variable(tensorflow::tf$zeros(shape(m, n)))
 }
 
 
 #' @noRd
 #' @import tensorflow
-zero_vector <- function(m)
-{
-    tensorflow::tf$Variable(tensorflow::tf$zeros(shape(m)))
+zero_vector <- function(m) {
+  tensorflow::tf$Variable(tensorflow::tf$zeros(shape(m)))
 }

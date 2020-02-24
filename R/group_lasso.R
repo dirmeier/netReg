@@ -111,17 +111,19 @@ setMethod(
            lambda = 1,
            thresh = 1e-5, maxit = 1e5, learning.rate = 0.01,
            family = gaussian) {
-
     stopifnot(
       is.numeric(maxit), is.numeric(thresh),
       is.numeric(learning.rate)
     )
 
-    if (is.null(grps))
-        grps <- rep(NA_integer_, ncol(X))
-    stopifnot(all(is.integer(grps)),
-              max(grps, na.rm = TRUE) <= ncol(X),
-              min(grps, na.rm = TRUE) >= 1)
+    if (is.null(grps)) {
+      grps <- rep(NA_integer_, ncol(X))
+    }
+    stopifnot(
+      all(is.integer(grps)),
+      max(grps, na.rm = TRUE) <= ncol(X),
+      min(grps, na.rm = TRUE) >= 1
+    )
 
     check.matrices(X, Y)
     check.dimensions(X, Y, nrow(X), ncol(X))

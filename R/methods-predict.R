@@ -21,83 +21,75 @@
 #' @export
 #' @method predict cv.edgenet
 #' @importFrom stats predict
-predict.cv.edgenet <- function(object, newdata=NULL, ...)
-{
-    predict(object$fit, newdata, ...)
+predict.cv.edgenet <- function(object, newdata = NULL, ...) {
+  predict(object$fit, newdata, ...)
 }
 
 
 #' @export
 #' @method predict cv.group.lasso
 #' @importFrom stats predict
-predict.cv.group.lasso <- function(object, newdata=NULL, ...)
-{
-    predict(object$fit, newdata, ...)
+predict.cv.group.lasso <- function(object, newdata = NULL, ...) {
+  predict(object$fit, newdata, ...)
 }
 
 
 #' @export
 #' @method predict gaussian.edgenet
-predict.gaussian.edgenet <- function(object, newdata=NULL, ...)
-{
-    mean <- function(x) x
-   .predict(object, newdata, mean, ...)
+predict.gaussian.edgenet <- function(object, newdata = NULL, ...) {
+  mean <- function(x) x
+  .predict(object, newdata, mean, ...)
 }
 
 
 #' @export
 #' @method predict gaussian.group.lasso
-predict.gaussian.group.lasso <- function(object, newdata=NULL, ...)
-{
-    predict.gaussian.edgenet(object, newdata, ...)
+predict.gaussian.group.lasso <- function(object, newdata = NULL, ...) {
+  predict.gaussian.edgenet(object, newdata, ...)
 }
 
 
 #' @export
 #' @method predict binomial.edgenet
-predict.binomial.edgenet <- function(object, newdata=NULL, ...)
-{
-    mean <- function(x) 1 / (1 + base::exp(-x))
-    .predict(object, newdata, mean, ...)
+predict.binomial.edgenet <- function(object, newdata = NULL, ...) {
+  mean <- function(x) 1 / (1 + base::exp(-x))
+  .predict(object, newdata, mean, ...)
 }
 
 
 #' @export
 #' @method predict binomial.group.lasso
-predict.binomial.group.lasso <- function(object, newdata=NULL, ...)
-{
-    predict.binomial.edgenet(object, newdata, ...)
+predict.binomial.group.lasso <- function(object, newdata = NULL, ...) {
+  predict.binomial.edgenet(object, newdata, ...)
 }
 
 
 #' @export
 #' @method predict poisson.edgenet
-predict.poisson.edgenet <- function(object, newdata=NULL, ...)
-{
-    mean <- function(x) base::exp(x)
-    .predict(object, newdata, mean, ...)
+predict.poisson.edgenet <- function(object, newdata = NULL, ...) {
+  mean <- function(x) base::exp(x)
+  .predict(object, newdata, mean, ...)
 }
 
 
 #' @export
 #' @method predict poisson.group.lasso
-predict.poisson.group.lasso <- function(object, newdata=NULL, ...)
-{
-    predict.poisson.edgenet(object, newdata, ...)
+predict.poisson.group.lasso <- function(object, newdata = NULL, ...) {
+  predict.poisson.edgenet(object, newdata, ...)
 }
 
 
 #' @noRd
 #' @importFrom stats coef
-.predict <- function(object, newdata, mean, ...)
-{
-    if (is.null(newdata)) stop("newdata is null")
-    X <- newdata
-    n <- dim(X)[1]
-    p <- dim(X)[2]
-    coefs <- object$beta
-    if(p != dim(coefs)[1])
-        stop("newdata dimensions do not fit coefficient dimensions!")
-    Y.hat <- mean(X %*% coefs + intercept.matrix(n, object$alpha))
-    Y.hat
+.predict <- function(object, newdata, mean, ...) {
+  if (is.null(newdata)) stop("newdata is null")
+  X <- newdata
+  n <- dim(X)[1]
+  p <- dim(X)[2]
+  coefs <- object$beta
+  if (p != dim(coefs)[1]) {
+    stop("newdata dimensions do not fit coefficient dimensions!")
+  }
+  Y.hat <- mean(X %*% coefs + intercept.matrix(n, object$alpha))
+  Y.hat
 }

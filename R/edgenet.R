@@ -70,147 +70,153 @@
 #' \item{call }{ the call that produced the object}
 #'
 #' @examples
-#' X <- matrix(rnorm(100*10), 100, 10)
+#' X <- matrix(rnorm(100 * 10), 100, 10)
 #' b <- matrix(rnorm(100), 10)
-#' G.X <-  abs(rWishart(1, 10, diag(10))[,,1])
-#' G.Y <-  abs(rWishart(1, 10, diag(10))[,,1])
+#' G.X <- abs(rWishart(1, 10, diag(10))[, , 1])
+#' G.Y <- abs(rWishart(1, 10, diag(10))[, , 1])
 #' diag(G.X) <- diag(G.Y) <- 0
 #'
 #' # estimate the parameters of a Gaussian model
 #' Y <- X %*% b + matrix(rnorm(100 * 10), 100)
 #' ## dont use affinity matrices
-#' fit <- edgenet(X=X, Y=Y, family=gaussian, maxit=10)
+#' fit <- edgenet(X = X, Y = Y, family = gaussian, maxit = 10)
 #' ## only provide one matrix
-#' fit <- edgenet(X=X, Y=Y, G.X=G.X, psigx=1, family=gaussian, maxit=10)
+#' fit <- edgenet(X = X, Y = Y, G.X = G.X, psigx = 1, family = gaussian, maxit = 10)
 #' ## use two matrices
-#' fit <- edgenet(X=X, Y=Y, G.X=G.X, G.Y, family=gaussian, maxit=10)
+#' fit <- edgenet(X = X, Y = Y, G.X = G.X, G.Y, family = gaussian, maxit = 10)
 #' ## if Y is vectorial, we cannot use an affinity matrix for Y
-#' fit <- edgenet(X=X, Y=Y[, 1], G.X=G.X, family=gaussian, maxit=10)
+#' fit <- edgenet(X = X, Y = Y[, 1], G.X = G.X, family = gaussian, maxit = 10)
 #'
 #' # estimation for binomial models
 #' eta <- 1 / (1 + exp(-X %*% b))
-#' Y <- do.call("cbind", lapply(seq(10), function(.) rbinom(100, 1, eta[,.])))
-#' fit <- edgenet(X=X, Y=Y, G.X=G.X, G.Y, family=binomial, maxit=1)
+#' Y <- do.call("cbind", lapply(seq(10), function(.) rbinom(100, 1, eta[, .])))
+#' fit <- edgenet(X = X, Y = Y, G.X = G.X, G.Y, family = binomial, maxit = 1)
 #'
 #' # estimation for Poisson models
 #' eta <- exp(-X %*% b)
-#' Y <- do.call("cbind", lapply(seq(10), function(.) rpois(100, eta[,.])))
-#' fit <- edgenet(X=X, Y=Y, G.X=G.X, G.Y, family=poisson, maxit=1)
+#' Y <- do.call("cbind", lapply(seq(10), function(.) rpois(100, eta[, .])))
+#' fit <- edgenet(X = X, Y = Y, G.X = G.X, G.Y, family = poisson, maxit = 1)
 setGeneric(
-    "edgenet",
-    function(X, Y, G.X=NULL, G.Y=NULL,
-             lambda=1, psigx=1, psigy=1,
-             thresh=1e-5, maxit=1e5, learning.rate=0.01,
-             family=gaussian)
-    {
-        standardGeneric("edgenet")
-    },
-    package = "netReg"
+  "edgenet",
+  function(X, Y, G.X = NULL, G.Y = NULL,
+           lambda = 1, psigx = 1, psigy = 1,
+           thresh = 1e-5, maxit = 1e5, learning.rate = 0.01,
+           family = gaussian) {
+    standardGeneric("edgenet")
+  },
+  package = "netReg"
 )
 
 
 #' @rdname edgenet-methods
 setMethod(
-    "edgenet",
-    signature = signature(X="matrix", Y="numeric"),
-    function(X, Y, G.X=NULL, G.Y=NULL,
-             lambda=1, psigx=1, psigy=1,
-             thresh=1e-5, maxit=1e5, learning.rate=0.01,
-             family=gaussian)
-    {
-        edgenet(X, as.matrix(Y), G.X, G.Y,
-                lambda, psigx, psigy,
-                thresh, maxit, learning.rate,
-                family)
-    }
+  "edgenet",
+  signature = signature(X = "matrix", Y = "numeric"),
+  function(X, Y, G.X = NULL, G.Y = NULL,
+           lambda = 1, psigx = 1, psigy = 1,
+           thresh = 1e-5, maxit = 1e5, learning.rate = 0.01,
+           family = gaussian) {
+    edgenet(
+      X, as.matrix(Y), G.X, G.Y,
+      lambda, psigx, psigy,
+      thresh, maxit, learning.rate,
+      family
+    )
+  }
 )
 
 
 #' @rdname edgenet-methods
 setMethod(
-    "edgenet",
-    signature = signature(X="matrix", Y="matrix"),
-    function(X, Y, G.X=NULL, G.Y=NULL,
-             lambda=1, psigx=1, psigy=1,
-             thresh=1e-5, maxit=1e5, learning.rate=0.01,
-             family=gaussian)
-    {
-        stopifnot(is.numeric(maxit), is.numeric(thresh),
-                  is.numeric(learning.rate))
+  "edgenet",
+  signature = signature(X = "matrix", Y = "matrix"),
+  function(X, Y, G.X = NULL, G.Y = NULL,
+           lambda = 1, psigx = 1, psigy = 1,
+           thresh = 1e-5, maxit = 1e5, learning.rate = 0.01,
+           family = gaussian) {
+    stopifnot(
+      is.numeric(maxit), is.numeric(thresh),
+      is.numeric(learning.rate)
+    )
 
-        if (is.null(G.X)) psigx <- 0
-        if (is.null(G.Y)) psigy <- 0
+    if (is.null(G.X)) psigx <- 0
+    if (is.null(G.Y)) psigy <- 0
 
-        check.matrices(X, Y)
-        check.graphs(X, Y, G.X, G.Y, psigx, psigy)
-        check.dimensions(X, Y, nrow(X), ncol(X))
-        lambda <- check.param(lambda, 0, `<`, 0)
-        psigx <- check.param(psigx, 0, `<`, 0)
-        psigy <- check.param(psigy, 0, `<`, 0)
-        maxit <- check.param(maxit, 0, `<`, 1e5)
-        thresh <- check.param(thresh, 0, `<`, 1e-5)
-        family <- get.family(family)
+    check.matrices(X, Y)
+    check.graphs(X, Y, G.X, G.Y, psigx, psigy)
+    check.dimensions(X, Y, nrow(X), ncol(X))
+    lambda <- check.param(lambda, 0, `<`, 0)
+    psigx <- check.param(psigx, 0, `<`, 0)
+    psigy <- check.param(psigy, 0, `<`, 0)
+    maxit <- check.param(maxit, 0, `<`, 1e5)
+    thresh <- check.param(thresh, 0, `<`, 1e-5)
+    family <- get.family(family)
 
-        if (ncol(Y) == 1) {
-            psigy <- 0
-            G.Y <- NULL
-        }
-
-        # estimate coefficients
-        ret <- .edgenet(x=X, y=Y, gx=G.X, gy=G.Y,
-                        lambda = lambda, psigx = psigx, psigy = psigy,
-                        thresh = thresh, maxit = maxit,
-                        learning.rate = learning.rate, family = family)
-
-        ret$call   <- match.call()
-        class(ret) <- c(class(ret), "edgenet")
-
-        ret
+    if (ncol(Y) == 1) {
+      psigy <- 0
+      G.Y <- NULL
     }
+
+    # estimate coefficients
+    ret <- .edgenet(
+      x = X, y = Y, gx = G.X, gy = G.Y,
+      lambda = lambda, psigx = psigx, psigy = psigy,
+      thresh = thresh, maxit = maxit,
+      learning.rate = learning.rate, family = family
+    )
+
+    ret$call <- match.call()
+    class(ret) <- c(class(ret), "edgenet")
+
+    ret
+  }
 )
 
 
 #' @noRd
 .edgenet <- function(x, y, gx, gy,
                      lambda, psigx, psigy,
-                     thresh, maxit,learning.rate, family)
-{
-    p <- ncol(x)
-    q <- ncol(y)
+                     thresh, maxit, learning.rate, family) {
+  p <- ncol(x)
+  q <- ncol(y)
 
-    reset_graph()
+  reset_graph()
 
-    x <- cast_float(x)
-    y <- cast_float(y)
+  x <- cast_float(x)
+  y <- cast_float(y)
 
-    if (!is.null(gx))
-        gx <- cast_float(laplacian_(gx))
-    if (!is.null(gy))
-        gy <- cast_float(laplacian_(gy))
+  if (!is.null(gx)) {
+    gx <- cast_float(laplacian_(gx))
+  }
+  if (!is.null(gy)) {
+    gy <- cast_float(laplacian_(gy))
+  }
 
-    # TODO: think about this
-    alpha <- zero_vector(q) + 1
-    beta  <- zero_matrix(p, q) + 1
+  # TODO: think about this
+  alpha <- zero_vector(q) + 1
+  beta <- zero_matrix(p, q) + 1
 
-    # estimate coefficients
-    loss <- edgenet.loss(gx, gy, family)
-    objective <- loss(alpha, beta, lambda, psigx, psigy, x, y)
-    res <- fit(objective, alpha, beta, maxit, learning.rate, thresh)
+  # estimate coefficients
+  loss <- edgenet.loss(gx, gy, family)
+  objective <- loss(alpha, beta, lambda, psigx, psigy, x, y)
+  res <- fit(objective, alpha, beta, maxit, learning.rate, thresh)
 
-    # finalize output
-    beta  <- res$beta
-    alpha <- res$alpha
-    rownames(beta) <- colnames(x)
-    colnames(beta) <- colnames(y)
-    ret <- list(beta = beta,
-                alpha = alpha,
-                parameters = c("lambda"=lambda, "psigx"=psigx, "psigy"=psigy),
-                lambda = lambda,
-                psigx = psigx,
-                psigy = psigy)
+  # finalize output
+  beta <- res$beta
+  alpha <- res$alpha
+  rownames(beta) <- colnames(x)
+  colnames(beta) <- colnames(y)
+  ret <- list(
+    beta = beta,
+    alpha = alpha,
+    parameters = c("lambda" = lambda, "psigx" = psigx, "psigy" = psigy),
+    lambda = lambda,
+    psigx = psigx,
+    psigy = psigy
+  )
 
-    ret$family <- family
-    class(ret) <- paste0(family$family, ".edgenet")
+  ret$family <- family
+  class(ret) <- paste0(family$family, ".edgenet")
 
-    ret
+  ret
 }

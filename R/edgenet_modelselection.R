@@ -87,139 +87,159 @@
 #' \item{call }{ the call that produced the object}
 #'
 #' @examples
-#' X <- matrix(rnorm(100*10), 100, 10)
+#' X <- matrix(rnorm(100 * 10), 100, 10)
 #' b <- matrix(rnorm(100), 10)
-#' G.X <-  abs(rWishart(1, 10, diag(10))[,,1])
-#' G.Y <-  abs(rWishart(1, 10, diag(10))[,,1])
+#' G.X <- abs(rWishart(1, 10, diag(10))[, , 1])
+#' G.Y <- abs(rWishart(1, 10, diag(10))[, , 1])
 #' diag(G.X) <- diag(G.Y) <- 0
 #'
 #' # estimate the parameters of a Gaussian model
 #' Y <- X %*% b + matrix(rnorm(100 * 10), 100)
 #'
 #' ## dont use affinity matrices and estimate lambda
-#' fit <- cv.edgenet(X=X, Y=Y, family=gaussian,
-#'                   maxit=1, optim.maxit=1)
+#' fit <- cv.edgenet(
+#'   X = X, Y = Y, family = gaussian,
+#'   maxit = 1, optim.maxit = 1
+#' )
 #' ## only provide one matrix and estimate lambda
-#' fit <- cv.edgenet(X=X, Y=Y, G.X=G.X, psigx=1, family=gaussian,
-#'                   maxit=1, optim.maxit=1)
+#' fit <- cv.edgenet(
+#'   X = X, Y = Y, G.X = G.X, psigx = 1, family = gaussian,
+#'   maxit = 1, optim.maxit = 1
+#' )
 #' ## estimate only lambda with two matrices
-#' fit <- cv.edgenet(X=X, Y=Y, G.X=G.X, G.Y, psigx=1, psigy=1,
-#'                   family=gaussian, maxit=1, optim.maxit=1)
+#' fit <- cv.edgenet(
+#'   X = X, Y = Y, G.X = G.X, G.Y, psigx = 1, psigy = 1,
+#'   family = gaussian, maxit = 1, optim.maxit = 1
+#' )
 #' ## estimate only psigx
-#' fit <- cv.edgenet(X=X, Y=Y, G.X=G.X, G.Y, lambda=1, psigy=1,
-#'                   family=gaussian, maxit=1, optim.maxit=1)
+#' fit <- cv.edgenet(
+#'   X = X, Y = Y, G.X = G.X, G.Y, lambda = 1, psigy = 1,
+#'   family = gaussian, maxit = 1, optim.maxit = 1
+#' )
 #' ## estimate all parameters
-#' fit<- cv.edgenet(X=X, Y=Y, G.X=G.X, G.Y,
-#'                  family=gaussian, maxit=1, optim.maxit=1)
+#' fit <- cv.edgenet(
+#'   X = X, Y = Y, G.X = G.X, G.Y,
+#'   family = gaussian, maxit = 1, optim.maxit = 1
+#' )
 #' ## if Y is vectorial, we cannot use an affinity matrix for Y
-#' fit<- cv.edgenet(X=X, Y=Y[, 1], G.X=G.X,
-#'                  family=gaussian, maxit=1, optim.maxit=1)
+#' fit <- cv.edgenet(
+#'   X = X, Y = Y[, 1], G.X = G.X,
+#'   family = gaussian, maxit = 1, optim.maxit = 1
+#' )
 #'
 #' # estimation for binomial models
 #' eta <- 1 / (1 + exp(-X %*% b))
-#' Y <- do.call("cbind", lapply(seq(10), function(.) rbinom(100, 1, eta[,.])))
-#' fit <- cv.edgenet(X=X, Y=Y, G.X=G.X, G.Y,
-#'                   family=binomial, maxit=1, optim.maxit=1)
+#' Y <- do.call("cbind", lapply(seq(10), function(.) rbinom(100, 1, eta[, .])))
+#' fit <- cv.edgenet(
+#'   X = X, Y = Y, G.X = G.X, G.Y,
+#'   family = binomial, maxit = 1, optim.maxit = 1
+#' )
 #'
 #' # estimation for Poisson models
 #' eta <- exp(-X %*% b)
-#' Y <- do.call("cbind", lapply(seq(10), function(.) rpois(100, eta[,.])))
-#' fit <- cv.edgenet(X=X, Y=Y, G.X=G.X, G.Y,
-#'                   family=poisson, maxit=1, optim.maxit=1)
+#' Y <- do.call("cbind", lapply(seq(10), function(.) rpois(100, eta[, .])))
+#' fit <- cv.edgenet(
+#'   X = X, Y = Y, G.X = G.X, G.Y,
+#'   family = poisson, maxit = 1, optim.maxit = 1
+#' )
 setGeneric(
-    "cv.edgenet",
-    function(X, Y, G.X=NULL, G.Y=NULL,
-             lambda=NA_real_, psigx=NA_real_, psigy=NA_real_,
-             thresh=1e-5, maxit=1e5, learning.rate=0.01,
-             family=gaussian,
-             optim.maxit=1e2, optim.thresh=1e-2,
-             nfolds=10)
-    {
-        standardGeneric("cv.edgenet")
-    },
-    package = "netReg"
+  "cv.edgenet",
+  function(X, Y, G.X = NULL, G.Y = NULL,
+           lambda = NA_real_, psigx = NA_real_, psigy = NA_real_,
+           thresh = 1e-5, maxit = 1e5, learning.rate = 0.01,
+           family = gaussian,
+           optim.maxit = 1e2, optim.thresh = 1e-2,
+           nfolds = 10) {
+    standardGeneric("cv.edgenet")
+  },
+  package = "netReg"
 )
 
 
 #' @rdname cvedgenet-methods
 setMethod(
-    "cv.edgenet",
-    signature = signature(X="matrix", Y="numeric"),
-    function(X, Y, G.X=NULL, G.Y=NULL,
-             lambda=NA_real_, psigx=NA_real_, psigy=NA_real_,
-             thresh=1e-5, maxit=1e5, learning.rate=0.01,
-             family=gaussian,
-             optim.maxit=1e2, optim.thresh=1e-2,
-             nfolds=10)
-    {
-        cv.edgenet(X, as.matrix(Y), G.X, G.Y,
-                   lambda, psigx, psigy,
-                   thresh, maxit, learning.rate,
-                   family,
-                   optim.maxit, optim.thresh,
-                   nfolds)
-    }
+  "cv.edgenet",
+  signature = signature(X = "matrix", Y = "numeric"),
+  function(X, Y, G.X = NULL, G.Y = NULL,
+           lambda = NA_real_, psigx = NA_real_, psigy = NA_real_,
+           thresh = 1e-5, maxit = 1e5, learning.rate = 0.01,
+           family = gaussian,
+           optim.maxit = 1e2, optim.thresh = 1e-2,
+           nfolds = 10) {
+    cv.edgenet(
+      X, as.matrix(Y), G.X, G.Y,
+      lambda, psigx, psigy,
+      thresh, maxit, learning.rate,
+      family,
+      optim.maxit, optim.thresh,
+      nfolds
+    )
+  }
 )
 
 
 #' @rdname cvedgenet-methods
 setMethod(
-    "cv.edgenet",
-    signature = signature(X="matrix", Y="matrix"),
-    function(X, Y, G.X=NULL, G.Y=NULL,
-             lambda=NA_real_, psigx=NA_real_, psigy=NA_real_,
-             thresh=1e-5, maxit=1e5, learning.rate=0.01,
-             family=gaussian,
-             optim.maxit=1e2, optim.thresh=1e-2,
-             nfolds=10)
-    {
-        stopifnot(is.numeric(nfolds), nfolds > 0, is.numeric(learning.rate),
-                  is.numeric(optim.maxit), is.numeric(optim.thresh),
-                  is.numeric(maxit), is.numeric(thresh))
+  "cv.edgenet",
+  signature = signature(X = "matrix", Y = "matrix"),
+  function(X, Y, G.X = NULL, G.Y = NULL,
+           lambda = NA_real_, psigx = NA_real_, psigy = NA_real_,
+           thresh = 1e-5, maxit = 1e5, learning.rate = 0.01,
+           family = gaussian,
+           optim.maxit = 1e2, optim.thresh = 1e-2,
+           nfolds = 10) {
+    stopifnot(
+      is.numeric(nfolds), nfolds > 0, is.numeric(learning.rate),
+      is.numeric(optim.maxit), is.numeric(optim.thresh),
+      is.numeric(maxit), is.numeric(thresh)
+    )
 
-        n <- dim(X)[1]
-        p <- dim(X)[2]
+    n <- dim(X)[1]
+    p <- dim(X)[2]
 
-        if (is.null(G.X)) psigx <- 0
-        if (is.null(G.Y)) psigy <- 0
+    if (is.null(G.X)) psigx <- 0
+    if (is.null(G.Y)) psigy <- 0
 
-        check.matrices(X, Y)
-        check.graphs(X, Y, G.X, G.Y, psigx, psigy)
-        check.dimensions(X, Y, n, p)
-        lambda <- check.param(lambda, 0, `<`, 0)
-        psigx <- check.param(psigx, 0, `<`, 0)
-        psigy <- check.param(psigy, 0, `<`, 0)
-        maxit <- check.param(maxit, 0, `<`, 1e5)
-        optim.maxit <- check.param(optim.maxit, 0, `<`, 1e2)
-        thresh <- check.param(thresh, 0, `<`, 1e-5)
-        optim.thresh <- check.param(optim.thresh, 0, `<`, 1e-2)
-        family <- get.family(family)
+    check.matrices(X, Y)
+    check.graphs(X, Y, G.X, G.Y, psigx, psigy)
+    check.dimensions(X, Y, n, p)
+    lambda <- check.param(lambda, 0, `<`, 0)
+    psigx <- check.param(psigx, 0, `<`, 0)
+    psigy <- check.param(psigy, 0, `<`, 0)
+    maxit <- check.param(maxit, 0, `<`, 1e5)
+    optim.maxit <- check.param(optim.maxit, 0, `<`, 1e2)
+    thresh <- check.param(thresh, 0, `<`, 1e-5)
+    optim.thresh <- check.param(optim.thresh, 0, `<`, 1e-2)
+    family <- get.family(family)
 
-        if (ncol(Y) == 1) {
-            psigy <- 0
-            G.Y <- NULL
-        }
-
-        if (n < nfolds) nfolds <- n
-        folds <- sample(rep(seq_len(10), length.out=n))
-
-        ret <- .cv.edgenet(
-            X, Y, G.X, G.Y,
-            lambda, psigx, psigy,
-            family,
-            thresh, maxit, learning.rate,
-            nfolds, folds,
-            optim.maxit, optim.thresh)
-
-        ret$fit <- edgenet(X, Y, G.X, G.Y,
-                           ret$lambda, ret$psigx, ret$psigy,
-                           thresh, maxit, learning.rate, family)
-
-        ret$call   <- match.call()
-        class(ret) <- c(class(ret), "cv.edgenet")
-
-        ret
+    if (ncol(Y) == 1) {
+      psigy <- 0
+      G.Y <- NULL
     }
+
+    if (n < nfolds) nfolds <- n
+    folds <- sample(rep(seq_len(10), length.out = n))
+
+    ret <- .cv.edgenet(
+      X, Y, G.X, G.Y,
+      lambda, psigx, psigy,
+      family,
+      thresh, maxit, learning.rate,
+      nfolds, folds,
+      optim.maxit, optim.thresh
+    )
+
+    ret$fit <- edgenet(
+      X, Y, G.X, G.Y,
+      ret$lambda, ret$psigx, ret$psigy,
+      thresh, maxit, learning.rate, family
+    )
+
+    ret$call <- match.call()
+    class(ret) <- c(class(ret), "cv.edgenet")
+
+    ret
+  }
 )
 
 
@@ -230,99 +250,112 @@ setMethod(
                         family,
                         thresh, maxit, learning.rate,
                         nfolds, folds,
-                        optim.maxit, optim.thresh)
-{
+                        optim.maxit, optim.thresh) {
+  reg.params <- list(lambda = lambda, psigx = psigx, psigy = psigy)
+  estimatable.params <- Filter(is.na, reg.params)
+  fixed.params <- Filter(is.finite, reg.params)
 
-    reg.params <- list(lambda=lambda, psigx=psigx, psigy=psigy)
-    estimatable.params <- Filter(is.na, reg.params)
-    fixed.params <- Filter(is.finite, reg.params)
-
-    init.params <- rep(0.1, length(estimatable.params))
-    if (is.null(gx) & is.null(gy) & !is.na(lambda))
-        stop("you didn't set graphs and lambda != NA_real_.
+  init.params <- rep(0.1, length(estimatable.params))
+  if (is.null(gx) & is.null(gy) & !is.na(lambda)) {
+    stop("you didn't set graphs and lambda != NA_real_.
              got nothing to estimate", call. = FALSE)
-    if (length(init.params) == 0)
-        stop("please set either of lambda/psigx/psigy to NA_real_",
-             call. = FALSE)
+  }
+  if (length(init.params) == 0) {
+    stop("please set either of lambda/psigx/psigy to NA_real_",
+      call. = FALSE
+    )
+  }
 
-    p <- ncol(x)
-    q <- ncol(y)
+  p <- ncol(x)
+  q <- ncol(y)
 
-    reset_graph()
+  reset_graph()
 
-    if (!is.null(gx))
-        gx <- cast_float(laplacian_(gx))
-    if (!is.null(gy))
-        gy <- cast_float(laplacian_(gy))
+  if (!is.null(gx)) {
+    gx <- cast_float(laplacian_(gx))
+  }
+  if (!is.null(gy)) {
+    gy <- cast_float(laplacian_(gy))
+  }
 
-    alpha <- zero_vector(q)
-    beta  <- zero_matrix(p, q)
+  alpha <- zero_vector(q)
+  beta <- zero_matrix(p, q)
 
-    x.tensor <- placeholder(shape(NULL, p), name = "x.tensor")
-    y.tensor <- placeholder(shape(NULL, q), name = "y.tensor")
-    lambda.tensor <- placeholder(shape())
-    psigx.tensor  <- placeholder(shape())
-    psigy.tensor  <- placeholder(shape())
+  x.tensor <- placeholder(shape(NULL, p), name = "x.tensor")
+  y.tensor <- placeholder(shape(NULL, q), name = "y.tensor")
+  lambda.tensor <- placeholder(shape())
+  psigx.tensor <- placeholder(shape())
+  psigy.tensor <- placeholder(shape())
 
-    loss  <- edgenet.loss(gx, gy, family)
-    objective <- loss(alpha, beta,
-                      lambda.tensor, psigx.tensor, psigy.tensor,
-                      x.tensor, y.tensor)
+  loss <- edgenet.loss(gx, gy, family)
+  objective <- loss(
+    alpha, beta,
+    lambda.tensor, psigx.tensor, psigy.tensor,
+    x.tensor, y.tensor
+  )
 
-    optimizer <- adam(learning.rate)
-    train <- optimizer$minimize(objective)
-    fn <- cross.validate(objective, train,
-                         x, y,
-                         x.tensor, y.tensor,
-                         lambda.tensor, psigx.tensor, psigy.tensor,
-                         nfolds, folds,
-                         maxit, thresh, learning.rate)
+  optimizer <- adam(learning.rate)
+  train <- optimizer$minimize(objective)
+  fn <- cross.validate(
+    objective, train,
+    x, y,
+    x.tensor, y.tensor,
+    lambda.tensor, psigx.tensor, psigy.tensor,
+    nfolds, folds,
+    maxit, thresh, learning.rate
+  )
 
-    with(session() %as% sess, {
-        opt <- optim(fn, init.params, var.args=fixed.params,
-                     sess=sess, alpha=alpha, beta=beta,
-                     lower=rep(0, length(init.params)),
-                     upper=rep(100, length(init.params)),
-                     control=list(maxeval=optim.maxit,
-                                  xtol_rel=optim.thresh,
-                                  ftol_rel=optim.thresh,
-                                  ftol_abs=optim.thresh))
-    })
+  with(session() %as% sess, {
+    opt <- optim(fn, init.params,
+      var.args = fixed.params,
+      sess = sess, alpha = alpha, beta = beta,
+      lower = rep(0, length(init.params)),
+      upper = rep(100, length(init.params)),
+      control = list(
+        maxeval = optim.maxit,
+        xtol_rel = optim.thresh,
+        ftol_rel = optim.thresh,
+        ftol_abs = optim.thresh
+      )
+    )
+  })
 
-    ret <- .cv.edgenet.post.process(opt, estimatable.params, fixed.params)
-    ret$family <- family
-    class(ret) <- paste0(family$family, ".cv.edgenet")
+  ret <- .cv.edgenet.post.process(opt, estimatable.params, fixed.params)
+  ret$family <- family
+  class(ret) <- paste0(family$family, ".cv.edgenet")
 
-    ret
+  ret
 }
 
 
 #' @noRd
-.cv.edgenet.post.process <- function(opt, estimatable.params, fixed.params)
-{
-    ret <- list(parameters=c(),
-                "lambda"=NA_real_,
-                "psigx"=NA_real_,
-                "psigy"=NA_real_)
+.cv.edgenet.post.process <- function(opt, estimatable.params, fixed.params) {
+  ret <- list(
+    parameters = c(),
+    "lambda" = NA_real_,
+    "psigx" = NA_real_,
+    "psigy" = NA_real_
+  )
 
-    for (i in seq(estimatable.params)) {
-        nm <- names(estimatable.params)[i]
-        ret[[ nm ]] <- opt$par[i]
-        ret$estimated.parameters <- c(ret$estimated.parameters, nm)
+  for (i in seq(estimatable.params)) {
+    nm <- names(estimatable.params)[i]
+    ret[[nm]] <- opt$par[i]
+    ret$estimated.parameters <- c(ret$estimated.parameters, nm)
+  }
+  for (i in seq(fixed.params)) {
+    ret[[names(fixed.params)[i]]] <- as.double(fixed.params[i])
+  }
+
+  pars <- c("lambda" = ret$lambda, "psigx" = ret$psigx, "psigy" = ret$psigy)
+  for (i in seq(pars))
+  {
+    if (names(pars)[i] %in% ret$estimated.parameters) {
+      names(pars)[i] <- paste(names(pars)[i], "(estimated)")
+    } else {
+      names(pars)[i] <- paste(names(pars)[i], "(fixed)")
     }
-    for (i in seq(fixed.params))
-        ret[[ names(fixed.params)[i] ]] <- as.double(fixed.params[i])
+  }
 
-    pars <- c("lambda"=ret$lambda, "psigx"=ret$psigx, "psigy"=ret$psigy)
-    for (i in seq(pars))
-    {
-        if (names(pars)[i] %in% ret$estimated.parameters)
-            names(pars)[i] <- paste(names(pars)[i], "(estimated)")
-        else
-            names(pars)[i] <- paste(names(pars)[i], "(fixed)")
-    }
-
-    ret$parameters <- pars
-    ret
+  ret$parameters <- pars
+  ret
 }
-

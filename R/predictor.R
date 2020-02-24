@@ -20,8 +20,7 @@
 
 #' @noRd
 #' @import tensorflow
-linear.predictor <- function(alpha, beta, x)
-{
-    eta <- tf$matmul(x, beta) + alpha
-    eta
+linear.predictor <- function(alpha, beta, x) {
+  eta <- tf$matmul(x, beta) + alpha
+  eta
 }

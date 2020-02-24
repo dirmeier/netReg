@@ -18,37 +18,52 @@
 # along with netReg. If not, see <http://www.gnu.org/licenses/>.
 
 
-
-.summary.edgenet <- function(x, obj.name)
-{
-    cat(sprintf("'%s' object", class(x)[1]))
-    cat("\n\ncall:\n")
-    print(x$call)
-    prmstr <- "parameters"
-    if (class(x)[-1] == "cv.edgenet")
-        prmstr <- paste("optimal", prmstr)
-    cat(sprintf("\n%s:\n", prmstr))
-    print(x$parameters)
-    cat("\nfamily: ", x$family$family)
-    cat("\nlink: ", x$family$link, "\n")
-    cat(sprintf("\n-> call coef(%s) for coefficients", obj.name))
+#' @noRd
+.summary <- function(x, obj.name) {
+  cat(sprintf("'%s' object", class(x)[1]))
+  cat("\n\ncall:\n")
+  print(x$call)
+  prmstr <- "parameters"
+  if (startsWith(class(x)[-1], "cv.")) {
+    prmstr <- paste("optimal", prmstr)
+  }
+  cat(sprintf("\n%s:\n", prmstr))
+  print(x$parameters)
+  cat("\nfamily: ", x$family$family)
+  cat("\nlink: ", x$family$link, "\n")
+  cat(sprintf("\n-> call coef(%s) for coefficients", obj.name))
 }
 
 
 #' @export
 #' @method summary edgenet
-summary.edgenet <- function(object, ...)
-    .summary.edgenet(object, deparse(substitute(object)))
+summary.edgenet <- function(object, ...) {
+  .summary(object, deparse(substitute(object)))
+}
 
 
 
 #' @export
 #' @method summary cv.edgenet
-summary.cv.edgenet <- function(object, ...)
-    .summary.edgenet(object, deparse(substitute(object)))
+summary.cv.edgenet <- function(object, ...) {
+  .summary(object, deparse(substitute(object)))
+}
+
+
+#' @export
+#' @method summary group.lasso
+summary.group.lasso <- function(object, ...) {
+  .summary.edgenet(object, deparse(substitute(object)))
+}
+
+
+#' @export
+#' @method summary cv.group.lasso
+summary.cv.group.lasso <- function(object, ...) {
+  .summary(object, deparse(substitute(object)))
+}
 
 
 #' @export
 #' @method summary netReg.family
 summary.netReg.family <- function(object, ...) print(object)
-

@@ -21,28 +21,28 @@
 #' @noRd
 #' @import tensorflow
 fit <- function(objective, alpha, beta,
-                maxit=1000, learning.rate = 0.01, thresh = 1e-4)
-{
-    optimizer <- adam(learning.rate)
-    train <- optimizer$minimize(objective)
+                maxit = 1000, learning.rate = 0.01, thresh = 1e-4) {
+  optimizer <- adam(learning.rate)
+  train <- optimizer$minimize(objective)
 
-    with(session() %as% sess, {
-      sess$run(init_variables())
-      target.old <- Inf
-      for (step in seq(maxit))
-      {
-          sess$run(train)
-          if (step %% 25 == 0) {
-              target <- sess$run(objective)
-              if (sum(abs(target - target.old)) < thresh)
-                  break
-              target.old <- target
-          }
+  with(session() %as% sess, {
+    sess$run(init_variables())
+    target.old <- Inf
+    for (step in seq(maxit))
+    {
+      sess$run(train)
+      if (step %% 25 == 0) {
+        target <- sess$run(objective)
+        if (sum(abs(target - target.old)) < thresh) {
+          break
+        }
+        target.old <- target
       }
+    }
 
-      alpha <- sess$run(alpha)
-      beta  <- sess$run(beta)
-    })
+    alpha <- sess$run(alpha)
+    beta <- sess$run(beta)
+  })
 
-    list(beta=beta, alpha=alpha)
+  list(beta = beta, alpha = alpha)
 }

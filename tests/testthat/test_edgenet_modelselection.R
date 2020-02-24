@@ -20,49 +20,49 @@
 
 context("edgenet modelselection")
 
-n   <- 100
-p   <- 5
-q   <- 2
+n <- 100
+p <- 5
+q <- 2
 G.X <- matrix(rbeta(p * p, 1, 1), p, p)
 G.X <- t(G.X) + G.X
 G.Y <- matrix(rbeta(q * q, 1, 1), q, q)
 G.Y <- t(G.Y) + G.Y
 diag(G.X) <- diag(G.Y) <- 0
-X   <- matrix(rnorm(n * p), n, p)
-B   <- matrix(rnorm(p * q), p, q)
-Y   <- X %*% B + matrix(rnorm(n * q), n)
+X <- matrix(rnorm(n * p), n, p)
+B <- matrix(rnorm(p * q), p, q)
+Y <- X %*% B + matrix(rnorm(n * q), n)
 
-ecv <- cv.edgenet(X, Y, maxit=1, thresh=1, optim.maxit = 1)
+ecv <- cv.edgenet(X, Y, maxit = 1, thresh = 1, optim.maxit = 1)
 
 test_that("gaussian edgenet modelselection returns s3 class", {
-    testthat::expect_s3_class(ecv, "gaussian.cv.edgenet")
-    testthat::expect_s3_class(ecv, "cv.edgenet")
+  testthat::expect_s3_class(ecv, "gaussian.cv.edgenet")
+  testthat::expect_s3_class(ecv, "cv.edgenet")
 })
 
 test_that("gaussian edgenet modelselection throws at wrong X", {
-    testthat::expect_error(cv.edgenet(X="s", Y, maxit=1, thresh=1))
+  testthat::expect_error(cv.edgenet(X = "s", Y, maxit = 1, thresh = 1))
 })
 
 test_that("gaussian edgenet modelselection throws at wrong Y", {
-    testthat::expect_error(cv.edgenet(X, Y="s", maxit=1, thresh=1))
+  testthat::expect_error(cv.edgenet(X, Y = "s", maxit = 1, thresh = 1))
 })
 
 test_that("gaussian edgenet modelselection throws at wrong fold", {
-    testthat::expect_error(cv.edgenet(X, Y, maxit=1, thresh=1, nfolds="s"))
+  testthat::expect_error(cv.edgenet(X, Y, maxit = 1, thresh = 1, nfolds = "s"))
 })
 
 test_that("gaussian edgenet modelselection warngs at maxit < 0 ", {
-    testthat::expect_warning(cv.edgenet(X, Y, thresh=1, maxit=-1))
+  testthat::expect_warning(cv.edgenet(X, Y, thresh = 1, maxit = -1))
 })
 
 test_that("gaussian edgenet modelselection warngs at thresh < 0 ", {
-    testthat::expect_warning(cv.edgenet(X, Y, maxit=1, thresh=-1))
+  testthat::expect_warning(cv.edgenet(X, Y, maxit = 1, thresh = -1))
 })
 
 test_that("gaussian edgenet modelselection warngs at epsilon < 0 ", {
-    testthat::expect_warning(cv.edgenet(X, Y, maxit=1, thresh=1, optim.thresh = -1))
+  testthat::expect_warning(cv.edgenet(X, Y, maxit = 1, thresh = 1, optim.thresh = -1))
 })
 
 test_that("gaussian edgenet modelselection warngs at approx.maxit < 0 ", {
-    testthat::expect_warning(cv.edgenet(X, Y, maxit=1, thresh=1, optim.maxit=-1))
+  testthat::expect_warning(cv.edgenet(X, Y, maxit = 1, thresh = 1, optim.maxit = -1))
 })

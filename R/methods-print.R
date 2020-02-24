@@ -20,42 +20,36 @@
 
 #' @export
 #' @method print edgenet
-print.edgenet <- function(x,...)
-{
-    cat(sprintf("'%s' object", class(x)[1]))
+print.edgenet <- function(x, ...) {
+  cat(sprintf("'%s' object", class(x)[1]))
 }
 
 #' @export
 #' @method print group.lasso
-print.group.lasso <- function(x,...)
-{
-    print.edgenet(x, ...)
+print.group.lasso <- function(x, ...) {
+  print.edgenet(x, ...)
 }
 
 
 #' @export
 #' @method print cv.edgenet
-print.cv.edgenet <- function(x, ...)
-{
-    cat(sprintf("'%s' object", class(x)[1]))
-    cat("\n\noptimal parameters:\n")
-    print(x$parameters)
+print.cv.edgenet <- function(x, ...) {
+  cat(sprintf("'%s' object", class(x)[1]))
+  cat("\n\noptimal parameters:\n")
+  print(x$parameters)
 }
 
 
 #' @export
 #' @method print cv.group.lasso
-print.cv.group.lasso <- function(x, ...)
-{
-    print.cv.edgenet(x, ...)
+print.cv.group.lasso <- function(x, ...) {
+  print.cv.edgenet(x, ...)
 }
 
 
 #' @export
 #' @method print netReg.family
-print.netReg.family <- function(x, ...)
-{
-    cat(sprintf("family: %s\n", x$family))
-    cat(sprintf("link: %s\n", x$link))
+print.netReg.family <- function(x, ...) {
+  cat(sprintf("family: %s\n", x$family))
+  cat(sprintf("link: %s\n", x$link))
 }
-

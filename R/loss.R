@@ -20,102 +20,92 @@
 
 #' @noRd
 #' @import tensorflow
-edgenet.loss <- function(gx, gy, family)
-{
-    invlink <- family$linkinv
-    loss.function <- family$loss
+edgenet.loss <- function(gx, gy, family) {
+  invlink <- family$linkinv
+  loss.function <- family$loss
 
-    loss <- function(alpha, beta, lambda, psigx, psigy, x, y)
-    {
-        eta <- linear.predictor(alpha, beta, x)
-        obj <- loss.function(y, eta, invlink) + .lasso.penalty(lambda, beta)
+  loss <- function(alpha, beta, lambda, psigx, psigy, x, y) {
+    eta <- linear.predictor(alpha, beta, x)
+    obj <- loss.function(y, eta, invlink) + .lasso.penalty(lambda, beta)
 
-        if (!is.null(gx)) {
-            obj <- obj + psigx * .edgenet.x.penalty(gx, beta)
-        }
-        if (!is.null(gy)) {
-            obj <- obj + psigy * .edgenet.y.penalty(gy, beta)
-        }
-
-        obj
+    if (!is.null(gx)) {
+      obj <- obj + psigx * .edgenet.x.penalty(gx, beta)
+    }
+    if (!is.null(gy)) {
+      obj <- obj + psigy * .edgenet.y.penalty(gy, beta)
     }
 
-    loss
+    obj
+  }
+
+  loss
 }
 
 
 #' @noRd
 #' @import tensorflow
-.edgenet.x.penalty <- function(gx, beta)
-{
-    tf$linalg$trace(tf$matmul(tf$transpose(beta), tf$matmul(gx, beta)))
+.edgenet.x.penalty <- function(gx, beta) {
+  tf$linalg$trace(tf$matmul(tf$transpose(beta), tf$matmul(gx, beta)))
 }
 
 
 #' @noRd
 #' @import tensorflow
-.edgenet.y.penalty <- function(gy, beta)
-{
-    tf$linalg$trace(tf$matmul(beta, tf$matmul(gy, tf$transpose(beta))))
+.edgenet.y.penalty <- function(gy, beta) {
+  tf$linalg$trace(tf$matmul(beta, tf$matmul(gy, tf$transpose(beta))))
 }
 
 
 #' @noRd
 #' @import tensorflow
-group.lasso.loss <- function(grps, family)
-{
-    invlink <- family$linkinv
-    loss.function <- family$loss
+group.lasso.loss <- function(grps, family) {
+  invlink <- family$linkinv
+  loss.function <- family$loss
 
-    loss <- function(alpha, beta, lambda, x, y)
-    {
-        eta <- linear.predictor(alpha, beta, x)
-        obj <- loss.function(y, eta, invlink) +
-            .group.lasso.penalty(lambda, beta, grps)
+  loss <- function(alpha, beta, lambda, x, y) {
+    eta <- linear.predictor(alpha, beta, x)
+    obj <- loss.function(y, eta, invlink) +
+      .group.lasso.penalty(lambda, beta, grps)
 
-        obj
-    }
+    obj
+  }
 
-    loss
+  loss
 }
 
 
 #' @noRd
 #' @importFrom tensorflow tf
 .group.lasso.penalty <- function(lambda, beta, grps) {
-    pen <- 0
-    iter <- unique(grps[!is.na(grps)])
-    for (el in iter) {
-        idxs <- which(grps == el)
-        grp.pen <- tf$sqrt(cast_float(length(idxs)))
-        for (j in seq(ncol(beta))) {
-            pen <- pen + grp.pen * tf$sqrt(tf$reduce_sum(tf$square(beta[idxs, j])))
-        }
+  pen <- 0
+  iter <- unique(grps[!is.na(grps)])
+  for (el in iter) {
+    idxs <- which(grps == el)
+    grp.pen <- tf$sqrt(cast_float(length(idxs)))
+    for (j in seq(ncol(beta))) {
+      pen <- pen + grp.pen * tf$sqrt(tf$reduce_sum(tf$square(beta[idxs, j])))
     }
-    lambda * pen
+  }
+  lambda * pen
 }
 
 
 #' @noRd
 #' @importFrom tensorflow tf
-.lasso.penalty <- function(lambda, beta)
-{
-    lambda * tf$reduce_sum(tf$abs(beta))
+.lasso.penalty <- function(lambda, beta) {
+  lambda * tf$reduce_sum(tf$abs(beta))
 }
 
 
 #' @noRd
 #' @importFrom tensorflow tf
-.ridge.penalty <- function(lambda, beta)
-{
-    lambda * tf$reduce_sum(tf$square(beta))
+.ridge.penalty <- function(lambda, beta) {
+  lambda * tf$reduce_sum(tf$square(beta))
 }
 
 
 #' @noRd
-.elastic.penalty <- function(alpha, lambda, beta)
-{
-    lambda * (.ridge.penalty((1 - alpha) / 2, beta) +
-              .lasso.penalty(alpha, beta))
+.elastic.penalty <- function(alpha, lambda, beta) {
+  lambda * (.ridge.penalty((1 - alpha) / 2, beta) +
+    .lasso.penalty(alpha, beta))
 }
-

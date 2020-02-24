@@ -39,12 +39,12 @@
 #'  \item{linkinv }{ inverse link function}
 #'  \item{loss }{ loss function}
 #' @examples
-#'  gaussian()
-#'  binomial("probit")$link
-#'  poisson()$linkinv
-#'  gamma()$linkinv
-#'  beta()$loss
-#'  inverse.gaussian()$loss
+#' gaussian()
+#' binomial("probit")$link
+#' poisson()$linkinv
+#' gamma()$linkinv
+#' beta()$loss
+#' inverse.gaussian()$loss
 family <- function(object, ...) UseMethod("family")
 
 
@@ -62,127 +62,134 @@ family.cv.edgenet <- function(object, ...) family.edgenet(object, ...)
 
 #' @export
 #' @rdname family-methods
-gaussian <- function(link = c("identity"))
-{
-    link <- match.arg(link)
-    linkinv <- switch(
-        link,
-        "identity"=identity,
-        stop("did not recognize link function", call. = FALSE)
-    )
+gaussian <- function(link = c("identity")) {
+  link <- match.arg(link)
+  linkinv <- switch(
+    link,
+    "identity" = identity,
+    stop("did not recognize link function", call. = FALSE)
+  )
 
-    .as.family("gaussian",
-               link,
-               linkinv,
-               gaussian.loss)
+  .as.family(
+    "gaussian",
+    link,
+    linkinv,
+    gaussian.loss
+  )
 }
 
 
 #' @export
 #' @rdname family-methods
-binomial <- function(link=c("logit", "probit", "log"))
-{
-    link <- match.arg(link)
-    linkinv <- switch(
-        link,
-        "logit"=logistic,
-        "log"=exp,
-        "probit"=gcdf,
-        stop("did not recognize link function", call. = FALSE)
-    )
+binomial <- function(link = c("logit", "probit", "log")) {
+  link <- match.arg(link)
+  linkinv <- switch(
+    link,
+    "logit" = logistic,
+    "log" = exp,
+    "probit" = gcdf,
+    stop("did not recognize link function", call. = FALSE)
+  )
 
-    .as.family("binomial",
-               link,
-               linkinv,
-               binomial.loss)
+  .as.family(
+    "binomial",
+    link,
+    linkinv,
+    binomial.loss
+  )
 }
 
 
 #' @export
 #' @rdname family-methods
-poisson <- function(link=c("log"))
-{
-    link <- match.arg(link)
-    linkinv <- switch(
-        link,
-        "log"=exp,
-        stop("did not recognize link function", call. = FALSE)
-    )
+poisson <- function(link = c("log")) {
+  link <- match.arg(link)
+  linkinv <- switch(
+    link,
+    "log" = exp,
+    stop("did not recognize link function", call. = FALSE)
+  )
 
-    .as.family("poisson",
-               link,
-               linkinv,
-               poisson.loss)
+  .as.family(
+    "poisson",
+    link,
+    linkinv,
+    poisson.loss
+  )
 }
 
 
 #' @export
 #' @rdname family-methods
-gamma <- function(link=c("inverse"))
-{
-    warn.experimental("gamma")
-    link <- match.arg(link)
-    linkinv <- switch(
-        link,
-        "inverse"=inverse,
-        stop("did not recognize link function", call. = FALSE)
-    )
+gamma <- function(link = c("inverse")) {
+  warn.experimental("gamma")
+  link <- match.arg(link)
+  linkinv <- switch(
+    link,
+    "inverse" = inverse,
+    stop("did not recognize link function", call. = FALSE)
+  )
 
-    .as.family("gamma",
-               link,
-               linkinv,
-               gamma.loss)
+  .as.family(
+    "gamma",
+    link,
+    linkinv,
+    gamma.loss
+  )
 }
 
 
 #' @export
 #' @rdname family-methods
-beta <- function(link=c("logit", "probit", "log"))
-{
-    warn.experimental("beta")
-    link <- match.arg(link)
-    linkinv <- switch(
-        link,
-        "logit"=logistic,
-        "log"=exp,
-        "probit"=gcdf,
-        stop("did not recognize link function", call. = FALSE)
-    )
+beta <- function(link = c("logit", "probit", "log")) {
+  warn.experimental("beta")
+  link <- match.arg(link)
+  linkinv <- switch(
+    link,
+    "logit" = logistic,
+    "log" = exp,
+    "probit" = gcdf,
+    stop("did not recognize link function", call. = FALSE)
+  )
 
-    .as.family("beta",
-               link,
-               linkinv,
-               beta.loss)
+  .as.family(
+    "beta",
+    link,
+    linkinv,
+    beta.loss
+  )
 }
 
 
 #' @export
 #' @rdname family-methods
-inverse.gaussian <- function(link=c("1/mu^2"))
-{
-    warn.experimental("inverse.gaussian")
-    link <- match.arg(link)
-    linkinv <- switch(
-        link,
-        "1/mu^2"=inverse.sqrt,
-        stop("did not recognize link function", call. = FALSE)
-    )
+inverse.gaussian <- function(link = c("1/mu^2")) {
+  warn.experimental("inverse.gaussian")
+  link <- match.arg(link)
+  linkinv <- switch(
+    link,
+    "1/mu^2" = inverse.sqrt,
+    stop("did not recognize link function", call. = FALSE)
+  )
 
-    .as.family("inverse.gaussian",
-               link,
-               linkinv,
-               inverse.gaussian.loss)
+  .as.family(
+    "inverse.gaussian",
+    link,
+    linkinv,
+    inverse.gaussian.loss
+  )
 }
 
 
 #' @noRd
-.as.family <- function(family, link, linkinv, loss)
-{
-    structure(
-        list(family=family,
-             link=link,
-             linkinv=linkinv,
-             loss=loss),
-        class="netReg.family"
-    )
+.as.family <- function(family, link, linkinv, loss) {
+  structure(
+    list(
+      family = family,
+      link = link,
+      linkinv = linkinv,
+      loss = loss
+    ),
+    class = "netReg.family"
+  )
 }

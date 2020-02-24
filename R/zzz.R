@@ -20,21 +20,21 @@
 
 #' @importFrom reticulate py_module_available
 #' @importFrom tensorflow install_tensorflow
-.onLoad <- function(libname, pkgname)
-{
-    if (!reticulate::py_module_available("tensorflow"))
-        warning("Could not find tensorflow installation")
-    if (!reticulate::py_module_available("tensorflow_probability"))
-        warning("Could not find tensorflow-probability installation")
-    Sys.setenv(TF_CPP_MIN_LOG_LEVEL = 2)
-    options(tensorflow.one_based_extract = TRUE)
+.onLoad <- function(libname, pkgname) {
+  if (!reticulate::py_module_available("tensorflow")) {
+    warning("Could not find tensorflow installation")
+  }
+  if (!reticulate::py_module_available("tensorflow_probability")) {
+    warning("Could not find tensorflow-probability installation")
+  }
+  Sys.setenv(TF_CPP_MIN_LOG_LEVEL = 2)
+  options(tensorflow.one_based_extract = TRUE)
 
-    library(tensorflow)
-    library(tfprobability)
+  library(tensorflow)
+  library(tfprobability)
 }
 
 
-.onUnload <- function(libpath)
-{
-    library.dynam.unload("netReg", libpath)
+.onUnload <- function(libpath) {
+  library.dynam.unload("netReg", libpath)
 }

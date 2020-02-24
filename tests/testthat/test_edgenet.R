@@ -20,80 +20,80 @@
 
 context("edgenet")
 
-n   <- 100
-p   <- 5
-q   <- 5
+n <- 100
+p <- 5
+q <- 5
 G.X <- matrix(rbeta(p * p, 1, 1), p, p)
 G.X <- t(G.X) + G.X
 G.Y <- matrix(rbeta(q * q, 1, 1), q, q)
 G.Y <- t(G.Y) + G.Y
 diag(G.X) <- diag(G.Y) <- 0
-X   <- matrix(rnorm(n * p), n, p)
-B   <- matrix(rnorm(p * q), p, q)
-Y   <- X %*% B + matrix(rnorm(n * q), n)
+X <- matrix(rnorm(n * p), n, p)
+B <- matrix(rnorm(p * q), p, q)
+Y <- X %*% B + matrix(rnorm(n * q), n)
 
 
 test_that("gaussian edgenet returns s3 class", {
-    e <- edgenet(X, Y, lambda=1, maxit=1, thresh=1e-5)
-    testthat::expect_s3_class(e, "edgenet")
-    testthat::expect_s3_class(e, "gaussian.edgenet")
+  e <- edgenet(X, Y, lambda = 1, maxit = 1, thresh = 1e-5)
+  testthat::expect_s3_class(e, "edgenet")
+  testthat::expect_s3_class(e, "gaussian.edgenet")
 })
 
 
 test_that("gaussian edgenet throws at wrong X", {
-    testthat::expect_error(edgenet(X="s", Y, G.X, G.Y))
+  testthat::expect_error(edgenet(X = "s", Y, G.X, G.Y))
 })
 
 
 test_that("gaussian edgenet throws at wrong Y", {
-    testthat::expect_error(edgenet(X, Y="s", G.X, G.Y))
+  testthat::expect_error(edgenet(X, Y = "s", G.X, G.Y))
 })
 
 
 test_that("gaussian edgenet warns at lambda<0", {
-    testthat::expect_warning(edgenet(X, Y, G.X, G.Y, lambda=-1, maxit=1))
+  testthat::expect_warning(edgenet(X, Y, G.X, G.Y, lambda = -1, maxit = 1))
 })
 
 
 test_that("gaussian edgenet warns at psigx<0", {
-    testthat::expect_warning(edgenet(X, Y, G.X, G.Y, psigx=-1, maxit=1))
+  testthat::expect_warning(edgenet(X, Y, G.X, G.Y, psigx = -1, maxit = 1))
 })
 
 
 test_that("gaussian edgenet warns at psigy<0", {
-    testthat::expect_warning(edgenet(X, Y, G.X, G.Y, psigy=-1, maxit=1))
+  testthat::expect_warning(edgenet(X, Y, G.X, G.Y, psigy = -1, maxit = 1))
 })
 
 
 test_that("gaussian edgenet warns at maxit<0", {
-    testthat::expect_warning(edgenet(X, Y, G.X, G.Y, maxit=-1))
+  testthat::expect_warning(edgenet(X, Y, G.X, G.Y, maxit = -1))
 })
 
 
 test_that("gaussian edgenet warns at thresh<0", {
-    testthat::expect_warning(edgenet(X, Y, G.X, G.Y, thresh=-1))
+  testthat::expect_warning(edgenet(X, Y, G.X, G.Y, thresh = -1))
 })
 
 
 test_that("gaussian edgenet throws at wrong dim[1] G.X", {
-    G.X <- matrix(1, p - 1, p)
-    testthat::expect_error(edgenet(X, Y, G.X, G.Y, thresh=-1))
+  G.X <- matrix(1, p - 1, p)
+  testthat::expect_error(edgenet(X, Y, G.X, G.Y, thresh = -1))
 })
 
 
 test_that("gaussian edgenet throws at wrong dim[2] G.X", {
-    G.X <- matrix(1, p, p - 1)
-    testthat::expect_error(edgenet(X, Y, G.X, G.Y, thresh=-1))
+  G.X <- matrix(1, p, p - 1)
+  testthat::expect_error(edgenet(X, Y, G.X, G.Y, thresh = -1))
 })
 
 
 test_that("gaussian edgenet throws at wrong dim[1] G.Y", {
-    G.Y <- matrix(1, q - 1, q)
-    testthat::expect_error(edgenet(X, Y, G.X, G.Y, thresh=-1))
+  G.Y <- matrix(1, q - 1, q)
+  testthat::expect_error(edgenet(X, Y, G.X, G.Y, thresh = -1))
 })
 
 
 test_that("gaussian edgenet throws at wrong dim[2] G.Y", {
-    G.Y <- matrix(1, q, q - 1)
-    testthat::expect_error(edgenet(X, Y, G.X, G.Y, thresh=-1))
+  G.Y <- matrix(1, q, q - 1)
+  testthat::expect_error(edgenet(X, Y, G.X, G.Y, thresh = -1))
 })

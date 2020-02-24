@@ -44,16 +44,14 @@ logistic <- function(x) 1 / (1 + tf$exp(-x))
 
 #' @noRd
 #' @import tensorflow
-gcdf <- function(x)
-{
-    std <- tfp$distributions$Normal(0, 1)
-    std$cdf(x)
+gcdf <- function(x) {
+  std <- tfp$distributions$Normal(0, 1)
+  std$cdf(x)
 }
 
 
 #' @noRd
 #' @importFrom tensorflow tf
-inverse.sqrt <- function(x)
-{
-    1 / tf$sqrt(x)
+inverse.sqrt <- function(x) {
+  1 / tf$sqrt(x)
 }
