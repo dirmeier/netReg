@@ -106,30 +106,21 @@ Fit a graph-regularized linear regression model using
  the model: \href{../doc/edgenet.html}{\code{vignette("edgenet", package="netReg")}}
 }
 \examples{
-X <- matrix(rnorm(100*10), 100, 10)
+X <- matrix(rnorm(100 * 10), 100, 10)
 b <- matrix(rnorm(100), 10)
-G.X <-  abs(rWishart(1, 10, diag(10))[,,1])
-G.Y <-  abs(rWishart(1, 10, diag(10))[,,1])
+G.X <- abs(rWishart(1, 10, diag(10))[, , 1])
+G.Y <- abs(rWishart(1, 10, diag(10))[, , 1])
 diag(G.X) <- diag(G.Y) <- 0
 
 # estimate the parameters of a Gaussian model
 Y <- X \%*\% b + matrix(rnorm(100 * 10), 100)
 ## dont use affinity matrices
-fit <- edgenet(X=X, Y=Y, family=gaussian, maxit=10)
+fit <- edgenet(X = X, Y = Y, family = gaussian, maxit = 10)
 ## only provide one matrix
-fit <- edgenet(X=X, Y=Y, G.X=G.X, psigx=1, family=gaussian, maxit=10)
+fit <- edgenet(X = X, Y = Y, G.X = G.X, psigx = 1, family = gaussian, maxit = 10)
 ## use two matrices
-fit <- edgenet(X=X, Y=Y, G.X=G.X, G.Y, family=gaussian, maxit=10)
+fit <- edgenet(X = X, Y = Y, G.X = G.X, G.Y, family = gaussian, maxit = 10)
 ## if Y is vectorial, we cannot use an affinity matrix for Y
-fit <- edgenet(X=X, Y=Y[, 1], G.X=G.X, family=gaussian, maxit=10)
+fit <- edgenet(X = X, Y = Y[, 1], G.X = G.X, family = gaussian, maxit = 10)
 
-# estimation for binomial models
-eta <- 1 / (1 + exp(-X \%*\% b))
-Y <- do.call("cbind", lapply(seq(10), function(.) rbinom(100, 1, eta[,.])))
-fit <- edgenet(X=X, Y=Y, G.X=G.X, G.Y, family=binomial, maxit=1)
-
-# estimation for Poisson models
-eta <- exp(-X \%*\% b)
-Y <- do.call("cbind", lapply(seq(10), function(.) rpois(100, eta[,.])))
-fit <- edgenet(X=X, Y=Y, G.X=G.X, G.Y, family=poisson, maxit=1)
 }

@@ -1,7 +1,7 @@
 Package: netReg
 Type: Package
 Title: Network-Regularized Regression Models
-Version: 1.11.1
+Version: 1.11.2
 Authors@R: person("Simon", "Dirmeier",
                   email = "simon.dirmeier@web.de", role = c("aut", "cre"))
 Maintainer: Simon Dirmeier <simon.dirmeier@web.de>

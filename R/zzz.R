@@ -29,9 +29,6 @@
   }
   Sys.setenv(TF_CPP_MIN_LOG_LEVEL = 2)
   options(tensorflow.one_based_extract = TRUE)
-
-  library(tensorflow)
-  library(tfprobability)
 }
 
 

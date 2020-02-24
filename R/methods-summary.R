@@ -53,7 +53,7 @@ summary.cv.edgenet <- function(object, ...) {
 #' @export
 #' @method summary group.lasso
 summary.group.lasso <- function(object, ...) {
-  .summary.edgenet(object, deparse(substitute(object)))
+  .summary(object, deparse(substitute(object)))
 }
 
 

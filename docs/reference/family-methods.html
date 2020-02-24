@@ -8,21 +8,25 @@
 
 <title>Family objects for models — family • netReg</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/lumen/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
-<!-- sticky kit -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+<!-- headroom.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -32,12 +36,13 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Family objects for models — family" />
 
+<meta property="og:title" content="Family objects for models — family" />
 <meta property="og:description" content="Family objects provide a convenient way to specify the details
  of the models used by netReg.
  See also stats::family for more details." />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -49,6 +54,7 @@
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
 
 
   </head>
@@ -67,7 +73,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">netReg</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.11.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.11.2</span>
       </span>
     </div>
 
@@ -92,7 +98,6 @@
   <a href="../news/index.html">News</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="http://www.simon-dirmeier.net">
@@ -119,6 +124,7 @@
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -130,27 +136,25 @@
     </div>
 
     <div class="ref-description">
-    
     <p>Family objects provide a convenient way to specify the details
  of the models used by <code>netReg</code>.
- See also <code><a href='https://www.rdocumentation.org/packages/stats/topics/family'>stats::family</a></code> for more details.</p>
-    
+ See also <code><a href='https://rdrr.io/r/stats/family.html'>stats::family</a></code> for more details.</p>
     </div>
 
     <pre class="usage"><span class='fu'>family</span>(<span class='no'>object</span>, <span class='no'>...</span>)
 
-<span class='fu'>gaussian</span>(<span class='kw'>link</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"identity"</span>))
+<span class='fu'>gaussian</span>(<span class='kw'>link</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"identity"</span>))
 
-<span class='fu'>binomial</span>(<span class='kw'>link</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"logit"</span>, <span class='st'>"probit"</span>, <span class='st'>"log"</span>))
+<span class='fu'>binomial</span>(<span class='kw'>link</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"logit"</span>, <span class='st'>"probit"</span>, <span class='st'>"log"</span>))
 
-<span class='fu'>poisson</span>(<span class='kw'>link</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"log"</span>))
+<span class='fu'>poisson</span>(<span class='kw'>link</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"log"</span>))
 
-<span class='fu'>gamma</span>(<span class='kw'>link</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"inverse"</span>))
+<span class='fu'>gamma</span>(<span class='kw'>link</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"inverse"</span>))
 
-<span class='fu'>beta</span>(<span class='kw'>link</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"logit"</span>, <span class='st'>"probit"</span>, <span class='st'>"log"</span>))
+<span class='fu'>beta</span>(<span class='kw'>link</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"logit"</span>, <span class='st'>"probit"</span>, <span class='st'>"log"</span>))
 
-<span class='fu'>inverse.gaussian</span>(<span class='kw'>link</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"1/mu^2"</span>))</pre>
-    
+<span class='fu'>inverse.gaussian</span>(<span class='kw'>link</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"1/mu^2"</span>))</pre>
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -168,7 +172,7 @@
       <td><p>name of a link function</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>An object of class <code>netReg.family</code></p>
@@ -177,64 +181,57 @@
  <dt>linkinv </dt><dd><p>inverse link function</p></dd>
  <dt>loss </dt><dd><p>loss function</p></dd>
 
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'> <span class='fu'>gaussian</span>()</div><div class='output co'>#&gt; family: gaussian
-#&gt; link: identity</div><div class='input'> <span class='fu'>binomial</span>(<span class='st'>"probit"</span>)$<span class='no'>link</span></div><div class='output co'>#&gt; [1] "probit"</div><div class='input'> <span class='fu'>poisson</span>()$<span class='no'>linkinv</span></div><div class='output co'>#&gt; function(x) tf$maximum(tf$exp(x), tf$float32$min)
-#&gt; &lt;environment: namespace:netReg&gt;</div><div class='input'> <span class='fu'>gamma</span>()$<span class='no'>linkinv</span></div><div class='output co'>#&gt; <span class='warning'>Warning: family gamma is still experimental. enjoy with care.</span></div><div class='output co'>#&gt; function(x) 1 / x
-#&gt; &lt;environment: namespace:netReg&gt;</div><div class='input'> <span class='fu'>beta</span>()$<span class='no'>loss</span></div><div class='output co'>#&gt; <span class='warning'>Warning: family beta is still experimental. enjoy with care.</span></div><div class='output co'>#&gt; function(y, eta, invlink, ...)
+#&gt; link: identity</div><div class='input'> <span class='fu'>binomial</span>(<span class='st'>"probit"</span>)$<span class='no'>link</span></div><div class='output co'>#&gt; [1] "probit"</div><div class='input'> <span class='fu'>poisson</span>()$<span class='no'>linkinv</span></div><div class='output co'>#&gt; function (x) 
+#&gt; tf$maximum(tf$exp(x), tf$float32$min)
+#&gt; &lt;bytecode: 0x556ab2abaaf8&gt;
+#&gt; &lt;environment: namespace:netReg&gt;</div><div class='input'> <span class='fu'>gamma</span>()$<span class='no'>linkinv</span></div><div class='output co'>#&gt; <span class='warning'>Warning: family gamma is still experimental. enjoy with care.</span></div><div class='output co'>#&gt; function (x) 
+#&gt; 1/x
+#&gt; &lt;bytecode: 0x556ab3ee3990&gt;
+#&gt; &lt;environment: namespace:netReg&gt;</div><div class='input'> <span class='fu'>beta</span>()$<span class='no'>loss</span></div><div class='output co'>#&gt; <span class='warning'>Warning: family beta is still experimental. enjoy with care.</span></div><div class='output co'>#&gt; function (y, eta, invlink, ...) 
 #&gt; {
 #&gt;     obj &lt;- 0
-#&gt;     eps &lt;- .Machine$double.eps * 1e9
+#&gt;     eps &lt;- .Machine$double.eps * 1e+09
 #&gt;     for (j in seq(ncol(y))) {
-#&gt;         mu &lt;- invlink(eta[ ,j])
-#&gt;         phi &lt;- 1 # TODO: replace this with tf$variable
-#&gt; 
-#&gt;         # reparametrize
-#&gt;         # concentration1 := alpha = mu * phi
+#&gt;         mu &lt;- invlink(eta[, j])
+#&gt;         phi &lt;- 1
 #&gt;         p &lt;- mu * phi
-#&gt;         # concentration0 := beta = (1. - mu) * phi
 #&gt;         q &lt;- (1 - mu) * phi
-#&gt; 
-#&gt;         # deal with numerical instabilities
 #&gt;         p.trans &lt;- tf$math$maximum(p, eps)
 #&gt;         q.trans &lt;- tf$math$maximum(q, eps)
-#&gt; 
-#&gt;         prob &lt;- tfp$distributions$Beta(
-#&gt;             concentration1 = p.trans, concentration0 = q.trans)
-#&gt;         obj &lt;- obj + tf$reduce_sum(prob$log_prob(y[,j]))
+#&gt;         prob &lt;- tfprobability::tfd_beta(concentration1 = p.trans, 
+#&gt;             concentration0 = q.trans)
+#&gt;         obj &lt;- obj + tf$reduce_sum(prob$log_prob(y[, j]))
 #&gt;     }
-#&gt; 
 #&gt;     -obj
 #&gt; }
-#&gt; &lt;environment: namespace:netReg&gt;</div><div class='input'> <span class='fu'>inverse.gaussian</span>()$<span class='no'>loss</span></div><div class='output co'>#&gt; <span class='warning'>Warning: family inverse.gaussian is still experimental. enjoy with care.</span></div><div class='output co'>#&gt; function(y, eta, invlink, ...)
+#&gt; &lt;bytecode: 0x556ab403ec08&gt;
+#&gt; &lt;environment: namespace:netReg&gt;</div><div class='input'> <span class='fu'>inverse.gaussian</span>()$<span class='no'>loss</span></div><div class='output co'>#&gt; <span class='warning'>Warning: family inverse.gaussian is still experimental. enjoy with care.</span></div><div class='output co'>#&gt; function (y, eta, invlink, ...) 
 #&gt; {
 #&gt;     obj &lt;- 0
 #&gt;     for (j in seq(ncol(y))) {
-#&gt;         # loc := mu
-#&gt;         # concentration := lambda (shape)
-#&gt;         prob &lt;- tfp$distributions$InverseGaussian(
-#&gt;             loc = invlink(tf$exp(eta[ ,j])), concentration = 1)
-#&gt;         obj &lt;- obj + tf$reduce_sum(prob$log_prob(y[,j]))
+#&gt;         prob &lt;- tfprobability::tfd_inverse_gaussian(loc = invlink(tf$exp(eta[, 
+#&gt;             j])), concentration = 1)
+#&gt;         obj &lt;- obj + tf$reduce_sum(prob$log_prob(y[, j]))
 #&gt;     }
-#&gt; 
 #&gt;     -obj
 #&gt; }
+#&gt; &lt;bytecode: 0x556ab4165eb8&gt;
 #&gt; &lt;environment: namespace:netReg&gt;</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>
 </div>
+
 
       <footer>
       <div class="copyright">
@@ -242,13 +239,16 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 
