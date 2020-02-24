@@ -28,11 +28,28 @@ predict.cv.edgenet <- function(object, newdata=NULL, ...)
 
 
 #' @export
+#' @method predict cv.group.lasso
+#' @importFrom stats predict
+predict.cv.group.lasso <- function(object, newdata=NULL, ...)
+{
+    predict(object$fit, newdata, ...)
+}
+
+
+#' @export
 #' @method predict gaussian.edgenet
 predict.gaussian.edgenet <- function(object, newdata=NULL, ...)
 {
     mean <- function(x) x
    .predict(object, newdata, mean, ...)
+}
+
+
+#' @export
+#' @method predict gaussian.group.lasso
+predict.gaussian.group.lasso <- function(object, newdata=NULL, ...)
+{
+    predict.gaussian.edgenet(object, newdata, ...)
 }
 
 
@@ -46,6 +63,14 @@ predict.binomial.edgenet <- function(object, newdata=NULL, ...)
 
 
 #' @export
+#' @method predict binomial.group.lasso
+predict.binomial.group.lasso <- function(object, newdata=NULL, ...)
+{
+    predict.binomial.edgenet(object, newdata, ...)
+}
+
+
+#' @export
 #' @method predict poisson.edgenet
 predict.poisson.edgenet <- function(object, newdata=NULL, ...)
 {
@@ -55,20 +80,10 @@ predict.poisson.edgenet <- function(object, newdata=NULL, ...)
 
 
 #' @export
-#' @method predict beta.edgenet
-predict.beta.edgenet <- function(object, newdata=NULL, ...)
+#' @method predict poisson.group.lasso
+predict.poisson.group.lasso <- function(object, newdata=NULL, ...)
 {
-    mean <- function(x) 1 / (1 + base::exp(-x))
-    .predict(object, newdata, mean, ...)
-}
-
-
-#' @export
-#' @method predict inverse.gaussian.edgenet
-predict.inverse.gaussian.edgenet <- function(object, newdata=NULL, ...)
-{
-    mean <- function(x) 1 / base::sqrt(x)
-    .predict(object, newdata, mean, ...)
+    predict.poisson.edgenet(object, newdata, ...)
 }
 
 

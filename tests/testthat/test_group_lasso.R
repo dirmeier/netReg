@@ -26,7 +26,7 @@ grps <- rep(1L, p)
 
 X <- matrix(rnorm(n * p), n, p)
 B <- rnorm(p)
-Y <- rbinom(n, 1, 1 / (1 + exp(-X %*% B)))
+Y <- rbinom(n, 1, 1 / (1 + base::exp(-X %*% B)))
 
 test_that("gaussian group.lasso returns s3 class", {
   e <- group.lasso(X, Y, grps, lambda = 1, maxit = 1, thresh = 1e-5)

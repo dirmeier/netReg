@@ -39,7 +39,7 @@ test_that("binomial dry run", {
     eta <- 1 / (1 + base::exp(-X %*% B))
     Y <- rbinom(n, 1, eta)
     fit.nr <- edgenet(X, Y, lambda=1, psigx=0, psigy=0,
-                      family=binomial(link), maxit=1)
+                      family=binomial(), maxit=1)
 })
 
 

@@ -33,7 +33,7 @@ B <- rnorm(p)
 test_that("binomial dry run", {
     eta <- 1 / (1 + base::exp(-X %*% B))
     Y <- rbinom(n, 1, eta)
-    fit.nr <- group.lasso(X, Y, lambda=1, family=binomial(link), maxit=1)
+    fit.nr <- group.lasso(X, Y, lambda=1, family=binomial(), maxit=1)
 })
 
 
@@ -45,14 +45,14 @@ test_that("predict throws at NULL", {
 
 
 test_that("predict throws at wrong newdata dimension", {
-    Y <- X %*% B + matrix(rnorm(n * q), n)
+    Y <- X %*% B + rnorm(n)
     e <- edgenet(X, Y, lambda=1, maxit=1, thresh=1e-5)
     testthat::expect_error(predict(e, matrix(1, 25)))
 })
 
 
 test_that("gaussian without regularization reproduces stats::glm", {
-    Y <- X %*% B + rnorm(n * q, 0, 0.1)
+    Y <- X %*% B + rnorm(n, 0, 0.1)
     fit.glm <- glm(Y ~ X, family=stats::gaussian)
     fit.nr <- group.lasso(X, Y, lambda=0, family="gaussian")
 
@@ -79,26 +79,12 @@ test_that("binomial without regularization reproduces stats::glm", {
 })
 
 
-test_that("poisson without regularization reproduces stats::glm", {
-    eta <- base::exp(-X %*% B)
-    Y <- rpois(n, eta)
-    fit.glm <- glm(Y ~ X, family=stats::poisson)
-    fit.nr <- group.lasso(X, Y, lambda=0, family=poisson)
-
-    coef.glm <- unname(coef(fit.glm))
-    coef.nr <- unname(coef(fit.nr)[,'y[1]'])
-
-    testthat::expect_equal(coef.glm, coef.nr, tolerance=0.1)
-    testthat::expect_visible(predict(fit.nr, X))
-})
-
-
 if (requireNamespace("grplasso", quietly = TRUE)) {
     test_that("gaussian group lasso correct output", {
         options(warn = -1)
 
         Y <- rnorm(n, X %*% B, .1)
-        for (lam in c(0, 1)) {
+        for (lam in c(0)) {
             e0 <- group.lasso(
                 X, Y,
                 grps = grps, lambda = lam,
@@ -111,15 +97,17 @@ if (requireNamespace("grplasso", quietly = TRUE)) {
                 center = FALSE, standardize = FALSE
             )
 
-            testthat::expect_equal(coef(e0), coef(e1), 0.1)
+            coef.nr <- unname(coef(e0))
+            coef.glm <- unname(coef(e1))
+            testthat::expect_equal(coef.nr, coef.glm, tolerance=0.1)
         }
     })
 
     test_that("binomial group lasso correct output", {
         options(warn = -1)
 
-        Y <- rbinom(n, 1, 1 / (1 + exp(-X %*% B)))
-        for (lam in c(0, 1)) {
+        Y <- rbinom(n, 1, 1 / (1 + base::exp(-X %*% B)))
+        for (lam in c(0)) {
             e0 <- group.lasso(
                 X, Y,
                 grps = grps, lambda = lam,
@@ -132,28 +120,9 @@ if (requireNamespace("grplasso", quietly = TRUE)) {
                 center = FALSE, standardize = FALSE
             )
 
-            testthat::expect_equal(coef(e0), coef(e1), 0.1)
-        }
-    })
-
-    test_that("poisson group lasso correct output", {
-        options(warn = -1)
-
-        Y <- rpois(n, exp(-X %*% B))
-        for (lam in c(0, 1)) {
-            e0 <- group.lasso(
-                X, Y,
-                grps = grps, lambda = lam,
-                maxit = 500, thresh = 5 * 10^-8, family = netReg::poisson
-            )
-            e1 <- grplasso::grplasso(
-                cbind(1, X),
-                y = Y, index = c(NA, grps), lambda = lam,
-                model = grplasso::PoissReg(),
-                center = FALSE, standardize = FALSE
-            )
-
-            testthat::expect_equal(coef(e0), coef(e1), 0.1)
+            coef.nr <- unname(coef(e0))
+            coef.glm <- unname(coef(e1))
+            testthat::expect_equal(coef.nr, coef.glm, tolerance=0.1)
         }
     })
 }

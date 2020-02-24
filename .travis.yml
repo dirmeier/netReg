@@ -7,9 +7,9 @@ cache: packages
 matrix:
   include:
     - r: bioc-devel
-      compiler: gcc    
+      compiler: gcc
     - r: bioc-release
-      compiler: gcc    
+      compiler: gcc
 
 env:
   global:
@@ -20,17 +20,24 @@ env:
 before_script:
   - sudo apt-get update
   - sudo apt-get install python3
-  - pip install --upgrade --ignore-installed --user travis virtualenv  
+  - pip install --upgrade --ignore-installed --user travis virtualenv
   - R -e 'tensorflow::install_tensorflow(extra_packages = "tensorflow-probability")'
   - R -e 'tensorflow::tf_config()'
 
 r_packages:
   - tensorflow
+  - tfprobability
   - devtools
   - covr
   - testthat
   - lintr
   - styler
+  - knitr
+  - rmarkdown
+  - lassoshooting
+  - glmnet
+  - LaplacesDemon
+  - grplasso
 
 bioc_packages:
   - BiocCheck
