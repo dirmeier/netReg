@@ -62,18 +62,20 @@ Before installing the package, make sure to have these Python dependencies insta
 * `tensorflow==1.14.0`,
 * `tensorflow-probabiltiy==0.7.0`
 
-The easiest way is probably to install `TensorFlow` from with `R` and then call:
+The easiest way to install `tfprobability` and all dependencies from `R` is using:
 
 ```r
-tensorflow::install_tensorflow(extra_packages = "tensorflow-probability")
+> install.packages(c("tensorflow", "tfprobability"))
+> tfprobability::install_tfprobability(version = "0.7.0", tensorflow = "1.14.0",
+                                       method="conda", envname="r-tensorflow")
 ```
 
 That creates a `conda` environment (in case you use it) called `r-tensorflow` and installs the Python dependencies automatically.
 
-You can install and use `netReg` either from [Bioconductor](https://bioconductor.org/packages/release/bioc/html/netReg.html),
-or by downloading the latest [tarball](https://github.com/dirmeier/netReg/releases).
+You can install `netReg` either from [Bioconductor](https://bioconductor.org/packages/release/bioc/html/netReg.html),
+or using the latest GitHub [tag](https://github.com/dirmeier/netReg/tags).
 
-If you want to use the **recommended way** using Bioconductor just call:
+If you want to use the recommended way using Bioconductor just call:
 
 ```r
 > if (!requireNamespace("BiocManager", quietly=TRUE))
@@ -83,13 +85,13 @@ If you want to use the **recommended way** using Bioconductor just call:
 > library(netReg)
 ```
  
-Installing the R package using the downloaded tarball works like this:
+Installing the R package using the latest GitHub tag/release works like this:
 
-```sh
-$ R CMD install <netReg-x.y.z.tar.gz>
+```r
+> devtools::install_github("dirmeier/netReg@v1.11.3")
 ```
 
-I **do not** recommend using `devtools`, so please prefer tarballed releases over installing from the main branch.
+The GitHub versions are usually ahead of Bioconductor.
 
 ## Documentation
 
