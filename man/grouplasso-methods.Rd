@@ -72,7 +72,7 @@ An object of class \code{edgenet}
 \item{parameters }{ regularization parameters}
 \item{lambda }{ regularization parameter lambda)}
 \item{family }{ a description of the error distribution and link function
-   to be used. Can a \code{\link{netReg::family}} function or a character string
+   to be used. Can be a \code{\link[netReg:family]{netReg::family}} function or a character string
    naming a family function, e.g. \code{gaussian} or "gaussian".}
 \item{call }{ the call that produced the object}
 }
@@ -82,19 +82,18 @@ Fit a linear regression model the group LASSO penalty.
 \examples{
 X <- matrix(rnorm(100 * 10), 100, 5)
 b <- rnorm(5)
-grps <- c(NA, 1, 1, 2, 2)
+grps <- c(NA_integer_, 1L, 1L, 2L, 2L)
 
 # estimate the parameters of a Gaussian model
 Y <- X \%*\% b + rnorm(100)
 fit <- group.lasso(X = X, Y = Y, grps = grps, family = gaussian, maxit = 10)
 
-# estimation for binomial models
-eta <- 1 / (1 + exp(-X \%*\% b))
-Y <- rbinom(100, 1, eta)
-fit <- group.lasso(X = X, Y = Y, grps = grps, family = binomial, maxit = 1)
-
-# estimation for Poisson models
-eta <- exp(-X \%*\% b)
-Y <- rpois(100, eta)
-fit <- group.lasso(X = X, Y = Y, G.X = G.X, G.Y, family = poisson, maxit = 1)
+}
+\references{
+Yuan, Ming and Lin, Yi (2006),
+ Model selection and estimation in regression with grouped variables. \cr
+ \emph{Journal of the Royal Statistical Society: Series B}\cr \cr
+ Meier, Lukas and Van De Geer, Sara and Bühlmann, Peter (2008),
+ The group lasso for logistic regression. \cr
+ \emph{Journal of the Royal Statistical Society: Series B}
 }

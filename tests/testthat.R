@@ -1,8 +1,7 @@
 library(testthat)
 library(tensorflow)
-library(keras)
 library(tfprobability)
-library(netReg)
 library(LaplacesDemon)
+library(netReg)
 
 test_check("netReg")

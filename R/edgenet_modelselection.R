@@ -127,21 +127,6 @@
 #'   family = gaussian, maxit = 1, optim.maxit = 1
 #' )
 #'
-#' # estimation for binomial models
-#' eta <- 1 / (1 + exp(-X %*% b))
-#' Y <- do.call("cbind", lapply(seq(10), function(.) rbinom(100, 1, eta[, .])))
-#' fit <- cv.edgenet(
-#'   X = X, Y = Y, G.X = G.X, G.Y,
-#'   family = binomial, maxit = 1, optim.maxit = 1
-#' )
-#'
-#' # estimation for Poisson models
-#' eta <- exp(-X %*% b)
-#' Y <- do.call("cbind", lapply(seq(10), function(.) rpois(100, eta[, .])))
-#' fit <- cv.edgenet(
-#'   X = X, Y = Y, G.X = G.X, G.Y,
-#'   family = poisson, maxit = 1, optim.maxit = 1
-#' )
 setGeneric(
   "cv.edgenet",
   function(X, Y, G.X = NULL, G.Y = NULL,

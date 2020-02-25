@@ -65,7 +65,7 @@
 #' \item{psigx }{ regularization parameter psigx}
 #' \item{psigy }{ regularization parameter psigy}
 #' \item{family }{ a description of the error distribution and link function
-#'    to be used. Can a \code{\link{netReg::family}} function or a character string
+#'    to be used. Can be a \code{\link[netReg:family]{netReg::family}} function or a character string
 #'    naming a family function, e.g. \code{gaussian} or "gaussian".}
 #' \item{call }{ the call that produced the object}
 #'
@@ -86,6 +86,11 @@
 #' fit <- edgenet(X = X, Y = Y, G.X = G.X, G.Y, family = gaussian, maxit = 10)
 #' ## if Y is vectorial, we cannot use an affinity matrix for Y
 #' fit <- edgenet(X = X, Y = Y[, 1], G.X = G.X, family = gaussian, maxit = 10)
+#'
+#' @references
+#'  Cheng, Wei and Zhang, Xiang and Guo, Zhishan and Shi, Yu and Wang, Wei (2014),
+#'  Graph-regularized dual Lasso for robust eQTL mapping. \cr
+#'  \emph{Bioinformatics}
 #'
 setGeneric(
   "edgenet",
