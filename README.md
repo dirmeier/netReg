@@ -116,4 +116,4 @@ If `netReg` was useful for you or your work, it would be great if you cited it l
 
 ## Author
 
-Simon Dirmeier <a href="mailto:simon.dirmeier@gmx.de">simon.dirmeier@gmx.de</a>
+Simon Dirmeier <a href="mailto:simon.dirmeier@gmx.de">simon.dirmeier @ gmx.de</a>

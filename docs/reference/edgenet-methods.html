@@ -78,7 +78,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">netReg</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.11.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.11.3</span>
       </span>
     </div>
 
@@ -92,7 +92,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/edgenet.html">Edgenet</a>
+      <a href="../articles/netReg.html">netReg</a>
     </li>
   </ul>
 </li>
@@ -147,7 +147,7 @@
  knowledge in the form of one/two affinity matrices. Graph-regularization is
  an extension to previously introduced regularization techniques,
  such as the LASSO. See the vignette for details on the objective function of
- the model: <a href='../doc/edgenet.html'><code><a href='../articles/edgenet.html'>vignette("edgenet", package="netReg")</a></code></a></p>
+ the model: <a href='../doc/edgenet.html'><code>vignette("edgenet", package="netReg")</code></a></p>
     </div>
 
     <pre class="usage"><span class='fu'>edgenet</span>(
@@ -264,44 +264,40 @@ of <code>G.Y</code></p></td>
 <dt>psigx </dt><dd><p>regularization parameter psigx</p></dd>
 <dt>psigy </dt><dd><p>regularization parameter psigy</p></dd>
 <dt>family </dt><dd><p>a description of the error distribution and link function
-   to be used. Can a <code><a href='family-methods.html'>netReg::family</a></code> function or a character string
+   to be used. Can be a <code><a href='family-methods.html'>netReg::family</a></code> function or a character string
    naming a family function, e.g. <code>gaussian</code> or "gaussian".</p></dd>
 <dt>call </dt><dd><p>the call that produced the object</p></dd>
 
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>Cheng, Wei and Zhang, Xiang and Guo, Zhishan and Shi, Yu and Wang, Wei (2014),
+ Graph-regularized dual Lasso for robust eQTL mapping. <br />
+ <em>Bioinformatics</em></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>X</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>100</span>*<span class='fl'>10</span>), <span class='fl'>100</span>, <span class='fl'>10</span>)
+    <pre class="examples"><div class='input'><span class='no'>X</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>100</span> * <span class='fl'>10</span>), <span class='fl'>100</span>, <span class='fl'>10</span>)
 <span class='no'>b</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>100</span>), <span class='fl'>10</span>)
-<span class='no'>G.X</span> <span class='kw'>&lt;-</span>  <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/rWishart.html'>rWishart</a></span>(<span class='fl'>1</span>, <span class='fl'>10</span>, <span class='fu'><a href='https://rdrr.io/r/base/diag.html'>diag</a></span>(<span class='fl'>10</span>))[,,<span class='fl'>1</span>])
-<span class='no'>G.Y</span> <span class='kw'>&lt;-</span>  <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/rWishart.html'>rWishart</a></span>(<span class='fl'>1</span>, <span class='fl'>10</span>, <span class='fu'><a href='https://rdrr.io/r/base/diag.html'>diag</a></span>(<span class='fl'>10</span>))[,,<span class='fl'>1</span>])
+<span class='no'>G.X</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/rWishart.html'>rWishart</a></span>(<span class='fl'>1</span>, <span class='fl'>10</span>, <span class='fu'><a href='https://rdrr.io/r/base/diag.html'>diag</a></span>(<span class='fl'>10</span>))[, , <span class='fl'>1</span>])
+<span class='no'>G.Y</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/rWishart.html'>rWishart</a></span>(<span class='fl'>1</span>, <span class='fl'>10</span>, <span class='fu'><a href='https://rdrr.io/r/base/diag.html'>diag</a></span>(<span class='fl'>10</span>))[, , <span class='fl'>1</span>])
 <span class='fu'><a href='https://rdrr.io/r/base/diag.html'>diag</a></span>(<span class='no'>G.X</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/diag.html'>diag</a></span>(<span class='no'>G.Y</span>) <span class='kw'>&lt;-</span> <span class='fl'>0</span>
 
 <span class='co'># estimate the parameters of a Gaussian model</span>
 <span class='no'>Y</span> <span class='kw'>&lt;-</span> <span class='no'>X</span> <span class='kw'>%*%</span> <span class='no'>b</span> + <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>100</span> * <span class='fl'>10</span>), <span class='fl'>100</span>)
 <span class='co'>## dont use affinity matrices</span>
-<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>edgenet</span>(<span class='kw'>X</span><span class='kw'>=</span><span class='no'>X</span>, <span class='kw'>Y</span><span class='kw'>=</span><span class='no'>Y</span>, <span class='kw'>family</span><span class='kw'>=</span><span class='no'>gaussian</span>, <span class='kw'>maxit</span><span class='kw'>=</span><span class='fl'>10</span>)
+<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>edgenet</span>(<span class='kw'>X</span> <span class='kw'>=</span> <span class='no'>X</span>, <span class='kw'>Y</span> <span class='kw'>=</span> <span class='no'>Y</span>, <span class='kw'>family</span> <span class='kw'>=</span> <span class='no'>gaussian</span>, <span class='kw'>maxit</span> <span class='kw'>=</span> <span class='fl'>10</span>)
 <span class='co'>## only provide one matrix</span>
-<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>edgenet</span>(<span class='kw'>X</span><span class='kw'>=</span><span class='no'>X</span>, <span class='kw'>Y</span><span class='kw'>=</span><span class='no'>Y</span>, <span class='kw'>G.X</span><span class='kw'>=</span><span class='no'>G.X</span>, <span class='kw'>psigx</span><span class='kw'>=</span><span class='fl'>1</span>, <span class='kw'>family</span><span class='kw'>=</span><span class='no'>gaussian</span>, <span class='kw'>maxit</span><span class='kw'>=</span><span class='fl'>10</span>)
+<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>edgenet</span>(<span class='kw'>X</span> <span class='kw'>=</span> <span class='no'>X</span>, <span class='kw'>Y</span> <span class='kw'>=</span> <span class='no'>Y</span>, <span class='kw'>G.X</span> <span class='kw'>=</span> <span class='no'>G.X</span>, <span class='kw'>psigx</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>family</span> <span class='kw'>=</span> <span class='no'>gaussian</span>, <span class='kw'>maxit</span> <span class='kw'>=</span> <span class='fl'>10</span>)
 <span class='co'>## use two matrices</span>
-<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>edgenet</span>(<span class='kw'>X</span><span class='kw'>=</span><span class='no'>X</span>, <span class='kw'>Y</span><span class='kw'>=</span><span class='no'>Y</span>, <span class='kw'>G.X</span><span class='kw'>=</span><span class='no'>G.X</span>, <span class='no'>G.Y</span>, <span class='kw'>family</span><span class='kw'>=</span><span class='no'>gaussian</span>, <span class='kw'>maxit</span><span class='kw'>=</span><span class='fl'>10</span>)
+<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>edgenet</span>(<span class='kw'>X</span> <span class='kw'>=</span> <span class='no'>X</span>, <span class='kw'>Y</span> <span class='kw'>=</span> <span class='no'>Y</span>, <span class='kw'>G.X</span> <span class='kw'>=</span> <span class='no'>G.X</span>, <span class='no'>G.Y</span>, <span class='kw'>family</span> <span class='kw'>=</span> <span class='no'>gaussian</span>, <span class='kw'>maxit</span> <span class='kw'>=</span> <span class='fl'>10</span>)
 <span class='co'>## if Y is vectorial, we cannot use an affinity matrix for Y</span>
-<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>edgenet</span>(<span class='kw'>X</span><span class='kw'>=</span><span class='no'>X</span>, <span class='kw'>Y</span><span class='kw'>=</span><span class='no'>Y</span>[, <span class='fl'>1</span>], <span class='kw'>G.X</span><span class='kw'>=</span><span class='no'>G.X</span>, <span class='kw'>family</span><span class='kw'>=</span><span class='no'>gaussian</span>, <span class='kw'>maxit</span><span class='kw'>=</span><span class='fl'>10</span>)
-
-<span class='co'># estimation for binomial models</span>
-<span class='no'>eta</span> <span class='kw'>&lt;-</span> <span class='fl'>1</span> / (<span class='fl'>1</span> + <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>exp</a></span>(-<span class='no'>X</span> <span class='kw'>%*%</span> <span class='no'>b</span>))
-<span class='no'>Y</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/do.call.html'>do.call</a></span>(<span class='st'>"cbind"</span>, <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='fl'>10</span>), <span class='kw'>function</span>(<span class='no'>.</span>) <span class='fu'><a href='https://rdrr.io/r/stats/Binomial.html'>rbinom</a></span>(<span class='fl'>100</span>, <span class='fl'>1</span>, <span class='no'>eta</span>[,<span class='no'>.</span>])))
-<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>edgenet</span>(<span class='kw'>X</span><span class='kw'>=</span><span class='no'>X</span>, <span class='kw'>Y</span><span class='kw'>=</span><span class='no'>Y</span>, <span class='kw'>G.X</span><span class='kw'>=</span><span class='no'>G.X</span>, <span class='no'>G.Y</span>, <span class='kw'>family</span><span class='kw'>=</span><span class='no'>binomial</span>, <span class='kw'>maxit</span><span class='kw'>=</span><span class='fl'>1</span>)
-
-<span class='co'># estimation for Poisson models</span>
-<span class='no'>eta</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>exp</a></span>(-<span class='no'>X</span> <span class='kw'>%*%</span> <span class='no'>b</span>)
-<span class='no'>Y</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/do.call.html'>do.call</a></span>(<span class='st'>"cbind"</span>, <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='fl'>10</span>), <span class='kw'>function</span>(<span class='no'>.</span>) <span class='fu'><a href='https://rdrr.io/r/stats/Poisson.html'>rpois</a></span>(<span class='fl'>100</span>, <span class='no'>eta</span>[,<span class='no'>.</span>])))
-<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>edgenet</span>(<span class='kw'>X</span><span class='kw'>=</span><span class='no'>X</span>, <span class='kw'>Y</span><span class='kw'>=</span><span class='no'>Y</span>, <span class='kw'>G.X</span><span class='kw'>=</span><span class='no'>G.X</span>, <span class='no'>G.Y</span>, <span class='kw'>family</span><span class='kw'>=</span><span class='no'>poisson</span>, <span class='kw'>maxit</span><span class='kw'>=</span><span class='fl'>1</span>)</div></pre>
+<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>edgenet</span>(<span class='kw'>X</span> <span class='kw'>=</span> <span class='no'>X</span>, <span class='kw'>Y</span> <span class='kw'>=</span> <span class='no'>Y</span>[, <span class='fl'>1</span>], <span class='kw'>G.X</span> <span class='kw'>=</span> <span class='no'>G.X</span>, <span class='kw'>family</span> <span class='kw'>=</span> <span class='no'>gaussian</span>, <span class='kw'>maxit</span> <span class='kw'>=</span> <span class='fl'>10</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       <li><a href="#value">Value</a></li>
+      <li><a href="#references">References</a></li>
       <li><a href="#examples">Examples</a></li>
     </ul>
 

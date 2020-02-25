@@ -1,3 +1,6 @@
+## Version 1.11.2
+  - Add group lasso.
+
 ## Version 1.11.1
   - Adds experimental families for inverse Gaussian, Beta and Gamma.
   - Add some test cases.

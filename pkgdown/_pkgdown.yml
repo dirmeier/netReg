@@ -4,8 +4,8 @@ navbar:
   left:
     - text: "Vignettes"
       menu:
-        - text: "Edgenet"
-          href: articles/edgenet.html
+        - text: "netReg"
+          href: articles/netReg.html
     - text: "Reference"
       href: reference/index.html
     - text: "News"

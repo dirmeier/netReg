@@ -1,5 +1,5 @@
 ---
-title: "edgenet: regularization with pair-wise interactions"
+title: "Network-regularized regression models"
 output: 
     BiocStyle::html_document:
         toc: true
@@ -8,16 +8,20 @@ output:
         number_sections: no
         theme: lumen
 vignette: >
- %\VignetteIndexEntry{edgenet}
+ %\VignetteIndexEntry{netReg}
  %\VignetteEngine{knitr::rmarkdown}
  %\usepackage[utf8]{inputenc}
 bibliography: netReg.bib
 ---
 
-## Edgenet tutorial {-}
+## Introduction {-}
 
-This vignette covers penalization using `edgenet` as introduced in @dirmeier2018netreg. `edgenet` uses networks to model pair-wise interactions of covariables and responses in generalized linear regression models. More specifically, `edgenet`
-uses a $(p \times p)$-dimensional affinity matrix $\mathbf{G}_X \in \mathbb{R}_+^{p \times p}$ to model the interaction of $p$
+This vignette covers an introduction to network-regularized generalized linear regression models (GLMs).
+Network-regularization makes use of graphs to model interactions of covariables and responses in generalized linear regression models and penalizes the coefficients in GLMs using this information.
+
+## Edgenet
+
+`edgenet` uses a $(p \times p)$-dimensional affinity matrix $\mathbf{G}_X \in \mathbb{R}_+^{p \times p}$ to model the interaction of $p$
 covariables in $\mathbf{X} \in \mathbb{R}^{n \times p}$ and analogously a matrix $\mathbf{G}_Y \in \mathbb{R}_+^{q \times q}$
 to model interactions of $q$ response variables in $\mathbf{Y} \in \mathbb{R}^{n \times q}$. The affinity matrices
 are used for regularization of regression coefficients like this:
@@ -39,36 +43,32 @@ are used for regularization of regression coefficients like this:
 \end{equation}
 
 Matrix $\mathbf{B} \in \mathbb{R}^{(p + 1) \times q}$ is the matrix of regression coefficients to be estimated (including an intercept).
-Vectors $\boldsymbol \beta_{i, *}$ and $\boldsymbol \beta_{*, i}$ are the $i$-th row or column of $\mathbf{B}$, respectively. Shrinkage $\lambda$, $\psi_1$ and $\psi_2$ are fixed or need to be estimated (e.g., using cross-validation). The log-likelihood function $\ell(\mathbf{B})$ over $q$ exponential family response variables is defined as:
+Vectors $\boldsymbol \beta_{i, *}$ and $\boldsymbol \beta_{*, i}$ are the $i$-th row or column of $\mathbf{B}$, respectively. Shrinkage parameters $\lambda$, $\psi_1$ and $\psi_2$ are fixed or need to be estimated (e.g., using cross-validation). The matrices $\mathbf{D}_{\mathbf{G}} - \mathbf{G}$ are the combinatorial (or normalized) graph Laplacians of an affinity matrix $\mathbf{G}$ [@chung1997spectral].
 
-\begin{equation}
-\small
-\ell(\mathbf{B}) = \sum_{j}^q \sum_i^n \log \ f_{\beta_{*,j}}({y}_{i, j} \mid \mathbf{x}_{i,*})
-\end{equation}
+## Group Lasso
 
-The matrices $\mathbf{D}_{\mathbf{G}} - \mathbf{G}$ are the combinatorial (or normalized) graph Laplacians of an affinity matrix $\mathbf{G}$ [@chung1997spectral].
+TODO [@yuan2006model] and [@meier2008group]
 
-### Families
+## Families
 
-So far `edgenet` supports the following families:
+So far `netReg` supports the following exponential family random variables:
 
 - Gaussian,
 - Binomial,
 - Poisson.
 
-
-Since $\mathbf{Y}$ is multivariate, we factorize the likelihood over every component $Y_j$ as:
+The log-likelihood function $\ell(\mathbf{B})$ over $q$ response variables is defined as:
 
 \begin{equation}
 \small
-\ell(\mathbf{B}) = \sum_{j}^q \sum_i^n  \mathbb{P}\left({y}_{i, j} \mid h\left(\mathbf{x}_{i,*} \cdot \beta_{*,j}\right)\right),
+\ell(\mathbf{B}) = \sum_{j}^q \sum_i^n \log \ \mathbb{P}\left({y}_{i, j} \mid h\left(\mathbf{x}_{i,*} \cdot \beta_{*,j}\right), \phi \right)
 \end{equation}
 
-where $h$ is the inverse of a link function, such as the logarithm.
+where $h$ is the inverse of a link function, such as the logarithm, and $\phi$ is a dispersion parameter.
 
-### Fitting a model to data
+## Fitting a model to data
 
-The following section shows how we use `edgenet`. To fit a model, we first need load the library:
+The following section shows how to use network regularization models. We shall use `edgenet`, but the calls for the other methods are analogous and examples can be found in the method documentation. We first load some libraries:
 
 ```{r}
 library(tensorflow)
@@ -152,8 +152,7 @@ fit <- edgenet(X=X, Y=Y.pois, G.X=G.X, G.Y=G.Y, family=poisson, maxit=10)
 summary(fit)
 ```
 
-
-### Model selection
+## Model selection
 
 In most cases we do not have the optimal shrinkage parameters $\lambda$,
 $\psi_{1}$ and $\psi_{2}$. For these settings you can use `netReg`'s
@@ -189,8 +188,7 @@ pred  <- predict(cv, X)
 pred[1:5, 1:5]
 ```
 
-
-### A biological example
+## A biological example
 
 This section explains how to fit a linear model and do parameter estimation.
 
