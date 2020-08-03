@@ -1,4 +1,4 @@
-# netReg: graph-regularized linear regression models.
+# netReg: network-regularized linear regression models.
 #
 # Copyright (C) 2015 - 2020 Simon Dirmeier
 #
@@ -24,8 +24,8 @@ edgenet.loss <- function(gx, gy, family) {
   invlink <- family$linkinv
   loss.function <- family$loss
 
-  loss <- function(alpha, beta, lambda, psigx, psigy, x, y) {
-    eta <- linear.predictor(alpha, beta, x)
+  loss <- function(mod, lambda, psigx, psigy, x, y) {
+    eta <- mod(x)
     obj <- loss.function(y, eta, invlink) + .lasso.penalty(lambda, beta)
 
     if (!is.null(gx)) {

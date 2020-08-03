@@ -5,14 +5,16 @@ Version: 1.12.0
 Authors@R: person("Simon", "Dirmeier",
                   email = "simon.dirmeier@web.de", role = c("aut", "cre"))
 Maintainer: Simon Dirmeier <simon.dirmeier@web.de>
-Description: netReg fits linear regression models using network-penalization.
-    Network-penalization used graph prior to regularize the coefficients of linear models.
+Description: netReg fits linear regression models using network-regularization.
+    Network-regularization used graph prior as penality for the coefficients of linear models.
+    The graph can represent any relationship between the covariables/responses of the
+    model, for instance, some quantifiable biological relationship such as coexpression.
 URL: https://github.com/dirmeier/netReg
 BugReports: https://github.com/dirmeier/netReg/issues
 Depends: 
     R (>= 3.4),
     tensorflow (>= 2.2.0),
-    tfprobability (>= 0.11.0)
+    tfprobability (>= 0.10.0)
 License: GPL-3
 Encoding: UTF-8
 Suggests:
@@ -34,5 +36,6 @@ Imports:
     stats,
     reticulate,
     nloptr,
-    methods
+    methods,
+    keras
 NeedsCompilation: yes

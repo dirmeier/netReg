@@ -1,6 +1,6 @@
 # netReg: graph-regularized linear regression models.
 #
-# Copyright (C) 2015 - 202 0Simon Dirmeier
+# Copyright (C) 2015 - 2020 Simon Dirmeier
 #
 # This file is part of netReg.
 #
@@ -20,30 +20,10 @@
 
 #' @noRd
 #' @import tensorflow
-init_variables <- function() {
-  tf$compat$v1$global_variables_initializer()
-}
-
-
-#' @noRd
-#' @import tensorflow
 adam <- function(learning.rate) {
-  tf$compat$v1$train$AdamOptimizer(learning_rate = learning.rate)
+  tf$optimizers$Adam(learning_rate = learning.rate)
 }
 
-
-#' @noRd
-#' @import tensorflow
-session <- function() {
-  tf$compat$v1$Session()
-}
-
-
-#' @noRd
-#' @import tensorflow
-reset_graph <- function() {
-  tensorflow::tf$compat$v1$reset_default_graph()
-}
 
 
 #' @noRd
@@ -62,29 +42,17 @@ constant_float <- function(x) {
 
 #' @noRd
 #' @import tensorflow
-placeholder <- function(shape, name = NULL) {
-  if (!is.null(name)) {
-    tensorflow::tf$compat$v1$placeholder(
-      tensorflow::tf$float32, shape,
-      name = name
-    )
-  } else {
-    tensorflow::tf$compat$v1$placeholder(
-      tensorflow::tf$float32, shape
-    )
-  }
+init_matrix <- function(m, n, trainable=TRUE) {
+  initializer <- tf$keras.initializers$glorot_normal(23L)
+  tensorflow::tf$Variable(initializer(shape(m, n), tensorflow::tf$float32),
+                          trainable=trainable)
 }
 
 
 #' @noRd
 #' @import tensorflow
-zero_matrix <- function(m, n) {
-  tensorflow::tf$Variable(tensorflow::tf$zeros(shape(m, n)))
-}
-
-
-#' @noRd
-#' @import tensorflow
-zero_vector <- function(m) {
-  tensorflow::tf$Variable(tensorflow::tf$zeros(shape(m)))
+init_vector <- function(m, trainable=TRUE) {
+  initializer <- tf$keras.initializers$glorot_normal(23L)
+  tensorflow::tf$Variable(initializer(shape(m), tensorflow::tf$float32),
+                          trainable=trainable)
 }

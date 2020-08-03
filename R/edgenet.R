@@ -1,6 +1,6 @@
-# netReg: graph-regularized linear regression models.
+# netReg: network-regularized linear regression models.
 #
-# Copyright (C) 2015 - 2019 Simon Dirmeier
+# Copyright (C) 2015 - 2020 Simon Dirmeier
 #
 # This file is part of netReg.
 #
@@ -176,8 +176,6 @@ setMethod(
   p <- ncol(x)
   q <- ncol(y)
 
-  reset_graph()
-
   x <- cast_float(x)
   y <- cast_float(y)
 
@@ -188,14 +186,14 @@ setMethod(
     gy <- cast_float(laplacian_(gy))
   }
 
-  # TODO: think about this
-  alpha <- zero_vector(q) + 1
-  beta <- zero_matrix(p, q) + 1
+  mod <- model(p, q, family)
 
   # estimate coefficients
   loss <- edgenet.loss(gx, gy, family)
-  objective <- loss(alpha, beta, lambda, psigx, psigy, x, y)
-  res <- fit(objective, alpha, beta, maxit, learning.rate, thresh)
+  res  <- fit(mod, loss,
+             lambda, psigx, psigy,
+             gx, gy, x, y,
+             maxit, learning.rate, thresh)
 
   # finalize output
   beta <- res$beta

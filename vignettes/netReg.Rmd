@@ -2,12 +2,12 @@
 title: "Network-regularized regression models"
 output: 
  rmarkdown::html_document:
-        toc: true
-        toc_depth: 2
-        toc_float: true
-        theme: lumen
-        highlight: pygments
-        number_sections: no
+      toc: true
+      toc_depth: 2
+      toc_float: true
+      theme: lumen
+      highlight: pygments
+      number_sections: no
 vignette: >
  %\VignetteIndexEntry{netReg}
  %\VignetteEngine{knitr::rmarkdown}

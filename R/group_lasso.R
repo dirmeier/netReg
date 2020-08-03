@@ -1,4 +1,4 @@
-# netReg: graph-regularized linear regression models.
+# netReg: network-regularized linear regression models.
 #
 # Copyright (C) 2015 - 2020 Simon Dirmeier
 #

@@ -20,7 +20,33 @@
 
 #' @noRd
 #' @import tensorflow
-linear.predictor <- function(alpha, beta, x) {
-  eta <- tf$matmul(x, beta) + alpha
-  eta
+fit <- function(mod, loss,
+                lambda, psigx, psigy,
+                gx, gy, x, y,
+                maxit = 1000, learning.rate = 0.03, thresh = 1e-4) {
+  optimizer <- keras::optimizer_adam(learning.rate)
+  lo.old <- Inf
+
+  for (step in seq_len(maxit)) {
+    with(tf$GradientTape() %as% t, {
+      lo <- loss(mod, lambda, psigx, psigy, x, y)
+    })
+
+    gradients <- t$gradient(lo, mod$trainable_variables)
+    optimizer$apply_gradients(purrr::transpose(list(
+      gradients, mod$trainable_variables
+    )))
+
+    if (step %% 25 == 0) {
+      if (sum(abs(lo$numpy() - lo.old)) < thresh) {
+        break
+      }
+      lo.old <- lo$numpy()
+    }
+  }
+
+  list(
+    beta = mod$beta$numpy(),
+    alpha = mod$alpha$numpy()
+  )
 }
