@@ -4,7 +4,6 @@
 #ifndef RCPP_netReg_RCPPEXPORTS_H_GEN_
 #define RCPP_netReg_RCPPEXPORTS_H_GEN_
 
-#include <RcppArmadillo.h>
 #include <Rcpp.h>
 
 namespace netReg {
