@@ -38,7 +38,9 @@
 # along with netReg. If not, see <http://www.gnu.org/licenses/>.
 
 
-model <- function(p, q, family) {
+model <- function(x, y, family) {
+    p <- x$shape[[2]]
+    q <- y$shape[[2]]
     keras::keras_model_custom(function(self) {
         self$alpha <- init_vector(q)
         self$beta <- init_matrix(p, q)

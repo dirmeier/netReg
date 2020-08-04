@@ -18,7 +18,7 @@
 # along with netReg. If not, see <http://www.gnu.org/licenses/>.
 
 
-#' @title Fit a linear regression model the group lasso penalty
+#' @title Fit a linear regression model using a group lasso penalty
 #'
 #' @export
 #' @docType methods
@@ -150,20 +150,12 @@ setMethod(
 #' @noRd
 .group.lasso <- function(x, y, grps,
                          lambda, thresh, maxit, learning.rate, family) {
-  p <- ncol(x)
-  q <- ncol(y)
-
-  reset_graph()
-
   x <- cast_float(x)
   y <- cast_float(y)
 
-  alpha <- zero_vector(q) + 1
-  beta <- zero_matrix(p, q) + 1
-
+  mod <- model(x, y, family)
   # estimate coefficients
   loss <- group.lasso.loss(grps, family)
-  objective <- loss(alpha, beta, lambda, x, y)
   res <- fit(objective, alpha, beta, maxit, learning.rate, thresh)
 
   # finalize output

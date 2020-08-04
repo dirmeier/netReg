@@ -62,8 +62,8 @@ group.lasso.loss <- function(grps, family) {
   invlink <- family$linkinv
   loss.function <- family$loss
 
-  loss <- function(alpha, beta, lambda, x, y) {
-    eta <- linear.predictor(alpha, beta, x)
+  loss <- function(mod, lambda, x, y) {
+    eta <- mod(x)
     obj <- loss.function(y, eta, invlink) +
       .group.lasso.penalty(lambda, beta, grps)
 

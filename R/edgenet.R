@@ -173,8 +173,6 @@ setMethod(
 .edgenet <- function(x, y, gx, gy,
                      lambda, psigx, psigy,
                      thresh, maxit, learning.rate, family) {
-  p <- ncol(x)
-  q <- ncol(y)
 
   x <- cast_float(x)
   y <- cast_float(y)
@@ -186,8 +184,7 @@ setMethod(
     gy <- cast_float(laplacian_(gy))
   }
 
-  mod <- model(p, q, family)
-
+  mod <- model(x, y, family)
   # estimate coefficients
   loss <- edgenet.loss(gx, gy, family)
   res  <- fit(mod, loss,

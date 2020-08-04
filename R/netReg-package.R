@@ -27,7 +27,7 @@
 #' fast matrix computations and optimization.
 #'
 #' @name netReg-package
-#' @author Simon Dirmeier | \email{simon.dirmeier@@gmx.de}
+#' @author Simon Dirmeier | \email{simon.dirmeier@@web.de}
 #' @docType package
 #' @keywords package
 #'
@@ -55,5 +55,3 @@
 #'  \emph{Computational Statistics & Data Analysis}
 NULL
 
-#' @importFrom utils globalVariables
-utils::globalVariables("sess")
