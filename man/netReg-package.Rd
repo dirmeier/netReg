@@ -30,6 +30,6 @@ Dirmeier, Simon and Fuchs, Christiane and Mueller, Nikola S and Theis,
  \emph{Computational Statistics & Data Analysis}
 }
 \author{
-Simon Dirmeier | \email{simon.dirmeier@gmx.de}
+Simon Dirmeier | \email{simon.dirmeier@web.de}
 }
 \keyword{package}

@@ -126,7 +126,6 @@
 #'   X = X, Y = Y[, 1], G.X = G.X,
 #'   family = gaussian, maxit = 1, optim.maxit = 1
 #' )
-#'
 setGeneric(
   "cv.edgenet",
   function(X, Y, G.X = NULL, G.Y = NULL,

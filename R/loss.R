@@ -20,19 +20,19 @@
 
 #' @noRd
 #' @import tensorflow
-edgenet.loss <- function(gx, gy, family) {
+edgenet.loss <- function(lambda, psigx, psigy, gx, gy, family) {
   invlink <- family$linkinv
   loss.function <- family$loss
 
-  loss <- function(mod, lambda, psigx, psigy, x, y) {
-    eta <- mod(x)
-    obj <- loss.function(y, eta, invlink) + .lasso.penalty(lambda, beta)
+  loss <- function(mod, x, y) {
+    mu.hat <- mod(x)
+    obj <- loss.function(y, mu.hat) + .lasso.penalty(lambda, mod$beta)
 
     if (!is.null(gx)) {
-      obj <- obj + psigx * .edgenet.x.penalty(gx, beta)
+      obj <- obj + psigx * .edgenet.x.penalty(gx, mod$beta)
     }
     if (!is.null(gy)) {
-      obj <- obj + psigy * .edgenet.y.penalty(gy, beta)
+      obj <- obj + psigy * .edgenet.y.penalty(gy, mod$beta)
     }
 
     obj
@@ -58,14 +58,14 @@ edgenet.loss <- function(gx, gy, family) {
 
 #' @noRd
 #' @import tensorflow
-group.lasso.loss <- function(grps, family) {
+group.lasso.loss <- function(lambda, grps, family) {
   invlink <- family$linkinv
   loss.function <- family$loss
 
-  loss <- function(mod, lambda, x, y) {
-    eta <- mod(x)
-    obj <- loss.function(y, eta, invlink) +
-      .group.lasso.penalty(lambda, beta, grps)
+  loss <- function(mod, x, y) {
+    mu.hat <- mod(x)
+    obj <- loss.function(y, mu.hat, invlink) +
+      .group.lasso.penalty(lambda, mod$beta, grps)
 
     obj
   }

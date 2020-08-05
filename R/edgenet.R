@@ -86,7 +86,6 @@
 #' fit <- edgenet(X = X, Y = Y, G.X = G.X, G.Y, family = gaussian, maxit = 10)
 #' ## if Y is vectorial, we cannot use an affinity matrix for Y
 #' fit <- edgenet(X = X, Y = Y[, 1], G.X = G.X, family = gaussian, maxit = 10)
-#'
 #' @references
 #'  Cheng, Wei and Zhang, Xiang and Guo, Zhishan and Shi, Yu and Wang, Wei (2014),
 #'  Graph-regularized dual Lasso for robust eQTL mapping. \cr
@@ -173,7 +172,6 @@ setMethod(
 .edgenet <- function(x, y, gx, gy,
                      lambda, psigx, psigy,
                      thresh, maxit, learning.rate, family) {
-
   x <- cast_float(x)
   y <- cast_float(y)
 
@@ -185,12 +183,8 @@ setMethod(
   }
 
   mod <- model(x, y, family)
-  # estimate coefficients
-  loss <- edgenet.loss(gx, gy, family)
-  res  <- fit(mod, loss,
-             lambda, psigx, psigy,
-             gx, gy, x, y,
-             maxit, learning.rate, thresh)
+  loss <- edgenet.loss(lambda, psigx, psigy, gx, gy, family)
+  res <- fit(mod, loss, x, y, maxit, learning.rate, thresh)
 
   # finalize output
   beta <- res$beta

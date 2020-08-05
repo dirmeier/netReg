@@ -39,18 +39,20 @@
 
 
 model <- function(x, y, family) {
-    p <- x$shape[[2]]
-    q <- y$shape[[2]]
-    keras::keras_model_custom(function(self) {
-        self$alpha <- init_vector(q)
-        self$beta <- init_matrix(p, q)
-        self$family <- family
-        self$linkinv <- family$linkinv
+  p <- x$shape[[2]]
+  q <- y$shape[[2]]
+  keras::keras_model_custom(function(self) {
+    self$alpha <- init_vector(q)
+    self$beta <- init_matrix(p, q)
+    self$family <- family
+    self$linkinv <- family$linkinv
 
-        function(x, mask = NULL, training = FALSE) {
-            eta <- linear.predictor(self$alpha, self$beta, x)
-            self$linkinv(eta)
-        }
-    })
+    function(x, mask = NULL, training = FALSE) {
+      eta <- linear.predictor(self$alpha, self$beta, x)
+      if (self$family %in% c("gamma", "inverse.gaussian")) {
+        eta <- tf$exp(eta)
+      }
+      self$linkinv(eta)
+    }
+  })
 }
-

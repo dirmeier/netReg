@@ -54,4 +54,3 @@
 #'  RcppArmadillo: Accelerating R with high-performance C++ linear algebra.
 #'  \emph{Computational Statistics & Data Analysis}
 NULL
-

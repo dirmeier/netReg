@@ -46,6 +46,7 @@ glmnet
 src/*.o
 src/*.so
 .Rproj.user/*
+.Rhistory
 netreg.Rcheck/*
 netreg*tar.gz
 com_crashlytics_export_strings.xml

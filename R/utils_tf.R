@@ -20,14 +20,6 @@
 
 #' @noRd
 #' @import tensorflow
-adam <- function(learning.rate) {
-  tf$optimizers$Adam(learning_rate = learning.rate)
-}
-
-
-
-#' @noRd
-#' @import tensorflow
 cast_float <- function(x) {
   tensorflow::tf$cast(x, tensorflow::tf$float32)
 }
@@ -42,17 +34,19 @@ constant_float <- function(x) {
 
 #' @noRd
 #' @import tensorflow
-init_matrix <- function(m, n, trainable=TRUE) {
+init_matrix <- function(m, n, trainable = TRUE) {
   initializer <- tf$keras.initializers$glorot_normal(23L)
   tensorflow::tf$Variable(initializer(shape(m, n), tensorflow::tf$float32),
-                          trainable=trainable)
+    trainable = trainable
+  )
 }
 
 
 #' @noRd
 #' @import tensorflow
-init_vector <- function(m, trainable=TRUE) {
+init_vector <- function(m, trainable = TRUE) {
   initializer <- tf$keras.initializers$glorot_normal(23L)
   tensorflow::tf$Variable(initializer(shape(m), tensorflow::tf$float32),
-                          trainable=trainable)
+    trainable = trainable
+  )
 }

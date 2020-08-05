@@ -4,7 +4,9 @@
 \name{yeast}
 \alias{yeast}
 \title{A sample yeast data set for regression}
-\format{A \code{list} containing three matrices}
+\format{
+A \code{list} containing three matrices
+}
 \usage{
 data(yeast)
 }

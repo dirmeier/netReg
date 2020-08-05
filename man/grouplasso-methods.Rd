@@ -5,7 +5,7 @@
 \alias{group.lasso}
 \alias{group.lasso,matrix,numeric-method}
 \alias{group.lasso,matrix,matrix-method}
-\title{Fit a linear regression model the group lasso penalty}
+\title{Fit a linear regression model using a group lasso penalty}
 \usage{
 group.lasso(
   X,

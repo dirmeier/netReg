@@ -63,7 +63,6 @@
 #' # estimate the parameters of a Gaussian model
 #' Y <- X %*% b + rnorm(100)
 #' fit <- group.lasso(X = X, Y = Y, grps = grps, family = gaussian, maxit = 10)
-#'
 #' @references
 #'  Yuan, Ming and Lin, Yi (2006),
 #'  Model selection and estimation in regression with grouped variables. \cr
@@ -154,9 +153,8 @@ setMethod(
   y <- cast_float(y)
 
   mod <- model(x, y, family)
-  # estimate coefficients
-  loss <- group.lasso.loss(grps, family)
-  res <- fit(objective, alpha, beta, maxit, learning.rate, thresh)
+  loss <- group.lasso.loss(lambda, grps, family)
+  res <- fit(mod, loss, maxit, learning.rate, thresh)
 
   # finalize output
   beta <- res$beta

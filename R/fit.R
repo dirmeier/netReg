@@ -18,18 +18,16 @@
 # along with netReg. If not, see <http://www.gnu.org/licenses/>.
 
 
+
 #' @noRd
 #' @import tensorflow
-fit <- function(mod, loss,
-                lambda, psigx, psigy,
-                gx, gy, x, y,
-                maxit = 1000, learning.rate = 0.03, thresh = 1e-4) {
+fit <- function(mod, loss, x, y, maxit = 1000, learning.rate = 0.03, thresh = 1e-4) {
   optimizer <- keras::optimizer_adam(learning.rate)
   lo.old <- Inf
 
   for (step in seq_len(maxit)) {
     with(tf$GradientTape() %as% t, {
-      lo <- loss(mod, lambda, psigx, psigy, x, y)
+      lo <- loss(mod, x, y)
     })
 
     gradients <- t$gradient(lo, mod$trainable_variables)
