@@ -4,7 +4,6 @@
 [![Project Life](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 [![Build Status](https://travis-ci.org/dirmeier/netReg.svg?branch=master)](https://travis-ci.org/dirmeier/netReg)
 [![codecov](https://codecov.io/gh/dirmeier/netReg/branch/master/graph/badge.svg)](https://codecov.io/gh/dirmeier/netReg)
-[![bioc](https://bioconductor.org/shields/years-in-bioc/netReg.svg)](https://bioconductor.org/packages/release/bioc/html/netReg.html)
 
 Generalized linear regression models with network-regularization in `R`. Now with `TensorFlow`.
 
@@ -59,39 +58,31 @@ For more details, please check out the respective vignettes of the single models
 
 Before installing the package, make sure to have these Python dependencies installed:
 
-* `tensorflow==1.14.0`,
-* `tensorflow-probabiltiy==0.7.0`
+* `tensorflow>=2.2.0`,
+* `tensorflow-probabiltiy>=0.10.0`
 
-The easiest way to install `tfprobability` and all dependencies from `R` is using:
+The easiest way is probably to install `TensorFlow` from with `R`
 
-```r
-> install.packages(c("tensorflow", "tfprobability"))
-> tfprobability::install_tfprobability(version = "0.7.0", tensorflow = "1.14.0",
-                                       method="conda", envname="r-tensorflow")
+```{r}
+install.packages(c("tensorflow", "tfprobability"))
+tensorflow::install_tensorflow(extra_packages = "tensorflow-probability")
 ```
 
-That creates a `conda` environment (in case you use it) called `r-tensorflow` and installs the Python dependencies automatically.
+That should do it.
 
-You can install `netReg` either from [Bioconductor](https://bioconductor.org/packages/release/bioc/html/netReg.html),
-or using the latest GitHub [tag](https://github.com/dirmeier/netReg/tags).
+If this does not work for you, try this approach on the command line:
 
-If you want to use the recommended way using Bioconductor just call:
-
-```r
-> if (!requireNamespace("BiocManager", quietly=TRUE))
->   install.packages("BiocManager")
-> BiocManager::install("netReg")
-  
-> library(netReg)
-```
- 
-Installing the R package using the latest GitHub tag/release works like this:
-
-```r
-> devtools::install_github("dirmeier/netReg@v1.11.3")
+```{bash}
+conda create -n r-tensorflow python=3.7
+source activate r-tensorflow
+conda install tensorflow==2.2.0 tensorflow-probability==0.10.0
 ```
 
-The GitHub versions are usually ahead of Bioconductor.
+You can then install and use `netReg` by downloading the latest [release](https://github.com/dirmeier/netReg/releases)
+
+```{r}
+remotes::install_github("dirmeier/netReg@v1.12.0")
+```
 
 ## Documentation
 
@@ -118,4 +109,4 @@ If `netReg` was useful for you or your work, it would be great if you cited it l
 
 ## Author
 
-Simon Dirmeier <a href="mailto:simon.dirmeier@gmx.de">simon.dirmeier @ gmx.de</a>
+Simon Dirmeier <a href="mailto:simon.dirmeier @ web.de">simon.dirmeier @ web.de</a>
