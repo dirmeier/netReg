@@ -106,7 +106,7 @@ setMethod(
   "group.lasso",
   signature = signature(X = "matrix", Y = "matrix"),
   function(X, Y, grps = NULL,
-           lambda = 1,
+           lambda = 0,
            thresh = 1e-5, maxit = 1e5, learning.rate = 0.01,
            family = gaussian) {
     stopifnot(
@@ -149,6 +149,8 @@ setMethod(
 #' @noRd
 .group.lasso <- function(x, y, grps,
                          lambda, thresh, maxit, learning.rate, family) {
+  cols.x <- colnames(x)
+  cols.y <- colnames(y)
   x <- cast_float(x)
   y <- cast_float(y)
 
@@ -159,8 +161,8 @@ setMethod(
   # finalize output
   beta <- res$beta
   alpha <- res$alpha
-  rownames(beta) <- colnames(x)
-  colnames(beta) <- colnames(y)
+  rownames(beta) <- cols.x
+  colnames(beta) <- cols.y
   ret <- list(
     beta = beta,
     alpha = alpha,

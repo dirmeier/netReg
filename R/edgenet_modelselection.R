@@ -253,8 +253,6 @@ setMethod(
   p <- ncol(x)
   q <- ncol(y)
 
-  reset_graph()
-
   if (!is.null(gx)) {
     gx <- cast_float(laplacian_(gx))
   }
@@ -262,24 +260,14 @@ setMethod(
     gy <- cast_float(laplacian_(gy))
   }
 
-  alpha <- zero_vector(q)
-  beta <- zero_matrix(p, q)
 
-  x.tensor <- placeholder(shape(NULL, p), name = "x.tensor")
-  y.tensor <- placeholder(shape(NULL, q), name = "y.tensor")
-  lambda.tensor <- placeholder(shape())
-  psigx.tensor <- placeholder(shape())
-  psigy.tensor <- placeholder(shape())
+  lambda.tensor <- init_zero_scalar()
+  psigx.tensor <- init_zero_scalar()
+  psigy.tensor <- init_zero_scalar()
 
-  loss <- edgenet.loss(gx, gy, family)
-  objective <- loss(
-    alpha, beta,
-    lambda.tensor, psigx.tensor, psigy.tensor,
-    x.tensor, y.tensor
-  )
+  loss <- edgenet.loss(lambda, psigx, psigy, gx, gy, family)
 
-  optimizer <- adam(learning.rate)
-  train <- optimizer$minimize(objective)
+  optimizer <- keras::optimizer_adam(learning.rate)
   fn <- cross.validate(
     objective, train,
     x, y,

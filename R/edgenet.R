@@ -94,7 +94,7 @@
 setGeneric(
   "edgenet",
   function(X, Y, G.X = NULL, G.Y = NULL,
-           lambda = 1, psigx = 1, psigy = 1,
+           lambda = 9, psigx = 0, psigy = 0,
            thresh = 1e-5, maxit = 1e5, learning.rate = 0.01,
            family = gaussian) {
     standardGeneric("edgenet")
@@ -108,7 +108,7 @@ setMethod(
   "edgenet",
   signature = signature(X = "matrix", Y = "numeric"),
   function(X, Y, G.X = NULL, G.Y = NULL,
-           lambda = 1, psigx = 1, psigy = 1,
+           lambda = 0, psigx = 0, psigy = 0,
            thresh = 1e-5, maxit = 1e5, learning.rate = 0.01,
            family = gaussian) {
     edgenet(
@@ -126,7 +126,7 @@ setMethod(
   "edgenet",
   signature = signature(X = "matrix", Y = "matrix"),
   function(X, Y, G.X = NULL, G.Y = NULL,
-           lambda = 1, psigx = 1, psigy = 1,
+           lambda = 0, psigx = 0, psigy = 0,
            thresh = 1e-5, maxit = 1e5, learning.rate = 0.01,
            family = gaussian) {
     stopifnot(
@@ -172,6 +172,8 @@ setMethod(
 .edgenet <- function(x, y, gx, gy,
                      lambda, psigx, psigy,
                      thresh, maxit, learning.rate, family) {
+  cols.x <- colnames(x)
+  cols.y <- colnames(y)
   x <- cast_float(x)
   y <- cast_float(y)
 
@@ -189,8 +191,8 @@ setMethod(
   # finalize output
   beta <- res$beta
   alpha <- res$alpha
-  rownames(beta) <- colnames(x)
-  colnames(beta) <- colnames(y)
+  rownames(beta) <- cols.x
+  colnames(beta) <- cols.y
   ret <- list(
     beta = beta,
     alpha = alpha,

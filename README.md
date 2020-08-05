@@ -47,7 +47,7 @@ For instance, in `R`, you could fit a network-regularized model like that:
 
 From version `v1.9.0` on, we use `TensorFlow`, instead of custom `C++` and `Dlib`, for
 estimation of regression coefficients replacing a custom *cyclic coordinate descent*. This allowed deleting of major parts of the code base.
-`netReg` still uses some `RcppArmadillo` for fast matrix algebra.
+`netReg` still uses some `RcppArmadillo` for some matrix algebra.
 
 In order to estimate the optimal hyperparameters, i.e., the regularization parameters
 of the network models, we use Powell's BOBYQA algorithm in a standard cross-validation framework.

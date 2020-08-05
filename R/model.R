@@ -49,7 +49,7 @@ model <- function(x, y, family) {
 
     function(x, mask = NULL, training = FALSE) {
       eta <- linear.predictor(self$alpha, self$beta, x)
-      if (self$family %in% c("gamma", "inverse.gaussian")) {
+      if (self$family$family %in% c("gamma", "inverse.gaussian")) {
         eta <- tf$exp(eta)
       }
       self$linkinv(eta)

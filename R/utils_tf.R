@@ -50,3 +50,10 @@ init_vector <- function(m, trainable = TRUE) {
     trainable = trainable
   )
 }
+
+#' @noRd
+#' @import tensorflow
+init_zero <- function(m, trainable = TRUE) {
+  tensorflow::tf$Variable(tf$zeros(m),  tensorflow::tf$float32,
+                          trainable = trainable)
+}
