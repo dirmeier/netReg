@@ -22,9 +22,9 @@ context("edgenet inference")
 
 set.seed(42)
 
-n <- 100
-p <- 10
-q <- 1
+n <- 100L
+p <- 10L
+q <- 1L
 
 G.X <- matrix(rbeta(p * p, 1, 1), p, p)
 G.X <- t(G.X) + G.X

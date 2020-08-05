@@ -172,6 +172,9 @@ setMethod(
            family = gaussian,
            optim.maxit = 1e2, optim.thresh = 1e-2,
            nfolds = 10) {
+
+    stop("needs update.. doesnt work due to tf2")
+
     stopifnot(
       is.numeric(nfolds), nfolds > 0, is.numeric(learning.rate),
       is.numeric(optim.maxit), is.numeric(optim.thresh),

@@ -53,7 +53,7 @@ init_vector <- function(m, trainable = TRUE) {
 
 #' @noRd
 #' @import tensorflow
-init_zero <- function(m, trainable = TRUE) {
-  tensorflow::tf$Variable(tf$zeros(m),  tensorflow::tf$float32,
+init_zero_scalar <- function(trainable = TRUE) {
+  tensorflow::tf$Variable(tf$zeros(shape(), tensorflow::tf$float32),
                           trainable = trainable)
 }
