@@ -53,4 +53,3 @@ gcdf <- function(x) {
 #' @noRd
 #' @importFrom tensorflow tf
 inverse.sqrt <- function(x) 1 / tf$sqrt(x)
-

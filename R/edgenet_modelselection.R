@@ -172,7 +172,6 @@ setMethod(
            family = gaussian,
            optim.maxit = 1e2, optim.thresh = 1e-2,
            nfolds = 10) {
-
     stopifnot(
       is.numeric(nfolds), nfolds > 0, is.numeric(learning.rate),
       is.numeric(optim.maxit), is.numeric(optim.thresh),
@@ -273,18 +272,18 @@ setMethod(
   )
 
   opt <- optim(
-    fn=fn,
-    par=init.params,
-               var.args = fixed.params,
-               lower = rep(0, length(init.params)),
-               upper = rep(100, length(init.params)),
-                control = list(
-                  maxeval = optim.maxit,
-                  xtol_rel = optim.thresh,
-                  ftol_rel = optim.thresh,
-                  ftol_abs = optim.thresh
-                )
+    fn = fn,
+    par = init.params,
+    var.args = fixed.params,
+    lower = rep(0, length(init.params)),
+    upper = rep(100, length(init.params)),
+    control = list(
+      maxeval = optim.maxit,
+      xtol_rel = optim.thresh,
+      ftol_rel = optim.thresh,
+      ftol_abs = optim.thresh
     )
+  )
 
   ret <- .cv.edgenet.post.process(opt, estimatable.params, fixed.params)
   ret$family <- family

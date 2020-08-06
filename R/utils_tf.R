@@ -55,5 +55,6 @@ init_vector <- function(m, trainable = TRUE) {
 #' @import tensorflow
 init_zero_scalar <- function(trainable = TRUE) {
   tensorflow::tf$Variable(tf$zeros(shape(), tensorflow::tf$float32),
-                          trainable = trainable)
+    trainable = trainable
+  )
 }

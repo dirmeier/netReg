@@ -20,6 +20,7 @@ Encoding: UTF-8
 Suggests:
     testthat,
     knitr,
+    covr,
     rmarkdown,
     lintr,
     styler,

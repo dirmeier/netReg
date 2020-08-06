@@ -25,7 +25,6 @@ cross.validate <- function(mod, loss,
                            nfolds, folds,
                            maxit = 1000, thresh = 1e-5, learning.rate = 0.01) {
   fn <- function(params, ...) {
-
     params <- .get.params(params, ...)
     lambda.tensor$assign(params[1])
     psigx.tensor$assign(params[2])
@@ -40,12 +39,16 @@ cross.validate <- function(mod, loss,
       y.test <- y[which(folds == fold), , drop = FALSE]
 
       mod$reinit()
-      invisible(fit(mod, loss,
-                    cast_float(x.train), cast_float(y.train),
-                    maxit, learning.rate, thresh))
-      losses[fold] <- loss(mod,
-                           cast_float(x.test),
-                           cast_float(y.test))$numpy()
+      invisible(fit(
+        mod, loss,
+        cast_float(x.train), cast_float(y.train),
+        maxit, learning.rate, thresh
+      ))
+      losses[fold] <- loss(
+        mod,
+        cast_float(x.test),
+        cast_float(y.test)
+      )$numpy()
     }
 
     mean(losses)

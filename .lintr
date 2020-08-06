@@ -9,8 +9,5 @@ linters: list(linelen=line_length_linter(80),
 exclusions: list("tests/testthat.R",
                  "tests/testthat/test_util.R",
                  "tests/testthat/test_edgenet.R",
-                 "tests/testthat/test_edgenet_modelselection.R",
-                 "tests/testthat/test_edgenet_predict.R")
-exclude: "# Exclude Linting"
-exclude_start: "# Begin Exclude Linting"
-exclude_end: "# End Exclude Linting"
+                 "tests/testthat/test_edgenet_inference.R",
+                 "tests/testthat/test_edgenet_modelselection.R")
