@@ -11,7 +11,7 @@ group.lasso(
   X,
   Y,
   grps = NULL,
-  lambda = 1,
+  lambda = 0,
   thresh = 1e-05,
   maxit = 1e+05,
   learning.rate = 0.01,
@@ -22,7 +22,7 @@ group.lasso(
   X,
   Y,
   grps = NULL,
-  lambda = 1,
+  lambda = 0,
   thresh = 1e-05,
   maxit = 1e+05,
   learning.rate = 0.01,
@@ -33,7 +33,7 @@ group.lasso(
   X,
   Y,
   grps = NULL,
-  lambda = 1,
+  lambda = 0,
   thresh = 1e-05,
   maxit = 1e+05,
   learning.rate = 0.01,
@@ -87,7 +87,6 @@ grps <- c(NA_integer_, 1L, 1L, 2L, 2L)
 # estimate the parameters of a Gaussian model
 Y <- X \%*\% b + rnorm(100)
 fit <- group.lasso(X = X, Y = Y, grps = grps, family = gaussian, maxit = 10)
-
 }
 \references{
 Yuan, Ming and Lin, Yi (2006),

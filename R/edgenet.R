@@ -94,7 +94,7 @@
 setGeneric(
   "edgenet",
   function(X, Y, G.X = NULL, G.Y = NULL,
-           lambda = 9, psigx = 0, psigy = 0,
+           lambda = 0, psigx = 0, psigy = 0,
            thresh = 1e-5, maxit = 1e5, learning.rate = 0.01,
            family = gaussian) {
     standardGeneric("edgenet")
@@ -184,7 +184,7 @@ setMethod(
     gy <- cast_float(laplacian_(gy))
   }
 
-  mod <- model(x, y, family)
+  mod <- model(ncol(x), ncol(y), family)
   loss <- edgenet.loss(lambda, psigx, psigy, gx, gy, family)
   res <- fit(mod, loss, x, y, maxit, learning.rate, thresh)
 

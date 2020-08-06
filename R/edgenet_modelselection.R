@@ -173,8 +173,6 @@ setMethod(
            optim.maxit = 1e2, optim.thresh = 1e-2,
            nfolds = 10) {
 
-    stop("needs update.. doesnt work due to tf2")
-
     stopifnot(
       is.numeric(nfolds), nfolds > 0, is.numeric(learning.rate),
       is.numeric(optim.maxit), is.numeric(optim.thresh),
@@ -253,9 +251,6 @@ setMethod(
     )
   }
 
-  p <- ncol(x)
-  q <- ncol(y)
-
   if (!is.null(gx)) {
     gx <- cast_float(laplacian_(gx))
   }
@@ -263,37 +258,33 @@ setMethod(
     gy <- cast_float(laplacian_(gy))
   }
 
+  lambda.tensor <- init_zero_scalar(FALSE)
+  psigx.tensor <- init_zero_scalar(FALSE)
+  psigy.tensor <- init_zero_scalar(FALSE)
 
-  lambda.tensor <- init_zero_scalar()
-  psigx.tensor <- init_zero_scalar()
-  psigy.tensor <- init_zero_scalar()
-
-  loss <- edgenet.loss(lambda, psigx, psigy, gx, gy, family)
-
-  optimizer <- keras::optimizer_adam(learning.rate)
+  mod <- model(ncol(x), ncol(y), family)
+  loss <- edgenet.loss(lambda.tensor, psigx.tensor, psigy.tensor, gx, gy, family)
   fn <- cross.validate(
-    objective, train,
+    mod, loss,
     x, y,
-    x.tensor, y.tensor,
     lambda.tensor, psigx.tensor, psigy.tensor,
     nfolds, folds,
     maxit, thresh, learning.rate
   )
 
-  with(session() %as% sess, {
-    opt <- optim(fn, init.params,
-      var.args = fixed.params,
-      sess = sess, alpha = alpha, beta = beta,
-      lower = rep(0, length(init.params)),
-      upper = rep(100, length(init.params)),
-      control = list(
-        maxeval = optim.maxit,
-        xtol_rel = optim.thresh,
-        ftol_rel = optim.thresh,
-        ftol_abs = optim.thresh
-      )
+  opt <- optim(
+    fn=fn,
+    par=init.params,
+               var.args = fixed.params,
+               lower = rep(0, length(init.params)),
+               upper = rep(100, length(init.params)),
+                control = list(
+                  maxeval = optim.maxit,
+                  xtol_rel = optim.thresh,
+                  ftol_rel = optim.thresh,
+                  ftol_abs = optim.thresh
+                )
     )
-  })
 
   ret <- .cv.edgenet.post.process(opt, estimatable.params, fixed.params)
   ret$family <- family

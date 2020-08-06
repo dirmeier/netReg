@@ -90,7 +90,7 @@ if (requireNamespace("grplasso", quietly = TRUE)) {
     for (lam in c(0)) {
       e0 <- group.lasso(
         X, Y,
-        grps = grps, lambda = lam,
+        grps = NULL, lambda = lam,
         maxit = 500, thresh = 5 * 10^-8, family = netReg::gaussian
       )
       e1 <- grplasso::grplasso(

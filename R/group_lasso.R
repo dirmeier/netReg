@@ -74,7 +74,7 @@
 setGeneric(
   "group.lasso",
   function(X, Y, grps = NULL,
-           lambda = 1,
+           lambda = 0,
            thresh = 1e-5, maxit = 1e5, learning.rate = 0.01,
            family = gaussian) {
     standardGeneric("group.lasso")
@@ -88,7 +88,7 @@ setMethod(
   "group.lasso",
   signature = signature(X = "matrix", Y = "numeric"),
   function(X, Y, grps = NULL,
-           lambda = 1,
+           lambda = 0,
            thresh = 1e-5, maxit = 1e5, learning.rate = 0.01,
            family = gaussian) {
     group.lasso(
@@ -154,9 +154,9 @@ setMethod(
   x <- cast_float(x)
   y <- cast_float(y)
 
-  mod <- model(x, y, family)
+  mod <- model(ncol(x), ncol(y), family)
   loss <- group.lasso.loss(lambda, grps, family)
-  res <- fit(mod, loss, maxit, learning.rate, thresh)
+  res <- fit(mod, loss, x, y, maxit, learning.rate, thresh)
 
   # finalize output
   beta <- res$beta

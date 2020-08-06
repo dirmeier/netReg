@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/lumen/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/lumen/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -41,7 +45,6 @@
 <meta property="og:description" content="Family objects provide a convenient way to specify the details
  of the models used by netReg.
  See also stats::family for more details." />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -59,7 +62,7 @@
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -73,7 +76,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">netReg</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.11.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.12.0</span>
       </span>
     </div>
 
@@ -186,16 +189,16 @@
     <pre class="examples"><div class='input'><span class='fu'>gaussian</span>()</div><div class='output co'>#&gt; family: gaussian
 #&gt; link: identity</div><div class='input'><span class='fu'>binomial</span>(<span class='st'>"probit"</span>)$<span class='no'>link</span></div><div class='output co'>#&gt; [1] "probit"</div><div class='input'><span class='fu'>poisson</span>()$<span class='no'>linkinv</span></div><div class='output co'>#&gt; function (x) 
 #&gt; tf$maximum(tf$exp(x), tf$float32$min)
-#&gt; &lt;bytecode: 0x55be995dfa80&gt;
+#&gt; &lt;bytecode: 0x55bbc4c3b810&gt;
 #&gt; &lt;environment: namespace:netReg&gt;</div><div class='input'><span class='fu'>gamma</span>()$<span class='no'>linkinv</span></div><div class='output co'>#&gt; <span class='warning'>Warning: family gamma is still experimental. enjoy with care.</span></div><div class='output co'>#&gt; function (x) 
 #&gt; 1/x
-#&gt; &lt;bytecode: 0x55be997178f0&gt;
-#&gt; &lt;environment: namespace:netReg&gt;</div><div class='input'><span class='fu'>beta</span>()$<span class='no'>loss</span></div><div class='output co'>#&gt; <span class='warning'>Warning: family beta is still experimental. enjoy with care.</span></div><div class='output co'>#&gt; function (y, eta, invlink, ...) 
+#&gt; &lt;bytecode: 0x55bbc4ad4dc8&gt;
+#&gt; &lt;environment: namespace:netReg&gt;</div><div class='input'><span class='fu'>beta</span>()$<span class='no'>loss</span></div><div class='output co'>#&gt; <span class='warning'>Warning: family beta is still experimental. enjoy with care.</span></div><div class='output co'>#&gt; function (y, mu.hat, ...) 
 #&gt; {
 #&gt;     obj &lt;- 0
 #&gt;     eps &lt;- .Machine$double.eps * 1e+09
 #&gt;     for (j in seq(ncol(y))) {
-#&gt;         mu &lt;- invlink(eta[, j])
+#&gt;         mu &lt;- mu.hat[, j]
 #&gt;         phi &lt;- 1
 #&gt;         p &lt;- mu * phi
 #&gt;         q &lt;- (1 - mu) * phi
@@ -207,28 +210,24 @@
 #&gt;     }
 #&gt;     -obj
 #&gt; }
-#&gt; &lt;bytecode: 0x55be99a584a8&gt;
-#&gt; &lt;environment: namespace:netReg&gt;</div><div class='input'><span class='fu'>inverse.gaussian</span>()$<span class='no'>loss</span></div><div class='output co'>#&gt; <span class='warning'>Warning: family inverse.gaussian is still experimental. enjoy with care.</span></div><div class='output co'>#&gt; function (y, eta, invlink, ...) 
+#&gt; &lt;bytecode: 0x55bbc459d120&gt;
+#&gt; &lt;environment: namespace:netReg&gt;</div><div class='input'><span class='fu'>inverse.gaussian</span>()$<span class='no'>loss</span></div><div class='output co'>#&gt; <span class='warning'>Warning: family inverse.gaussian is still experimental. enjoy with care.</span></div><div class='output co'>#&gt; function (y, mu.hat, ...) 
 #&gt; {
 #&gt;     obj &lt;- 0
 #&gt;     for (j in seq(ncol(y))) {
-#&gt;         prob &lt;- tfprobability::tfd_inverse_gaussian(loc = invlink(tf$exp(eta[, 
-#&gt;             j])), concentration = 1)
+#&gt;         prob &lt;- tfprobability::tfd_inverse_gaussian(loc = mu.hat[, 
+#&gt;             j], concentration = 1)
 #&gt;         obj &lt;- obj + tf$reduce_sum(prob$log_prob(y[, j]))
 #&gt;     }
 #&gt;     -obj
 #&gt; }
-#&gt; &lt;bytecode: 0x55be99b12ee8&gt;
+#&gt; &lt;bytecode: 0x55bbc451a098&gt;
 #&gt; &lt;environment: namespace:netReg&gt;</div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -239,7 +238,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

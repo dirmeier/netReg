@@ -61,24 +61,14 @@ Before installing the package, make sure to have these Python dependencies insta
 * `tensorflow>=2.2.0`,
 * `tensorflow-probabiltiy>=0.10.0`
 
-The easiest way is probably to install `TensorFlow` from with `R`
+The easiest way is probably to install `TensorFlow` from `R`
 
 ```{r}
 install.packages(c("tensorflow", "tfprobability"))
 tensorflow::install_tensorflow(extra_packages = "tensorflow-probability")
 ```
 
-That should do it.
-
-If this does not work for you, try this approach on the command line:
-
-```{bash}
-conda create -n r-tensorflow python=3.7
-source activate r-tensorflow
-conda install tensorflow==2.2.0 tensorflow-probability==0.10.0
-```
-
-You can then install and use `netReg` by downloading the latest [release](https://github.com/dirmeier/netReg/releases)
+Then install `netReg` by downloading the latest [release](https://github.com/dirmeier/netReg/releases), for instance
 
 ```{r}
 remotes::install_github("dirmeier/netReg@v1.12.0")
@@ -109,4 +99,4 @@ If `netReg` was useful for you or your work, it would be great if you cited it l
 
 ## Author
 
-Simon Dirmeier <a href="mailto:simon.dirmeier @ web.de">simon.dirmeier @ web.de</a>
+Simon Dirmeier < <a href="mailto:simon.dirmeier @ web.de">simon.dirmeier @ web.de</a> >

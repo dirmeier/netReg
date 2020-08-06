@@ -38,14 +38,18 @@
 # along with netReg. If not, see <http://www.gnu.org/licenses/>.
 
 
-model <- function(x, y, family) {
-  p <- x$shape[[2]]
-  q <- y$shape[[2]]
+model <- function(p, q, family) {
   keras::keras_model_custom(function(self) {
     self$alpha <- init_vector(q)
     self$beta <- init_matrix(p, q)
     self$family <- family
     self$linkinv <- family$linkinv
+    self$init_weights <- self$get_weights()
+
+    self$reinit <- function() {
+      self$set_weights(self$init_weights)
+    }
+
 
     function(x, mask = NULL, training = FALSE) {
       eta <- linear.predictor(self$alpha, self$beta, x)

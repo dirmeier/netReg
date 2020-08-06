@@ -1,6 +1,6 @@
 ## Version 1.12.0
   - Drop bioconductor support.
-  - Update to tensorflow 2.0
+  - Update to tensorflow 2.0.
 
 ## Version 1.11.2
   - Add group lasso.

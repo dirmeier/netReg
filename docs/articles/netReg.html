@@ -6,20 +6,20 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Network-regularized regression models • netReg</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/lumen/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/lumen/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="Network-regularized regression models">
-<meta property="og:description" content="">
-<meta name="twitter:card" content="summary">
+<meta property="og:description" content="netReg">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
-<body>
+<body data-spy="scroll" data-target="#toc">
     <div class="container template-article">
       <header><div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">netReg</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.11.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.12.0</span>
       </span>
     </div>
 
@@ -86,10 +86,10 @@
 
       
 
-      </header><div class="row">
+      </header><script src="netReg_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>Network-regularized regression models</h1>
+      <h1 data-toc-skip>Network-regularized regression models</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/dirmeier/netReg/blob/master/vignettes/netReg.Rmd"><code>vignettes/netReg.Rmd</code></a></small>
@@ -150,9 +150,9 @@
 <h2 class="hasAnchor">
 <a href="#fitting-a-model-to-data" class="anchor"></a>Fitting a model to data</h2>
 <p>The following section shows how to use network regularization models. We shall use <code>edgenet</code>, but the calls for the other methods are analogous and examples can be found in the method documentation. We first load some libraries:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(tensorflow)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(tfprobability)</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(netReg)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tensorflow</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tfprobability</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">netReg</span>)</pre></body></html></div>
 <pre><code>## 
 ## Attaching package: 'netReg'</code></pre>
 <pre><code>## The following objects are masked from 'package:stats':
@@ -162,23 +162,23 @@
 ## 
 ##     beta, gamma</code></pre>
 <p>Set some parameters and create affinity matrices:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co"># parameters</span></a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">n &lt;-<span class="st"> </span><span class="dv">100</span></a>
-<a class="sourceLine" id="cb5-3" data-line-number="3">p &lt;-<span class="st"> </span><span class="dv">10</span></a>
-<a class="sourceLine" id="cb5-4" data-line-number="4">q &lt;-<span class="st"> </span><span class="dv">10</span></a>
-<a class="sourceLine" id="cb5-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb5-6" data-line-number="6"><span class="co"># affinity matrices</span></a>
-<a class="sourceLine" id="cb5-7" data-line-number="7">G.X &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/rWishart.html">rWishart</a></span>(<span class="dv">1</span>, <span class="dv">10</span>, <span class="kw"><a href="https://rdrr.io/r/base/diag.html">diag</a></span>(p))[,,<span class="dv">1</span>])</a>
-<a class="sourceLine" id="cb5-8" data-line-number="8">G.Y &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/rWishart.html">rWishart</a></span>(<span class="dv">1</span>, <span class="dv">10</span>, <span class="kw"><a href="https://rdrr.io/r/base/diag.html">diag</a></span>(q))[,,<span class="dv">1</span>])</a></code></pre></div>
+<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="co"># parameters</span>
+<span class="no">n</span> <span class="kw">&lt;-</span> <span class="fl">100</span>
+<span class="no">p</span> <span class="kw">&lt;-</span> <span class="fl">10</span>
+<span class="no">q</span> <span class="kw">&lt;-</span> <span class="fl">10</span>
+
+<span class="co"># affinity matrices</span>
+<span class="no">G.X</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/rWishart.html">rWishart</a></span>(<span class="fl">1</span>, <span class="fl">10</span>, <span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span>(<span class="no">p</span>))[,,<span class="fl">1</span>])
+<span class="no">G.Y</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/rWishart.html">rWishart</a></span>(<span class="fl">1</span>, <span class="fl">10</span>, <span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span>(<span class="no">q</span>))[,,<span class="fl">1</span>])</pre></body></html></div>
 <p>We created the affinity matrix absolutely random, although in practice a <em>real</em> (biological) observed affinity matrix should be used, because in the end the affinity matrix decides the shrinkage of the coefficients.</p>
 <p>The actual fit is straightforward. We create Gaussian data first and then fit the model:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="co"># data</span></a>
-<a class="sourceLine" id="cb6-2" data-line-number="2">X &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(n <span class="op">*</span><span class="st"> </span>p), n)</a>
-<a class="sourceLine" id="cb6-3" data-line-number="3">B &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(p <span class="op">*</span><span class="st"> </span>q), p)</a>
-<a class="sourceLine" id="cb6-4" data-line-number="4">Y &lt;-<span class="st"> </span>X <span class="op">%*%</span><span class="st"> </span>B <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(n <span class="op">*</span><span class="st"> </span>q, <span class="dv">0</span>, <span class="fl">0.1</span>), n)</a>
-<a class="sourceLine" id="cb6-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb6-6" data-line-number="6">fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/edgenet-methods.html">edgenet</a></span>(<span class="dt">X=</span>X, <span class="dt">Y=</span>Y, <span class="dt">G.X=</span>G.X, <span class="dt">G.Y=</span>G.Y, <span class="dt">family=</span>gaussian, <span class="dt">maxit=</span><span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb6-7" data-line-number="7"><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(fit)</a></code></pre></div>
+<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="co"># data</span>
+<span class="no">X</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(<span class="no">n</span> * <span class="no">p</span>), <span class="no">n</span>)
+<span class="no">B</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(<span class="no">p</span> * <span class="no">q</span>), <span class="no">p</span>)
+<span class="no">Y</span> <span class="kw">&lt;-</span> <span class="no">X</span> <span class="kw">%*%</span> <span class="no">B</span> + <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(<span class="no">n</span> * <span class="no">q</span>, <span class="fl">0</span>, <span class="fl">0.1</span>), <span class="no">n</span>)
+
+<span class="no">fit</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/edgenet-methods.html">edgenet</a></span>(<span class="kw">X</span><span class="kw">=</span><span class="no">X</span>, <span class="kw">Y</span><span class="kw">=</span><span class="no">Y</span>, <span class="kw">G.X</span><span class="kw">=</span><span class="no">G.X</span>, <span class="kw">G.Y</span><span class="kw">=</span><span class="no">G.Y</span>, <span class="kw">family</span><span class="kw">=</span><span class="no">gaussian</span>, <span class="kw">maxit</span><span class="kw">=</span><span class="fl">10</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">fit</span>)</pre></body></html></div>
 <pre><code>## 'gaussian.edgenet' object
 ## 
 ## call:
@@ -186,45 +186,45 @@
 ## 
 ## parameters:
 ## lambda  psigx  psigy 
-##      1      1      1 
+##      0      0      0 
 ## 
 ## family:  gaussian
 ## link:  identity 
 ## 
 ## -&gt; call coef(fit) for coefficients</code></pre>
 <p>The <code>fit</code> object contains information about coefficients, intercepts etc.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span>(fit)[,<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]</a></code></pre></div>
-<pre><code>##                  y[1]      y[2]      y[3]      y[4]      y[5]
-## (Intercept) 0.9002102 0.9002293 0.9005224 0.9002954 0.9004978
-## x[1]        0.9000567 0.9000338 0.9001076 0.9001009 0.9000664
-## x[2]        0.9000067 0.8999692 0.9000125 0.9000753 0.8999888
-## x[3]        0.9001236 0.9000939 0.9001020 0.9001544 0.9000940
-## x[4]        0.9000631 0.9000619 0.9001054 0.9001449 0.9001650
-## x[5]        0.9001096 0.9000229 0.9000679 0.9001243 0.9000254
-## x[6]        0.9001267 0.9000723 0.9000980 0.9001300 0.9001029
-## x[7]        0.9000788 0.9000654 0.9000988 0.9001276 0.9001102
-## x[8]        0.9001202 0.9000919 0.9001132 0.9001564 0.9000763
-## x[9]        0.9001207 0.9001111 0.9001263 0.9001679 0.9001586
-## x[10]       0.9000170 0.8999769 0.9000309 0.9000831 0.8999950</code></pre>
+<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span>(<span class="no">fit</span>)[,<span class="fl">1</span>:<span class="fl">5</span>]</pre></body></html></div>
+<pre><code>##                   y[1]        y[2]        y[3]        y[4]         y[5]
+## (Intercept) -0.1630796 -0.23214686 -0.02538059  0.34130132 -0.198667809
+## x[1]        -0.3592043 -0.23102178  0.16815110  0.53984874 -0.104653560
+## x[2]        -0.5965749 -0.15797064  0.36232686  0.01690750 -0.380840629
+## x[3]        -0.3803682 -0.51961625 -0.32226369  0.13058329  0.340984464
+## x[4]        -0.4625967 -0.19649535 -0.05385770 -0.07929124 -0.124232985
+## x[5]        -0.0285626  0.21023563 -0.13049057 -0.12466140 -0.312471777
+## x[6]         0.1536922  0.24436840  0.26746860  0.13201326  0.379353553
+## x[7]        -0.2568381 -0.20051777  0.07121361 -0.25147247  0.137432635
+## x[8]         0.1674609 -0.25654319 -0.18768132 -0.13183960  0.001251033
+## x[9]         0.4304502 -0.02000845  0.11283835  0.29864952  0.113691278
+## x[10]        0.2920552  0.34738910 -0.35429192  0.01667544  0.344083071</code></pre>
 <p>Having the coefficients estimated we are able to predict novel data-sets:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">pred  &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span>(fit, X)</a>
-<a class="sourceLine" id="cb10-2" data-line-number="2">pred[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]</a></code></pre></div>
-<pre><code>##            [,1]       [,2]       [,3]       [,4]       [,5]
-## [1,] -3.0930336 -3.0929826 -3.0927593 -3.0932525 -3.0928628
-## [2,] -0.6364986 -0.6363426 -0.6360796 -0.6364172 -0.6360277
-## [3,] -3.0718918 -3.0716743 -3.0715506 -3.0719167 -3.0715974
-## [4,]  1.8601170  1.8601290  1.8603944  1.8602053  1.8603729
-## [5,]  3.2352305  3.2352297  3.2355916  3.2354347  3.2355512</code></pre>
+<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="no">pred</span>  <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span>(<span class="no">fit</span>, <span class="no">X</span>)
+<span class="no">pred</span>[<span class="fl">1</span>:<span class="fl">5</span>, <span class="fl">1</span>:<span class="fl">5</span>]</pre></body></html></div>
+<pre><code>##             [,1]       [,2]       [,3]        [,4]        [,5]
+## [1,] -0.05118159  0.3543974 1.47509871  2.40112775 -0.08999453
+## [2,] -0.78901938  0.1039426 1.38059871 -0.04497960 -0.49891885
+## [3,] -0.72092823 -0.7879457 0.78885289  1.52635059 -1.41302641
+## [4,]  0.25004272 -0.4180337 0.09098085  0.03431876 -1.65688342
+## [5,]  0.42486505  0.3555659 0.01309996  0.44698370  0.24478359</code></pre>
 <p>The binomial case is the same only with a different <code>family</code> argument:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="co"># data</span></a>
-<a class="sourceLine" id="cb12-2" data-line-number="2">X &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(n <span class="op">*</span><span class="st"> </span>p), n)</a>
-<a class="sourceLine" id="cb12-3" data-line-number="3">B &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(p <span class="op">*</span><span class="st"> </span>q), p)</a>
-<a class="sourceLine" id="cb12-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb12-5" data-line-number="5">eta &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">/</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/Log.html">exp</a></span>(<span class="op">-</span>X <span class="op">%*%</span><span class="st"> </span>B))</a>
-<a class="sourceLine" id="cb12-6" data-line-number="6">Y.binom &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/do.call.html">do.call</a></span>(<span class="st">"cbind"</span>, <span class="kw"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="dv">10</span>), <span class="cf">function</span>(.) <span class="kw"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span>(n, <span class="dv">1</span>, eta[,.])))</a>
-<a class="sourceLine" id="cb12-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb12-8" data-line-number="8">fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/edgenet-methods.html">edgenet</a></span>(<span class="dt">X=</span>X, <span class="dt">Y=</span>Y, <span class="dt">G.X=</span>G.X, <span class="dt">G.Y=</span>G.Y, <span class="dt">family=</span>binomial, <span class="dt">maxit=</span><span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb12-9" data-line-number="9"><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(fit)</a></code></pre></div>
+<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="co"># data</span>
+<span class="no">X</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(<span class="no">n</span> * <span class="no">p</span>), <span class="no">n</span>)
+<span class="no">B</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(<span class="no">p</span> * <span class="no">q</span>), <span class="no">p</span>)
+
+<span class="no">eta</span> <span class="kw">&lt;-</span> <span class="fl">1</span> / (<span class="fl">1</span> + <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span>(-<span class="no">X</span> <span class="kw">%*%</span> <span class="no">B</span>))
+<span class="no">Y.binom</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html">do.call</a></span>(<span class="st">"cbind"</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">10</span>), <span class="kw">function</span>(<span class="no">.</span>) <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span>(<span class="no">n</span>, <span class="fl">1</span>, <span class="no">eta</span>[,<span class="no">.</span>])))
+
+<span class="no">fit</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/edgenet-methods.html">edgenet</a></span>(<span class="kw">X</span><span class="kw">=</span><span class="no">X</span>, <span class="kw">Y</span><span class="kw">=</span><span class="no">Y</span>, <span class="kw">G.X</span><span class="kw">=</span><span class="no">G.X</span>, <span class="kw">G.Y</span><span class="kw">=</span><span class="no">G.Y</span>, <span class="kw">family</span><span class="kw">=</span><span class="no">binomial</span>, <span class="kw">maxit</span><span class="kw">=</span><span class="fl">10</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">fit</span>)</pre></body></html></div>
 <pre><code>## 'binomial.edgenet' object
 ## 
 ## call:
@@ -232,22 +232,22 @@
 ## 
 ## parameters:
 ## lambda  psigx  psigy 
-##      1      1      1 
+##      0      0      0 
 ## 
 ## family:  binomial
 ## link:  logit 
 ## 
 ## -&gt; call coef(fit) for coefficients</code></pre>
 <p>The Poisson case of course works analogously:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="co"># data</span></a>
-<a class="sourceLine" id="cb14-2" data-line-number="2">X &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(n <span class="op">*</span><span class="st"> </span>p), n)</a>
-<a class="sourceLine" id="cb14-3" data-line-number="3">B &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(p <span class="op">*</span><span class="st"> </span>q), p)</a>
-<a class="sourceLine" id="cb14-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb14-5" data-line-number="5">eta &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/Log.html">exp</a></span>(<span class="op">-</span>X <span class="op">%*%</span><span class="st"> </span>B)</a>
-<a class="sourceLine" id="cb14-6" data-line-number="6">Y.pois &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/do.call.html">do.call</a></span>(<span class="st">"cbind"</span>, <span class="kw"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="dv">10</span>), <span class="cf">function</span>(.) <span class="kw"><a href="https://rdrr.io/r/stats/Poisson.html">rpois</a></span>(n, eta[,.])))</a>
-<a class="sourceLine" id="cb14-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb14-8" data-line-number="8">fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/edgenet-methods.html">edgenet</a></span>(<span class="dt">X=</span>X, <span class="dt">Y=</span>Y.pois, <span class="dt">G.X=</span>G.X, <span class="dt">G.Y=</span>G.Y, <span class="dt">family=</span>poisson, <span class="dt">maxit=</span><span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb14-9" data-line-number="9"><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(fit)</a></code></pre></div>
+<div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="co"># data</span>
+<span class="no">X</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(<span class="no">n</span> * <span class="no">p</span>), <span class="no">n</span>)
+<span class="no">B</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(<span class="no">p</span> * <span class="no">q</span>), <span class="no">p</span>)
+
+<span class="no">eta</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span>(-<span class="no">X</span> <span class="kw">%*%</span> <span class="no">B</span>)
+<span class="no">Y.pois</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html">do.call</a></span>(<span class="st">"cbind"</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">10</span>), <span class="kw">function</span>(<span class="no">.</span>) <span class="fu"><a href="https://rdrr.io/r/stats/Poisson.html">rpois</a></span>(<span class="no">n</span>, <span class="no">eta</span>[,<span class="no">.</span>])))
+
+<span class="no">fit</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/edgenet-methods.html">edgenet</a></span>(<span class="kw">X</span><span class="kw">=</span><span class="no">X</span>, <span class="kw">Y</span><span class="kw">=</span><span class="no">Y.pois</span>, <span class="kw">G.X</span><span class="kw">=</span><span class="no">G.X</span>, <span class="kw">G.Y</span><span class="kw">=</span><span class="no">G.Y</span>, <span class="kw">family</span><span class="kw">=</span><span class="no">poisson</span>, <span class="kw">maxit</span><span class="kw">=</span><span class="fl">10</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">fit</span>)</pre></body></html></div>
 <pre><code>## 'poisson.edgenet' object
 ## 
 ## call:
@@ -256,7 +256,7 @@
 ## 
 ## parameters:
 ## lambda  psigx  psigy 
-##      1      1      1 
+##      0      0      0 
 ## 
 ## family:  poisson
 ## link:  log 
@@ -267,8 +267,8 @@
 <h2 class="hasAnchor">
 <a href="#model-selection" class="anchor"></a>Model selection</h2>
 <p>In most cases we do not have the optimal shrinkage parameters <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(\psi_{1}\)</span> and <span class="math inline">\(\psi_{2}\)</span>. For these settings you can use <code>netReg</code>’s included model selection. We use Powell’s BOBYQA algorithm <span class="citation">(Powell 2009)</span> for gradient-free optimization in a coss-validation framework. Doing the model selection only requires calling <code>cv.edgenet</code>:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1">cv &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cvedgenet-methods.html">cv.edgenet</a></span>(<span class="dt">X=</span>X, <span class="dt">Y=</span>Y, <span class="dt">G.X=</span>G.Y, G.Y, <span class="dt">family=</span>gaussian, <span class="dt">optim.maxit=</span><span class="dv">10</span>, <span class="dt">maxit=</span><span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb16-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(cv)</a></code></pre></div>
+<div class="sourceCode" id="cb16"><html><body><pre class="r"><span class="no">cv</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/cvedgenet-methods.html">cv.edgenet</a></span>(<span class="kw">X</span><span class="kw">=</span><span class="no">X</span>, <span class="kw">Y</span><span class="kw">=</span><span class="no">Y</span>, <span class="kw">G.X</span><span class="kw">=</span><span class="no">G.Y</span>, <span class="no">G.Y</span>, <span class="kw">family</span><span class="kw">=</span><span class="no">gaussian</span>, <span class="kw">optim.maxit</span><span class="kw">=</span><span class="fl">10</span>, <span class="kw">maxit</span><span class="kw">=</span><span class="fl">10</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">cv</span>)</pre></body></html></div>
 <pre><code>## 'gaussian.cv.edgenet' object
 ## 
 ## call:
@@ -277,7 +277,7 @@
 ## 
 ## optimal parameters:
 ## lambda (estimated)  psigx (estimated)  psigy (estimated) 
-##          0.2496870          0.1068451          0.1000000 
+##                0.0                0.0                0.1 
 ## 
 ## family:  gaussian
 ## link:  identity 
@@ -285,7 +285,7 @@
 ## -&gt; call coef(cv) for coefficients</code></pre>
 <p>The cross-validation and BOBYQA is quite computationally intensive, so we set <code>optim.maxit</code> to <span class="math inline">\(10\)</span>. I recommend using <code>TensorFlow</code> on a GPU for that, since <code>edgenet</code> needs to compute many matrix multiplications.</p>
 <p>The <code>cv.edgenet</code> object also contains a fit with the optimal parameters.</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(cv<span class="op">$</span>fit)</a></code></pre></div>
+<div class="sourceCode" id="cb18"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">cv</span>$<span class="no">fit</span>)</pre></body></html></div>
 <pre><code>## 'gaussian.edgenet' object
 ## 
 ## call:
@@ -294,55 +294,55 @@
 ##     learning.rate = learning.rate, family = family)
 ## 
 ## parameters:
-##    lambda     psigx     psigy 
-## 0.2496870 0.1068451 0.1000000 
+## lambda  psigx  psigy 
+##    0.0    0.0    0.1 
 ## 
 ## family:  gaussian
 ## link:  identity 
 ## 
 ## -&gt; call coef(cv$fit) for coefficients</code></pre>
 <p>You can obtain the coefficients like this:</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span>(cv)[,<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]</a></code></pre></div>
-<pre><code>##                  y[1]      y[2]      y[3]      y[4]      y[5]
-## (Intercept) 0.9002468 0.9002630 0.9004420 0.9003136 0.9004307
-## x[1]        0.9001268 0.9001094 0.9001504 0.9001334 0.9001250
-## x[2]        0.9001982 0.9001670 0.9001775 0.9001907 0.9001613
-## x[3]        0.9001543 0.9002062 0.9001770 0.9002146 0.9002761
-## x[4]        0.9001299 0.9001547 0.9001780 0.9001891 0.9002198
-## x[5]        0.9001935 0.9001071 0.9000996 0.9001226 0.9000956
-## x[6]        0.9001814 0.9002068 0.9001824 0.9002084 0.9001912
-## x[7]        0.9001718 0.9001417 0.9001468 0.9001465 0.9001535
-## x[8]        0.9001450 0.9002055 0.9001589 0.9002355 0.9003094
-## x[9]        0.9001301 0.9001237 0.9001505 0.9001450 0.9001575
-## x[10]       0.9001198 0.9000630 0.9001025 0.9000970 0.9000515</code></pre>
+<div class="sourceCode" id="cb20"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span>(<span class="no">cv</span>)[,<span class="fl">1</span>:<span class="fl">5</span>]</pre></body></html></div>
+<pre><code>##                    y[1]        y[2]        y[3]        y[4]        y[5]
+## (Intercept) -0.16244969 -0.23274037 -0.02441612  0.34165695 -0.10992736
+## x[1]        -0.17127870 -0.23197828  0.07147893  0.34191269 -0.10608900
+## x[2]        -0.39909041 -0.15980190  0.16407205 -0.17635283 -0.38124603
+## x[3]        -0.35902753 -0.34072834 -0.51756036  0.13084252  0.17913467
+## x[4]        -0.46262899 -0.20085037 -0.05717313 -0.07060570 -0.13922529
+## x[5]        -0.03887326  0.17031582 -0.19004494 -0.31362623 -0.12089321
+## x[6]         0.12813450  0.24580370  0.21148647  0.06246414  0.37806559
+## x[7]        -0.07154852 -0.20182194 -0.12542124 -0.25217736  0.13823010
+## x[8]         0.10940531 -0.25719425 -0.18792039  0.06579314  0.00186960
+## x[9]         0.23375580 -0.02342807  0.10914293  0.29933539  0.07559465
+## x[10]        0.28874746  0.34816018 -0.35426050  0.01299304  0.37586561</code></pre>
 <p>Furthermore, you can also directly predict using a <code>cv.edgenet</code> object:</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1">pred  &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span>(cv, X)</a>
-<a class="sourceLine" id="cb22-2" data-line-number="2">pred[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]</a></code></pre></div>
-<pre><code>##           [,1]      [,2]      [,3]      [,4]      [,5]
-## [1,]  6.417744  6.417987  6.418234  6.418153  6.418428
-## [2,]  5.636099  5.636082  5.636308  5.636238  5.636356
-## [3,]  4.960406  4.960530  4.960774  4.960645  4.960739
-## [4,] -1.498913 -1.498815 -1.498747 -1.498842 -1.498643
-## [5,]  1.974640  1.974640  1.974773  1.974646  1.974792</code></pre>
+<div class="sourceCode" id="cb22"><html><body><pre class="r"><span class="no">pred</span>  <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span>(<span class="no">cv</span>, <span class="no">X</span>)
+<span class="no">pred</span>[<span class="fl">1</span>:<span class="fl">5</span>, <span class="fl">1</span>:<span class="fl">5</span>]</pre></body></html></div>
+<pre><code>##            [,1]       [,2]       [,3]       [,4]       [,5]
+## [1,]  0.6655738  1.4596471 -0.3293040 0.43184121  1.5805688
+## [2,]  1.2374389  0.8648512  0.4778417 0.80782780  0.7880389
+## [3,]  0.8258052  0.4210416 -0.7071699 0.01681445  0.6643146
+## [4,]  1.0978712 -1.1434807 -0.5039964 1.24404678  0.4011041
+## [5,] -2.1403600 -1.2662913  0.2640689 0.67490179 -1.6143991</code></pre>
 </div>
 <div id="a-biological-example" class="section level2">
 <h2 class="hasAnchor">
 <a href="#a-biological-example" class="anchor"></a>A biological example</h2>
 <p>This section explains how to fit a linear model and do parameter estimation.</p>
 <p>At first we load the library and some data:</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(netReg)</a>
-<a class="sourceLine" id="cb24-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="st">"yeast"</span>)</a>
-<a class="sourceLine" id="cb24-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb24-4" data-line-number="4"><span class="kw"><a href="https://rdrr.io/r/base/ls.html">ls</a></span>(yeast)</a>
-<a class="sourceLine" id="cb24-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb24-6" data-line-number="6">X &lt;-<span class="st"> </span>yeast<span class="op">$</span>X</a>
-<a class="sourceLine" id="cb24-7" data-line-number="7">Y &lt;-<span class="st"> </span>yeast<span class="op">$</span>Y</a>
-<a class="sourceLine" id="cb24-8" data-line-number="8">G.Y &lt;-<span class="st"> </span>yeast<span class="op">$</span>GY</a></code></pre></div>
+<div class="sourceCode" id="cb24"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">netReg</span>)
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="st">"yeast"</span>)
+
+<span class="fu"><a href="https://rdrr.io/r/base/ls.html">ls</a></span>(<span class="no">yeast</span>)
+
+<span class="no">X</span> <span class="kw">&lt;-</span> <span class="no">yeast</span>$<span class="no">X</span>
+<span class="no">Y</span> <span class="kw">&lt;-</span> <span class="no">yeast</span>$<span class="no">Y</span>
+<span class="no">G.Y</span> <span class="kw">&lt;-</span> <span class="no">yeast</span>$<span class="no">GY</span></pre></body></html></div>
 <p>The <em>yeast</em> data <span class="math inline">\(\mathbf{X}\)</span> and <span class="math inline">\(\mathbf{Y}\)</span> set is taken and adopted from <span class="citation">(Brem et al. 2005)</span>, <span class="citation">(Storey, Akey, and Kruglyak 2005)</span>, and <span class="citation">(Cheng et al. 2014)</span>. <span class="math inline">\(\mathbf{GY}\)</span> is taken from <a href="https://thebiogrid.org/downloads/archives/Release%20Archive/BIOGRID-3.4.150/BIOGRID-ORGANISM-3.4.150.tab.zip">BioGRID</a>.</p>
 <p><span class="math inline">\(\mathbf{X}\)</span> is a <span class="math inline">\((n \times p)\)</span> matrix of genetic markers where <span class="math inline">\(n\)</span> is the number of samples (112) and <span class="math inline">\(p\)</span> is the number of markers. <span class="math inline">\(\mathbf{Y}\)</span> is a <span class="math inline">\((n \times q)\)</span> matrix of expression values for <span class="math inline">\(q\)</span> yeast genes. <span class="math inline">\(n\)</span> is again the numer of samples (112). <span class="math inline">\(\mathbf{GY}\)</span> is a <span class="math inline">\((q \times q)\)</span> adjacency matrix representing protein-protein interactions for the <span class="math inline">\(q\)</span> response variables.</p>
 <p>We only use a smaller network in order to be able to print the results here.</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1">fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/edgenet-methods.html">edgenet</a></span>(<span class="dt">X=</span>X, <span class="dt">Y=</span>Y, <span class="dt">G.Y=</span>G.Y, <span class="dt">lambda=</span><span class="dv">5</span>, <span class="dt">family=</span>gaussian, <span class="dt">maxit=</span><span class="dv">10</span>, <span class="dt">thresh=</span><span class="fl">1e-3</span>)</a>
-<a class="sourceLine" id="cb25-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(fit)</a></code></pre></div>
+<div class="sourceCode" id="cb25"><html><body><pre class="r"><span class="no">fit</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/edgenet-methods.html">edgenet</a></span>(<span class="kw">X</span><span class="kw">=</span><span class="no">X</span>, <span class="kw">Y</span><span class="kw">=</span><span class="no">Y</span>, <span class="kw">G.Y</span><span class="kw">=</span><span class="no">G.Y</span>, <span class="kw">lambda</span><span class="kw">=</span><span class="fl">5</span>, <span class="kw">family</span><span class="kw">=</span><span class="no">gaussian</span>, <span class="kw">maxit</span><span class="kw">=</span><span class="fl">10</span>, <span class="kw">thresh</span><span class="kw">=</span><span class="fl">1e-3</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">fit</span>)</pre></body></html></div>
 <pre><code>## 'gaussian.edgenet' object
 ## 
 ## call:
@@ -351,7 +351,7 @@
 ## 
 ## parameters:
 ## lambda  psigx  psigy 
-##      5      0      1 
+##      5      0      0 
 ## 
 ## family:  gaussian
 ## link:  identity 
@@ -359,67 +359,55 @@
 ## -&gt; call coef(fit) for coefficients</code></pre>
 <p>For the response variables we use an affinity matrix that represents <em>biological relationships</em> with <span class="math inline">\(\mathbf{GY}\)</span>. We promote sparsity by setting <span class="math inline">\(\lambda = 5\)</span> and put a weak (default) penalty on similar coefficients by setting <span class="math inline">\(\psi_{gy} = 1\)</span>. Other than that we used standard parameters in this case.</p>
 <p>The <code>fit</code> object contains information about coefficients and intercepts. Having the coefficients estimated we are able to predict novel data-sets:</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1">X.new &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(<span class="dv">10</span> <span class="op">*</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span>(X)), <span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb27-2" data-line-number="2">pred  &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span>(fit, X.new)</a>
-<a class="sourceLine" id="cb27-3" data-line-number="3">pred[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]</a></code></pre></div>
-<pre><code>##              [,1]        [,2]        [,3]        [,4]        [,5]
-##  [1,]  2.08389752  2.08390616  2.08409566  2.08398957  2.08407733
-##  [2,]  2.71363789  2.71364024  2.71383720  2.71374306  2.71381468
-##  [3,] -2.71739126 -2.71734147 -2.71720112 -2.71739887 -2.71718293
-##  [4,]  0.08862455  0.08864482  0.08881695  0.08867402  0.08880885
-##  [5,] -1.17214992 -1.17211757 -1.17195795 -1.17212364 -1.17195644
-##  [6,]  1.21193469  1.21195199  1.21213155  1.21200779  1.21212164
-##  [7,]  3.17341386  3.17341074  3.17361296  3.17352997  3.17358602
-##  [8,]  0.54536953  0.54538679  0.54556191  0.54542646  0.54555232
-##  [9,] -1.10880228 -1.10876912 -1.10861042 -1.10877570 -1.10860763
-## [10,]  3.29923570  3.29923096  3.29943492  3.29935307  3.29940613</code></pre>
+<div class="sourceCode" id="cb27"><html><body><pre class="r"><span class="no">X.new</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(<span class="fl">10</span> * <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span>(<span class="no">X</span>)), <span class="fl">10</span>)
+<span class="no">pred</span>  <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span>(<span class="no">fit</span>, <span class="no">X.new</span>)
+<span class="no">pred</span>[<span class="fl">1</span>:<span class="fl">10</span>, <span class="fl">1</span>:<span class="fl">5</span>]</pre></body></html></div>
+<pre><code>##             [,1]       [,2]        [,3]        [,4]        [,5]
+##  [1,] -0.6757834 -0.8090910 -0.31337134  1.02725184  0.06933979
+##  [2,] -1.2732760 -0.4990129 -0.37511128  1.33005729  0.38497863
+##  [3,] -0.6421384 -1.6582473  0.28940158  1.55448934 -0.73135658
+##  [4,] -0.7716256 -1.0690991 -0.01077137  0.76471074 -0.71789652
+##  [5,]  1.3143872  1.3439773 -0.22799809 -0.50196089  0.16459957
+##  [6,] -0.3874723 -0.5376041  0.60159730  0.66529136 -0.40160947
+##  [7,]  0.6736399  0.2275900 -1.08288862  0.81600604  0.19496621
+##  [8,] -2.1097200 -1.4885862  0.80288228  0.69912857 -1.15956326
+##  [9,] -0.4001558  0.2458691  1.24825451  0.08191516 -0.58259017
+## [10,] -0.6622698 -1.0883038 -0.04796913  0.74152967 -0.86456885</code></pre>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h2>
 <div id="refs" class="references">
 <div id="ref-brem2005genetic">
-<p>Brem, Rachel B, John D Storey, Jacqueline Whittle, and Leonid Kruglyak. 2005. “Genetic Interactions Between Polymorphisms That Affect Gene Expression in Yeast.” <em>Nature</em> 436 (7051). NIH Public Access: 701.</p>
+<p>Brem, Rachel B, John D Storey, Jacqueline Whittle, and Leonid Kruglyak. 2005. “Genetic Interactions Between Polymorphisms That Affect Gene Expression in Yeast.” <em>Nature</em> 436 (7051): 701.</p>
 </div>
 <div id="ref-cheng2014graph">
-<p>Cheng, Wei, Xiang Zhang, Zhishan Guo, Yu Shi, and Wei Wang. 2014. “Graph-Regularized Dual Lasso for Robust eQTL Mapping.” <em>Bioinformatics</em> 30 (12). Oxford Univ Press: i139–i148.</p>
+<p>Cheng, Wei, Xiang Zhang, Zhishan Guo, Yu Shi, and Wei Wang. 2014. “Graph-Regularized Dual Lasso for Robust eQTL Mapping.” <em>Bioinformatics</em> 30 (12): i139–i148.</p>
 </div>
 <div id="ref-chung1997spectral">
 <p>Chung, Fan RK, and Fan Chung Graham. 1997. <em>Spectral Graph Theory</em>. 92. American Mathematical Soc.</p>
 </div>
 <div id="ref-meier2008group">
-<p>Meier, Lukas, Sara Van De Geer, and Peter Bühlmann. 2008. “The Group Lasso for Logistic Regression.” <em>Journal of the Royal Statistical Society: Series B (Statistical Methodology)</em> 70 (1). Wiley Online Library: 53–71.</p>
+<p>Meier, Lukas, Sara Van De Geer, and Peter Bühlmann. 2008. “The Group Lasso for Logistic Regression.” <em>Journal of the Royal Statistical Society: Series B (Statistical Methodology)</em> 70 (1): 53–71.</p>
 </div>
 <div id="ref-powell2009bobyqa">
-<p>Powell, Michael JD. 2009. “The Bobyqa Algorithm for Bound Constrained Optimization Without Derivatives.” <em>Cambridge NA Report NA2009/06, University of Cambridge, Cambridge</em>. Citeseer.</p>
+<p>Powell, Michael JD. 2009. “The Bobyqa Algorithm for Bound Constrained Optimization Without Derivatives.” <em>Cambridge NA Report NA2009/06, University of Cambridge, Cambridge</em>.</p>
 </div>
 <div id="ref-storey2005multiple">
-<p>Storey, John D, Joshua M Akey, and Leonid Kruglyak. 2005. “Multiple Locus Linkage Analysis of Genomewide Expression in Yeast.” <em>PLoS Biology</em> 3 (8). Public Library of Science: e267.</p>
+<p>Storey, John D, Joshua M Akey, and Leonid Kruglyak. 2005. “Multiple Locus Linkage Analysis of Genomewide Expression in Yeast.” <em>PLoS Biology</em> 3 (8): e267.</p>
 </div>
 <div id="ref-yuan2006model">
-<p>Yuan, Ming, and Yi Lin. 2006. “Model Selection and Estimation in Regression with Grouped Variables.” <em>Journal of the Royal Statistical Society: Series B (Statistical Methodology)</em> 68 (1). Wiley Online Library: 49–67.</p>
+<p>Yuan, Ming, and Yi Lin. 2006. “Model Selection and Estimation in Regression with Grouped Variables.” <em>Journal of the Royal Statistical Society: Series B (Statistical Methodology)</em> 68 (1): 49–67.</p>
 </div>
 </div>
 </div>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-        <div id="tocnav">
-      <h2 class="hasAnchor">
-<a href="#tocnav" class="anchor"></a>Contents</h2>
-      <ul class="nav nav-pills nav-stacked">
-<li><a href="#introduction">Introduction</a></li>
-      <li><a href="#edgenet">Edgenet</a></li>
-      <li><a href="#group-lasso">Group Lasso</a></li>
-      <li><a href="#families">Families</a></li>
-      <li><a href="#fitting-a-model-to-data">Fitting a model to data</a></li>
-      <li><a href="#model-selection">Model selection</a></li>
-      <li><a href="#a-biological-example">A biological example</a></li>
-      <li><a href="#references">References</a></li>
-      </ul>
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
 </div>
-      </div>
 
 </div>
 
@@ -430,7 +418,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

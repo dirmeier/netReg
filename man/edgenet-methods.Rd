@@ -13,9 +13,9 @@ edgenet(
   Y,
   G.X = NULL,
   G.Y = NULL,
-  lambda = 1,
-  psigx = 1,
-  psigy = 1,
+  lambda = 0,
+  psigx = 0,
+  psigy = 0,
   thresh = 1e-05,
   maxit = 1e+05,
   learning.rate = 0.01,
@@ -27,9 +27,9 @@ edgenet(
   Y,
   G.X = NULL,
   G.Y = NULL,
-  lambda = 1,
-  psigx = 1,
-  psigy = 1,
+  lambda = 0,
+  psigx = 0,
+  psigy = 0,
   thresh = 1e-05,
   maxit = 1e+05,
   learning.rate = 0.01,
@@ -41,9 +41,9 @@ edgenet(
   Y,
   G.X = NULL,
   G.Y = NULL,
-  lambda = 1,
-  psigx = 1,
-  psigy = 1,
+  lambda = 0,
+  psigx = 0,
+  psigy = 0,
   thresh = 1e-05,
   maxit = 1e+05,
   learning.rate = 0.01,
@@ -122,7 +122,6 @@ fit <- edgenet(X = X, Y = Y, G.X = G.X, psigx = 1, family = gaussian, maxit = 10
 fit <- edgenet(X = X, Y = Y, G.X = G.X, G.Y, family = gaussian, maxit = 10)
 ## if Y is vectorial, we cannot use an affinity matrix for Y
 fit <- edgenet(X = X, Y = Y[, 1], G.X = G.X, family = gaussian, maxit = 10)
-
 }
 \references{
 Cheng, Wei and Zhang, Xiang and Guo, Zhishan and Shi, Yu and Wang, Wei (2014),

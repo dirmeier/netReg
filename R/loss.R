@@ -64,7 +64,7 @@ group.lasso.loss <- function(lambda, grps, family) {
 
   loss <- function(mod, x, y) {
     mu.hat <- mod(x)
-    obj <- loss.function(y, mu.hat, invlink) +
+    obj <- loss.function(y, mu.hat) +
       .group.lasso.penalty(lambda, mod$beta, grps)
 
     obj

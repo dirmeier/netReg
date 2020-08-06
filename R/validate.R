@@ -19,14 +19,18 @@
 
 
 #' @noRd
-cross.validate <- function(objective, train,
+cross.validate <- function(mod, loss,
                            x, y,
-                           x.tensor, y.tensor,
                            lambda.tensor, psigx.tensor, psigy.tensor,
                            nfolds, folds,
                            maxit = 1000, thresh = 1e-5, learning.rate = 0.01) {
-  fn <- function(params, ..., sess, alpha, beta) {
+  fn <- function(params, ...) {
+
     params <- .get.params(params, ...)
+    lambda.tensor$assign(params[1])
+    psigx.tensor$assign(params[2])
+    psigy.tensor$assign(params[3])
+
     losses <- vector(mode = "double", length = nfolds)
 
     for (fold in seq(nfolds)) {
@@ -35,48 +39,16 @@ cross.validate <- function(objective, train,
       x.test <- x[which(folds == fold), , drop = FALSE]
       y.test <- y[which(folds == fold), , drop = FALSE]
 
-      sess$run(init_variables())
-
-      target.old <- Inf
-      for (step in seq(maxit))
-      {
-        sess$run(train, feed_dict = dict(
-          x.tensor = x.train,
-          y.tensor = y.train,
-          lambda.tensor = params[1],
-          psigx.tensor = params[2],
-          psigy.tensor = params[3]
-        ))
-        if (step %% 25 == 0) {
-          target <- sess$run(objective,
-            feed_dict = dict(
-              x.tensor = x.test,
-              y.tensor = y.test,
-              lambda.tensor = params[1],
-              psigx.tensor = params[2],
-              psigy.tensor = params[3]
-            )
-          )
-          if (sum(abs(target - target.old)) < thresh) {
-            break
-          }
-          target.old <- target
-        }
-      }
-
-      losses[fold] <- sess$run(
-        objective,
-        feed_dict = dict(
-          x.tensor = x.test,
-          y.tensor = y.test,
-          lambda.tensor = params[1],
-          psigx.tensor = params[2],
-          psigy.tensor = params[3]
-        )
-      )
+      mod$reinit()
+      invisible(fit(mod, loss,
+                    cast_float(x.train), cast_float(y.train),
+                    maxit, learning.rate, thresh))
+      losses[fold] <- loss(mod,
+                           cast_float(x.test),
+                           cast_float(y.test))$numpy()
     }
 
-    sum(losses)
+    mean(losses)
   }
 
   fn

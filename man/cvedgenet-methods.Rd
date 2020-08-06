@@ -174,5 +174,4 @@ fit <- cv.edgenet(
   X = X, Y = Y[, 1], G.X = G.X,
   family = gaussian, maxit = 1, optim.maxit = 1
 )
-
 }
