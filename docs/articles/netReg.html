@@ -113,9 +113,9 @@
 \begin{split}
 \hat{\mathbf{B}} = \arg \min_{\mathbf{B}} \,
  &amp; -\ell(\mathbf{B}) + \lambda ||\mathbf{B} ||_1  \\  &amp; +
-              \frac{\psi_1}{2}  \sum_{i=1}^p \sum_{j=1}^p
+              \frac{\psi_1}{2}  \sum_{i &lt; j}^p
                || \boldsymbol \beta_{i,*} - \boldsymbol \beta_{j,*} ||_2^2 (\mathbf{G}_X)_{i,j}    \\  &amp; +
- \frac{\psi_2}{2}  \sum_{i=1}^q \sum_{j=1}^q || \boldsymbol \beta_{*,i} - \boldsymbol \beta_{*,j} ||_2^2 (\mathbf{G}_Y)_{i,j} \\
+ \frac{\psi_2}{2}  \sum_{i &lt; j}^q || \boldsymbol \beta_{*,i} - \boldsymbol \beta_{*,j} ||_2^2 (\mathbf{G}_Y)_{i,j} \\
  = \arg \min_{\mathbf{B}} \,
  &amp;  -\ell(\mathbf{B})  + \lambda ||\mathbf{B} ||_1  \\  &amp; +
  \psi_1 \text{tr}\left( \mathbf{B}^T \left( \mathbf{D}_{\mathbf{G}_X} - \mathbf{G}_X \right) \mathbf{B}  \right) \\  &amp; +
@@ -123,12 +123,20 @@
 \end{split}
 \label{equ:graphreg}
 \end{equation}\]</span></p>
-<p>Matrix <span class="math inline">\(\mathbf{B} \in \mathbb{R}^{(p + 1) \times q}\)</span> is the matrix of regression coefficients to be estimated (including an intercept). Vectors <span class="math inline">\(\boldsymbol \beta_{i, *}\)</span> and <span class="math inline">\(\boldsymbol \beta_{*, i}\)</span> are the <span class="math inline">\(i\)</span>-th row or column of <span class="math inline">\(\mathbf{B}\)</span>, respectively. Shrinkage parameters <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(\psi_1\)</span> and <span class="math inline">\(\psi_2\)</span> are fixed or need to be estimated (e.g., using cross-validation). The matrices <span class="math inline">\(\mathbf{D}_{\mathbf{G}} - \mathbf{G}\)</span> are the combinatorial (or normalized) graph Laplacians of an affinity matrix <span class="math inline">\(\mathbf{G}\)</span> <span class="citation">(Chung and Graham 1997)</span>.</p>
+<p>Matrix <span class="math inline">\(\mathbf{B} \in \mathbb{R}^{p \times q}\)</span> is the matrix of regression coefficients to be estimated. Vectors <span class="math inline">\(\boldsymbol \beta_{i, *}\)</span> and <span class="math inline">\(\boldsymbol \beta_{*, i}\)</span> are the <span class="math inline">\(i\)</span>-th row or column of <span class="math inline">\(\mathbf{B}\)</span>, respectively. Shrinkage parameters <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(\psi_1\)</span> and <span class="math inline">\(\psi_2\)</span> are fixed or need to be estimated (e.g., using cross-validation). The matrices <span class="math inline">\(\mathbf{D}_{\mathbf{G}} - \mathbf{G}\)</span> are the combinatorial (or normalized) graph Laplacians of an affinity matrix <span class="math inline">\(\mathbf{G}\)</span> <span class="citation">(Chung and Graham 1997)</span>.</p>
 </div>
 <div id="group-lasso" class="section level2">
 <h2 class="hasAnchor">
 <a href="#group-lasso" class="anchor"></a>Group Lasso</h2>
-<p>TODO <span class="citation">(Yuan and Lin 2006)</span> and <span class="citation">(Meier, Van De Geer, and Bühlmann 2008)</span></p>
+<p>Using <code>group.lasso</code> estimates the coefficients as:</p>
+<p><span class="math display">\[\begin{equation}
+\small
+\begin{split}
+\hat{\mathbf{B}} = \arg \min_{\mathbf{B}}-\ell(\mathbf{B})  + \lambda q \sum_{g=1}^G \sqrt{p_{\mathcal{I}_g} } ||\mathbf{B}_{\mathcal{I}_g} ||_2
+\end{split}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(\mathcal{I}_g\)</span> is a set of indexes belonging to the <span class="math inline">\(g\)</span>th group of variables and <span class="math inline">\(p_{\mathcal{I}_g}\)</span> is the number of indexes in <span class="math inline">\(I_g\)</span>.</p>
+<p>For details see <span class="citation">Yuan and Lin (2006)</span> and <span class="citation">Meier, Van De Geer, and Bühlmann (2008)</span>.</p>
 </div>
 <div id="families" class="section level2">
 <h2 class="hasAnchor">
@@ -194,27 +202,27 @@
 ## -&gt; call coef(fit) for coefficients</code></pre>
 <p>The <code>fit</code> object contains information about coefficients, intercepts etc.</p>
 <div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span>(<span class="no">fit</span>)[,<span class="fl">1</span>:<span class="fl">5</span>]</pre></body></html></div>
-<pre><code>##                   y[1]        y[2]        y[3]        y[4]         y[5]
-## (Intercept) -0.1630796 -0.23214686 -0.02538059  0.34130132 -0.198667809
-## x[1]        -0.3592043 -0.23102178  0.16815110  0.53984874 -0.104653560
-## x[2]        -0.5965749 -0.15797064  0.36232686  0.01690750 -0.380840629
-## x[3]        -0.3803682 -0.51961625 -0.32226369  0.13058329  0.340984464
-## x[4]        -0.4625967 -0.19649535 -0.05385770 -0.07929124 -0.124232985
-## x[5]        -0.0285626  0.21023563 -0.13049057 -0.12466140 -0.312471777
-## x[6]         0.1536922  0.24436840  0.26746860  0.13201326  0.379353553
-## x[7]        -0.2568381 -0.20051777  0.07121361 -0.25147247  0.137432635
-## x[8]         0.1674609 -0.25654319 -0.18768132 -0.13183960  0.001251033
-## x[9]         0.4304502 -0.02000845  0.11283835  0.29864952  0.113691278
-## x[10]        0.2920552  0.34738910 -0.35429192  0.01667544  0.344083071</code></pre>
+<pre><code>##                    y[1]       y[2]        y[3]        y[4]         y[5]
+## (Intercept) -0.16372357 -0.2316945  0.02737926  0.34097889 -0.105030037
+## x[1]        -0.16059643 -0.2313775 -0.03142583  0.51275665 -0.303018451
+## x[2]        -0.39847398 -0.3570667  0.16326329  0.01756574 -0.380845875
+## x[3]        -0.19856811 -0.3400769 -0.32230523  0.13058577  0.142470390
+## x[4]        -0.46293089 -0.2050446 -0.05251313 -0.06883960 -0.123903140
+## x[5]        -0.22737142  0.2117070 -0.13059130 -0.23648606 -0.113737300
+## x[6]        -0.04534919  0.4436029  0.06920882  0.13216609  0.575335979
+## x[7]        -0.26768568 -0.2007703 -0.12714125 -0.25135115  0.336130023
+## x[8]        -0.03005466 -0.2583929 -0.19308074 -0.13266258  0.001283742
+## x[9]         0.43247440 -0.2189635 -0.08593618  0.49682340  0.071804374
+## x[10]        0.48690146  0.5470110 -0.35403898 -0.10100128  0.453747362</code></pre>
 <p>Having the coefficients estimated we are able to predict novel data-sets:</p>
 <div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="no">pred</span>  <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span>(<span class="no">fit</span>, <span class="no">X</span>)
 <span class="no">pred</span>[<span class="fl">1</span>:<span class="fl">5</span>, <span class="fl">1</span>:<span class="fl">5</span>]</pre></body></html></div>
-<pre><code>##             [,1]       [,2]       [,3]        [,4]        [,5]
-## [1,] -0.05118159  0.3543974 1.47509871  2.40112775 -0.08999453
-## [2,] -0.78901938  0.1039426 1.38059871 -0.04497960 -0.49891885
-## [3,] -0.72092823 -0.7879457 0.78885289  1.52635059 -1.41302641
-## [4,]  0.25004272 -0.4180337 0.09098085  0.03431876 -1.65688342
-## [5,]  0.42486505  0.3555659 0.01309996  0.44698370  0.24478359</code></pre>
+<pre><code>##             [,1]       [,2]       [,3]       [,4]       [,5]
+## [1,] -0.32158514  1.1686790 -0.5254761  0.4811892  0.9944519
+## [2,]  0.06955218 -0.8547956  0.2519866  1.8171487 -0.7470146
+## [3,] -0.90264899 -1.4262676  0.1695588  1.6798598 -0.5145753
+## [4,] -0.94817461 -1.9246118 -0.5142707 -0.5670974 -1.6619765
+## [5,] -1.08426687 -0.2752363 -0.4806917 -0.3350478 -0.4745447</code></pre>
 <p>The binomial case is the same only with a different <code>family</code> argument:</p>
 <div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="co"># data</span>
 <span class="no">X</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(<span class="no">n</span> * <span class="no">p</span>), <span class="no">n</span>)
@@ -303,27 +311,27 @@
 ## -&gt; call coef(cv$fit) for coefficients</code></pre>
 <p>You can obtain the coefficients like this:</p>
 <div class="sourceCode" id="cb20"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span>(<span class="no">cv</span>)[,<span class="fl">1</span>:<span class="fl">5</span>]</pre></body></html></div>
-<pre><code>##                    y[1]        y[2]        y[3]        y[4]        y[5]
-## (Intercept) -0.16244969 -0.23274037 -0.02441612  0.34165695 -0.10992736
-## x[1]        -0.17127870 -0.23197828  0.07147893  0.34191269 -0.10608900
-## x[2]        -0.39909041 -0.15980190  0.16407205 -0.17635283 -0.38124603
-## x[3]        -0.35902753 -0.34072834 -0.51756036  0.13084252  0.17913467
-## x[4]        -0.46262899 -0.20085037 -0.05717313 -0.07060570 -0.13922529
-## x[5]        -0.03887326  0.17031582 -0.19004494 -0.31362623 -0.12089321
-## x[6]         0.12813450  0.24580370  0.21148647  0.06246414  0.37806559
-## x[7]        -0.07154852 -0.20182194 -0.12542124 -0.25217736  0.13823010
-## x[8]         0.10940531 -0.25719425 -0.18792039  0.06579314  0.00186960
-## x[9]         0.23375580 -0.02342807  0.10914293  0.29933539  0.07559465
-## x[10]        0.28874746  0.34816018 -0.35426050  0.01299304  0.37586561</code></pre>
+<pre><code>##                    y[1]         y[2]        y[3]         y[4]        y[5]
+## (Intercept) -0.35588041 -0.232255802  0.02198078  0.340631217 -0.10527337
+## x[1]        -0.16256212 -0.231138483  0.16712175  0.340972930 -0.10545750
+## x[2]        -0.39932463 -0.160676509  0.16458692 -0.089755476 -0.38133600
+## x[3]        -0.18265110 -0.340652287 -0.32260081  0.131721079  0.14218807
+## x[4]        -0.46262977 -0.008151647 -0.05559497 -0.072637200 -0.12494944
+## x[5]        -0.22665824  0.210271865 -0.13041021 -0.203870773 -0.11489344
+## x[6]         0.14777447  0.245310903  0.06885408  0.126467019  0.37710941
+## x[7]        -0.07047708 -0.201622412  0.06693970 -0.288983971  0.13853629
+## x[8]         0.16731566 -0.409378856 -0.18969758 -0.054690421  0.02538267
+## x[9]         0.23566134 -0.027911738 -0.07712438  0.298734963  0.07248964
+## x[10]        0.28829402  0.353896320 -0.35493070 -0.009454384  0.34470639</code></pre>
 <p>Furthermore, you can also directly predict using a <code>cv.edgenet</code> object:</p>
 <div class="sourceCode" id="cb22"><html><body><pre class="r"><span class="no">pred</span>  <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span>(<span class="no">cv</span>, <span class="no">X</span>)
 <span class="no">pred</span>[<span class="fl">1</span>:<span class="fl">5</span>, <span class="fl">1</span>:<span class="fl">5</span>]</pre></body></html></div>
-<pre><code>##            [,1]       [,2]       [,3]       [,4]       [,5]
-## [1,]  0.6655738  1.4596471 -0.3293040 0.43184121  1.5805688
-## [2,]  1.2374389  0.8648512  0.4778417 0.80782780  0.7880389
-## [3,]  0.8258052  0.4210416 -0.7071699 0.01681445  0.6643146
-## [4,]  1.0978712 -1.1434807 -0.5039964 1.24404678  0.4011041
-## [5,] -2.1403600 -1.2662913  0.2640689 0.67490179 -1.6143991</code></pre>
+<pre><code>##             [,1]        [,2]        [,3]       [,4]        [,5]
+## [1,]  0.08609146 -0.04476012  0.14871950  1.0318050  0.21170539
+## [2,]  0.48112556  1.06886462  0.09079072  0.8434048 -0.15075668
+## [3,] -0.46962093  0.30358474 -0.23594222 -0.2223917  0.19895651
+## [4,]  0.21615855 -0.91502171 -0.60888238  0.1337218  0.58986854
+## [5,] -0.31310795  0.35949823  0.02480447 -0.3005600  0.08730987</code></pre>
 </div>
 <div id="a-biological-example" class="section level2">
 <h2 class="hasAnchor">
@@ -362,17 +370,17 @@
 <div class="sourceCode" id="cb27"><html><body><pre class="r"><span class="no">X.new</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(<span class="fl">10</span> * <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span>(<span class="no">X</span>)), <span class="fl">10</span>)
 <span class="no">pred</span>  <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span>(<span class="no">fit</span>, <span class="no">X.new</span>)
 <span class="no">pred</span>[<span class="fl">1</span>:<span class="fl">10</span>, <span class="fl">1</span>:<span class="fl">5</span>]</pre></body></html></div>
-<pre><code>##             [,1]       [,2]        [,3]        [,4]        [,5]
-##  [1,] -0.6757834 -0.8090910 -0.31337134  1.02725184  0.06933979
-##  [2,] -1.2732760 -0.4990129 -0.37511128  1.33005729  0.38497863
-##  [3,] -0.6421384 -1.6582473  0.28940158  1.55448934 -0.73135658
-##  [4,] -0.7716256 -1.0690991 -0.01077137  0.76471074 -0.71789652
-##  [5,]  1.3143872  1.3439773 -0.22799809 -0.50196089  0.16459957
-##  [6,] -0.3874723 -0.5376041  0.60159730  0.66529136 -0.40160947
-##  [7,]  0.6736399  0.2275900 -1.08288862  0.81600604  0.19496621
-##  [8,] -2.1097200 -1.4885862  0.80288228  0.69912857 -1.15956326
-##  [9,] -0.4001558  0.2458691  1.24825451  0.08191516 -0.58259017
-## [10,] -0.6622698 -1.0883038 -0.04796913  0.74152967 -0.86456885</code></pre>
+<pre><code>##              [,1]        [,2]        [,3]       [,4]       [,5]
+##  [1,]  0.29136290 -1.81636870 -0.66046072  0.3040425 -0.4596874
+##  [2,] -1.72847740 -0.93544837  1.43224349  1.1754133 -1.8184199
+##  [3,]  0.07050712  0.09312239  0.37569794  0.3261704 -0.2471046
+##  [4,]  0.71981141  0.91821380 -0.06435614  0.8901740  1.3033837
+##  [5,] -0.24207819 -0.68306352 -0.45834507  0.7889845 -0.3666771
+##  [6,]  0.47433843 -0.58950918 -0.79962199  0.5536975  0.7117297
+##  [7,] -0.61460469  0.32679043  1.24686699 -0.8202174 -0.7112233
+##  [8,] -0.98078235 -0.30842095  1.18594692  0.8893463 -1.8467004
+##  [9,]  0.57838045 -0.22869192 -0.88055932  0.2620722  0.6097410
+## [10,] -0.34773362  0.33096473  0.88073703  0.3981614 -0.1033840</code></pre>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2 class="hasAnchor">

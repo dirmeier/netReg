@@ -99,4 +99,4 @@ If `netReg` was useful for you or your work, it would be great if you cited it l
 
 ## Author
 
-Simon Dirmeier < <a href="mailto:simon.dirmeier @ web.de">simon.dirmeier @ web.de</a> >
+Simon Dirmeier <<a href="mailto:simon.dirmeier @ web.de">simon.dirmeier @ web.de</a>>

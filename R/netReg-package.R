@@ -18,10 +18,12 @@
 # along with netReg. If not, see <http://www.gnu.org/licenses/>.
 
 
-#' The \emph{netReg} package
+#' Network-Regularized Regression Models
 #'
-#' \emph{netReg} is a package for generalized linear regression that includes
-#' prior graphs in the models objective function.
+#' \emph{netReg} fits linear regression models using network-regularization.
+#' Network-regularization used graph prior as penality for the coefficients of linear models.
+#' The graph can represent any relationship between the covariables/responses of the
+#' model, for instance, some quantifiable biological relationship such as coexpression.
 #'
 #' \emph{netReg} uses \emph{Armadillo} and \emph{TensorFlow} for
 #' fast matrix computations and optimization.

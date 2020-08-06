@@ -24,17 +24,16 @@ Network-regularization makes use of graphs to model interactions of covariables 
 
 `edgenet` uses a $(p \times p)$-dimensional affinity matrix $\mathbf{G}_X \in \mathbb{R}_+^{p \times p}$ to model the interaction of $p$
 covariables in $\mathbf{X} \in \mathbb{R}^{n \times p}$ and analogously a matrix $\mathbf{G}_Y \in \mathbb{R}_+^{q \times q}$
-to model interactions of $q$ response variables in $\mathbf{Y} \in \mathbb{R}^{n \times q}$. The affinity matrices
-are used for regularization of regression coefficients like this:
+to model interactions of $q$ response variables in $\mathbf{Y} \in \mathbb{R}^{n \times q}$. The affinity matrices are used for regularization of regression coefficients like this:
 
 \begin{equation}
 \small
 \begin{split}
 \hat{\mathbf{B}} = \arg \min_{\mathbf{B}} \,
  & -\ell(\mathbf{B}) + \lambda ||\mathbf{B} ||_1  \\  & +
-      		  \frac{\psi_1}{2}  \sum_{i=1}^p \sum_{j=1}^p
+      		  \frac{\psi_1}{2}  \sum_{i < j}^p
       		   || \boldsymbol \beta_{i,*} - \boldsymbol \beta_{j,*} ||_2^2 (\mathbf{G}_X)_{i,j}    \\  & +
- \frac{\psi_2}{2}  \sum_{i=1}^q \sum_{j=1}^q || \boldsymbol \beta_{*,i} - \boldsymbol \beta_{*,j} ||_2^2 (\mathbf{G}_Y)_{i,j} \\
+ \frac{\psi_2}{2}  \sum_{i < j}^q || \boldsymbol \beta_{*,i} - \boldsymbol \beta_{*,j} ||_2^2 (\mathbf{G}_Y)_{i,j} \\
  = \arg \min_{\mathbf{B}} \,
  &  -\ell(\mathbf{B})  + \lambda ||\mathbf{B} ||_1  \\  & +
  \psi_1 \text{tr}\left( \mathbf{B}^T \left( \mathbf{D}_{\mathbf{G}_X} - \mathbf{G}_X \right) \mathbf{B}  \right) \\  & +
@@ -43,12 +42,23 @@ are used for regularization of regression coefficients like this:
 \label{equ:graphreg}
 \end{equation}
 
-Matrix $\mathbf{B} \in \mathbb{R}^{(p + 1) \times q}$ is the matrix of regression coefficients to be estimated (including an intercept).
+Matrix $\mathbf{B} \in \mathbb{R}^{p \times q}$ is the matrix of regression coefficients to be estimated.
 Vectors $\boldsymbol \beta_{i, *}$ and $\boldsymbol \beta_{*, i}$ are the $i$-th row or column of $\mathbf{B}$, respectively. Shrinkage parameters $\lambda$, $\psi_1$ and $\psi_2$ are fixed or need to be estimated (e.g., using cross-validation). The matrices $\mathbf{D}_{\mathbf{G}} - \mathbf{G}$ are the combinatorial (or normalized) graph Laplacians of an affinity matrix $\mathbf{G}$ [@chung1997spectral].
 
 ## Group Lasso
 
-TODO [@yuan2006model] and [@meier2008group]
+Using `group.lasso` estimates the coefficients as:
+
+\begin{equation}
+\small
+\begin{split}
+\hat{\mathbf{B}} = \arg \min_{\mathbf{B}}-\ell(\mathbf{B})  + \lambda q \sum_{g=1}^G \sqrt{p_{\mathcal{I}_g} } ||\mathbf{B}_{\mathcal{I}_g} ||_2
+\end{split}
+\end{equation}
+
+where $\mathcal{I}_g$ is a set of indexes belonging to the $g$th group of variables and  $p_{\mathcal{I}_g}$ is the number of indexes in $I_g$.
+
+For details see @yuan2006model and @meier2008group.
 
 ## Families
 
