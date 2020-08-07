@@ -35,6 +35,7 @@
 #'
 #' @useDynLib netReg, .registration = TRUE
 #'
+#' @import methods
 #' @import tensorflow
 #' @import tfprobability
 #' @importFrom tensorflow tf

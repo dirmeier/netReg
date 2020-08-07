@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ['windows-latest', 'macOS-latest', 'ubuntu-18.04']
+        os: ['macOS-latest', 'ubuntu-18.04']
         tfp: ['0.11']
         include:
           - os: ubuntu-18.04
@@ -39,6 +39,7 @@ jobs:
           sysreqs=$(Rscript -e "cat(sysreqs::sysreq_commands('DESCRIPTION'))")
           sudo -s eval "$sysreqs"
           sudo apt-get install -y qpdf
+          export TF_CPP_MIN_LOG_LEVEL="3"
       - name: install dependencies
         run: Rscript -e "install.packages('remotes')" -e "remotes::install_deps(dependencies = TRUE)" -e "remotes::install_cran('rcmdcheck')"
       - name: install python
@@ -56,6 +57,7 @@ jobs:
       - name: coverage
         continue-on-error: true
         run: |
-          tar -C .. -xf $PKG_TARBALL- Rscript -e 'covr::codecov()'
+          tar -C .. -xf $PKG_TARBALL
+          Rscript -e 'covr::codecov()'
           Rscript -e 'lintr::lint_package()'
 

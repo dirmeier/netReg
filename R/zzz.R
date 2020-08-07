@@ -21,13 +21,13 @@
 #' @importFrom reticulate py_module_available
 #' @importFrom tensorflow install_tensorflow
 .onLoad <- function(libname, pkgname) {
+  Sys.setenv(TF_CPP_MIN_LOG_LEVEL = 3)
   if (!reticulate::py_module_available("tensorflow")) {
     warning("Could not find tensorflow installation")
   }
   if (!reticulate::py_module_available("tensorflow_probability")) {
     warning("Could not find tensorflow-probability installation")
   }
-  Sys.setenv(TF_CPP_MIN_LOG_LEVEL = 2)
   options(tensorflow.one_based_extract = TRUE)
 }
 
