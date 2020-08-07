@@ -2,7 +2,7 @@
 
 [![Project Status](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![Project Life](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
-[![Build Status](https://travis-ci.org/dirmeier/netReg.svg?branch=master)](https://travis-ci.org/dirmeier/netReg)
+[![ci](https://github.com/dirmeier/netReg/workflows/ci/badge.svg)](https://github.com/dirmeier/netReg/actions?query=workflow%3Aci)
 [![codecov](https://codecov.io/gh/dirmeier/netReg/branch/master/graph/badge.svg)](https://codecov.io/gh/dirmeier/netReg)
 
 Generalized linear regression models with network-regularization in `R`. Now with `TensorFlow`.
