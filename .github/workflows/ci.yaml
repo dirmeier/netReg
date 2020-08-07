@@ -41,18 +41,18 @@ jobs:
           sudo apt-get install -y qpdf
       - name: install dependencies
         run: Rscript -e "install.packages('remotes')" -e "remotes::install_deps(dependencies = TRUE)" -e "remotes::install_cran('rcmdcheck')"
-      - name: install Python
+      - name: install python
         run: |
           Rscript -e "remotes::install_github('rstudio/reticulate')"
           Rscript -e "reticulate::install_miniconda()"
           Rscript -e "reticulate::conda_create('r-reticulate', packages = c('python==3.6.9'))"
-      - name: install TensorFlow
+      - name: install tensorFlow
         run: |
           Rscript -e "remotes::install_local()"
           Rscript -e "tfprobability::install_tfprobability(version=Sys.getenv('TFP_VERSION'), tensorflow=Sys.getenv('TF_VERSION'))"
       - name: check
         continue-on-error: ${{ contains(matrix.allow_failure, 'true') }}
-        run: Rscript -e "rcmdcheck::rcmdcheck(args = '--no-manual --no-build-vignettes', error_on = 'warning', check_dir = 'check')"
+        run: Rscript -e "rcmdcheck::rcmdcheck(args = '--no-manual', error_on = 'warning', check_dir = 'check')"
       - name: coverage
         continue-on-error: true
         run: |
