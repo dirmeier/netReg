@@ -38,6 +38,7 @@ jobs:
           Rscript -e "install.packages('remotes')" -e "remotes::install_github('r-hub/sysreqs')"
           sysreqs=$(Rscript -e "cat(sysreqs::sysreq_commands('DESCRIPTION'))")
           sudo -s eval "$sysreqs"
+          sudo apt-get install -y qpdf
       - name: install dependencies
         run: Rscript -e "install.packages('remotes')" -e "remotes::install_deps(dependencies = TRUE)" -e "remotes::install_cran('rcmdcheck')"
       - name: install Python
@@ -51,4 +52,11 @@ jobs:
           Rscript -e "tfprobability::install_tfprobability(version=Sys.getenv('TFP_VERSION'), tensorflow=Sys.getenv('TF_VERSION'))"
       - name: check
         continue-on-error: ${{ contains(matrix.allow_failure, 'true') }}
-        run: Rscript -e "rcmdcheck::rcmdcheck(args = '--no-manual --no-build-vignettes --as-cran', error_on = 'warning', check_dir = 'check')"
+        run: Rscript -e "rcmdcheck::rcmdcheck(args = '--no-manual --no-build-vignettes', error_on = 'warning', check_dir = 'check')"
+        -after_success:
+      - name: coverage
+        continue-on-error: true
+        run: |
+          tar -C .. -xf $PKG_TARBALL- Rscript -e 'covr::codecov()'
+          Rscript -e 'lintr::lint_package()'
+

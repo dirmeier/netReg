@@ -21,6 +21,7 @@
 
 #' @noRd
 #' @import tensorflow
+#' @importFrom purrr transpose
 fit <- function(mod, loss, x, y, maxit = 1000, learning.rate = 0.03, thresh = 1e-4) {
   optimizer <- keras::optimizer_adam(learning.rate)
   lo.old <- Inf

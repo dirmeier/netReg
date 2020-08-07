@@ -37,6 +37,6 @@ Imports:
     stats,
     reticulate,
     nloptr,
-    methods,
-    keras
+    keras,
+    purrr
 NeedsCompilation: yes

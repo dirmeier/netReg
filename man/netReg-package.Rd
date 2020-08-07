@@ -3,10 +3,12 @@
 \docType{package}
 \name{netReg-package}
 \alias{netReg-package}
-\title{The \emph{netReg} package}
+\title{Network-Regularized Regression Models}
 \description{
-\emph{netReg} is a package for generalized linear regression that includes
-prior graphs in the models objective function.
+\emph{netReg} fits linear regression models using network-regularization.
+Network-regularization used graph prior as penality for the coefficients of linear models.
+The graph can represent any relationship between the covariables/responses of the
+model, for instance, some quantifiable biological relationship such as coexpression.
 }
 \details{
 \emph{netReg} uses \emph{Armadillo} and \emph{TensorFlow} for

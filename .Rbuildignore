@@ -19,7 +19,7 @@
 ^benchmark/
 ^cleanup$
 ^cmd_line
-^codecov.yml$
+^.codecov.yml$
 ^cpp
 ^cpp/
 ^docs$
