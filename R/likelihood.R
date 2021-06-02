@@ -100,6 +100,54 @@ beta.loss <- function(y, mu.hat, ...) {
 
 #' @noRd
 #' @importFrom tensorflow tf
+#' @importFrom tfprobability tfd_beta tfd_uniform tfd_mixture tfd_categorical
+bum.loss <- function(y, mu.hat, ...) {
+  obj <- 0
+  eps <- .Machine$double.eps * 1e9
+  N <- mu.hat$shape[[1]]
+  for (j in seq(ncol(y))) {
+    mu <- mu.hat[, j]
+    mixture_weight <- tf$constant(matrix(0.75, nrow = N, ncol = 2), dtype = tf$float32) # TODO: learn this parameter
+    phi <- 1 # TODO: replace this with tf$variable
+
+    # reparametrize
+    # concentration1 := alpha = mu * phi
+    p <- mu * phi
+    # concentration0 := beta = (1. - mu) * phi
+    q <- (1 - mu) * phi
+
+    # deal with numerical instabilities
+    p.trans <- tf$math$maximum(p, eps)
+    q.trans <- tf$math$maximum(q, eps)
+
+    # need correct batch dimensions for mixture
+    p.trans <- tf$stack(list(p.trans, p.trans), 0L)
+    q.trans <- tf$stack(list(q.trans, q.trans), 0L)
+
+    prob <- tfprobability::tfd_mixture(
+      cat = tfprobability::tfd_categorical(
+        probs = c(mixture_weight, 1 - mixture_weight)
+      ),
+      components = c(
+        tfprobability::tfd_beta(
+          concentration1 = p.trans, concentration0 = q.trans
+        ),
+        tfprobability::tfd_uniform(
+          low = tf$constant(tf$Variable(matrix(0, nrow = 2, ncol = N), dtype=tf$float32)),
+          high = tf$constant(tf$Variable(matrix(1, nrow = 2, ncol = N), dtype=tf$float32))
+        )
+      )
+    )
+
+    obj <- obj + tf$reduce_sum(prob$log_prob(y[, j]))
+  }
+
+  -obj
+}
+
+
+#' @noRd
+#' @importFrom tensorflow tf
 #' @importFrom tfprobability tfd_inverse_gaussian
 inverse.gaussian.loss <- function(y, mu.hat, ...) {
   obj <- 0
