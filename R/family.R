@@ -163,6 +163,28 @@ beta <- function(link = c("logit", "probit", "log")) {
 
 #' @export
 #' @rdname family-methods
+bum <- function(link = c("logit", "probit", "log")) {
+  warn.experimental("bum")
+  link <- match.arg(link)
+  linkinv <- switch(
+    link,
+    "logit" = logistic,
+    "log" = exp,
+    "probit" = gcdf,
+    stop("did not recognize link function", call. = FALSE)
+  )
+
+  .as.family(
+    "bum",
+    link,
+    linkinv,
+    bum.loss
+  )
+}
+
+
+#' @export
+#' @rdname family-methods
 inverse.gaussian <- function(link = c("1/mu^2")) {
   warn.experimental("inverse.gaussian")
   link <- match.arg(link)

@@ -8,6 +8,7 @@
 \alias{poisson}
 \alias{gamma}
 \alias{beta}
+\alias{bum}
 \alias{inverse.gaussian}
 \title{Family objects for models}
 \usage{
@@ -22,6 +23,8 @@ poisson(link = c("log"))
 gamma(link = c("inverse"))
 
 beta(link = c("logit", "probit", "log"))
+
+bum(link = c("logit", "probit", "log"))
 
 inverse.gaussian(link = c("1/mu^2"))
 }
